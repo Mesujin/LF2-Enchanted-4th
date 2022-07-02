@@ -1,6 +1,6 @@
 //Includes
- #include "framework.h"
- #include "Native Platform.h"
+ #include "Includes\framework.h"
+ #include "Includes\Native Platform.h"
  #include <string>
  #include <dos.h>
  #include <timeapi.h>

@@ -75,6 +75,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>Output\</OutDir>
+    <IntDir>Output\Intermidate\</IntDir>
+    <TargetName>LF2 Enchanted 3rd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -140,20 +143,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="Native Platform.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Native Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Native Platform.rc" />
+    <ClInclude Include="Includes\framework.h" />
+    <ClInclude Include="Includes\Native Platform.h" />
+    <ClInclude Include="Includes\Resource.h" />
+    <ClInclude Include="Includes\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Native Platform.ico" />
-    <Image Include="small.ico" />
+    <Image Include="Includes\Native Platform.ico" />
+    <Image Include="Includes\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Includes\Native Platform.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
