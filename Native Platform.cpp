@@ -10,7 +10,7 @@
   #include <chrono>
   #include <thread>
   #define MAX_LOADSTRING 50
-  #define MAX_DISPOBJ 2000
+  #define MAX_DISPOBJ 17500
   #define MAX_QUALITY 8294400
  //-//
  //Basic Variables
