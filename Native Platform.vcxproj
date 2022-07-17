@@ -148,8 +148,6 @@
   <ItemGroup>
     <ClInclude Include="Includes\framework.h" />
     <ClInclude Include="Includes\Native Platform.h" />
-    <ClInclude Include="Includes\Resource.h" />
-    <ClInclude Include="Includes\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Includes\Native Platform.ico" />
