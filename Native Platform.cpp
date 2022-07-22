@@ -1,7 +1,11 @@
 ﻿//Main Platform
- //Tags
+ //Commands
+  #include "Includes\bmp.h"
   #include "Includes\framework.h"
   #include "Includes\Native Platform.h"
+  #include "Includes\angelscript.h"
+  #include "Includes\scriptbuilder.h"
+  #include "Includes\scriptstdstring.h"
   #include <filesystem>
   #include <fstream>
   #include <chrono>
@@ -10,7 +14,7 @@
   #include <dos.h>
   #include <map>
   #define MAX_LOADSTRING 50
-  #define MAX_DISPOBJ    17500
+  #define MAX_DISPOBJ    18000
   #define MAX_QUALITY    8294400
  //-//
  //Functions
@@ -18,7 +22,12 @@
   double InvertionR(double Varb01){return 1 - (Varb01 - (double)(int)Varb01);}
   int Rounding(double Varb01){if(Varb01 > (double)(int)Varb01 + 0.5){return (int)Varb01 + 1;} else {return (int)Varb01;}}
  //-//
- //System
+ //System 
+  asIScriptModule *Modu0001;
+  asIScriptEngine *Engi0001;
+  asIScriptContext *Cont0001;
+  asIScriptFunction *Func0001;
+
   HINSTANCE Inst0001;
   COLORREF Cref0001[MAX_QUALITY];
   COLORREF Cref0002[MAX_QUALITY];
@@ -30,9 +39,9 @@
   HDC Phdc0001;
   HDC Phdc0002;
   std::string Strn0001;
-  std::jthread Thrd0001;
-  std::jthread Thrd0002;
   std::wstring Wstr0001;
+  std::ofstream File0001;
+  std::ifstream File0002;
   std::chrono::steady_clock::time_point Time0001;
   std::chrono::steady_clock::time_point Time0002;
   std::chrono::steady_clock::time_point Time0003;
@@ -63,9 +72,21 @@
   double Vrab0022;                     // Temporal D03 : Temp 1st
   double Vrab0023;                     // Temporal D04 : Count BitW
   double Vrab0024;                     // Temporal D05 : Count BitH
+  unsigned int Vrab0025 = 0;           // Pic Number
+  
+  //Graphic Memory
+  std::vector<COLORREF> PicColor;
+  std::vector<std::string> PicAddress;
+  std::vector<unsigned int> PicIndex;
+  std::vector<unsigned int> PicWidth;
+  std::vector<unsigned int> PicHeight;
+  std::vector<OBJECT> Objects;
 
-  void ID();
+  int ScreenCount = 0;
+  int ScreenCount2 = 0;
+  int ScreenCount3 = 0;
 
+  void Platform_Graphic();
   void Platform_Timming()
   {
    Time0003 = std::chrono::steady_clock::now();
@@ -138,7 +159,10 @@
    {Vrab0001 += 1; if(Vrab0001 == 18446744073709551614) Vrab0001 = 1000; Time0001 += std::chrono::seconds(1); Vrab0014 = Vrab0013; Vrab0013 = 0;}
    Vrab0012 += 1;
    if(Vrab0012 != Vrab0007) if(Vrab0002){goto Labl0001;} else {return;} Vrab0012 = 0; Vrab0013 += 1;
-   ID(); Platform_Display();
+   Vrab0017 = Cont0001->Prepare(Func0001);
+   Vrab0017 = Cont0001->Execute();
+   Platform_Graphic();
+   Platform_Display();
    if(Vrab0002){goto Labl0001;} else {return;} 
   }
   LRESULT CALLBACK Platform_Process(HWND Hwnd01, UINT Uint01, WPARAM Wprm01, LPARAM Lprm01)
@@ -180,6 +204,104 @@
    Wind01.hIconSm = LoadIcon(Wind01.hInstance, MAKEINTRESOURCE(IDI_SMALL));
    return RegisterClassExW(&Wind01); 
   }
+  void Platform_Call(unsigned char Vrab01, std::string Strn01)
+  {
+   switch(Vrab01)
+   {
+    case 0:     
+     Vrab0005 = true;
+    break;
+    case 1:
+     File0001.open(Strn01);
+     File0001 << "A";
+     File0001.close();
+    break;
+    default: return;
+   }
+   return;
+  }
+  void Platform_AngelScript()
+  {
+   Labl0003:
+   File0002.open("Database\\System.as");
+   if(File0002.is_open())
+   {
+    bool Vrab02 = true;
+    Vrab0001 = 1500;
+    while(File0002)
+    {
+     File0002 >> Strn0001;
+     if(Strn0001.compare("MaximumObjNum") == 0)
+     {
+      File0002 >> Strn0001 >> Vrab0001;
+      Objects.resize(Vrab0001 * 12);
+      Vrab02 = false;
+      goto Labl0004;
+     }
+    }
+    Labl0004:
+    File0002.close();
+    if(Vrab02) goto Labl0002;
+   } else
+   {
+    Labl0002:
+    File0001.open("Database\\System.as");
+    File0001 << R"""(
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Universal AI and Basic System for LF2ET, by Mesujin.                                         //
+// Ver. 0.81.220722                                                                             //
+//                                                                                              //
+// Do not modify if you don't know what you're gonna modify!                                    //
+// If you know what you're gonna modify, then have fun modifiying. ;3                           //
+// You did better to turn off the "Word Wrap" setting to get better look to the code. XD        //
+// ..normally, "Alt + Z" is the default shortcut for "Word Wrap" (if you don't know where it)   //
+//                                                                                              //
+// Repository: https://github.com/Mesujin/LF2-Enchanted-3rd-AI-and-System (More readable there) //
+// The right of this AI belong to Mesujin :P this's mine :<                                     //
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+// The Value in Configuration must be Positive!
+// (If there's no "Limit", then the "Limit" is their Data Type limit.)
+// Try to return the Value to it's "Default" Value if you occuring an error.
+
+//Configuration
+ //Main Configuration
+  uint64 MaximumObjNum         = 1500 ;//In-Game maximum objects. {Limit = 1537228672809129301} {Default = 1500}
+)""";
+    File0001.close();
+    goto Labl0003;
+   }
+   Vrab0001 = 0;
+   Engi0001 = asCreateScriptEngine();
+   RegisterStdString(Engi0001);
+   Engi0001->RegisterGlobalFunction("void Call(uint8 Vrab01, string Strn01)", asFunctionPtr(Platform_Call), asCALL_CDECL);
+   CScriptBuilder Make01;
+   int Vrab01 = Make01.StartNewModule(Engi0001, "System");
+   if(Vrab01 < 0)
+   {
+	Engi0001->DiscardModule("System");
+    Vrab0002 = false;
+    PostQuitMessage(0);
+   }
+   Vrab01 = Make01.AddSectionFromFile("Database\\System.as");
+   if(Vrab01 < 0)
+   {
+	Engi0001->DiscardModule("System");
+    Vrab0002 = false;
+    PostQuitMessage(0);
+   }
+   Vrab01 = Make01.BuildModule();
+   if(Vrab01 < 0)
+   {
+	Engi0001->DiscardModule("System");
+    Vrab0002 = false;
+    PostQuitMessage(0);
+   }
+   Modu0001 = Engi0001->GetModule("System");
+   Func0001 = Modu0001->GetFunctionByDecl("void Main()");
+   Cont0001 = Engi0001->CreateContext();
+   return;
+  }
   int APIENTRY wWinMain(HINSTANCE Inst01, HINSTANCE Inst02, LPWSTR Wstr01, int Vrab01)
   {
    UNREFERENCED_PARAMETER(Inst02); UNREFERENCED_PARAMETER(Wstr01);
@@ -192,6 +314,7 @@
    MSG Mssg01;
    Phdc0001 = GetDC(Hwnd0001);
    Time0001 = std::chrono::steady_clock::now();
+   Platform_AngelScript();
    std::jthread Thrd0001(Platform_Main);
    while(GetMessage(&Mssg01, nullptr, 0, 0))
    {
@@ -204,39 +327,127 @@
 //-//
  
 //Engine
- //Memorized Variables
-  COLORREF PicData[1];
-  int PicIndex[1];
-  int PicWidth[1];
-  int PicHeight[1];
-
-
-  int ScreenCount = 0;
-  int ScreenCount2 = 0;
-  int ScreenCount3 = 0;
- //-//
- //Object Variables
-  bool ObjDisp_Exist[MAX_DISPOBJ];
-  unsigned char ObjDisp_Trans[MAX_DISPOBJ];
-  int ObjDisp_Pic[MAX_DISPOBJ];
-  int ObjDisp_PicX1[MAX_DISPOBJ];
-  int ObjDisp_PicY1[MAX_DISPOBJ];
-  int ObjDisp_PicX2[MAX_DISPOBJ];
-  int ObjDisp_PicY2[MAX_DISPOBJ];
-  double ObjDisp_X1[MAX_DISPOBJ];
-  double ObjDisp_X2[MAX_DISPOBJ];
-  double ObjDisp_X3[MAX_DISPOBJ];
-  double ObjDisp_X4[MAX_DISPOBJ];
-  double ObjDisp_Y1[MAX_DISPOBJ];
-  double ObjDisp_Y2[MAX_DISPOBJ];
-  double ObjDisp_Y3[MAX_DISPOBJ];
-  double ObjDisp_Y4[MAX_DISPOBJ];
+  struct GAMEOBJECTINPUT
+  {
+   long long int System;
+   unsigned char Output;
+   bool A;
+   bool D;
+   bool J;
+   bool Up;
+   bool Left;
+   bool Down;
+   bool Right;
+   bool AD;
+   bool AJ;
+   bool DJ;
+   bool DrA;
+   bool DlA;
+   bool DrJ;
+   bool DlJ;
+   bool DdA;
+   bool DdJ;
+   bool DuA;
+   bool DuJ;
+   bool DJA;
+   unsigned short Hold_A;
+   unsigned short Hold_D;
+   unsigned short Hold_J;
+   unsigned short Hold_Up;
+   unsigned short Hold_Left;
+   unsigned short Hold_Down;
+   unsigned short Hold_Right;
+   unsigned short Hold_AD;
+   unsigned short Hold_AJ;
+   unsigned short Hold_DJ;
+   unsigned short Hold_DrA;
+   unsigned short Hold_DlA;
+   unsigned short Hold_DrJ;
+   unsigned short Hold_DlJ;
+   unsigned short Hold_DdA;
+   unsigned short Hold_DdJ;
+   unsigned short Hold_DuA;
+   unsigned short Hold_DuJ;
+   unsigned short Hold_DJA;
+  };
+  struct GAMEOBJECTSUMMARY
+  {
+   unsigned int Hero_Kill;
+   unsigned int Minion_Kill;
+   double HP_Dmg;
+   double DHP_Dmg;
+   double HP_Took;
+   double DHP_Took;
+   double HP_Recovery;
+   double DHP_Recovery;
+   double HP_Cost;
+   double MP_Cost;
+  };
+  struct GAMEOBJECTSTAT
+  {
+   double Movement_Speed;
+   double Damage_Dealt;
+   double Damage_Taken;
+   double Weight;
+  };
+  struct GAMEOBJECT 
+  {
+   GAMEOBJECTINPUT Input;
+   GAMEOBJECTSUMMARY Summary;
+   GAMEOBJECTSTAT Stat;
+   bool Focused;
+   bool Exist;
+   unsigned char Name[30];
+   unsigned char Shadow;
+   unsigned int ID;
+   unsigned int Frame;
+   unsigned int Wait;
+   unsigned short Facing;
+   unsigned short Blink;
+   unsigned char Life;
+   unsigned char Vrest[1500];
+   unsigned char Arest;
+   unsigned short TimeWorks;
+   unsigned short Team;
+   unsigned short Owner;
+   unsigned short Mother;
+   unsigned short Target;
+   unsigned short LastHit;
+   unsigned short HeldA;
+   unsigned short HeldB;
+   unsigned short Catch;
+   unsigned short Cooldown[10];
+   unsigned char Dimension;
+   char HitLag;
+   double HP;
+   double DHP;
+   double Shield;
+   double MP;
+   double X;
+   double Y;
+   double Z;
+   double ToGround;
+   double Vel_X;
+   double Vel_Y;
+   double Vel_Z;
+   unsigned short Fall;
+   unsigned short Defence;
+  };
+  struct GAME
+  {
+   GAMEOBJECT Object[1500];
+   unsigned char Menu;
+   bool InGame = false;
+   unsigned long long int Time;
+   unsigned long long int Playtime;
+   unsigned char Background;
+  };
+  GAME Game;
  //-//
  
- //System
-  void ID()
+ //Graphic
+  void Platform_Graphic()
   {
-   Vrab0005 = true;
    ScreenCount3 += 1 * Vrab0007;
    if(ScreenCount3 == 256){ScreenCount3 = 0; ScreenCount2 += 1 * Vrab0007;}
    if(ScreenCount2 == 256){ScreenCount2 = 0; ScreenCount += 1 * Vrab0007;}
@@ -248,11 +459,21 @@
    for(Vrab0019 = 125; Vrab0019 < 225; ++Vrab0019)
    Cref0001[(Vrab0010 * Vrab0019) + Vrab0017] = RGB(125, 125, 125);
 
-   //Graphic
+   //Objects Graphic
     for(Vrab0017 = 0; Vrab0017 < MAX_DISPOBJ; ++Vrab0017)
-    if(ObjDisp_Exist[Vrab0017])
+    if(Objects[Vrab0017].Exist)
     {
+     if(Objects[Vrab0017].Text > 0)
+     {
      
+      continue;
+     }
+     if(PicWidth[Objects[Vrab0017].Pic] < Objects[Vrab0017].PicX1) continue;
+     if(PicHeight[Objects[Vrab0017].Pic] < Objects[Vrab0017].PicY1) continue;
+     if(PicWidth[Objects[Vrab0017].Pic] < Objects[Vrab0017].PicX2) continue;
+     if(PicHeight[Objects[Vrab0017].Pic] < Objects[Vrab0017].PicY2) continue;
+     for(Vrab0020 = 0; Vrab0020 < Objects[Vrab0017].X2 - Objects[Vrab0017].X1; ++Vrab0020)
+     {}
     } else {break;}
    //-//
    
