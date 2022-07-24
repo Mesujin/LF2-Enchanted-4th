@@ -159,6 +159,7 @@
    {Vrab0001 += 1; if(Vrab0001 == 18446744073709551614) Vrab0001 = 1000; Time0001 += std::chrono::seconds(1); Vrab0014 = Vrab0013; Vrab0013 = 0;}
    Vrab0012 += 1;
    if(Vrab0012 != Vrab0007) if(Vrab0002){goto Labl0001;} else {return;} Vrab0012 = 0; Vrab0013 += 1;
+   if(Vrab0001 > 6 && )
    Vrab0017 = Cont0001->Prepare(Func0001);
    Vrab0017 = Cont0001->Execute();
    Platform_Graphic();
@@ -233,8 +234,8 @@
      File0002 >> Strn0001;
      if(Strn0001.compare("MaximumObjNum") == 0)
      {
-      File0002 >> Strn0001 >> Vrab0001;
-      Objects.resize(Vrab0001 * 12);
+      File0002 >> Strn0001 >> Vrab0025;
+      Objects.resize(Vrab0025 * 12);
       Vrab02 = false;
       goto Labl0004;
      }
@@ -247,6 +248,7 @@
     Labl0002:
     File0001.open("Database\\System.as");
     File0001 << R"""(
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Universal AI and Basic System for LF2ET, by Mesujin.                                         //
 // Ver. 0.81.220722                                                                             //
@@ -264,9 +266,10 @@
 // (If there's no "Limit", then the "Limit" is their Data Type limit.)
 // Try to return the Value to it's "Default" Value if you occuring an error.
 
-//Configuration
+//Configurationn
  //Main Configuration
   uint64 MaximumObjNum         = 1500 ;//In-Game maximum objects. {Limit = 1537228672809129301} {Default = 1500}
+
 )""";
     File0001.close();
     goto Labl0003;
@@ -327,115 +330,8 @@
 //-//
  
 //Engine
-  struct GAMEOBJECTINPUT
-  {
-   long long int System;
-   unsigned char Output;
-   bool A;
-   bool D;
-   bool J;
-   bool Up;
-   bool Left;
-   bool Down;
-   bool Right;
-   bool AD;
-   bool AJ;
-   bool DJ;
-   bool DrA;
-   bool DlA;
-   bool DrJ;
-   bool DlJ;
-   bool DdA;
-   bool DdJ;
-   bool DuA;
-   bool DuJ;
-   bool DJA;
-   unsigned short Hold_A;
-   unsigned short Hold_D;
-   unsigned short Hold_J;
-   unsigned short Hold_Up;
-   unsigned short Hold_Left;
-   unsigned short Hold_Down;
-   unsigned short Hold_Right;
-   unsigned short Hold_AD;
-   unsigned short Hold_AJ;
-   unsigned short Hold_DJ;
-   unsigned short Hold_DrA;
-   unsigned short Hold_DlA;
-   unsigned short Hold_DrJ;
-   unsigned short Hold_DlJ;
-   unsigned short Hold_DdA;
-   unsigned short Hold_DdJ;
-   unsigned short Hold_DuA;
-   unsigned short Hold_DuJ;
-   unsigned short Hold_DJA;
-  };
-  struct GAMEOBJECTSUMMARY
-  {
-   unsigned int Hero_Kill;
-   unsigned int Minion_Kill;
-   double HP_Dmg;
-   double DHP_Dmg;
-   double HP_Took;
-   double DHP_Took;
-   double HP_Recovery;
-   double DHP_Recovery;
-   double HP_Cost;
-   double MP_Cost;
-  };
-  struct GAMEOBJECTSTAT
-  {
-   double Movement_Speed;
-   double Damage_Dealt;
-   double Damage_Taken;
-   double Weight;
-  };
-  struct GAMEOBJECT 
-  {
-   GAMEOBJECTINPUT Input;
-   GAMEOBJECTSUMMARY Summary;
-   GAMEOBJECTSTAT Stat;
-   bool Focused;
-   bool Exist;
-   unsigned char Name[30];
-   unsigned char Shadow;
-   unsigned int ID;
-   unsigned int Frame;
-   unsigned int Wait;
-   unsigned short Facing;
-   unsigned short Blink;
-   unsigned char Life;
-   unsigned char Vrest[1500];
-   unsigned char Arest;
-   unsigned short TimeWorks;
-   unsigned short Team;
-   unsigned short Owner;
-   unsigned short Mother;
-   unsigned short Target;
-   unsigned short LastHit;
-   unsigned short HeldA;
-   unsigned short HeldB;
-   unsigned short Catch;
-   unsigned short Cooldown[10];
-   unsigned char Dimension;
-   char HitLag;
-   double HP;
-   double DHP;
-   double Shield;
-   double MP;
-   double X;
-   double Y;
-   double Z;
-   double ToGround;
-   double Vel_X;
-   double Vel_Y;
-   double Vel_Z;
-   unsigned short Fall;
-   unsigned short Defence;
-  };
   struct GAME
   {
-   GAMEOBJECT Object[1500];
    unsigned char Menu;
    bool InGame = false;
    unsigned long long int Time;
@@ -446,6 +342,10 @@
  //-//
  
  //Graphic
+  void Platform_Building()
+  {
+   
+  }
   void Platform_Graphic()
   {
    ScreenCount3 += 1 * Vrab0007;
