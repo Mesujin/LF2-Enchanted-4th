@@ -22,23 +22,3 @@
 #else
  #include <SDKDDKVer.h>
 #endif
-
-struct OBJECT
-{
- bool Exist;
- unsigned char Text;
- unsigned char Transparency;
- unsigned int Pic;
- unsigned int PicX1;
- unsigned int PicY1;
- unsigned int PicX2;
- unsigned int PicY2;
- double X1;
- double X2;
- double X3;
- double X4;
- double Y1;
- double Y2;
- double Y3;
- double Y4;
-};
