@@ -4,6 +4,7 @@
   #include "Includes\framework.h"
   #include "Includes\angelscript.h"
   #include "Includes\Native Platform.h"
+  #include "Includes\scriptarray.h"
   #include "Includes\scriptbuilder.h"
   #include "Includes\scriptstdstring.h"
   #include <filesystem>
@@ -27,6 +28,7 @@
   using int8 = char;
   using int2 = bool;
   using string = std::string;
+  using xint32 = float;
   using xint64 = double;
  //-//
  //Non-basic Variables
@@ -45,6 +47,7 @@
   HDC Phdc0001;
   HDC Phdc0002;
   string Strn0001;
+  string Strn0002;
   std::ostringstream Ostr0001;
   std::wstring Wstr0001;
   std::ofstream File0001;
@@ -154,19 +157,19 @@
  //-//
  //Basic Variables
   struct OBJECT {bool Exist; unsigned char Text; unsigned char Transparency; unsigned int Pic; unsigned int PicX1; unsigned int PicY1; unsigned int PicX2; unsigned int PicY2; double X1; double X2; double X3; double X4; double Y1; double Y2; double Y3; double Y4;};
-
+  
+  std::vector <OBJECT> Objects;
   std::vector <COLORREF> PicColor;
   std::vector <std::string> PicAddress;
-  std::vector <unsigned int> PicIndex;
-  std::vector <unsigned int> PicWidth;
-  std::vector <unsigned int> PicHeight;
-  std::vector <OBJECT> Objects;
+  std::vector <uint32> PicIndex;
+  std::vector <uint32> PicWidth;
+  std::vector <uint32> PicHeight;
   
   uint64 Vrab0001 = 0;    // App Runtime
   int2 Vrab0002 = false;  // Plat Running
   int2 Vrab0003 = false;  // DynamicFPS
   int2 Vrab0004 = false;  // DynamicFPS Med
-  int2 Vrab0005 = false;  // Disp FPS
+  int2 Vrab0005 = false;  // Console On
   int2 Vrab0006 = false;  // Color Quality
   int32 Vrab0007 = 4;     // FPS Ratio
   int32 Vrab0008 = 400;   // Layer W
@@ -194,47 +197,6 @@
   int32 ScreenCount = 0;
   int32 ScreenCount2 = 0;
   int32 ScreenCount3 = 0;
- //-//
- //AngelScript Communication
-  struct DATASAVE
-  {
-   char UserName[30];
-   bool LoadData(const int8 *Vrab01)
-   {
-    File0002.open(Vrab01);
-    if(File0002.is_open())
-    {
-     
-    } else {return false;}
-    File0002.close();
-   }
-  };
-  struct PLATFORM
-  {
-   void MaxObject(uint32 Vrab01){Objects.resize(Vrab01);}
-   void AddObject(uint32 Vrab01, uint8 Vrab02, uint8 Vrab03, uint32 Vrab04, uint32 Vrab05, uint32 Vrab06, uint32 Vrab07, uint32 Vrab08, xint64 Vrab09, xint64 Vrab10, xint64 Vrab11, xint64 Vrab12, xint64 Vrab13, xint64 Vrab14, xint64 Vrab15, xint64 Vrab16)
-   {
-    Objects[Vrab01].Exist = true;
-    Objects[Vrab01].Text = Vrab02;
-    Objects[Vrab01].Transparency = Vrab03;
-    Objects[Vrab01].Pic = Vrab04;
-    Objects[Vrab01].PicX1 = Vrab05;
-    Objects[Vrab01].PicY1 = Vrab06;
-    Objects[Vrab01].PicX2 = Vrab07;
-    Objects[Vrab01].PicY2 = Vrab08;
-    Objects[Vrab01].X1 = Vrab09;
-    Objects[Vrab01].X2 = Vrab10;
-    Objects[Vrab01].X3 = Vrab11;
-    Objects[Vrab01].X4 = Vrab12;
-    Objects[Vrab01].Y1 = Vrab13;
-    Objects[Vrab01].Y2 = Vrab14;
-    Objects[Vrab01].Y3 = Vrab15;
-    Objects[Vrab01].Y4 = Vrab16;
-   }
-   void DeleteObject(uint32 Vrab01){Objects[Vrab01].Exist = false;}
-   void FPSDisplay(int2 Vrab01){Vrab0005 = Vrab01;}
-   DATASAVE Save;
-  }; PLATFORM Platform;
  //-//
  //Functions
   xint64 Rerounding(xint64 Varb01){return (Varb01 - (double)(int)Varb01);}
@@ -369,17 +331,58 @@
   }
   xint64 DecryptionDOUBLE94(int8 Vrab01){return (xint64)(Vrab01 - 33);}
   xint64 DecryptionDOUBLE(const int8 Vrab01[11]){return DecryptionDOUBLE94(Vrab01[0]) * 8836 + DecryptionDOUBLE94(Vrab01[1]) * 94 + DecryptionDOUBLE94(Vrab01[2]) - 400000 + DecryptionDOUBLE94(Vrab01[3]) * 0.064847759419264 + DecryptionDOUBLE94(Vrab01[4]) * 0.000689869781056 + DecryptionDOUBLE94(Vrab01[5]) * 0.000007339040224 + DecryptionDOUBLE94(Vrab01[6]) * 0.000000078074896 +  DecryptionDOUBLE94(Vrab01[7]) * 0.000000000830584 + DecryptionDOUBLE94(Vrab01[8]) * 0.000000000008836 + DecryptionDOUBLE94(Vrab01[9]) * 0.000000000000094 + DecryptionDOUBLE94(Vrab01[10]) * 0.000000000000001;}
-  uint32 Decryption94(int8 Vrab01){return (uint32)(Vrab01 - 33);}
-  uint32 DecryptionUINT32(const int8 Vrab01[5]){return Decryption94(Vrab01[4]) + Decryption94(Vrab01[3]) * 94 + Decryption94(Vrab01[2]) * 8836 + Decryption94(Vrab01[1]) * 830584 + Decryption94(Vrab01[0]) * 78074896;}
+  uint64 Decryption94(int8 Vrab01){return (uint64)(Vrab01 - 33);}
+  uint64 DecryptionUINT64(const int8 Vrab01[10])
+  {
+   return Decryption94(Vrab01[9])
+       + Decryption94(Vrab01[8]) * 94
+       + Decryption94(Vrab01[7]) * 8836
+       + Decryption94(Vrab01[6]) * 830584
+       + Decryption94(Vrab01[5]) * 78074896
+       + Decryption94(Vrab01[4]) * 7339040224
+       + Decryption94(Vrab01[3]) * 689869781056
+       + Decryption94(Vrab01[2]) * 64847759419264
+       + Decryption94(Vrab01[1]) * 6095689385410816
+       + Decryption94(Vrab01[0]) * 572994802228616704;
+  }
+  uint32 DecryptionUINT32(const int8 Vrab01[5]){return (uint32)Decryption94(Vrab01[4]) + (uint32)Decryption94(Vrab01[3]) * 94 + (uint32)Decryption94(Vrab01[2]) * 8836 + (uint32)Decryption94(Vrab01[1]) * 830584 + (uint32)Decryption94(Vrab01[0]) * 78074896;}
   uint16 DecryptionUINT16(int8 Vrab01[3]){return (uint16)Decryption94(Vrab01[2]) + (uint16)Decryption94(Vrab01[1]) * 94 + (uint16)Decryption94(Vrab01[0]) * 8836;}
   uint8 DecryptionUINT8(int8 Vrab01[2]){return (uint8)Decryption94(Vrab01[1]) + (uint8)Decryption94(Vrab01[0]) * 94;}
-  int32 DecryptionINT32(int8 Vrab01[5]){return (int32)Decryption94(Vrab01[4]) + (int32)Decryption94(Vrab01[3]) * 94 + Decryption94(Vrab01[2]) * 8836 + Decryption94(Vrab01[1]) * 830584 + Decryption94(Vrab01[0]) * 78074896;}
+  int64 DecryptionINT64(const int8 Vrab01[10])
+  {
+   return (int64)Decryption94(Vrab01[9])
+       + (int64)Decryption94(Vrab01[8]) * 94
+       + (int64)Decryption94(Vrab01[7]) * 8836
+       + (int64)Decryption94(Vrab01[6]) * 830584
+       + (int64)Decryption94(Vrab01[5]) * 78074896
+       + (int64)Decryption94(Vrab01[4]) * 7339040224
+       + (int64)Decryption94(Vrab01[3]) * 689869781056
+       + (int64)Decryption94(Vrab01[2]) * 64847759419264
+       + (int64)Decryption94(Vrab01[1]) * 6095689385410816
+       + (int64)Decryption94(Vrab01[0]) * 572994802228616704;
+  }
+  int32 DecryptionINT32(int8 Vrab01[5]){return (int32)Decryption94(Vrab01[4]) + (int32)Decryption94(Vrab01[3]) * 94 + (int32)Decryption94(Vrab01[2]) * 8836 + (int32)Decryption94(Vrab01[1]) * 830584 + (int32)Decryption94(Vrab01[0]) * 78074896;}
+  int8 DecryptionINT8(int8 Vrab01[2]){return (uint8)Decryption94(Vrab01[1]) + (uint8)Decryption94(Vrab01[0]) * 94;}
   string Encryption94(uint8 Vrab01){switch(Vrab01){case 0: return "\u0021"; case 1: return "\u0022"; case 2: return "\u0023"; case 3: return "\u0024"; case 4: return "\u0025"; case 5: return "\u0026"; case 6: return "\u0027"; case 7: return "\u0028"; case 8: return "\u0029"; case 9: return "\u002A"; case 10: return "\u002B"; case 11: return "\u002C"; case 12: return "\u002D"; case 13: return "\u002E"; case 14: return "\u002F"; case 15: return "\u0030"; case 16: return "\u0031"; case 17: return "\u0032"; case 18: return "\u0033"; case 19: return "\u0034"; case 20: return "\u0035"; case 21: return "\u0036"; case 22: return "\u0037"; case 23: return "\u0038"; case 24: return "\u0039"; case 25: return "\u003A"; case 26: return "\u003B"; case 27: return "\u003C"; case 28: return "\u003D"; case 29: return "\u003E"; case 30: return "\u003F"; case 31: return "\u0040"; case 32: return "\u0041"; case 33: return "\u0042"; case 34: return "\u0043"; case 35: return "\u0044"; case 36: return "\u0045"; case 37: return "\u0046"; case 38: return "\u0047"; case 39: return "\u0048"; case 40: return "\u0049"; case 41: return "\u004A"; case 42: return "\u004B"; case 43: return "\u004C"; case 44: return "\u004D"; case 45: return "\u004E"; case 46: return "\u004F"; case 47: return "\u0050"; case 48: return "\u0051"; case 49: return "\u0052"; case 50: return "\u0053"; case 51: return "\u0054"; case 52: return "\u0055"; case 53: return "\u0056"; case 54: return "\u0057"; case 55: return "\u0058"; case 56: return "\u0059"; case 57: return "\u005A"; case 58: return "\u005B"; case 59: return "\u005C"; case 60: return "\u005D"; case 61: return "\u005E"; case 62: return "\u005F"; case 63: return "\u0060"; case 64: return "\u0061"; case 65: return "\u0062"; case 66: return "\u0063"; case 67: return "\u0064"; case 68: return "\u0065"; case 69: return "\u0066"; case 70: return "\u0067"; case 71: return "\u0068"; case 72: return "\u0069"; case 73: return "\u006A"; case 74: return "\u006B"; case 75: return "\u006C"; case 76: return "\u006D"; case 77: return "\u006E"; case 78: return "\u006F"; case 79: return "\u0070"; case 80: return "\u0071"; case 81: return "\u0072"; case 82: return "\u0073"; case 83: return "\u0074"; case 84: return "\u0075"; case 85: return "\u0076"; case 86: return "\u0077"; case 87: return "\u0078"; case 88: return "\u0079"; case 89: return "\u007A"; case 90: return "\u007B"; case 91: return "\u007C"; case 92: return "\u007D"; case 93: return "\u007E"; default: return "";}}
   string EncryptionDOUBLE(xint64 Vrab01){Vrab01 += 400000; if(Vrab01 < 0){Vrab01 = 0;} else {if(Vrab01 > 800000) Vrab01 = 800000;} uint64 Vrab02 = (uint64)Vrab01; uint64 Vrab03 = Vrab02 / 94; Vrab0020 = (Vrab01 - (xint64)(uint64)Vrab01) * 100000; Vrab0021 = (Vrab0020 - (xint64)(uint64)Vrab0020) * 100000; Vrab0022 = (Vrab0021 - (xint64)(uint64)Vrab0021) * 100000; uint64 Vrab04 = (uint64)Vrab0020 * 10000000000 + (uint64)Vrab0021* 100000 + (uint64)Vrab0022; uint64 Vrab05 = Vrab04 / 94; uint64 Vrab06 = Vrab05 / 94; uint64 Vrab07 = Vrab06 / 94; uint64 Vrab08 = Vrab07 / 94; uint64 Vrab09 = Vrab08 / 94; uint64 Vrab10 = Vrab09 / 94; return Encryption94((Vrab03 / 94) % 94) + Encryption94(Vrab03 % 94) + Encryption94(Vrab02 % 94) + Encryption94((Vrab10 / 94) % 94) + Encryption94(Vrab10 % 94) + Encryption94(Vrab09 % 94) + Encryption94(Vrab08 % 94) + Encryption94(Vrab07 % 94) + Encryption94(Vrab06 % 94) + Encryption94(Vrab05 % 94) + Encryption94(Vrab04 % 94);}
+  string EncryptionUINT64(uint64 Vrab01)
+  {
+   uint64 Vrab02 = Vrab01 / 94;
+   uint64 Vrab03 = Vrab02 / 94;
+   uint64 Vrab04 = Vrab03 / 94;
+   uint64 Vrab05 = Vrab04 / 94;
+   uint64 Vrab06 = Vrab05 / 94;
+   uint64 Vrab07 = Vrab06 / 94;
+   uint64 Vrab08 = Vrab07 / 94;
+   uint64 Vrab09 = Vrab08 / 94;
+   return Encryption94((Vrab09 / 94) % 94) + Encryption94(Vrab09 % 94) + Encryption94(Vrab08 % 94) + Encryption94(Vrab07 % 94) + Encryption94(Vrab06 % 94) + Encryption94(Vrab05 % 94) + Encryption94(Vrab04 % 94) + Encryption94(Vrab03 % 94) + Encryption94(Vrab02 % 94) + Encryption94(Vrab01 % 94);
+  }
   string EncryptionUINT32(uint32 Vrab01){uint32 Vrab02 = Vrab01 / 94; uint32 Vrab03 = Vrab02 / 94; uint32 Vrab04 = Vrab03 / 94; return Encryption94((Vrab04 / 94) % 94) + Encryption94(Vrab04 % 94) + Encryption94(Vrab03 % 94) + Encryption94(Vrab02 % 94) + Encryption94(Vrab01 % 94);}
   string EncryptionUINT16(uint16 Vrab01){uint32 Vrab02 = Vrab01 / 94; return Encryption94((Vrab02 / 94) % 94) + Encryption94(Vrab02 % 94) + Encryption94(Vrab01 % 94);}
   string EncryptionUINT8(uint8 Vrab01){return Encryption94((Vrab01 / 94) % 94) + Encryption94(Vrab01 % 94);}
-  string EncryptionINT32(int32 Vrab01){return EncryptionUINT32(Vrab01);}
+  string EncryptionINT64(int64 Vrab01){return EncryptionUINT64((uint64)Vrab01);}
+  string EncryptionINT32(int32 Vrab01){return EncryptionUINT32((uint32)Vrab01);}
+  string EncryptionINT8(int8 Vrab01){return EncryptionUINT8((uint8)Vrab01);}
   string EncryptionECD(string Vrab01)
   {
    switch(Vrab0017)
@@ -534,6 +537,220 @@
    return "";
   }
  //-//
+ //AngelScript Communication
+  void Platform_Error();
+  void Platform_Console();
+  struct INT8_Array {int8 INDEX(uint32 Vrab01);};
+  struct INT32_Array {int32 INDEX(uint32 Vrab01);};
+  struct INT2_Array {int2 INDEX(uint32 Vrab01);};
+  template <int32 Vrab01> void *get_property(void *Vrab02){return (void*)((int8*)Vrab02 + Vrab01);}
+  int8 INT8_Array::INDEX(uint32 Vrab01){return *(((int8*)this) + Vrab01);}
+  int32 INT32_Array::INDEX(uint32 Vrab01){return *(((int32*)this) + Vrab01);}
+  int2 INT2_Array::INDEX(uint32 Vrab01){return *(((int2*)this) + Vrab01);}
+  //struct CharArrayArray {template <int size> CharArray *opIndex(unsigned int x);};
+  //template <int size> CharArray *CharArrayArray::opIndex(unsigned int x){return (CharArray*)(((char*)this)+x*size);}
+  struct DATASAVE
+  {
+   char UserName[30];
+   uint64 UserExperience;
+   bool SaveData(uint8 Vrab01)
+   {
+    switch(Vrab01)
+    {
+     case 0:
+      File0001.open("Database\\AutoSave.esd");
+     break;
+     case 1:
+      File0001.open("Database\\Save1.esd");
+     break;
+     case 2:
+      File0001.open("Database\\Save2.esd");
+     break;
+     case 3:
+      File0001.open("Database\\Save3.esd");
+     break;
+     case 4:
+      File0001.open("Database\\Save4.esd");
+     break;
+     case 5:
+      File0001.open("Database\\Save5.esd");
+     break;
+     case 6:
+      File0001.open("Database\\Save6.esd");
+     break;
+     case 7:
+      File0001.open("Database\\Save7.esd");
+     break;
+     default: return false;
+    }
+    if(File0001.is_open())
+    {
+     File0001 << EncryptionINT64(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count());
+
+     for(Vrab0026 = 0; Vrab0026 < 30; ++Vrab0026)
+     File0001 << EncryptionINT8(UserName[Vrab0026]);
+     File0001 << EncryptionUINT64(UserExperience);
+
+     File0001 << EncryptionINT64(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count());
+    } else {return false;}
+    File0001.close();
+    return true;
+   }
+   bool LoadData(uint8 Vrab01)
+   {
+    switch(Vrab01)
+    {
+     case 0:
+      File0002.open("Database\\AutoSave.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\AutoSave.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 1:
+      File0002.open("Database\\Save1.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save1.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 2:
+      File0002.open("Database\\Save2.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save2.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 3:
+      File0002.open("Database\\Save3.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save3.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 4:
+      File0002.open("Database\\Save4.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save4.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 5:
+      File0002.open("Database\\Save5.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save5.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 6:
+      File0002.open("Database\\Save6.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save6.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     case 7:
+      File0002.open("Database\\Save7.esd"); if(!File0002.is_open()) return false;
+      if(stat("Database\\Save7.esd", &Stat0001) == 0) Time0007 = Stat0001.st_mtime;
+     break;
+     default: return false;
+    }
+    char Vrab02; char Vrab03[10];
+    for(Vrab0026 = 0; Vrab0026 < 10; ++Vrab0026){File0002.read(&Vrab02, 1); Vrab03[Vrab0026] = Vrab02; if(!File0002) return false;}
+    uint64 Vrab04 = DecryptionINT64(Vrab03); if((uint64)Time0007 < Vrab04) return false;
+
+    for(Vrab0026 = 0; Vrab0026 < 30; ++Vrab0026)
+    {
+     for(Vrab0028 = 0; Vrab0028 < 2; ++Vrab0028){File0002.read(&Vrab02, 1); Vrab03[Vrab0028] = Vrab02; if(!File0002) return false;}
+     UserName[Vrab0026] = DecryptionINT8(Vrab03);
+    }
+    for(Vrab0028 = 0; Vrab0028 < 10; ++Vrab0028){File0002.read(&Vrab02, 1); Vrab03[Vrab0028] = Vrab02; if(!File0002) return false;}
+    UserExperience = DecryptionUINT64(Vrab03);
+
+    for(Vrab0026 = 0; Vrab0026 < 10; ++Vrab0026){File0002.read(&Vrab02, 1); Vrab03[Vrab0026] = Vrab02; if(!File0002) return false;}
+    uint64 Vrab05 = DecryptionINT64(Vrab03); if((uint64)Time0007 < Vrab05 || (uint64)Time0007 > Vrab05 + 1 || Vrab05 < Vrab04) return false;
+    File0002.close();
+    return true;
+   }
+  };
+  struct PLATFORM
+  {
+   void MaxObject(uint32 Vrab01){Objects.resize(Vrab01);}
+   void AddObject(uint32 Vrab01, uint8 Vrab02, uint8 Vrab03, uint32 Vrab04, uint32 Vrab05, uint32 Vrab06, uint32 Vrab07, uint32 Vrab08, xint64 Vrab09, xint64 Vrab10, xint64 Vrab11, xint64 Vrab12, xint64 Vrab13, xint64 Vrab14, xint64 Vrab15, xint64 Vrab16)
+   {
+    Objects[Vrab01].Exist = true;
+    Objects[Vrab01].Text = Vrab02;
+    Objects[Vrab01].Transparency = Vrab03;
+    Objects[Vrab01].Pic = Vrab04;
+    Objects[Vrab01].PicX1 = Vrab05;
+    Objects[Vrab01].PicY1 = Vrab06;
+    Objects[Vrab01].PicX2 = Vrab07;
+    Objects[Vrab01].PicY2 = Vrab08;
+    Objects[Vrab01].X1 = Vrab09;
+    Objects[Vrab01].X2 = Vrab10;
+    Objects[Vrab01].X3 = Vrab11;
+    Objects[Vrab01].X4 = Vrab12;
+    Objects[Vrab01].Y1 = Vrab13;
+    Objects[Vrab01].Y2 = Vrab14;
+    Objects[Vrab01].Y3 = Vrab15;
+    Objects[Vrab01].Y4 = Vrab16;
+   }
+   void DeleteObject(uint32 Vrab01){Objects[Vrab01].Exist = false;}
+   void Print(int2 Vrab01){if(Vrab01){Ostr0001 << "true";} else {Ostr0001 << "true";}}
+   void Print(int8 Vrab01){Ostr0001 << Vrab01;}
+   void Print(int16 Vrab01){Ostr0001 << Vrab01;}
+   void Print(int32 Vrab01){Ostr0001 << Vrab01;}
+   void Print(int64 Vrab01){Ostr0001 << Vrab01;}
+   void Print(uint8 Vrab01){Ostr0001 << Vrab01;}
+   void Print(uint16 Vrab01){Ostr0001 << Vrab01;}
+   void Print(uint32 Vrab01){Ostr0001 << Vrab01;}
+   void Print(uint64 Vrab01){Ostr0001 << Vrab01;}
+   void Print(xint32 Vrab01){Ostr0001 << Vrab01;}
+   void Print(xint64 Vrab01){Ostr0001 << Vrab01;}
+   void Print(const string &Vrab01){Ostr0001 << Vrab01;}
+   uint16 BufferSize = 60;
+   int16 BufferYSize;
+   std::vector <uint16> PrintSize;
+   void PrintClear(){Ostr0001.str("");}
+   void PrintOut()
+   {
+    if(!Vrab0005) Platform_Console();
+    HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCursorPosition(Hand01, {0, 0});
+    Strn0002 = "";
+    Strn0001 = Ostr0001.str().c_str();
+    Ostr0001.str("");
+
+    Vrab0026 = Strn0001.length();
+    Vrab0017 = 0;
+    Vrab0018 = 0;
+    Vrab0028 = 0;
+    
+    while((uint32)Vrab0017 != Vrab0026)
+    {
+     if(Strn0001[Vrab0017] == '\n')
+     {
+      Vrab0019 = (int32)Vrab0028;
+      if(PrintSize.size() > (uint32)Vrab0018) while(Vrab0028 < PrintSize[Vrab0018])
+      {
+       Strn0002 += " "; Vrab0028 += 1;
+      }
+      if(Vrab0028 < BufferSize) Strn0002 += "\n";
+      if(PrintSize.size() <= (uint32)Vrab0018){PrintSize.push_back((uint16)Vrab0019);} else {PrintSize[Vrab0018] = (uint16)Vrab0019;}
+      Vrab0018 += 1;
+      Vrab0028 = 65535;
+     } else
+     {Strn0002 += Strn0001[Vrab0017];}
+     Vrab0028 += 1;
+     if(Vrab0028 == BufferSize)
+     {
+      Vrab0028 = 0;
+      if(PrintSize.size() <= (uint32)Vrab0018){PrintSize.push_back(BufferSize);} else {PrintSize[Vrab0018] = BufferSize;}
+      Vrab0018 += 1;
+     }
+     Vrab0017 += 1;
+    }
+    Vrab0019 = (int32)Vrab0028;
+    if(PrintSize.size() > (uint32)Vrab0018) while(Vrab0028 < PrintSize[Vrab0018])
+    {
+     Strn0002 += " "; Vrab0028 += 1;
+    }
+    if(Vrab0028 < BufferSize) Strn0002 += "\n";
+    if(PrintSize.size() <= (uint32)Vrab0018){PrintSize.push_back((uint16)Vrab0019);} else {PrintSize[Vrab0018] = (uint16)Vrab0019;}
+    Vrab0018 += 1; Vrab0019 = Vrab0018;
+    while((uint32)Vrab0018 < PrintSize.size())
+    {
+     Vrab0028 = 0;
+     while(Vrab0028 < PrintSize[Vrab0018]){Strn0002 += " "; Vrab0028 += 1;}
+     if(Vrab0028 < BufferSize) if((uint32)Vrab0018 + 1 < PrintSize.size()) Strn0002 += "\n";
+     Vrab0018 += 1;
+    }
+    std::cout << Strn0002;
+    PrintSize.resize(Vrab0019);
+   }
+   bool FPSDisplay = false;
+   DATASAVE Save;
+  }; PLATFORM Platform;
+ //-//
  //System Functions
   void Platform_Graphic();
   void Platform_AngelScript(bool);
@@ -598,16 +815,17 @@
     }
    }
    Bmap0001 = CreateBitmap(Vrab0008, Vrab0009, 1, 8*4, Cref0002); Phdc0002 = CreateCompatibleDC(Phdc0001); SelectObject(Phdc0002, Bmap0001); BitBlt(Phdc0001, Vrab0015, Vrab0016, Vrab0008, Vrab0009, Phdc0002, 0, 0, SRCCOPY);
-   if(Vrab0005){Strn0001 = std::to_string(Vrab0014); Wstr0001 = std::wstring(Strn0001.begin(), Strn0001.end()); TextOutW(Phdc0001, 0, 0, Wstr0001.c_str(), Strn0001.length());} DeleteObject(Bmap0001); DeleteDC(Phdc0002); return;
+   if(Platform.FPSDisplay){Strn0001 = std::to_string(Vrab0014); Wstr0001 = std::wstring(Strn0001.begin(), Strn0001.end()); TextOutW(Phdc0001, 0, 0, Wstr0001.c_str(), Strn0001.length());} DeleteObject(Bmap0001); DeleteDC(Phdc0002); return;
   }
-  void Platform_Error()
+  void Platform_Console()
   {
-   File0002.open("Database\\System.as");
+   if(Vrab0005) return;
    int16 Vrab01 = 60;
-   if(File0002.is_open()){while(File0002){File0002 >> Strn0001; if(Strn0001.compare("ConsoleBuffer") == 0){File0002 >> Strn0001; File0002 >> Vrab01; goto Labl0005;}} File0002.close();}
-   Labl0005:
-   File0002.close();
+   File0002.open("Database\\System.as");
+   if(File0002.is_open()){while(File0002){File0002 >> Strn0001; if(Strn0001.compare("ConsoleBuffer") == 0){File0002 >> Strn0001 >> Vrab01; goto Labl0006;}} File0002.close();}
+   Labl0006: File0002.close();
    switch(Vrab01){case 60: case 80: case 100: case 120: break; default: Vrab01 = 100; break;}
+   Platform.PrintSize.resize(0); Platform.BufferSize = Vrab01;
    AllocConsole();
    HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
    freopen("CONIN$", "rb", stdin);
@@ -616,13 +834,41 @@
    SMALL_RECT Rect01 = {0, 0, Vrab01, Vrab01 / 2};
    CONSOLE_SCREEN_BUFFER_INFOEX Info01;
    Info01.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+   SetConsoleScreenBufferSize(Hand01, {Vrab01, 150});
    GetConsoleScreenBufferInfoEx(Hand01, &Info01);
    Info01.wAttributes = true;
    Info01.srWindow = Rect01;
    Info01.ColorTable[0] = RGB(255, 255, 255);
    Info01.ColorTable[1] = RGB(0, 0, 0);
    Info01.ColorTable[7] = RGB(0, 0, 0);
+   SetConsoleScreenBufferInfoEx(Hand01, &Info01);
+   SetConsoleTitleA("Windows Console API - LF2 Enchanted 3rd");
+   Vrab0005 = true;
+  }
+  void Platform_Error()
+  {
+   int16 Vrab01 = 60;
+   File0002.open("Database\\System.as");
+   if(File0002.is_open()){while(File0002){File0002 >> Strn0001; if(Strn0001.compare("ConsoleBuffer") == 0){File0002 >> Strn0001; File0002 >> Vrab01; goto Labl0005;}} File0002.close();}
+   Labl0005:
+   File0002.close();
+   switch(Vrab01){case 60: case 80: case 100: case 120: break; default: Vrab01 = 100; break;}
+   if(Vrab0005){ShowWindow(GetConsoleWindow(), 0); FreeConsole(); Vrab0005 = false;}
+   AllocConsole();
+   HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
+   freopen("CONIN$", "rb", stdin);
+   freopen("CONOUT$", "wb", stdout);
+   freopen("CONOUT$", "wb", stderr);
+   SMALL_RECT Rect01 = {0, 0, Vrab01, Vrab01 / 2};
+   CONSOLE_SCREEN_BUFFER_INFOEX Info01;
+   Info01.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
    SetConsoleScreenBufferSize(Hand01, {Vrab01, 150});
+   GetConsoleScreenBufferInfoEx(Hand01, &Info01);
+   Info01.wAttributes = true;
+   Info01.srWindow = Rect01;
+   Info01.ColorTable[0] = RGB(255, 255, 255);
+   Info01.ColorTable[1] = RGB(0, 0, 0);
+   Info01.ColorTable[7] = RGB(0, 0, 0);
    SetConsoleScreenBufferInfoEx(Hand01, &Info01);
    SetConsoleTitleA("Windows Console API - LF2 Enchanted 3rd");
    printf("Error while building \'Database\\System.as\';\n\n%s\nPress 'Enter' to exit... \n(Also type 'Y'/'y' to reset it into it's original state.)\n(Or 'R'/'r' to retry.)\n: ", Ostr0001.str().c_str());
@@ -680,20 +926,51 @@
    {
     Labl0002:
     File0001.open("Database\\System.as");
-    File0001 << "uint32 MaximumObjNum = 1500 ;\n void Main(){Platform.FPSDisplay(true); return;}";
+    File0001 << R"""(uint32 MaximumObjNum = 1500 ; uint64 SystemRunTime = 0; void Main(){Platform.FPSDisplay = true; SystemRunTime += 1; if(SystemRunTime == 150) Platform.Save.SaveData(0); if(SystemRunTime == 300) Platform.Save.LoadData(0); return;})""";
     File0001.close();
     goto Labl0003;
    }
    Engi0001 = asCreateScriptEngine();
    RegisterStdString(Engi0001);
    Engi0001->SetMessageCallback(asFUNCTION(Platform_Typing), NULL, asCALL_CDECL);
+   ///////////////////////
+   RegisterScriptArray(Engi0001, true);
+   
+   Engi0001->RegisterObjectType("int32_array", 0, asOBJ_REF|asOBJ_NOCOUNT);
+   Engi0001->RegisterObjectType("bool_array", 0, asOBJ_REF|asOBJ_NOCOUNT);
+   Engi0001->RegisterObjectType("int8_array", 0, asOBJ_REF|asOBJ_NOCOUNT);
+
+   Engi0001->RegisterObjectType("DATASAVE", 0, asOBJ_REF | asOBJ_NOCOUNT);
+   Engi0001->RegisterObjectMethod("DATASAVE", "bool LoadData(uint8 Vrab01)", asMETHOD(DATASAVE, LoadData), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("DATASAVE", "bool SaveData(uint8 Vrab01)", asMETHOD(DATASAVE, SaveData), asCALL_THISCALL);
+   Engi0001->RegisterObjectProperty("DATASAVE", "int8_array UserName", asOFFSET(DATASAVE, UserName));
+
    Engi0001->RegisterObjectType("PLATFORM", 0, asOBJ_REF | asOBJ_NOCOUNT);
-   //Engi0001->RegisterObjectBehaviour("PLATFORM", asBEHAVE_ADDREF, "void AddRef()", asMETHOD(PLATFORM, AddRef), asCALL_THISCALL); Engi0001->RegisterObjectBehaviour("PLATFORM", asBEHAVE_RELEASE, "void ReleaseRef()", asMETHOD(PLATFORM, ReleaseRef), asCALL_THISCALL);
-   Engi0001->RegisterObjectMethod("PLATFORM", "void MaxObject(uint32 Vrab01)", asMETHOD(PLATFORM, MaxObject), asCALL_THISCALL);
-   Engi0001->RegisterObjectMethod("PLATFORM", "void AddObject(uint32 Vrab01, uint8 Vrab02, uint8 Vrab03, uint32 Vrab04, uint32 Vrab05, uint32 Vrab06, uint32 Vrab07, uint32 Vrab08, double Vrab09, double Vrab10, double Vrab11, double Vrab12, double Vrab13, double Vrab14, double Vrab15, double Vrab16)", asMETHOD(PLATFORM, AddObject), asCALL_THISCALL);
-   Engi0001->RegisterObjectMethod("PLATFORM", "void DeleteObject(uint32 Vrab01)", asMETHOD(PLATFORM, DeleteObject), asCALL_THISCALL);
-   Engi0001->RegisterObjectMethod("PLATFORM", "void FPSDisplay(bool Vrab01)", asMETHOD(PLATFORM, FPSDisplay), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void MaxObject(uint32 Varb01)", asMETHOD(PLATFORM, MaxObject), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void AddObject(uint32 Varb01, uint8 Varb02, uint8 Varb03, uint32 Varb04, uint32 Varb05, uint32 Varb06, uint32 Varb07, uint32 Varb08, double Varb09, double Varb10, double Varb11, double Varb12, double Varb13, double Varb14, double Varb15, double Varb16)", asMETHOD(PLATFORM, AddObject), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void DeleteObject(uint32 Varb01)", asMETHOD(PLATFORM, DeleteObject), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void PrintOut()", asMETHOD(PLATFORM, PrintOut), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void PrintClear()", asMETHOD(PLATFORM, PrintClear), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(bool Varb01)", asMETHODPR(PLATFORM, Print, (int2), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(int8 Varb01)", asMETHODPR(PLATFORM, Print, (int8), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(int16 Varb01)", asMETHODPR(PLATFORM, Print, (int16), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(int32 Varb01)", asMETHODPR(PLATFORM, Print, (int32), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(int64 Varb01)", asMETHODPR(PLATFORM, Print, (int64), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(uint8 Varb01)", asMETHODPR(PLATFORM, Print, (uint8), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(uint16 Varb01)", asMETHODPR(PLATFORM, Print, (uint16), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(uint32 Varb01)", asMETHODPR(PLATFORM, Print, (uint32), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(uint64 Varb01)", asMETHODPR(PLATFORM, Print, (uint64), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(float Varb01)", asMETHODPR(PLATFORM, Print, (xint32), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(double Varb01)", asMETHODPR(PLATFORM, Print, (xint64), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("PLATFORM", "void Print(const string &in Varb01)", asMETHODPR(PLATFORM, Print, (const string &Vrab01), void), asCALL_THISCALL);
+   Engi0001->RegisterObjectProperty("PLATFORM", "bool FPSDisplay", asOFFSET(PLATFORM, FPSDisplay));
+   Engi0001->RegisterObjectProperty("PLATFORM", "DATASAVE Save", asOFFSET(PLATFORM, Save));
    Engi0001->RegisterGlobalProperty("PLATFORM Platform", &Platform);
+
+   Engi0001->RegisterObjectMethod("int32_array", "int32 INDEX(uint Varb01) const", asMETHOD(INT32_Array, INDEX), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("bool_array", "bool INDEX(uint Varb01) const", asMETHOD(INT2_Array, INDEX), asCALL_THISCALL);
+   Engi0001->RegisterObjectMethod("int8_array", "int8 INDEX(uint Varb01) const", asMETHOD(INT8_Array, INDEX), asCALL_THISCALL);
+   ///////////////////////
    CScriptBuilder Make01;
    int32 Vrab01 = Make01.StartNewModule(Engi0001, "System");
    if(Vrab01 < 0)
@@ -753,12 +1030,13 @@
    Modu0001 = Engi0001->GetModule("System");
    Func0001 = Modu0001->GetFunctionByDecl("void Main()");
    Cont0001 = Engi0001->CreateContext();
+   if(Vrab0005){ShowWindow(GetConsoleWindow(), 0); FreeConsole(); Vrab0005 = false;}
    AllocConsole();
    HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
    freopen("CONIN$", "rb", stdin);
    freopen("CONOUT$", "wb", stdout);
    freopen("CONOUT$", "wb", stderr);
-   SMALL_RECT Rect01 = {0, 0, 60, 6};
+   SMALL_RECT Rect01 = {0, 0, 50, 1};
    CONSOLE_SCREEN_BUFFER_INFOEX Info01;
    Info01.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
    GetConsoleScreenBufferInfoEx(Hand01, &Info01);
@@ -768,9 +1046,9 @@
    Info01.ColorTable[1] = RGB(0, 0, 0);
    Info01.ColorTable[7] = RGB(0, 0, 0);
    SetConsoleScreenBufferInfoEx(Hand01, &Info01);
-   SetConsoleScreenBufferSize(Hand01, {60, 5});
+   SetConsoleScreenBufferSize(Hand01, {50, 0});
    SetConsoleTitleA("Windows Console API - LF2 Enchanted 3rd");
-   printf("\n\n(): INFO - Rebuilding \'Database\\System.as\'");
+   printf("(): INFO - Rebuilding \'Database\\System.as\'");
    std::this_thread::sleep_for(std::chrono::seconds(1));
    ShowWindow(GetConsoleWindow(), 0); FreeConsole();
   }
