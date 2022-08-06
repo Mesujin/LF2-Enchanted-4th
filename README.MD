@@ -17,7 +17,7 @@ To modify this, you could start from 'main.cpp', but everything else about the g
 Just make sure it's built on Release.
 
 ## Lincense
-[GNU General Public License v3.0](LICENSE) or https://www.gnu.org/licenses/gpl-3.0.en.html
+[GNU General Public License v3.0](LICENSE.MD) or https://www.gnu.org/licenses/gpl-3.0.en.html
 
 
 <br/>
