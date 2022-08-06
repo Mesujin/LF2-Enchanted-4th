@@ -14,7 +14,7 @@
 ## Install & Modify
 To install/build this source, you'll need to copy the '[System.as](https://github.com/Mesujin/LF2-Enchanted-3rd-AI-and-System/)' and copy other datas from the game as it doesn't included here. <br/>
 To modify this, you could start from 'main.cpp', but everything else about the game is located in 'engine.h'. <br/>
-Just make sure the it's built on Release.
+Just make sure it's built on Release.
 
 ## Lincense
 [GNU General Public License v3.0](LICENSE) or https://www.gnu.org/licenses/gpl-3.0.en.html
