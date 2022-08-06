@@ -1,7 +1,7 @@
 <div align="center">
   <img src="icon.jpg" width="120"/>
   <h1>LF2 Enchanted 3rd | Hepta: Enchanted</h1>
-  <p><strong>Most resource belong to Marti Wong & Starsky Wong, developers of LF2</strong></p>
+  <p><strong>Most resources belong to Marti Wong & Starsky Wong, developers of LF2</strong></p>
 </div>
 <br/>
 
