@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.png" width="120"/>
+  <img src="icon.jpg" width="120"/>
   <h1>LF2 Enchanted 3rd | Hepta: Enchanted</h1>
   <p><strong>Mostly belong to Marti Wong & Starsky Wong</strong></p>
 </div>
