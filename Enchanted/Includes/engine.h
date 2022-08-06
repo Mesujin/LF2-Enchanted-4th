@@ -42,6 +42,7 @@
  using xint32 = float;              // -
  using xint64 = double;             // -
  using string = std::string;        // -
+ using memsize = uint32;            // Maximum size of vector.
 //-//
 //Memory / Variables
  //Non-Basic
@@ -70,35 +71,49 @@
 //-//
 //Dynamic Memory / Variables
  struct COLOUR {uint8 Red; uint8 Green; uint8 Blue;};
- struct OBJECT {int1 Exist = false; int1 Loaded = false; uint8 Type = 255; string Address = ""; uint64 PropertyAdd = 0; uint64 FrameAdd = 0; uint64 FrameNum = 0; uint64 GuideAdd = 0;};
  struct DISPLAY {uint8 Red; uint8 Green; uint8 Blue; uint8 BTrans;};
+ struct OBJ_DATA_ID {int1 Exist = false; int1 Loaded = false; uint8 Type = 255; string Address = ""; memsize PropertyAdd; memsize FrameNum; memsize FrameAdd; memsize GuideAdd;};
+ struct OBJ_DATA_PR {string Name; memsize Face; memsize Small; memsize PicNum; memsize PicAdd; uint32 MaxHP; uint32 MovementSpeed; xint64 Weight; uint8 Speciality[15]; memsize StartingFrame;};
+ struct OBJ_DATA_PP {memsize Address; uint32 W; uint32 H; uint32 Row; uint32 Col;};
+ struct OBJ_DATA_FM {int8 FrameType; uint32 State; uint32 State2; uint32 Stat3; uint32 CenterX; uint32 CenterY; uint32 Wait; memsize Next; uint32 Vx; uint32 Vy; uint32 Vz; uint8 InputType[18]; memsize InputFrame[18]; memsize Sound; uint32 MP; int1 HeldA; memsize HeldAAdd; int1 HeldB; memsize HeldBAdd; int1 Catch; memsize CatchAdd; int1 Body; memsize BodyAdd; memsize SpointNum; memsize SpointAdd; memsize BpointNum; memsize BpointAdd; memsize FpointNum; memsize FpointAdd; memsize IpointNum; memsize IpointAdd; memsize RpointNum; memsize RpointAdd; memsize OpointNum; memsize OpointAdd;};
+ struct OBJ_DATA_FD {uint8 Kind; uint32 X; uint32 Y; uint32 W; uint32 H; uint16 Rotate;};
+ struct OBJ_DATA_FA {uint8 kind; uint32 X; uint32 Y; uint32 Z; memsize Action; memsize Velocity;};
+ struct OBJ_DATA_FH {uint8 kind; uint32 X; uint32 Y; uint32 Z; memsize Action; memsize Velocity;};
+ struct OBJ_DATA_FC {};
+ struct OBJ_DATA_FS {};
+ struct OBJ_DATA_FF {};
+ struct OBJ_DATA_FB {};
+ struct OBJ_DATA_FI {};
+ struct OBJ_DATA_FR {};
+ struct OBJ_DATA_FO {};
+ struct OBJ_DATA_GD {};
 
- std::vector <DISPLAY> Display;
+ std::vector < DISPLAY > Display;
  
- std::vector <OBJECT> DATA_ID;           // -
- std::vector <uint32> DATA_Property;     // +>> (+0)Name; (+1)Face; (+2)Small; (+3)Pic_Num; (+4)Pic_Add; (+5)MaxHP; (+6)MovementSpeed; (+7)Weight; (+8 - +22)Speciality; (+23)StartingFrame;
- std::vector <uint32> DATA_Property_Pic; // +>> (+0)Address; (+1)W; (+2)H; (+3)Row; (+4)Col;
- std::vector <uint32> DATA_Frame;        // +>> (+0)Number; (+1)FType; (+2)State; (+3)State2; (+4)State3; (+5)CenterX; (+6)CenterY; (+7)Wait; (+8)Next; (+9)Vx; (+10)Vy; (+11)Vz; (+12 - +29)in_##; (+30)Sound; (+31)MP; (+32)HeldA; (+33)HeldA_Add; (+34)HeldB; (+35)HeldB_Add; (+36)Catch; (+37)Catch_Add; (+38)Body; (+39)Body_Add; (+40)SPoint_Num; (+41)SPoint_Add; (+42)BPoint_Num; (+43)BPoint_Add; (+44)FPoint_Num; (+45)FPoint_Add; (+46)IPoint_Num; (+47)IPoint_Add; (+48)RPoint_Num; (+49)RPoint_Add; (+50)OPoint_Num; (+51)OPoint_Add;
- std::vector <uint32> DATA_Frame_Body;   // +>> (+0)Kind; (+1)X; (+2)Y; (+3)W; (+4)H; (+5)Rotate;
- std::vector <uint32> DATA_Frame_HeldA;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector <uint32> DATA_Frame_HeldB;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector <uint32> DATA_Frame_Catch;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Hurt_Act;
- std::vector <uint32> DATA_Frame_SPoint; // +>> (+0)Pic; (+1)X1; (+2)Y1; (+3)X2; (+4)Y2; (+5)X3; (+6)Y3; (+7)X4; (+8)Y4; (+9)Trans;
- std::vector <uint32> DATA_Frame_FPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z;
- std::vector <uint32> DATA_Frame_BPoint; // +>> (+0)X; (+1)Y;
- std::vector <uint32> DATA_Frame_IPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape; (+8)X_Rot; (+9)Y_Rot; (+10)Z_Rot (+11)Kind;
- std::vector <uint32> DATA_Frame_RPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape;
- std::vector <uint32> DATA_Frame_OPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)ID; (+5)Action;
- std::vector <uint32> DATA_Guide;        // -
+ std::vector < OBJ_DATA_ID > DATA_ID;           // -
+ std::vector < OBJ_DATA_PR > DATA_Property;     // +>> (+0)Name; (+1)Face; (+2)Small; (+3)Pic_Num; (+4)Pic_Add; (+5)MaxHP; (+6)MovementSpeed; (+7)Weight; (+8 - +22)Speciality; (+23)StartingFrame;
+ std::vector < OBJ_DATA_PP > DATA_Property_Pic; // +>> (+0)Address; (+1)W; (+2)H; (+3)Row; (+4)Col;
+ std::vector < OBJ_DATA_FM > DATA_Frame;        // +>> (+0)Number; (+1)FType; (+2)State; (+3)State2; (+4)State3; (+5)CenterX; (+6)CenterY; (+7)Wait; (+8)Next; (+9)Vx; (+10)Vy; (+11)Vz; (+12 - +29)in_##; (+30)Sound; (+31)MP; (+32)HeldA; (+33)HeldA_Add; (+34)HeldB; (+35)HeldB_Add; (+36)Catch; (+37)Catch_Add; (+38)Body; (+39)Body_Add; (+40)SPoint_Num; (+41)SPoint_Add; (+42)BPoint_Num; (+43)BPoint_Add; (+44)FPoint_Num; (+45)FPoint_Add; (+46)IPoint_Num; (+47)IPoint_Add; (+48)RPoint_Num; (+49)RPoint_Add; (+50)OPoint_Num; (+51)OPoint_Add;
+ std::vector < OBJ_DATA_FD > DATA_Frame_Body;   // +>> (+0)Kind; (+1)X; (+2)Y; (+3)W; (+4)H; (+5)Rotate;
+ std::vector < OBJ_DATA_FA > DATA_Frame_HeldA;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
+ std::vector < OBJ_DATA_FH > DATA_Frame_HeldB;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
+ std::vector < OBJ_DATA_FC > DATA_Frame_Catch;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Hurt_Act;
+ std::vector < OBJ_DATA_FS > DATA_Frame_SPoint; // +>> (+0)Pic; (+1)X1; (+2)Y1; (+3)X2; (+4)Y2; (+5)X3; (+6)Y3; (+7)X4; (+8)Y4; (+9)Trans;
+ std::vector < OBJ_DATA_FF > DATA_Frame_FPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z;
+ std::vector < OBJ_DATA_FB > DATA_Frame_BPoint; // +>> (+0)X; (+1)Y;
+ std::vector < OBJ_DATA_FI > DATA_Frame_IPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape; (+8)X_Rot; (+9)Y_Rot; (+10)Z_Rot (+11)Kind; ...
+ std::vector < OBJ_DATA_FR > DATA_Frame_RPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape;
+ std::vector < OBJ_DATA_FO > DATA_Frame_OPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)ID; (+5)Action;
+ std::vector < OBJ_DATA_GD > DATA_Guide;        // -
 
- std::vector <uint32> INDEX_Language;     // -
- std::vector <uint32> INDEX_Frame;        // -
+ std::vector < uint32 > INDEX_Language;     // -
+ std::vector < uint32 > INDEX_Frame;        // -
 
- std::vector <COLOUR> BMP_Color;
- std::vector <uint32> BMP_Index;
- std::vector <uint32> BMP_Width;
- std::vector <uint32> BMP_Height;
- std::vector <string> BMP_Address;
+ std::vector < COLOUR > BMP_Color;
+ std::vector < uint32 > BMP_Index;
+ std::vector < uint32 > BMP_Width;
+ std::vector < uint32 > BMP_Height;
+ std::vector < string > BMP_Address;
 //-//
 //Useful Functions
  int1 SetLang(uint8 Vrab01){switch(Vrab01){case 0: File0002.open(LOCATION_LANG_EN); break; case 1: File0002.open(LOCATION_LANG_ID); break; case 2: File0002.open(LOCATION_LANG_CN); break; case 3: File0002.open(LOCATION_LANG_CN2); break; case 4: File0002.open(LOCATION_LANG_RU); break; case 5: File0002.open(LOCATION_LANG_JP); break;} if(!File0002.is_open()) return false; Strn0002.assign((std::istreambuf_iterator<char>(File0002)), (std::istreambuf_iterator<char>())); Vrab0001 = Strn0002.length(); Vrab0002 = 0; Vrab0003 = 0; INDEX_Language.clear(); INDEX_Language.resize(0); Text0001 = ""; while(Vrab0002 < Vrab0001){if(Strn0002[Vrab0002] == '<') if(Strn0002[Vrab0002 + 1] == '/') if(Strn0002[Vrab0002 + 2] == '>'){Labl0012: Vrab0002 += 3; INDEX_Language.push_back(Vrab0003); Vrab0004 = 0; while(Strn0002[Vrab0002 + Vrab0004] == ' ') Vrab0004 += 1; if(Strn0002[Vrab0002 + Vrab0004] == '\n'){Vrab0004 += 1; Vrab0002 += Vrab0004;} else {if(Strn0002[Vrab0002 + Vrab0004] == '/') if(Strn0002[Vrab0002 + Vrab0004 + 1] == '/'){while(Strn0002[Vrab0002 + Vrab0004 + 2] != '\n') Vrab0004 += 1; Vrab0004 += 3; Vrab0002 += Vrab0004;}}} if(Strn0002[Vrab0002] == '/') if(Strn0002[Vrab0002 + 1] == '/'){Labl0013: Vrab0002 += 2; while(Strn0002[Vrab0002] != '\n') Vrab0002 += 1;} if(Strn0002[Vrab0002] == '\n'){Vrab0004 = 1; while(Strn0002[Vrab0002 + Vrab0004] == '\n') Vrab0004 += 1; if(Strn0002[Vrab0002 + Vrab0004] == '<') if(Strn0002[Vrab0002 + Vrab0004 + 1] == '/') if(Strn0002[Vrab0002 + Vrab0004 + 2] == '>'){Vrab0002 += Vrab0004; goto Labl0012;}} if(Strn0002[Vrab0002] == ' '){Vrab0004 = 1; while(Strn0002[Vrab0002 + Vrab0004] == ' ') Vrab0004 += 1; if(Strn0002[Vrab0002 + Vrab0004] == '/') if(Strn0002[Vrab0002 + Vrab0004 + 1] == '/'){Vrab0002 += Vrab0004; goto Labl0013;}} Text0001 += Strn0002[Vrab0002]; Vrab0003 += 1; Vrab0002 += 1;} File0001.open("TextLangOutPut.txt"); for(Vrab0002 = 0; Vrab0002 < INDEX_Language.size(); ++Vrab0002) File0001 << INDEX_Language[Vrab0002] << " "; File0001 << "\n================\n" << Text0001; File0001.close(); return true;}
