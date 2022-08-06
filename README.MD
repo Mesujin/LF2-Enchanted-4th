@@ -6,18 +6,18 @@
 <br/>
 
 ## Description
-  This is the source of LF2ET's Engine.                                                                  
-  Feel free to modify or anything as this is an open-sourced project, as long as you kept my name, Marti's name, and Starsky's name there, then there's should be no conflict between us.
+This is the source of "LF2 Enchanted 3rd (Hepta: Enchanted)"'s Platform and Engine.                                                                  
+Feel free to modify or anything since this is an open-sourced project, as long as you kept my name, Marti's name, and Starsky's name there, then there's should be no conflict between us.
 
 > LF2ET's Discord Server : https://discord.gg/Wnz3bJuegK
 
 ## Install & Modify
 To install/build this source, you'll need to copy the '[System.as](https://github.com/Mesujin/LF2-Enchanted-3rd-AI-and-System/)' and copy other datas from the game as it doesn't included here. <br/>
 To modify this, you could start from 'main.cpp', but everything else about the game is located in 'engine.h'. <br/>
-Just make sure it's built on Release.
+Just make sure to build this on "Release".
 
 ## Lincense
-[GNU General Public License v3.0](LICENSE) or https://www.gnu.org/licenses/gpl-3.0.en.html
+[GNU General Public License v3.0](LICENSE.MD) or https://www.gnu.org/licenses/gpl-3.0.en.html
 
 
 <br/>
