@@ -1,9 +1,9 @@
 #pragma once
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Source of "Hepta : Enchanted".                                                         //
+// Main source of "Hepta: Enchanted".                                                     //
 // Dunno what to text here, but this is my usual style for a header text...               //
 //                                                                                        //
-// Rights? Dunno how to runs a Rights, but i'm the one who text these codes, so... dunno. //
+// Under GNU General Public License v3.0.                                                 //
 // Last modify - 2022 4 8 5:11 PM                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,31 +74,25 @@
  struct DISPLAY {uint8 Red; uint8 Green; uint8 Blue; uint8 BTrans;};
 
  std::vector <DISPLAY> Display;
-
- std::vector <int8> DATA_INT8;
- std::vector <int32> DATA_INT32;
- std::vector <uint8> DATA_UINT8;
- std::vector <uint16> DATA_UINT16;
- std::vector <uint32> DATA_UINT32;
- std::vector <xint64> DATA_XINT64;
+ 
+ std::vector <OBJECT> DATA_ID;           // -
+ std::vector <uint32> DATA_Property;     // +>> (+0)Name; (+1)Face; (+2)Small; (+3)Pic_Num; (+4)Pic_Add; (+5)MaxHP; (+6)MovementSpeed; (+7)Weight; (+8 - +22)Speciality; (+23)StartingFrame;
+ std::vector <uint32> DATA_Property_Pic; // +>> (+0)Address; (+1)W; (+2)H; (+3)Row; (+4)Col;
+ std::vector <uint32> DATA_Frame;        // +>> (+0)Number; (+1)FType; (+2)State; (+3)State2; (+4)State3; (+5)CenterX; (+6)CenterY; (+7)Wait; (+8)Next; (+9)Vx; (+10)Vy; (+11)Vz; (+12 - +29)in_##; (+30)Sound; (+31)MP; (+32)HeldA; (+33)HeldA_Add; (+34)HeldB; (+35)HeldB_Add; (+36)Catch; (+37)Catch_Add; (+38)Body; (+39)Body_Add; (+40)SPoint_Num; (+41)SPoint_Add; (+42)BPoint_Num; (+43)BPoint_Add; (+44)FPoint_Num; (+45)FPoint_Add; (+46)IPoint_Num; (+47)IPoint_Add; (+48)RPoint_Num; (+49)RPoint_Add; (+50)OPoint_Num; (+51)OPoint_Add;
+ std::vector <uint32> DATA_Frame_Body;   // +>> (+0)Kind; (+1)X; (+2)Y; (+3)W; (+4)H; (+5)Rotate;
+ std::vector <uint32> DATA_Frame_HeldA;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
+ std::vector <uint32> DATA_Frame_HeldB;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
+ std::vector <uint32> DATA_Frame_Catch;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Hurt_Act;
+ std::vector <uint32> DATA_Frame_SPoint; // +>> (+0)Pic; (+1)X1; (+2)Y1; (+3)X2; (+4)Y2; (+5)X3; (+6)Y3; (+7)X4; (+8)Y4; (+9)Trans;
+ std::vector <uint32> DATA_Frame_FPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z;
+ std::vector <uint32> DATA_Frame_BPoint; // +>> (+0)X; (+1)Y;
+ std::vector <uint32> DATA_Frame_IPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape; (+8)X_Rot; (+9)Y_Rot; (+10)Z_Rot (+11)Kind;
+ std::vector <uint32> DATA_Frame_RPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape;
+ std::vector <uint32> DATA_Frame_OPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)ID; (+5)Action;
+ std::vector <uint32> DATA_Guide;        // -
 
  std::vector <uint32> INDEX_Language;     // -
- std::vector <OBJECT> INDEX_ID;           // -
- std::vector <uint32> INDEX_Property;     // +>> (+0)Name; (+1)Face; (+2)Small; (+3)Pic_Num; (+4)Pic_Add; (+5)MaxHP; (+6)MovementSpeed; (+7)Weight; (+8 - +22)Speciality; (+23)StartingFrame;
- std::vector <uint32> INDEX_Property_Pic; // +>> (+0)Address; (+1)W; (+2)H; (+3)Row; (+4)Col;
- std::vector <uint32> INDEX_Frame_Index;  // -
- std::vector <uint32> INDEX_Frame;        // +>> (+0)Number; (+1)FType; (+2)State; (+3)State2; (+4)State3; (+5)CenterX; (+6)CenterY; (+7)Wait; (+8)Next; (+9)Vx; (+10)Vy; (+11)Vz; (+12 - +29)in_##; (+30)Sound; (+31)MP; (+32)HeldA; (+33)HeldA_Add; (+34)HeldB; (+35)HeldB_Add; (+36)Catch; (+37)Catch_Add; (+38)Body; (+39)Body_Add; (+40)SPoint_Num; (+41)SPoint_Add; (+42)BPoint_Num; (+43)BPoint_Add; (+44)FPoint_Num; (+45)FPoint_Add; (+46)IPoint_Num; (+47)IPoint_Add; (+48)RPoint_Num; (+49)RPoint_Add; (+50)OPoint_Num; (+51)OPoint_Add;
- std::vector <uint32> INDEX_Frame_Body;   // +>> (+0)Kind; (+1)X; (+2)Y; (+3)W; (+4)H; (+5)Rotate;
- std::vector <uint32> INDEX_Frame_HeldA;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector <uint32> INDEX_Frame_HeldB;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector <uint32> INDEX_Frame_Catch;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Hurt_Act;
- std::vector <uint32> INDEX_Frame_SPoint; // +>> (+0)Pic; (+1)X1; (+2)Y1; (+3)X2; (+4)Y2; (+5)X3; (+6)Y3; (+7)X4; (+8)Y4; (+9)Trans;
- std::vector <uint32> INDEX_Frame_FPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z;
- std::vector <uint32> INDEX_Frame_BPoint; // +>> (+0)X; (+1)Y;
- std::vector <uint32> INDEX_Frame_IPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape; (+8)X_Rot; (+9)Y_Rot; (+10)Z_Rot (+11)Kind;
- std::vector <uint32> INDEX_Frame_RPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape;
- std::vector <uint32> INDEX_Frame_OPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)ID; (+5)Action;
- std::vector <uint32> INDEX_Guide;        // -
+ std::vector <uint32> INDEX_Frame;        // -
 
  std::vector <COLOUR> BMP_Color;
  std::vector <uint32> BMP_Index;
