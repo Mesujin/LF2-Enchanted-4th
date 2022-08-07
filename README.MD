@@ -12,10 +12,11 @@ Feel free to modify or anything since this is an open-sourced project, as long a
 
 > LF2ET's Discord Server : https://discord.gg/Wnz3bJuegK
 
-## Install & Modify
+## Modify & Install
+To start modifying, you'll need [Microsoft Visual Studio](https://visualstudio.microsoft.com/), 2019 or higher. <br/>
+In modifying, you could start from `main.cpp`, but everything else about the game is located in `engine.h`. <br/>
+Make sure to build this source with `Release` setup. <br/>
 To run this source after you build it, you'll need to copy the "[System.as](https://github.com/Mesujin/LF2-Enchanted-3rd-AI-and-System/)" and copy other datas from the game (simply everything in the "Database") as it doesn't included here. <br/>
-To modify this game, you could start from `main.cpp`, but everything else about the game is located in `engine.h`. <br/>
-Make sure to build this source on `Release`.
 
 ## Lincense
 Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
