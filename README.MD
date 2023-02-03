@@ -14,8 +14,7 @@ Feel free to modify or anything since this is an open-sourced project, as long a
 
 > LF2EF's Discord Server : https://discord.gg/Wnz3bJuegK
 
-<hr/>
-<br>
+<h1></h1>
 
 
 ## Modify & Build
@@ -37,15 +36,13 @@ To run this source after you build it, you'll need to copy the data from the gam
 
 
 <b>Note that i won't explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project.</b>
-<hr>
-<br>
+<h1></h1>
 
 ## Lincense
 Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 > About GNU : https://www.gnu.org/licenses/gpl-3.0.en.html
 
-<hr/>
-<br>
+<h1></h1>
 
 ## Credits
 Powered by DirectXTK and Microsoft Visual Studio 2019 (Professional). <br/>
@@ -58,6 +55,7 @@ Supported by LF-Empire Community.
 
 Resources from Little Fighter 2, by Marti Wong & Starsky Wong.
 > About Little Fighter 2 (LF2) : https://lf2.net
-<div align="center"><h1></h1>
+<h1></h1>
+<div align="center">
 I'll say, this project is one of <a href="https://lf-empire.de/">LF-Empire</a>'s property as this fansite provide me the "power" to work on this project.
 </div>
