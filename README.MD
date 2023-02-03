@@ -1,9 +1,11 @@
 <div align="center">
   <img src="icon.jpg" width="120"/>
-  <h1>LF2 Enchanted 4th | Hepta: Enchanted</h1>
-  <p><strong>Most resources belong to Marti Wong & Starsky Wong, developers of LF2</strong></p>
+  <h1>LF2 Enchanted 4th | Hepta: Enchanted </h2>
+  Most resources belong to Marti Wong & Starsky Wong, developers of LF2
 </div>
+
 <br/>
+<br>
 
 ## Description
 This is the source of `LF2 Enchanted 4th (LF2EF)`'s Platform and Engine.                                                                  
@@ -12,7 +14,8 @@ Feel free to modify or anything since this is an open-sourced project, as long a
 
 > LF2EF's Discord Server : https://discord.gg/Wnz3bJuegK
 
-<br/>
+<hr/>
+<br>
 
 
 ## Modify & Build
@@ -33,15 +36,16 @@ To run this source after you build it, you'll need to copy the data from the gam
 <br>
 
 
-<b>`( Note that i won't explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project. )`</b>
-
-<br/>
+<b>Note that i won't explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project.</b>
+<hr>
+<br>
 
 ## Lincense
 Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 > About GNU : https://www.gnu.org/licenses/gpl-3.0.en.html
 
-<br/>
+<hr/>
+<br>
 
 ## Credits
 Powered by DirectXTK and Microsoft Visual Studio 2019 (Professional). <br/>
@@ -52,12 +56,8 @@ Powered by DirectXTK and Microsoft Visual Studio 2019 (Professional). <br/>
 Supported by LF-Empire Community.
 > About LF-Empire : https://lf-empire.de/lfe-v10/lf-empire <br/>
 
-
-
-<br/>
-<br/>
-
+Resources from Little Fighter 2, by Marti Wong & Starsky Wong.
 > About Little Fighter 2 (LF2) : https://lf2.net
 <div align="center"><h1></h1>
-I'll say, this project is one of the <a href="https://lf-empire.de/">LF-Empire</a>'s property as this fansite provide me the "power" to work on this project.
+I'll say, this project is one of <a href="https://lf-empire.de/">LF-Empire</a>'s property as this fansite provide me the "power" to work on this project.
 </div>
