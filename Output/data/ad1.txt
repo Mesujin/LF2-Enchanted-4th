@@ -1,0 +1,36 @@
+20080825 4 en
+ba 0 422 132 32    ? bae
+ba 132 422 132 32  ? bae
+ba 264 422 132 32  ? bae
+ba 396 422 132 32  ? bae
+ba 528 422 132 32  ? bae
+ba 660 422 132 32  ? bae
+ba 0 454 132 32    ? bae
+ba 132 454 132 32  ? bae
+ba 264 454 132 32  ? bae
+ba 396 454 132 32  ? bae
+ba 528 454 132 32  ? bae
+ba 660 454 132 32  ? bae
+ba 0 486 132 32    ? bae
+ba 132 486 132 32  ? bae
+ba 264 486 132 32  ? bae
+ba 396 486 132 32  ? bae
+ba 528 486 132 32  ? bae
+ba 660 486 132 32  ? bae
+ba 0 518 132 32  http://www.littlefighter.com/advertise bae
+ba 132 518 132 32  ? bae
+ba 264 518 132 32  ? bae
+ba 396 518 132 32  ? bae
+ba 528 518 132 32  ? bae
+ba 660 518 132 32  ? bae
+ta 0 0 0 ? tae
+ta 0 0 0 ? tae
+ta 0 0 0 ? tae
+ta 0 0 0 ? tae
+ta 0 140 300 http://www.herofighter.com tae
+ta 140 280 300 http://www.littlefighter.com/figure_index.html tae
+ta 280 300 300 http://www.littlefighter.com/toolbar tae
+ta 0 0 0 ? tae
+un 0 ? une
+y 0 0 ye
+<end>

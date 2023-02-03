@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\packages\directxtk_desktop_2019.2022.12.16.1\include\</FILEPATH>
+      <FILENAME>WICTextureLoader.h</FILENAME>
+      <LINE>169</LINE>
+      <COLUMN>8</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::DX11::WIC_LOADER_FLAGS' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>DirectX::DX11::|</FUNCTION>
+    <DECORATED>??UDX11@DirectX@@YA?AW4WIC_LOADER_FLAGS@01@W4201@0@Z</DECORATED>
+    <FUNCLINE>169</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\packages\directxtk_desktop_2019.2022.12.16.1\include\</FILEPATH>
+      <FILENAME>Keyboard.h</FILENAME>
+      <LINE>429</LINE>
+      <COLUMN>25</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::Keyboard::Keys' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>DirectX::Keyboard::State::IsKeyDown</FUNCTION>
+    <DECORATED>?IsKeyDown@State@Keyboard@DirectX@@QBA_NW4Keys@23@@Z</DECORATED>
+    <FUNCLINE>429</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\packages\directxtk_desktop_2019.2022.12.16.1\include\</FILEPATH>
+      <FILENAME>GamePad.h</FILENAME>
+      <LINE>214</LINE>
+      <COLUMN>67</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::GamePad::Capabilities::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>DirectX::GamePad::Capabilities::{ctor}</FUNCTION>
+    <DECORATED>??0Capabilities@GamePad@DirectX@@QAE@XZ</DECORATED>
+    <FUNCLINE>214</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\packages\directxtk_desktop_2019.2022.12.16.1\include\</FILEPATH>
+      <FILENAME>Audio.h</FILENAME>
+      <LINE>785</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::AUDIO_ENGINE_FLAGS' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>DirectX::|</FUNCTION>
+    <DECORATED>??UDirectX@@YA?AW4AUDIO_ENGINE_FLAGS@0@W410@0@Z</DECORATED>
+    <FUNCLINE>785</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\packages\directxtk_desktop_2019.2022.12.16.1\include\</FILEPATH>
+      <FILENAME>Audio.h</FILENAME>
+      <LINE>786</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::SOUND_EFFECT_INSTANCE_FLAGS' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>DirectX::|</FUNCTION>
+    <DECORATED>??UDirectX@@YA?AW4SOUND_EFFECT_INSTANCE_FLAGS@0@W410@0@Z</DECORATED>
+    <FUNCLINE>786</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Database\Project\Hepta - Enchanted\Resource\Includes\</FILEPATH>
+      <FILENAME>platform.cpp</FILENAME>
+      <LINE>354</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'DirectX::DX11::SpriteEffects' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>HEPTA_GAME::Render</FUNCTION>
+    <DECORATED>?Render@HEPTA_GAME@@AAEXXZ</DECORATED>
+    <FUNCLINE>185</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>
