@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Includes\device.cpp">
-      <Filter>Platform\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Includes\platform.cpp">
       <Filter>Platform\Main</Filter>
     </ClCompile>

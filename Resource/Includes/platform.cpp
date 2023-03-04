@@ -55,16 +55,35 @@
   } else
   {Success = false;}
  }
+ int0 G_ToggleFullscreen() fastened
+ {
+  auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
+  if(Varb0014)
+  {
+   SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+   SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, 0);
+   uint32 Vrab06 = Varb0002, Vrab07 = Varb0003;
+   ShowWindow(Hwnd01, SW_SHOWNORMAL);
+   SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab06 + 16), static_cast < LONG > (Vrab07 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+  } else
+  {
+   SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_POPUP);
+   SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, WS_EX_TOPMOST);
+   SetWindowPos(Hwnd01, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+   ShowWindow(Hwnd01, SW_SHOWMAXIMIZED);
+  }
+  Varb0014 = !Varb0014;
+ }
 //-//
 
 // Platform Sentry
  int1 HEPTA_DEVICE::WindowSizeChanged(uint32 Vrab01, uint32 Vrab02)
  {
   RECT Rect01; Rect01.left = Rect01.top = 0; Varb0008 = 0; Varb0009 = 0;
+  statics xint64 Vrab05 = rxint64(Vrab01) / rxint64(Varb0002);
+  statics xint64 Vrab06 = rxint64(Vrab02) / rxint64(Varb0003);
   if(Varb0005)
   {
-   xint64 Vrab05 = rxint64(Vrab01) / rxint64(Varb0002);
-   xint64 Vrab06 = rxint64(Vrab02) / rxint64(Varb0003);
    if(Vrab05 != Vrab06)
    {
     if(Vrab05 > Vrab06)
@@ -79,27 +98,13 @@
     Rect01.right = Varb0002; Rect01.bottom = Varb0003;
    }
    if(Vrab05 < Vrab06)
-   {Varb0010 = Vrab05;} else {Varb0010 = Vrab06;}
-  }
-
-  /*if(Vrab03)
+   {Varb0010 = Varb0011 = Vrab05;} else {Varb0010 = Varb0011 = Vrab06;}
+  } else
   {
-   xint64 Vrab05 = rxint64(Varb0002) / rxint64(Vrab01);
-   xint64 Vrab06 = rxint64(Varb0003) / rxint64(Vrab02);
-   if(Vrab05 != Vrab06)
-   {
-    if(Vrab05 > Vrab06)
-    {
-     statics uint64 Vrab07 = L_Rounding(rxint64(Varb0002) * Vrab05);
-     Rect01.left = 1; Rect01.right = 1;
-    } else
-    {
-     statics uint64 Vrab07 = L_Rounding(rxint64(Varb0002) * Vrab06 * (rxint64(Vrab01) / rxint64(Varb0002)));
-     Rect01.right = Vrab01; Rect01.bottom = Vrab07;
-    }
-   } else
-   {Rect01.left = Rect01.top = 0; Rect01.right = Vrab01; Rect01.bottom = Vrab02;}
-  }*/
+   Rect01.right = Varb0002; Rect01.bottom = Varb0003;
+   if(Vrab05 < Vrab06)
+   {Varb0010 = Vrab06; Varb0011 = Vrab05;} else {Varb0010 = Vrab05; Varb0011 = Vrab06;}
+  }
 
   if(m_outputSize == Rect01)
   {
@@ -141,8 +146,8 @@
 
   // TODO: Change the timer settings if you want something other than the default variable timestep mode.
   // e.g. for 60 FPS fixed timestep update logic, call:
-  m_timer.SetFixedTimeStep(false);
-  m_timer.SetTargetElapsedTicks(120);
+  m_timer.SetFixedTimeStep(true);
+  m_timer.SetTargetElapsedSeconds(1.f / 240.f);
     
   m_keyboard = std::make_unique < DirectX::Keyboard > ();
   m_gamepad = std::make_unique < DirectX::GamePad > ();
@@ -154,7 +159,7 @@
   // Executes the basic game loop.
   int0 HEPTA_GAME::Tick()
   {
-   m_timer.Tick([&](){Sond0001.clear(); Disp0001.clear(); Update(m_timer);}); Render();
+   m_timer.Tick([&](){Update(m_timer);}); Render();
    if(!Aeng001->Update()){Aeng001->IsCriticalError(); return;} 
    {
     {
@@ -176,8 +181,7 @@
   // Updates the world.
   int0 HEPTA_GAME::Update(HEPTA_TIMING statics &Time01)
   {
-   P_EngineInput(m_keyboard.get(), m_gamepad.get(), m_mouse.get());
-   P_EngineFrame(Time01.GetElapsedSeconds(), Time01.GetTotalSeconds(), Time01.GetFrameCount(), Time01.GetFramesPerSecond());
+   P_EngineFrame(Time01.GetElapsedSeconds(), Time01.GetTotalSeconds(), Time01.GetFrameCount(), Time01.GetFramesPerSecond(), m_keyboard.get(), m_gamepad.get(), m_mouse.get());
   }
  #pragma endregion
  #pragma region Frame Render
@@ -186,12 +190,12 @@
   {
    if(Varb0007) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
+
    m_deviceResources->PIXBeginEvent(L"Render");
    {
     Pics001->Begin(DirectX::SpriteSortMode_Deferred, Stat001->NonPremultiplied(), Samp001.Get(), nullptr, nullptr, [=]
      {
-      statics auto Cont01 = m_deviceResources->GetD3DDeviceContext();
-      Cont01->PSSetShader(Grap001.Get(), nullptr, 0);
+      m_deviceResources->GetD3DDeviceContext()->PSSetShader(Grap001.Get(), nullptr, 0);
      }
     );
     
@@ -268,9 +272,9 @@
         Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(-Vrab03 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
-      case 2: case 5: // Casual Image Draw
+      case 2: case 6: // Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 5) Vrab04 = 4.0f;
+        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 6) Vrab04 = 4.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
@@ -293,50 +297,50 @@
         Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
        }
       break;
-      case 3: case 6: // Specified Image Draw
+      case 3: case 7: // Specific Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 6) Vrab04 = 4.0f;
+        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 7) Vrab04 = 4.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
         statics insize Vrab03 = Disp0001[Vrab02].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        if(Disp0001[Vrab02].Post_X4 % 90 == 0)
+        auto Effc01 = DirectX::SpriteEffects_None; uint8 Vrab05 = 0;
+        switch(Disp0001[Vrab02].Effect){case 0: break; case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: Vrab05 = (Disp0001[Vrab02].Effect - 4) * 2;break;}
+        if(Vrab05 % 90 == 0)
         {
          statics RECT Rect03 = Pics0001[Vrab03].Get_Image();
-         Rect02.left = rint32(ruint64(Disp0001[Vrab02].Post_X3));
-         Rect02.top = rint32(ruint64(Disp0001[Vrab02].Post_Y3));
+         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab02].Post_X3));
+         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab02].Post_Y3));
          if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2))){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2));}
          if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2))){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2));}
          if(Rect02.right < Rect02.left) Rect02.right = Rect02.left;
          if(Rect02.bottom < Rect02.top) Rect02.bottom = Rect02.top;
 
-         Flts01 = Pics0001[Vrab03].Get_Center();
+         Flts01 = DirectX::XMFLOAT2(rxint32(rint32(rxint32(Rect02.right - Rect02.left) / 2)), rxint32(rint32(rxint32(Rect02.bottom - Rect02.top) / 2)));
          Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
-         Rect01.right = Rect01.left + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         } else
         {
          statics RECT Rect03 = Pics0001[Vrab03].Get_Specified();
-         Rect02.left = rint32(ruint64(Disp0001[Vrab02].Post_X3));
-         Rect02.top = rint32(ruint64(Disp0001[Vrab02].Post_Y3));
+         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab02].Post_X3));
+         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab02].Post_Y3));
          if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2)) - 1){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2)) - 1;}
          if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2)) - 1){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2)) - 1;}
          if(Rect02.right < Rect02.left) Rect02.right = Rect02.left;
          if(Rect02.bottom < Rect02.top) Rect02.bottom = Rect02.top;
          
-         Flts01 = Pics0001[Vrab03].Get_Mid();
+         Flts01 = DirectX::XMFLOAT2(rxint32(rint32(rxint32(Rect02.right - Rect02.left - 2) / 2)), rxint32(rint32(rxint32(Rect02.bottom - Rect02.top - 2) / 2)));
          Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
-         Rect01.right = Rect01.left + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
-        auto Effc01 = DirectX::SpriteEffects_None;
-        switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X4)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Vrab05)), Flts01, Effc01);
        }
       break;
-      case 4: case 7: // Sprited Image Draw
+      case 4: case 8: // Sprite Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 7) Vrab04 = 4.0f;
+        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 8) Vrab04 = 4.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
@@ -359,10 +363,34 @@
         Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
        }
       break;
+      case 5: case 9: // Mirrored Sprite Image Draw
+       {
+        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 9) Vrab04 = 4.0f;
+        RECT Rect01;
+        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
+        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
+        statics insize Vrab03 = Spic0001[Disp0001[Vrab02].Target]; DirectX::XMFLOAT2 Flts01; RECT Rect02;
+        if(Disp0001[Vrab02].Post_X3 % 90 == 0)
+        {
+         Rect02 = Sprt0001[Vrab03].Get_Image(Disp0001[Vrab02].Target); Rect02.left += 1; Rect02.right += 1; Flts01 = Sprt0001[Vrab03].Get_Center();
+         Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+        } else
+        {
+         Rect02 = Sprt0001[Vrab03].Get_Specified(Disp0001[Vrab02].Target); Rect02.left += 1; Rect02.right += 1; Flts01 = Sprt0001[Vrab03].Get_Mid();
+         Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+        }
+        auto Effc01 = DirectX::SpriteEffects_None;
+        switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
+        Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+       }
+      break;
       default: break;
      }
     }
-    Disp0001.clear();
 
     Pics001->End();
    }
@@ -454,7 +482,7 @@
 
    ThrowIfFailed(Dvis01->CreateSamplerState(&Desc01, Samp001.ReleaseAndGetAddressOf()));
 
-   auto Hlsl01 = CSO_Read(L"System\\platform.cso");
+   auto Hlsl01 = CSO_Read(L"Database\\Platform.cso");
    ThrowIfFailed(Dvis01->CreatePixelShader(Hlsl01.data(), Hlsl01.size(), nullptr, Grap001.ReleaseAndGetAddressOf()));
    Stat001->DepthNone();
 
@@ -491,8 +519,7 @@
  {
   remains int1 Vrab02 = false, // in sizemove.
   Vrab03 = false,              // in suspend.
-  Vrab04 = false,              // minimized.
-  Vrab05 = false;              // fullscreen.
+  Vrab04 = false;              // minimized.
   // TODO: Set Vrab05 to true if defaulting to fullscreen.
 
   auto Game01 = reinterpret_cast < HEPTA_GAME* > (GetWindowLongPtr(Hwnd01, GWLP_USERDATA));
@@ -551,9 +578,9 @@
    case WM_RBUTTONUP:
    case WM_MBUTTONDOWN:
    case WM_MBUTTONUP:
-   case WM_MOUSEWHEEL:
    case WM_XBUTTONDOWN:
    case WM_XBUTTONUP:
+   case WM_MOUSEWHEEL:
    case WM_MOUSEHOVER:
     DirectX::Mouse::ProcessMessage(Vrab01, Wpar01, Lpar01);
    break;
@@ -563,25 +590,9 @@
     DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);
    break;
    case WM_SYSKEYDOWN:
-    DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);
+    if(Wpar01 == VK_F4 && (Lpar01 & 0x60000000) == 0x20000000){PostQuitMessage(0); break;}
     if(Wpar01 == VK_RETURN && (Lpar01 & 0x60000000) == 0x20000000) // Implements the classic ALT+ENTER fullscreen toggle.
-    {
-     if(Vrab05)
-     {
-      SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_OVERLAPPEDWINDOW);
-      SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, 0);
-      uint32 Vrab06 = Varb0002, Vrab07 = Varb0003;
-      ShowWindow(Hwnd01, SW_SHOWNORMAL);
-      SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab06 + 16), static_cast < LONG > (Vrab07 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-     } else
-     {
-      SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_POPUP);
-      SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, WS_EX_TOPMOST);
-      SetWindowPos(Hwnd01, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-      ShowWindow(Hwnd01, SW_SHOWMAXIMIZED);
-     }
-     Vrab05 = !Vrab05;
-    }
+    {G_ToggleFullscreen();} else {DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);}
    return 0;
    case WM_MOUSEACTIVATE: // When you click activate the window, we want Mouse to ignore it.
     return MA_ACTIVATEANDEAT;
@@ -596,7 +607,7 @@
  int WINAPI wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
  {
   UNREFERENCED_PARAMETER(Hins02); UNREFERENCED_PARAMETER(Lpws01);
-  
+
   if(!DirectX::XMVerifyCPUSupport()) return 1;
   if(FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return 1;
 
@@ -624,10 +635,15 @@
         // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"EnchantedWindowClass", g_szAppName, WS_POPUP,
         // to default to fullscreen.
    if(!Hwnd01) return 1;
-   
    ShowWindow(Hwnd01, Vrab01);
+
+   {
+    std::ifstream File01("Database\\Platform.cso");
+    if(!File01.is_open()) return rint32(WM_QUIT);
+    File01.close();
+   }
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
-   SetWindowLongPtr(Hwnd01, GWLP_USERDATA, reinterpret_cast < LONG_PTR > (Game0001.get()));
+   SetWindowLongPtrW(Hwnd01, GWLP_USERDATA, reinterpret_cast < LONG_PTR > (Game0001.get()));
    
    GetClientRect(Hwnd01, &Rect01);
    Game0001->Initialize(Hwnd01, Rect01.right - Rect01.left, Rect01.bottom - Rect01.top);
@@ -670,6 +686,538 @@
   Game0001.reset();
 
   CoUninitialize();
-  return static_cast<int>(Mssg01.wParam);
+  return rint32(Mssg01.wParam);
+ }
+//-//
+
+// Platform Device
+ #ifdef __clang__
+  #pragma clang diagnostic ignored "-Wcovered-switch-default"
+  #pragma clang diagnostic ignored "-Wswitch-enum"
+ #endif
+
+ #pragma warning(disable : 4061)
+
+ namespace
+ {
+  #if defined(_DEBUG)
+   // Check for SDK Layer support.
+   inline int1 SdkLayersAvailable() fastened {HRESULT hr = D3D11CreateDevice(nullptr,
+                                                                             D3D_DRIVER_TYPE_NULL,       // There is no need to create a real hardware device.
+                                                                             nullptr,
+                                                                             D3D11_CREATE_DEVICE_DEBUG,  // Check for the SDK layers.
+                                                                             nullptr,                    // Any feature level will do.
+                                                                             0,
+                                                                             D3D11_SDK_VERSION,
+                                                                             nullptr,                    // No need to keep the D3D device reference.
+                                                                             nullptr,                    // No need to know the feature level.
+                                                                             nullptr                     // No need to keep the D3D device context reference.
+                                                                            ); return SUCCEEDED(hr);}
+  #endif
+
+  inline DXGI_FORMAT NoSRGB(DXGI_FORMAT Dxfm01) fastened
+  {
+   switch(Dxfm01)
+   {
+    case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB: return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB: return DXGI_FORMAT_B8G8R8A8_UNORM;
+    case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB: return DXGI_FORMAT_B8G8R8X8_UNORM;
+    default:                              return Dxfm01;
+   }
+  }
+
+  inline lint32 ComputeIntersectionArea(lint32 Vrab01, lint32 Vrab02, lint32 Vrab03, lint32 Vrab04, lint32 Vrab05, lint32 Vrab06, lint32 Vrab07, lint32 Vrab08) fastened
+  {
+   return std::max(0l, std::min(Vrab03, Vrab07) - std::max(Vrab01, Vrab05)) * std::max(0l, std::min(Vrab04, Vrab08) - std::max(Vrab02, Vrab06));
+  }
+ }
+
+ // Constructor for HEPTA_DEVICE.
+ HEPTA_DEVICE::HEPTA_DEVICE(DXGI_FORMAT Dxfm01 = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT Dxfm02 = DXGI_FORMAT_D32_FLOAT, uint32 Vrab01 = 2, D3D_FEATURE_LEVEL Dxfl01 = D3D_FEATURE_LEVEL_9_1, uint32 Vrab02 = c_FlipPresent) fastened :
+  m_screenViewport{},
+  m_backBufferFormat(Dxfm01),
+  m_depthBufferFormat(Dxfm02),
+  m_backBufferCount(Vrab01),
+  m_d3dMinFeatureLevel(Dxfl01),
+  m_window(nullptr),
+  m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1),
+  m_outputSize{0, 0, 1, 1},
+  m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709),
+  m_options(Vrab02 | c_FlipPresent),
+  m_deviceNotify(nullptr)
+ {}
+
+ // Configures the Direct3D device, and stores handles to it and the device context.
+ int0 HEPTA_DEVICE::CreateDeviceResources()
+ {
+  uint32 creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+  #if defined(_DEBUG)
+   if(SdkLayersAvailable())
+   {
+    // If the project is in a debug build, enable debugging via SDK Layers with this flag.
+    creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+   } else
+   {
+    OutputDebugStringA("WARNING: Direct3D Debug Device is not available\n");
+   }
+  #endif
+
+  CreateFactory();
+
+  // Determines whether tearing support is available for fullscreen borderless windows.
+  if(m_options & c_AllowTearing)
+  {
+   BOOL allowTearing = FALSE;
+   Microsoft::WRL::ComPtr < IDXGIFactory5 > Dxif01;
+   HRESULT Hslt01 = m_dxgiFactory.As(&Dxif01);
+   if(SUCCEEDED(Hslt01))
+   {
+    Hslt01 = Dxif01->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing));
+   }
+   if(FAILED(Hslt01) || !allowTearing)
+   {
+    m_options &= ~c_AllowTearing;
+    #ifdef _DEBUG
+     OutputDebugStringA("WARNING: Variable refresh rate displays not supported");
+    #endif
+   }
+  }
+
+  // Disable HDR if we are on an OS that can't support FLIP swap effects
+  if(m_options & c_EnableHDR)
+  {
+   Microsoft::WRL::ComPtr < IDXGIFactory5 > Dxif01;
+   if(FAILED(m_dxgiFactory.As(&Dxif01)))
+   {
+    m_options &= ~c_EnableHDR;
+    #ifdef _DEBUG
+     OutputDebugStringA("WARNING: HDR swap chains not supported");
+    #endif
+   }
+  }
+
+  // Disable FLIP if not on a supporting OS
+  if(m_options & c_FlipPresent)
+  {
+   Microsoft::WRL::ComPtr < IDXGIFactory4 > Dxif01;
+   if(FAILED(m_dxgiFactory.As(&Dxif01)))
+   {
+    m_options &= ~c_FlipPresent;
+    #ifdef _DEBUG
+     OutputDebugStringA("INFO: Flip swap effects not supported");
+    #endif
+   }
+  }
+
+  // Determine DirectX hardware feature levels this app will support.
+  static const D3D_FEATURE_LEVEL s_featureLevels[] = {D3D_FEATURE_LEVEL_11_1,
+                                                      D3D_FEATURE_LEVEL_11_0,
+                                                      D3D_FEATURE_LEVEL_10_1,
+                                                      D3D_FEATURE_LEVEL_10_0,
+                                                      D3D_FEATURE_LEVEL_9_3,
+                                                      D3D_FEATURE_LEVEL_9_2,
+                                                      D3D_FEATURE_LEVEL_9_1};
+
+  UINT featLevelCount = 0;
+  for(; featLevelCount < static_cast < UINT > (std::size(s_featureLevels)); ++featLevelCount)
+  {
+   if(s_featureLevels[featLevelCount] < m_d3dMinFeatureLevel) break;
+  }
+  if(!featLevelCount) throw std::out_of_range("minFeatureLevel too high");
+  
+  // Create the Direct3D 11 API device object and a corresponding context.
+  Microsoft::WRL::ComPtr < IDXGIAdapter1 > Dxia01; GetHardwareAdapter(Dxia01.GetAddressOf());
+  Microsoft::WRL::ComPtr < ID3D11Device > Dvis01;
+  Microsoft::WRL::ComPtr < ID3D11DeviceContext > Cont01;
+  HRESULT Hslt01 = E_FAIL;
+
+  if(Dxia01)
+  {
+   Hslt01 = D3D11CreateDevice(Dxia01.Get(),
+                              D3D_DRIVER_TYPE_UNKNOWN,
+                              nullptr,
+                              creationFlags,
+                              s_featureLevels,
+                              featLevelCount,
+                              D3D11_SDK_VERSION,
+                              Dvis01.GetAddressOf(),  // Returns the Direct3D device created.
+                              &m_d3dFeatureLevel,     // Returns feature level of device created.
+                              Cont01.GetAddressOf());  // Returns the device immediate context.
+  }
+  #if defined(NDEBUG)
+   else
+   {
+    throw std::runtime_error("No Direct3D hardware device found.");
+   }
+  #endif
+  if(FAILED(Hslt01))
+  {
+   // If the initialization fails, fall back to the WARP device.
+   // For more information on WARP, see:
+   // http://go.microsoft.com/fwlink/?LinkId=286690
+   Hslt01 = D3D11CreateDevice(nullptr,
+                              D3D_DRIVER_TYPE_WARP, // Create a WARP device instead of a hardware device.
+                              nullptr,
+                              creationFlags,
+                              s_featureLevels,
+                              featLevelCount,
+                              D3D11_SDK_VERSION,
+                              Dvis01.GetAddressOf(),
+                              &m_d3dFeatureLevel,
+                              Cont01.GetAddressOf());
+  }
+  if(FAILED(Hslt01)) throw std::runtime_error("No compatible Direct3D device found.");
+
+  #ifndef NDEBUG
+   Microsoft::WRL::ComPtr < ID3D11Debug > Ddbg01;
+   if(SUCCEEDED(Dvis01.As(&Ddbg01)))
+   {
+    Microsoft::WRL::ComPtr < ID3D11InfoQueue > Dinq01;
+    if(SUCCEEDED(Ddbg01.As(&Dinq01)))
+    {
+     #ifdef _DEBUG
+      Dinq01->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+      Dinq01->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+     #endif
+     D3D11_MESSAGE_ID Dmsg01 [] = {D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS};
+     D3D11_INFO_QUEUE_FILTER Dfil01 = {};
+     Dfil01.DenyList.NumIDs = static_cast<UINT>(std::size(Dmsg01));
+     Dfil01.DenyList.pIDList = Dmsg01;
+     Dinq01->AddStorageFilterEntries(&Dfil01);
+    }
+   }
+  #endif
+
+  ThrowIfFailed(Dvis01.As(&m_d3dDevice));
+  ThrowIfFailed(Cont01.As(&m_d3dContext));
+  ThrowIfFailed(Cont01.As(&m_d3dAnnotation));
+ }
+
+ // These resources need to be recreated every time the window size is changed.
+ int0 HEPTA_DEVICE::CreateWindowSizeDependentResources()
+ {
+  if(!m_window) throw std::logic_error("Call SetWindow with a valid Win32 window handle");
+
+  // Clear the previous window size specific context.
+  m_d3dContext->OMSetRenderTargets(0, nullptr, nullptr);
+  m_d3dRenderTargetView.Reset();
+  m_d3dDepthStencilView.Reset();
+  m_renderTarget.Reset();
+  m_depthStencil.Reset();
+  m_d3dContext->Flush();
+
+  // Determine the render target size in pixels.
+  statics UINT        backBufferWidth  = std::max < UINT > (static_cast < UINT > (m_outputSize.right - m_outputSize.left), 1u);
+  statics UINT        backBufferHeight = std::max < UINT > (static_cast < UINT > (m_outputSize.bottom - m_outputSize.top), 1u);
+  statics DXGI_FORMAT backBufferFormat = (m_options & (c_FlipPresent | c_AllowTearing | c_EnableHDR)) ? NoSRGB(m_backBufferFormat) : m_backBufferFormat;
+
+  if(m_swapChain)
+  {
+   // If the swap chain already exists, resize it.
+   HRESULT Hslt01 = m_swapChain->ResizeBuffers(m_backBufferCount,
+                                               backBufferWidth,
+                                               backBufferHeight,
+                                               backBufferFormat,
+                                               (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u);
+
+   if(Hslt01 == DXGI_ERROR_DEVICE_REMOVED || Hslt01 == DXGI_ERROR_DEVICE_RESET)
+   {
+    #ifdef _DEBUG
+     {
+      int8 Vect01[64] = {};
+      sprintf_s(Vect01, "Device Lost on ResizeBuffers: Reason code 0x%08X\n",
+      ruint32((Hslt01 == DXGI_ERROR_DEVICE_REMOVED) ? m_d3dDevice->GetDeviceRemovedReason() : Hslt01));
+      OutputDebugStringA(Vect01);
+     }
+    #endif
+
+    // If the device was removed for any reason, a new device and swap chain will need to be created.
+    HandleDeviceLost();
+
+    // Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method and correctly set up the new device.
+    return;
+   } else {ThrowIfFailed(Hslt01);}
+  } else
+  {
+   // Create a descriptor for the swap chain.
+   DXGI_SWAP_CHAIN_DESC1 Dxsc01 = {};
+   Dxsc01.Width = backBufferWidth;
+   Dxsc01.Height = backBufferHeight;
+   Dxsc01.Format = backBufferFormat;
+   Dxsc01.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+   Dxsc01.BufferCount = m_backBufferCount;
+   Dxsc01.SampleDesc.Count = 1;
+   Dxsc01.SampleDesc.Quality = 0;
+   Dxsc01.Scaling = DXGI_SCALING_STRETCH;
+   Dxsc01.SwapEffect = (m_options & (c_FlipPresent | c_AllowTearing | c_EnableHDR)) ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
+   Dxsc01.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+   Dxsc01.Flags = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
+
+   DXGI_SWAP_CHAIN_FULLSCREEN_DESC Dxsf01 = {};
+   Dxsf01.Windowed = TRUE;
+
+   // Create a SwapChain from a Win32 window.
+   ThrowIfFailed(m_dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice.Get(), m_window, &Dxsc01, &Dxsf01, nullptr, m_swapChain.ReleaseAndGetAddressOf()));
+
+   // This class does not support exclusive full-screen mode and prevents DXGI from responding to the ALT+ENTER shortcut.
+   ThrowIfFailed(m_dxgiFactory->MakeWindowAssociation(m_window, DXGI_MWA_NO_ALT_ENTER));
+  }
+
+  // Handle color space settings for HDR
+  UpdateColorSpace();
+
+  // Create a render target view of the swap chain back buffer.
+  ThrowIfFailed(m_swapChain->GetBuffer(0, IID_PPV_ARGS(m_renderTarget.ReleaseAndGetAddressOf())));
+
+  CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, m_backBufferFormat);
+  ThrowIfFailed(m_d3dDevice->CreateRenderTargetView(m_renderTarget.Get(), &renderTargetViewDesc, m_d3dRenderTargetView.ReleaseAndGetAddressOf()));
+
+  if(m_depthBufferFormat != DXGI_FORMAT_UNKNOWN)
+  {
+   // Create a depth stencil view for use with 3D rendering if needed.
+   CD3D11_TEXTURE2D_DESC depthStencilDesc(m_depthBufferFormat,
+                                          backBufferWidth,
+                                          backBufferHeight,
+                                          1, // This depth stencil view has only one texture.
+                                          1, // Use a single mipmap level.
+                                          D3D11_BIND_DEPTH_STENCIL);
+
+   ThrowIfFailed(m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencil.ReleaseAndGetAddressOf()));
+   ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(m_depthStencil.Get(), nullptr, m_d3dDepthStencilView.ReleaseAndGetAddressOf()));
+  }
+
+  // Set the 3D rendering viewport to target the entire window.
+  m_screenViewport = { 0.0f, 0.0f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 1.f };
+ }
+
+ // This method is called when the Win32 window is created (or re-created).
+ int0 HEPTA_DEVICE::SetWindow(HWND Hwnd01, uint32 Vrab01, uint32 Vrab02) fastened
+ {
+  m_window = Hwnd01; m_outputSize.left = m_outputSize.top = 0; m_outputSize.right = Vrab01; m_outputSize.bottom = Vrab02;
+ }
+
+ // Recreate all device resources and set them back to the current state.
+ int0 HEPTA_DEVICE::HandleDeviceLost()
+ {
+  if(m_deviceNotify) m_deviceNotify->OnDeviceLost();
+  
+  m_d3dDepthStencilView.Reset();
+  m_d3dRenderTargetView.Reset();
+  m_renderTarget.Reset();
+  m_depthStencil.Reset();
+  m_swapChain.Reset();
+  m_d3dContext.Reset();
+  m_d3dAnnotation.Reset();
+
+  #ifdef _DEBUG
+   {
+    Microsoft::WRL::ComPtr < ID3D11Debug > Ddbg01;
+    if(SUCCEEDED(m_d3dDevice.As(&Ddbg01))) Ddbg01->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);     
+   }
+  #endif
+
+  m_d3dDevice.Reset();
+  m_dxgiFactory.Reset();
+
+  CreateDeviceResources();
+  CreateWindowSizeDependentResources();
+
+  if(m_deviceNotify) m_deviceNotify->OnDeviceRestored();
+ }
+
+ // Present the contents of the swap chain to the screen.
+ int0 HEPTA_DEVICE::Present()
+ {
+  HRESULT Hslt01 = E_FAIL;
+  if(m_options & c_AllowTearing)
+  {
+   // Recommended to always use tearing if supported when using a sync interval of 0.
+   Hslt01 = m_swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
+  } else
+  {
+   // The first argument instructs DXGI to block until VSync, putting the application
+   // to sleep until the next VSync. This ensures we don't waste any cycles rendering
+   // frames that will never be displayed to the screen.
+   Hslt01 = m_swapChain->Present(1, 0);
+  }
+
+  // Discard the contents of the render target.
+  // This is a valid operation only when the existing contents will be entirely
+  // overwritten. If dirty or scroll rects are used, this call should be removed.
+  m_d3dContext->DiscardView(m_d3dRenderTargetView.Get());
+  
+  // Discard the contents of the depth stencil.
+  if(m_d3dDepthStencilView) m_d3dContext->DiscardView(m_d3dDepthStencilView.Get());
+
+  // If the device was removed either by a disconnection or a driver upgrade, we
+  // must recreate all device resources.
+  if(Hslt01 == DXGI_ERROR_DEVICE_REMOVED || Hslt01 == DXGI_ERROR_DEVICE_RESET)
+  {
+   #ifdef _DEBUG
+    int8 Vect01[64] = {};
+    sprintf_s(Vect01, "Device Lost on Present: Reason code 0x%08X\n",
+    ruint32((Hslt01 == DXGI_ERROR_DEVICE_REMOVED) ? m_d3dDevice->GetDeviceRemovedReason() : Hslt01));
+    OutputDebugStringA(Vect01);
+   #endif
+   
+   HandleDeviceLost();
+  } else
+  {
+   ThrowIfFailed(Hslt01);
+   if(!m_dxgiFactory->IsCurrent()) UpdateColorSpace();
+  }
+ }
+
+ int0 HEPTA_DEVICE::CreateFactory()
+ {
+  #if defined(_DEBUG) && (_WIN32_WINNT >= 0x0603 /*_WIN32_WINNT_WINBLUE*/)
+   int1 Vrab01 = false;
+   {
+    Microsoft::WRL::ComPtr < IDXGIInfoQueue > Dxiq01;
+    if(SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(Dxiq01.GetAddressOf()))))
+    {
+     Vrab01 = true;
+     ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
+
+     Dxiq01->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true);
+     Dxiq01->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true);
+
+     // IDXGISwapChain::GetContainingOutput: The swapchain's Dxad02 does not control the output on which the swapchain's window resides.
+     DXGI_INFO_QUEUE_MESSAGE_ID Dxmg01[] = {80};
+     DXGI_INFO_QUEUE_FILTER Dxfl01 = {};
+     Dxfl01.DenyList.NumIDs = static_cast < UINT > (std::size(Dxmg01));
+     Dxfl01.DenyList.pIDList = Dxmg01;
+     Dxiq01->AddStorageFilterEntries(DXGI_DEBUG_DXGI, &Dxfl01);
+    }
+   }
+
+   if(!Vrab01)
+  #endif
+
+  ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
+ }
+
+ // This method acquires the first available hardware Dxad02.
+ // If no such Dxad02 can be found, *ppAdapter will be set to nullptr.
+ int0 HEPTA_DEVICE::GetHardwareAdapter(IDXGIAdapter1** Dxad01)
+ {
+  *Dxad01 = nullptr;
+  Microsoft::WRL::ComPtr < IDXGIAdapter1 > Dxad02;
+  Microsoft::WRL::ComPtr < IDXGIFactory6 > Dxfc01;
+  HRESULT Hslt01 = m_dxgiFactory.As(&Dxfc01);
+  if(SUCCEEDED(Hslt01))
+  {
+   for(uint32 Vrab01 = 0; SUCCEEDED(Dxfc01->EnumAdapterByGpuPreference(Vrab01, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(Dxad02.ReleaseAndGetAddressOf()))); Vrab01++)
+   {
+    DXGI_ADAPTER_DESC1 desc;
+    ThrowIfFailed(Dxad02->GetDesc1(&desc));
+    
+    // Don't select the Basic Render Driver adapter.
+    if(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
+
+    #ifdef _DEBUG
+     wchar_t Vect01[256] = {};
+     swprintf_s(Vect01, L"Direct3D Dxad02 (%u): VID:%04X, PID:%04X - %ls\n", Vrab01, desc.VendorId, desc.DeviceId, desc.Description);
+     OutputDebugStringW(Vect01);
+    #endif
+
+    break;
+   }
+  }
+
+  if(!Dxad02)
+  {
+   for(uint32 Vrab01 = 0; SUCCEEDED(m_dxgiFactory->EnumAdapters1(Vrab01, Dxad02.ReleaseAndGetAddressOf())); Vrab01++)
+   {
+    DXGI_ADAPTER_DESC1 desc;
+    ThrowIfFailed(Dxad02->GetDesc1(&desc));
+    
+    // Don't select the Basic Render Driver adapter.
+    if(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
+            
+    #ifdef _DEBUG
+     wchar_t Vect01[256] = {};
+     swprintf_s(buff, L"Direct3D Dxad02 (%u): VID:%04X, PID:%04X - %ls\n", Vrab01, desc.VendorId, desc.DeviceId, desc.Description);
+     OutputDebugStringW(Vect01);
+    #endif
+
+    break;
+   }
+  }
+
+  *Dxad01 = Dxad02.Detach();
+ }
+
+ // Sets the color space for the swap chain in order to handle HDR output.
+ int0 HEPTA_DEVICE::UpdateColorSpace()
+ {
+  if(!m_dxgiFactory) return;
+  
+  // Output information is cached on the DXGI Factory. If it is stale we need to create a new factory.
+  if(!m_dxgiFactory->IsCurrent()) CreateFactory();
+
+  DXGI_COLOR_SPACE_TYPE Dxcs01 = DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709;
+  int1 Vrab01 = false;
+  if(m_swapChain)
+  {
+   // To detect HDR support, we will need to check the color space in the primary DXGI output associated with the app at this point in time (using window/display intersection).
+
+   // Get the retangle bounds of the app window.
+   RECT Rect01;
+   if(!GetWindowRect(m_window, &Rect01)) throw std::system_error(std::error_code(rint32(GetLastError()), std::system_category()), "GetWindowRect");
+
+   statics lint32 Vrab02 = Rect01.left, Vrab03 = Rect01.top, Vrab04 = Rect01.right, Vrab05 = Rect01.bottom;
+   lint32 Vrab06 = -1;
+   Microsoft::WRL::ComPtr < IDXGIOutput > Dxou01;
+   Microsoft::WRL::ComPtr < IDXGIAdapter > Dxad02;
+   
+   for(uint32 Vrab07 = 0; SUCCEEDED(m_dxgiFactory->EnumAdapters(Vrab07, Dxad02.ReleaseAndGetAddressOf())); ++Vrab07)
+   {
+    Microsoft::WRL::ComPtr < IDXGIOutput > Dxou02;
+    for(uint32 Vrab08 = 0; SUCCEEDED(Dxad02->EnumOutputs(Vrab08, Dxou02.ReleaseAndGetAddressOf())); ++Vrab08)
+    {
+     // Get the rectangle bounds of current output.
+     DXGI_OUTPUT_DESC Dxod01; ThrowIfFailed(Dxou02->GetDesc(&Dxod01));
+     statics auto& r = Dxod01.DesktopCoordinates;
+
+     // Compute the intersection
+     statics lint32 Vrab09 = ComputeIntersectionArea(Vrab02, Vrab03, Vrab04, Vrab05, r.left, r.top, r.right, r.bottom);
+     if(Vrab09 > Vrab06){Dxou01.Swap(Dxou02); Vrab06 = Vrab09;}
+    }
+   }
+
+   if(Dxou01)
+   {
+    Microsoft::WRL::ComPtr<IDXGIOutput6> Dxou02;
+    if(SUCCEEDED(Dxou01.As(&Dxou02)))
+    {
+     DXGI_OUTPUT_DESC1 Dxod01; ThrowIfFailed(Dxou02->GetDesc1(&Dxod01));
+     
+     // Check if Display output is HDR10.
+     if(Dxod01.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020) Vrab01 = true;
+    }
+   }
+  }
+
+  if((m_options & c_EnableHDR) && Vrab01)
+  switch(m_backBufferFormat)
+  {
+   case DXGI_FORMAT_R10G10B10A2_UNORM: // The application creates the HDR10 signal.
+    Dxcs01 = DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020;
+   break;
+   case DXGI_FORMAT_R16G16B16A16_FLOAT: // The system creates the HDR10 signal; application uses linear values.
+    Dxcs01 = DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P709;
+   break;
+   default: break;
+  }
+
+  m_colorSpace = Dxcs01;
+  Microsoft::WRL::ComPtr < IDXGISwapChain3 > Dxch01;
+
+  if(m_swapChain && SUCCEEDED(m_swapChain.As(&Dxch01)))
+  {
+   uint32 Vrab02 = 0;
+   if(SUCCEEDED(Dxch01->CheckColorSpaceSupport(Dxcs01, &Vrab02)) && (Vrab02 & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT)) ThrowIfFailed(Dxch01->SetColorSpace1(Dxcs01));
+  }
  }
 //-//

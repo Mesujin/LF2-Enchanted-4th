@@ -69,6 +69,7 @@
   using sint16 = signed short;       // -
   using sint32 = signed int;         // -
   using sint64 = signed long long;   // -
+  using lint32 = long;               // -
   using uint8 = unsigned char;       // -
   using uint16 = unsigned short;     // -
   using uint32 = unsigned int;       // -
@@ -121,7 +122,7 @@
     remains absolut uint32 c_AllowTearing = 0x2;
     remains absolut uint32 c_EnableHDR    = 0x4;
     
-    HEPTA_DEVICE(DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D32_FLOAT, UINT backBufferCount = 2, D3D_FEATURE_LEVEL minFeatureLevel = D3D_FEATURE_LEVEL_9_1, unsigned int flags = c_FlipPresent) noexcept;
+    HEPTA_DEVICE(DXGI_FORMAT, DXGI_FORMAT, uint32, D3D_FEATURE_LEVEL, uint32) fastened;
     ~HEPTA_DEVICE() = default;
     HEPTA_DEVICE(HEPTA_DEVICE&&) = default;
     HEPTA_DEVICE& operator= (HEPTA_DEVICE&&) = default;
@@ -161,7 +162,7 @@
     
     private:
      int0 CreateFactory();
-     int0 GetHardwareAdapter(IDXGIAdapter1** ppAdapter);
+     int0 GetHardwareAdapter(IDXGIAdapter1**);
      
      uint32 m_options; // DeviceResources options (see flags above).
    
@@ -392,6 +393,8 @@
    ~HEPTA_PICTURE() = default;
    
    int0 Relocate_Target(){Vrab001 -= 1;}
+   uint32 Get_Width(){return Vrab004;}
+   uint32 Get_Height(){return Vrab005;}
    insize Get_Target(){return Vrab001;}
    RECT Get_Image()
    {
@@ -481,6 +484,7 @@
   };
  //-//
  // Globals
+  int0 G_ToggleFullscreen() fastened;
   namespace {
    struct HEPTA_EXCEPTION : public std::exception
    {
@@ -612,19 +616,47 @@
    int0 G_ClearSprite(insize Vrab01 = 0) fastened
    {
     if(Vrab01 >= Sprt0001.size()) return; statics insize Vrab02 = Sprt0001[Vrab01].Get_Offset();
-    insize Vrab03 = Spic0001.size() - 1;
-    while(Vrab03 != Vrab02){Vrab03 -= 1; Spic0001.pop_back();}
-    Vrab03 = Sprt0001.size() - 1;
-    while(Vrab03 != Vrab01){Vrab03 -= 1; Sprt0001.pop_back();}
+    //insize Vrab03 = Spic0001.size() - 1;
+    //while(Vrab03 != Vrab02){Vrab03 -= 1; Spic0001.pop_back();}
+    //Vrab03 = Sprt0001.size() - 1;
+    //while(Vrab03 != Vrab01){Vrab03 -= 1; Sprt0001.pop_back();}
+    Spic0001.erase(Spic0001.begin() + Vrab02, Spic0001.end());
+    Sprt0001.erase(Sprt0001.begin() + Vrab01, Sprt0001.end());
    }
    int0 G_ClearPic(insize Vrab01 = 0) fastened
    {
     if(Vrab01 >= Pics0001.size()) return;
-    insize Vrab02 = Pics0001.size() - 1;
-    while(Vrab02 != Vrab01){Vrab02 -= 1; Pics0001.pop_back();}
+  //  insize Vrab02 = Pics0001.size() - 1;
+   // while(Vrab02 != Vrab01){Vrab02 -= 1; Pics0001.pop_back();}
+    Pics0001.erase(Pics0001.begin() + Vrab01, Pics0001.end());
    }
    int0 G_CleanUnreferencedImage(insize Vrab01 = 0) fastened
    {
+    return;
+    insize Vrab02 = Imge0001.size(); if(Vrab01 >= Vrab02) return; statics insize Vrab03 = Sprt0001.size(), Vrab04 = Pics0001.size();
+    while(Vrab02 != Vrab01)
+    {
+     Vrab02 -= 1;
+     {insize Vrab05 = 0; while(Vrab05 != Vrab03){if(Sprt0001[Vrab05].Get_Target() == Vrab02) break; Vrab05 += 1;} if(Vrab05 != Vrab03) continue;} // Check whenever it's referenced or not.
+     {insize Vrab05 = 0; while(Vrab05 != Vrab04){if(Pics0001[Vrab05].Get_Target() == Vrab02) break; Vrab05 += 1;} if(Vrab05 != Vrab04) continue;} // Check whenever it's referenced or not.
+
+     // Not Referenced.
+     statics insize Vrab05 = Imge0001.size() - 1;
+     if(Vrab05 == Vrab02) // Easy cleanning or hard cleaning.
+     {
+      Microsoft::WRL::ComPtr < ID3D11Resource > Reso01;
+      Imge0001[Vrab02].Texture->GetResource(Reso01.GetAddressOf());
+      Reso01->Release(); Imge0001[Vrab02].Texture->Release();
+      Reso01.Reset(); Imge0001[Vrab02].Texture.Reset();
+      Imge0001.pop_back();
+     } else
+     {
+     
+     }
+    }
+
+
+    /*
     insize Vrab02 = Imge0001.size(); statics insize Vrab04 = Sprt0001.size(), Vrab05 = Pics0001.size();
     while((Vrab02 -= 1) != Vrab01 - 1)
     {
@@ -634,11 +666,11 @@
      Vrab06 = 0;
      while(Vrab06 != Vrab05){if(Pics0001[Vrab06].Get_Target() == Vrab02) break; Vrab06 += 1;}
      if(Vrab06 != Vrab05) continue;
-     if(Vrab02 == Imge0001.size() - 1){ID3D11ShaderResourceView* Shad01 = Imge0001[Vrab02].Texture.Get(); Imge0001[Vrab02].Texture.Detach(); Shad01->Release(); Imge0001.pop_back();} else 
+     if(Vrab02 == Imge0001.size() - 1){Microsoft::WRL::ComPtr < ID3D11Resource > Reso01; Imge0001[Vrab02].Texture.Get()->GetResource(Reso01.GetAddressOf()); Reso01->Release(); Imge0001[Vrab02].Texture->Release(); Imge0001.pop_back();} else 
      {
       statics insize Vrab07 = Imge0001.size() - 2;
       for(insize Vrab08 = Vrab02; Vrab08 != Vrab07; ++Vrab08) Imge0001[Vrab02] = Imge0001[Vrab02 + 1];
-      {ID3D11ShaderResourceView* Shad01 = Imge0001[Imge0001.size() - 1].Texture.Get(); Imge0001[Imge0001.size() - 1].Texture.Detach(); Shad01->Release(); Imge0001.pop_back();}
+      {Microsoft::WRL::ComPtr < ID3D11Resource > Reso01; statics insize Vrab09 = Imge0001.size() - 1; Imge0001[Vrab09].Texture.Get()->GetResource(Reso01.GetAddressOf()); Reso01->Release(); Imge0001[Vrab09].Texture->Release(); Imge0001.pop_back();}
       insize Vrab08 = 0;
       while(Vrab08 != Vrab04){if(Sprt0001[Vrab08].Get_Target() == Vrab02 + 1) break; Vrab08 += 1;}
       for(insize Vrab09 = Vrab08; Vrab09 != Vrab04; ++Vrab09) Sprt0001[Vrab09].Relocate_Target();
@@ -646,7 +678,7 @@
       while(Vrab08 != Vrab05){if(Pics0001[Vrab08].Get_Target() == Vrab02 + 1) break; Vrab08 += 1;}
       for(insize Vrab09 = Vrab08; Vrab09 != Vrab05; ++Vrab09) Pics0001[Vrab09].Relocate_Target();
      }
-    }
+    }*/
    }
   };
  //-//
