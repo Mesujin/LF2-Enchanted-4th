@@ -27,6 +27,24 @@
     <ClCompile Include="Includes\platform.cpp">
       <Filter>Platform\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptarray.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptbuilder.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptmath.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptmathcomplex.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptstdstring.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\AngelScript\scriptstdstring_utils.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\engine.h">

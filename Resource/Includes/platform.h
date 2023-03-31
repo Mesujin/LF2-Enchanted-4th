@@ -10,11 +10,11 @@
  
  // Commands
   // General
-   //#include <winsdkver.h>
-   //#ifndef _WIN32_WINNT
-   // #define _WIN32_WINNT 0x0601
-   //#endif
-   //#include <sdkddkver.h>
+   #include <winsdkver.h>
+   #ifndef _WIN32_WINNT
+    #define _WIN32_WINNT 0x0601
+   #endif
+   #include <sdkddkver.h>
 
    #define NOMINMAX   // Use the C++ standard templated min/max.
    #define NODRAWTEXT // DirectX apps don't need GDI.
@@ -32,7 +32,6 @@
    #include <shellapi.h>
 
    #pragma warning (push, 0)
-    #include <DirectXMath.h>
     #include <d3d11_1.h>
     #include <dxgi1_6.h>
    #pragma warning (pop)

@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 // Commands
- //#include "platform.h"
  #include "engine.h"
 //-//
 
@@ -76,7 +75,7 @@
  }
 //-//
 
-// Platform Sentry
+// Platform Sector
  int1 HEPTA_DEVICE::WindowSizeChanged(uint32 Vrab01, uint32 Vrab02)
  {
   RECT Rect01; Rect01.left = Rect01.top = 0; Varb0008 = 0; Varb0009 = 0;
@@ -607,6 +606,8 @@
  int WINAPI wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
  {
   UNREFERENCED_PARAMETER(Hins02); UNREFERENCED_PARAMETER(Lpws01);
+
+  //::LoadLibraryA("Database\\XAudio2.dll");
 
   if(!DirectX::XMVerifyCPUSupport()) return 1;
   if(FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return 1;

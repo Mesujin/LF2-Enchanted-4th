@@ -15,6 +15,14 @@
   #include <chrono>
   #include <filesystem>
   #include "platform.h"
+  
+  // AngelScript
+   #include "AngelScript/angelscript.h"
+   #include "AngelScript/scriptarray.h"
+   #include "AngelScript/scriptmath.h"
+   #include "AngelScript/scriptmathcomplex.h"
+   #include "AngelScript/scriptstdstring.h"
+  //-//
  //-//
  // Earlier Function Declaration
   int0   LF2_Enchanted(uint32, uint64) fastened;
@@ -22,12 +30,15 @@
   int32  L_Numbering(string) fastened;
   int32  L_Rounding(xint64) fastened;
   int64  L_Rounding64(xint64) fastened;
+  uint64 L_Random(uint64 Vrab01) fastened;
+  uint64 L_Interprocessing(statics string&) fastened;
   xint64 L_Doubling(string) fastened;
   string L_Number(insize) fastened;
   string L_Lowercase(string) fastened;
   string L_Spacemaker(string) fastened;
   string L_Execute(statics string) fastened;
   string L_Rename(string, string) fastened;
+  string L_Focus(statics string) fastened;
  //-//
  // Memory / Variables
   // Basic
@@ -114,7 +125,32 @@
 
      int1  RESH_CAPS;
     };
-
+    
+    struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO
+    {
+     int64 X = 0, Y = 0; int64 H = 0; uint8 Color = 0; string Name;
+     xint64 HP = 0.0, DHP = 0.0, MHP = 0.0, MP = 0.0, MMP = 0.0;
+     uint8 Integrate = 0; int64 C = 0;
+    };
+    struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT
+    {
+     int1 Facing = false;
+     uint8 Trans = 255;
+     int64 X = 0, Y = 0, Z = 0, W = 0, H = 0;
+     uint32 Rotate = 0;
+     insize Pic = rinsize(-1); insize Pic_M = rinsize(-1);
+     int1 Character = false;
+     unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO > Info;
+    };
+    struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT
+    {
+     int1 Sprite = false;
+     int1 Facing = false;
+     uint8 Trans = 255;
+     int64 X = 0, Y = 0, W = 0, H = 0;
+     uint32 Rotate = 0;
+     insize Pic = rinsize(-1);
+    };
     struct HEPTA_LF2_ENCHANTED_PROSPECTIVE_DRAW
     {
      xint64 X = 0; xint64 Y = 0; xint64 Z = 0; insize D = 0; int1 F = false;
@@ -127,10 +163,9 @@
     };
     struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW
     {
-     string Name;
-     xint64 HP = 0; xint64 DHP = 0; xint64 MHP = 0; xint64 MP = 0; xint64 MMP = 0;
-     insize Pic = rinsize(-1); insize Pic_M = rinsize(-1); uint8 Team = 0; uint8 Player = 0; int1 Facing = false; int1 Shadow = true;
-     int64 X = 0; int64 Y = 0; int64 Z = 0; int64 CenX = 0; int64 CenY = 0; int64 W = 0;
+     int1 Type = false;
+     unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > Object;
+     unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > Effect;
     };
 
     struct HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER 
@@ -232,10 +267,11 @@
      insize Frame = 0, Wait = 0, Team = 0, Owner = 0;
      xint64 X = 0, Y = 0, Z = 0; insize D = 0;
      xint64 X_Vel = 0, Y_Vel = 0, Z_Vel = 0;
+     xint64 Scale = 1.0;
      uint32 Walk_Animation = 0; uint32 Walk_Phase = 0;
      uint32 Run_Animation = 0; uint32 Run_Phase = 0;
 
-
+     insize Target = rinsize(-1);
 
      uint8  Player = 9;
      insize Index = 0;
@@ -250,12 +286,239 @@
      uint8 Cast_A = 0, Cast_D = 0, Cast_J = 0, Cast_RR = 0, Cast_LL = 0, Cast_DRA = 0, Cast_DLA = 0, Cast_DRJ = 0, Cast_DLJ = 0, Cast_DDA = 0, Cast_DDJ = 0, Cast_DUA = 0, Cast_DUJ = 0, Cast_DJA = 0;
      HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT *Data;
     };
+    struct HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT
+    {
+     xint64 X = 0.0, Y = 0.0, Z = 0.0; int1 Exist = true;
+    };
     struct HEPTA_LF2_ENCHANTED_ENGINE1
     {
      HEPTA_LF2_ENCHANTED_ENGINE1()
      {
       std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out); if(File01.is_open()){File01 << "[] INFO - Engine1 : Origin - Starting.\n";}
      }
+
+     // AngelScript
+
+     uint32 MaximumFrame = rinsize(-1);
+     uint32 MaximumObject = rinsize(-1);
+     int32  MaximumMP = 500;
+
+     uint32 ModuleID = 0;
+
+     uint32 ElapsedTime = 0;
+     int32  Background_width = 0;
+     int32  Background_zwidth1 = 0;
+     int32  Background_zwidth2 = 0;
+     int32  Stage = 0;
+     int1   Stage_clear = 0;
+     int32  Stage_bound = 0;
+     int32  Phase = 0;
+     int32  Phase_Count = 0;
+     int32  User = -1;
+
+     int1   L_Gets_int1(uint64 Vrab01) fastened {return *(int1*)Vrab01;}
+     int8   L_Gets_int8(uint64 Vrab01) fastened {return *(int8*)Vrab01;}
+     int16  L_Gets_int16(uint64 Vrab01) fastened {return *(int16*)Vrab01;}
+     int32  L_Gets_int32(uint64 Vrab01) fastened {return *(int32*)Vrab01;}
+     int64  L_Gets_int64(uint64 Vrab01) fastened {return *(int64*)Vrab01;}
+     uint8  L_Gets_uint8(uint64 Vrab01) fastened {return *(uint8*)Vrab01;}
+     uint16 L_Gets_uint16(uint64 Vrab01) fastened {return *(uint16*)Vrab01;}
+     uint32 L_Gets_uint32(uint64 Vrab01) fastened {return *(uint32*)Vrab01;}
+     uint64 L_Gets_uint64(uint64 Vrab01) fastened {return *(uint64*)Vrab01;}
+     xint32 L_Gets_xint32(uint64 Vrab01) fastened {return *(xint32*)Vrab01;}
+     xint64 L_Gets_xint64(uint64 Vrab01) fastened {return *(xint64*)Vrab01;}
+     int1   L_Gets_int1S(const string &Temp01) fastened {return L_Gets_int1(L_Interprocessing(Temp01));}
+     int8   L_Gets_int8S(const string &Temp01) fastened {return L_Gets_int8(L_Interprocessing(Temp01));}
+     int16  L_Gets_int16S(const string &Temp01) fastened {return L_Gets_int16(L_Interprocessing(Temp01));}
+     int32  L_Gets_int32S(const string &Temp01) fastened {return L_Gets_int32(L_Interprocessing(Temp01));}
+     int64  L_Gets_int64S(const string &Temp01) fastened {return L_Gets_int64(L_Interprocessing(Temp01));}
+     uint8  L_Gets_uint8S(const string &Temp01) fastened {return L_Gets_uint8(L_Interprocessing(Temp01));}
+     uint16 L_Gets_uint16S(const string &Temp01) fastened {return L_Gets_uint16(L_Interprocessing(Temp01));}
+     uint32 L_Gets_uint32S(const string &Temp01) fastened {return L_Gets_uint32(L_Interprocessing(Temp01));}
+     uint64 L_Gets_uint64S(const string &Temp01) fastened {return L_Gets_uint64(L_Interprocessing(Temp01));}
+     xint32 L_Gets_xint32S(const string &Temp01) fastened {return L_Gets_xint32(L_Interprocessing(Temp01));}
+     xint64 L_Gets_xint64S(const string &Temp01) fastened {return L_Gets_xint64(L_Interprocessing(Temp01));}
+
+     int0   L_Sets_int1(const uint64 Vrab01, int1 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int1 &Vrab03 = *((int1*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int8(const uint64 Vrab01, int8 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int8 &Vrab03 = *((int8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int16(const uint64 Vrab01, int16 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int16 &Vrab03 = *((int16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int32(const uint64 Vrab01, int32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int32 &Vrab03 = *((int32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int64(const uint64 Vrab01, int64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int64 &Vrab03 = *((int64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint8(const uint64 Vrab01, uint8 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint8 &Vrab03 = *((uint8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint16(const uint64 Vrab01, uint16 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint16 &Vrab03 = *((uint16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint32(const uint64 Vrab01, uint32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint32 &Vrab03 = *((uint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint64(const uint64 Vrab01, uint64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint64 &Vrab03 = *((uint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_xint32(const uint64 Vrab01, xint32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint32 &Vrab03 = *((xint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_xint64(const uint64 Vrab01, xint64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint64 &Vrab03 = *((xint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int1S(const string &Temp01, int1 Vrab01) fastened {L_Sets_int1(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int8S(const string &Temp01, int8 Vrab01) fastened {L_Sets_int8(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int16S(const string &Temp01, int16 Vrab01) fastened {L_Sets_int16(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int32S(const string &Temp01, int32 Vrab01) fastened {L_Sets_int32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int64S(const string &Temp01, int64 Vrab01) fastened {L_Sets_int64(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint8S(const string &Temp01, uint8 Vrab01) fastened {L_Sets_uint8(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint16S(const string &Temp01, uint16 Vrab01) fastened {L_Sets_uint16(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint32S(const string &Temp01, uint32 Vrab01) fastened {L_Sets_uint32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint64S(const string &Temp01, uint64 Vrab01) fastened {L_Sets_uint64(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_xint32S(const string &Temp01, xint32 Vrab01) fastened {L_Sets_xint32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_xint64S(const string &Temp01, xint64 Vrab01) fastened {L_Sets_xint64(L_Interprocessing(Temp01), Vrab01);}
+
+     int0   L_Sets(uint64 Vrab01, const string &Temp01) fastened 
+   {
+    const string Temp02 = L_Lowercase(Temp01);
+    const uint32 Vrab02 = Temp02.size(); uint32 Vrab03 = 0; int1 Vrab04 = true;
+    while(Vrab03 != Vrab02)
+    switch(Temp02.at(Vrab03))
+    {
+     case '\n': Vrab04 = true; case ' ': case ',': case 13: Vrab03 += 1; break; case '-': if(!Vrab04){Vrab03 += 1; break;}
+     default:
+      {
+       string Temp03 = "";
+       while(Vrab03 != Vrab02)
+       {
+        const int8 Vrab05 = Temp02.at(Vrab03); switch(Vrab05)
+        {
+         case '\n': Vrab04 = true; case ' ': case ',': case 13: break; case '-': if(!Vrab04) break;
+         default:
+          Temp03.push_back(Vrab05);
+          Vrab03 += 1;
+         continue;
+        }
+        break;
+       }
+
+       int1 Vrab05 = false; std::vector < uint8 > Vect01;
+       if(Temp03 != "")
+       {
+        if(Temp03 == "-") Vrab04 = false;
+
+        if(Vrab04)
+        {
+         const uint64 Vrab06 = L_Interprocessing(Temp03);
+         if(Vrab06 != 0)
+         {Vrab04 = false; Vrab01 = Vrab06; goto Labl01;}
+        }
+
+        const uint32 Vrab06 = Temp03.size(); uint32 Vrab07 = 0; Vrab05 = true;
+        while(Vrab07 != Vrab06)
+        {
+         string Temp04 = "";
+         const int8 Vrab08 = Temp03.at(Vrab07); switch(Vrab08){case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': break; default: Vrab05 = false; goto Labl01;}
+         Temp04.push_back(Vrab08);
+         Vrab07 += 1; if(Vrab07 == Vrab06)
+         {
+          Temp04.push_back('0');
+         } else
+         {
+          const int8 Vrab09 = Temp03.at(Vrab07); switch(Vrab09){case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': break; default: Vrab05 = false; goto Labl01;}
+          Temp04.push_back(Vrab09);
+          Vrab07 += 1;
+         }
+         Vect01.push_back(ruint8(L_Interprocessing(Temp04)));
+        }
+       }
+
+       Labl01:
+       if(Vrab05)
+       {
+        const uint32 Vrab08 = Vect01.size(); uint32 Vrab09 = 0; DWORD Dwrd01;
+        if(Vrab08 != 0) if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), Vrab08, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0)
+        {
+         while(Vrab09 != Vrab08)
+         {
+          uint8 &Vrab10 = *((uint8*)Vrab01); Vrab10 = Vect01[Vrab09]; Vrab09 += 1; Vrab01 += 1;
+         }
+         VirtualProtect(static_cast < LPVOID > ((uint64*)(Vrab01 - Vrab08)), Vrab08, Dwrd01, &Dwrd01);
+        }
+       }
+
+       Vrab03 += 1; continue;
+      }
+     break;
+    }
+   }
+     int0   L_SetsS(const string &Temp01, const string &Temp02) fastened {L_Sets(L_Interprocessing(Temp01), Temp02);}
+  
+     int0   L_Draw(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04, uint8 Vrab05, uint8 Vrab06, uint8 Vrab07)
+     {
+      G_SetDisplay(0, (Vrab07 + (Vrab06 << 8) + (Vrab05 << 16)), rint64(Vrab01), rint64(Vrab02), 0ui8, 255ui8, rint64(Vrab03), rint64(Vrab04));
+     }
+
+     int1   L_Copy(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03) fastened {if(Vrab01 >= Objects.size()) return false; if(Vrab02 >= MaximumFrame || Vrab02 < 0 || Vrab03 >= MaximumFrame || Vrab03 < 0) return false; Objects[Vrab01].Frame[Vrab03] = Objects[Vrab01].Frame[Vrab02]; return true;}
+     int1   L_Copys(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04) fastened {statics insize Vrab05 = Objects.size(); if(Vrab01 >= Vrab05 || Vrab02 >= Vrab05) return false; if(Vrab03 >= MaximumFrame || Vrab03 < 0 || Vrab04 >= MaximumFrame || Vrab04 < 0) return false;  Objects[Vrab02].Frame[Vrab04] = Objects[Vrab01].Frame[Vrab03]; return true;}
+     uint32 L_Address(int32 Vrab01) fastened {insize Vrab02 = Objects.size(); while(Vrab02 != 0){Vrab02 -= 1; if(Objects[Vrab02].id == rinsize(Vrab01)) return Vrab02;} return rinsize(-1);}
+     int32  L_Random(int32 Vrab01)  fastened {return rint32(::L_Random(ruint64(Vrab01)));}
+     insize L_Generate(int32 Vrab01, int32 Vrab02, int32 Vrab03, xint64 Vrab04, xint64 Vrab05, xint64 Vrab06, uint8 Vrab07) fastened
+     {
+      if(Vrab01 < 0 || Vrab01 >= rint32(MaximumObject)) return rinsize(-1);
+      if(Object[Vrab01].Exist) return rinsize(-1);
+      insize Vrab08 = Objects.size();
+      while(Vrab08 != 0)
+      {
+       Vrab08 -= 1; if(Objects[Vrab08].id == rinsize(Vrab02)){Object[Vrab01].Data = &Objects[Vrab08]; break;}
+       if(Vrab08 == 0) return rinsize(-1);
+      }
+      Object[Vrab01].Frame = rinsize(Vrab03);
+      Object[Vrab01].X = Vrab04;
+      Object[Vrab01].Y = Vrab05;
+      Object[Vrab01].Z = Vrab06;
+      Object[Vrab01].Facing = Vrab07 != 0;
+     }
+     int32  L_Aggring(int32 Vrab01) fastened {if(User == -1) return -1; if(Vrab01 < 0 || Vrab01 >= rint32(MaximumObject)) return -1; if(!Object[Vrab01].Exist) return -1; return (Object[Vrab01].Target = Vrab01);}
+     int0   L_InputClear()          fastened {if(User == -1) return; Object[User].In_A = false; Object[User].In_D = false; Object[User].In_J = false; Object[User].In_C = false; Object[User].In_Up = false; Object[User].In_Left = false; Object[User].In_Down = false; Object[User].In_Right = false;}
+     int0   L_InputUP()             fastened {if(User == -1) return; Object[User].In_Up = Object[User].Input_Up == 0;}
+     int0   L_InputLEFT()           fastened {if(User == -1) return; Object[User].In_Left = Object[User].Input_Left == 0;}
+     int0   L_InputDOWN()           fastened {if(User == -1) return; Object[User].In_Down = Object[User].Input_Down == 0;}
+     int0   L_InputRIGHT()          fastened {if(User == -1) return; Object[User].In_Right = Object[User].Input_Right == 0;}
+     int0   L_InputATTACK()         fastened {if(User == -1) return; Object[User].In_A = Object[User].Input_A == 0;}
+     int0   L_InputDEFEND()         fastened {if(User == -1) return; Object[User].In_D = Object[User].Input_D == 0;}
+     int0   L_InputJUMP()           fastened {if(User == -1) return; Object[User].In_J = Object[User].Input_J == 0;}
+     int0   L_InputCOMMAND()        fastened {if(User == -1) return; Object[User].In_C = Object[User].Input_C == 0;}
+     int0   L_InputUPH()            fastened {if(User == -1) return; Object[User].In_Up = true;}
+     int0   L_InputLEFTH()          fastened {if(User == -1) return; Object[User].In_Left = true;}
+     int0   L_InputDOWNH()          fastened {if(User == -1) return; Object[User].In_Down = true;}
+     int0   L_InputRIGHTH()         fastened {if(User == -1) return; Object[User].In_Right = true;}
+     int0   L_InputATTACKH()        fastened {if(User == -1) return; Object[User].In_A = true;}
+     int0   L_InputDEFENDH()        fastened {if(User == -1) return; Object[User].In_D = true;}
+     int0   L_InputJUMPH()          fastened {if(User == -1) return; Object[User].In_J = true;}
+     int0   L_InputCOMMANDH()       fastened {if(User == -1) return; Object[User].In_C = true;}
+     int0   L_InputDRA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_A == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputATTACK();} else {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_A = false;}}
+     int0   L_InputDLA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_A = false;}}
+     int0   L_InputDUA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_A == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputATTACK();} else    {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_A = false;}}
+     int0   L_InputDDA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_A = false;}}
+     int0   L_InputDRJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_J == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputJUMP();} else   {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_J = false;}}
+     int0   L_InputDLJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_J = false;}}
+     int0   L_InputDUJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_J == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputJUMP();} else      {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_J = false;}}
+     int0   L_InputDDJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_J = false;}}
+     int0   L_InputDJA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_J == 0 && Object[User].Input_A == 0)    {L_InputClear(); L_InputDEFEND(); L_InputJUMP(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_J = false; Object[User].In_A = false;}}
+
+     int0   C_Clear() fastened
+     {
+      HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
+      if(Hand01 == INVALID_HANDLE_VALUE) return;
+      const COORD Cord01 = {0, 0};
+      DWORD Dwrd01, Dwrd02;
+      CONSOLE_SCREEN_BUFFER_INFO Csbi01;
+      if(!GetConsoleScreenBufferInfo(Hand01, &Csbi01)){return;}
+      Dwrd02 = Csbi01.dwSize.X * Csbi01.dwSize.Y;
+      if(!FillConsoleOutputCharacterA(Hand01, ' ', Dwrd02, Cord01, &Dwrd01)){return;}
+      SetConsoleCursorPosition(Hand01, Cord01);
+     }
+     int0   C_PrintAddr(const int0 *Vrab01)    fastened {printf("%p", Vrab01);}
+     int0   C_Print(const int1 Vrab01)         fastened {if(Vrab01){printf("true");} else {printf("false");}}
+     int0   C_Print(const int8 Vrab01)         fastened {printf("%i", Vrab01);}
+     int0   C_Print(const int16 Vrab01)        fastened {printf("%i", Vrab01);}
+     int0   C_Print(const int32 Vrab01)        fastened {printf("%i", Vrab01);}
+     int0   C_Print(const int64 Vrab01)        fastened {printf("%lli", Vrab01);}
+     int0   C_Print(const uint8 Vrab01)        fastened {printf("%u", Vrab01);}
+     int0   C_Print(const uint16 Vrab01)       fastened {printf("%u", Vrab01);}
+     int0   C_Print(const uint32 Vrab01)       fastened {printf("%u", Vrab01);}
+     int0   C_Print(const uint64 Vrab01)       fastened {printf("%llu", Vrab01);}
+     int0   C_Print(const xint32 Vrab01)       fastened {printf("%f", Vrab01);}
+     int0   C_Print(const xint64 Vrab01)       fastened {printf("%Lf", Vrab01);}
+     int0   C_Print(const string &Temp01)      fastened {printf("%s", Temp01.c_str());}
+
+     //-//
+
      int0   Start(statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics insize Vrab04)
      {
       Independent_Team = 5; Mode = Vrab01; Background = Vrab02; Difficult = Vrab03; Max = Vrab04; Object.clear(); Animation[Background].clear(); if(Backgrounds[Background].width < 800) Backgrounds[Background].Shift = L_Rounding(rxint64(800 - Backgrounds[Background].width) / 2);
@@ -378,8 +641,8 @@
            if(Object[Vrab97].Cast_A > 0) Object[Vrab97].Cast_A -= 1;
            if(Object[Vrab97].Cast_D > 0) Object[Vrab97].Cast_D -= 1;
            if(Object[Vrab97].Cast_J > 0) Object[Vrab97].Cast_J -= 1;
-           if(Object[Vrab97].Cast_LL > 0) if(Object[Vrab97].Cast_LL < 246){Object[Vrab97].Cast_LL -= 1;} else {Object[Vrab97].Cast_LL += 1;}
-           if(Object[Vrab97].Cast_RR > 0) if(Object[Vrab97].Cast_RR < 246){Object[Vrab97].Cast_RR -= 1;} else {Object[Vrab97].Cast_RR += 1;}
+           if(Object[Vrab97].Cast_LL > 0) Object[Vrab97].Cast_LL -= 1;
+           if(Object[Vrab97].Cast_RR > 0) Object[Vrab97].Cast_RR -= 1;
            if(Object[Vrab97].In_Up)   {if((++Object[Vrab97].Input_Up) == 255ui8) Object[Vrab97].Input_Up = 250ui8;} else {Object[Vrab97].Input_Up = 0ui8;}
            if(Object[Vrab97].In_Left) {if((++Object[Vrab97].Input_Down) == 255ui8) Object[Vrab97].Input_Down = 250ui8;} else {Object[Vrab97].Input_Down = 0ui8;}
            if(Object[Vrab97].In_Down) {if((++Object[Vrab97].Input_Left) == 255ui8) Object[Vrab97].Input_Left = 250ui8;} else {Object[Vrab97].Input_Left = 0ui8;}
@@ -389,10 +652,10 @@
            if(Object[Vrab97].In_D)    {if((++Object[Vrab97].Input_D) == 255ui8) Object[Vrab97].Input_D = 250ui8;} else {Object[Vrab97].Input_D = 0ui8;}
            if(Object[Vrab97].In_C)    {if((++Object[Vrab97].Input_C) == 255ui8) Object[Vrab97].Input_C = 250ui8;} else {Object[Vrab97].Input_C = 0ui8;}
            if(Object[Vrab97].Input_D == 1){Object[Vrab97].Cast_D = 5; Object[Vrab97].Cast_DRA = 1; Object[Vrab97].Cast_DLA = 1; Object[Vrab97].Cast_DRJ = 1; Object[Vrab97].Cast_DLJ = 1; Object[Vrab97].Cast_DDA = 1; Object[Vrab97].Cast_DDJ = 1; Object[Vrab97].Cast_DUA = 1; Object[Vrab97].Cast_DUJ = 1; Object[Vrab97].Cast_DJA = 1;}
-           if(Object[Vrab97].Input_Left == 1) {if(Object[Vrab97].Cast_LL > 0){if(Object[Vrab97].Cast_LL < 246){Object[Vrab97].Cast_LL = 253;} else {Object[Vrab97].Cast_LL = 0;}} else {Object[Vrab97].Cast_LL = 10;} Object[Vrab97].Cast_RR = 0; if(Object[Vrab97].Cast_DLA == 1){Object[Vrab97].Cast_DLA = 2;} else {Object[Vrab97].Cast_DLA = 0;} if(Object[Vrab97].Cast_DLJ == 1){Object[Vrab97].Cast_DLJ = 2;} else {Object[Vrab97].Cast_DLJ = 0;} Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
-           if(Object[Vrab97].Input_Right == 1){if(Object[Vrab97].Cast_RR > 0){if(Object[Vrab97].Cast_RR < 246){Object[Vrab97].Cast_RR = 253;} else {Object[Vrab97].Cast_RR = 0;}} else {Object[Vrab97].Cast_RR = 10;} Object[Vrab97].Cast_LL = 0; if(Object[Vrab97].Cast_DRA == 1){Object[Vrab97].Cast_DRA = 2;} else {Object[Vrab97].Cast_DRA = 0;} if(Object[Vrab97].Cast_DRJ == 1){Object[Vrab97].Cast_DRJ = 2;} else {Object[Vrab97].Cast_DRJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
-           if(Object[Vrab97].Input_Up == 1)  {if(Object[Vrab97].Cast_DUA == 1){Object[Vrab97].Cast_DUA = 2;} else {Object[Vrab97].Cast_DUA = 0;} if(Object[Vrab97].Cast_DUJ == 1){Object[Vrab97].Cast_DUJ = 2;} else {Object[Vrab97].Cast_DUJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DJA = 0;}
-           if(Object[Vrab97].Input_Down == 1){if(Object[Vrab97].Cast_DDA == 1){Object[Vrab97].Cast_DDA = 2;} else {Object[Vrab97].Cast_DDA = 0;} if(Object[Vrab97].Cast_DDJ == 1){Object[Vrab97].Cast_DDJ = 2;} else {Object[Vrab97].Cast_DDJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
+           if(Object[Vrab97].Input_Left == 1) {if(Object[Vrab97].Cast_DLA == 1){Object[Vrab97].Cast_DLA = 2;} else {Object[Vrab97].Cast_DLA = 0;} if(Object[Vrab97].Cast_DLJ == 1){Object[Vrab97].Cast_DLJ = 2;} else {Object[Vrab97].Cast_DLJ = 0;} Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
+           if(Object[Vrab97].Input_Right == 1){if(Object[Vrab97].Cast_DRA == 1){Object[Vrab97].Cast_DRA = 2;} else {Object[Vrab97].Cast_DRA = 0;} if(Object[Vrab97].Cast_DRJ == 1){Object[Vrab97].Cast_DRJ = 2;} else {Object[Vrab97].Cast_DRJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
+           if(Object[Vrab97].Input_Up == 1)   {if(Object[Vrab97].Cast_DUA == 1){Object[Vrab97].Cast_DUA = 2;} else {Object[Vrab97].Cast_DUA = 0;} if(Object[Vrab97].Cast_DUJ == 1){Object[Vrab97].Cast_DUJ = 2;} else {Object[Vrab97].Cast_DUJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DJA = 0;}
+           if(Object[Vrab97].Input_Down == 1) {if(Object[Vrab97].Cast_DDA == 1){Object[Vrab97].Cast_DDA = 2;} else {Object[Vrab97].Cast_DDA = 0;} if(Object[Vrab97].Cast_DDJ == 1){Object[Vrab97].Cast_DDJ = 2;} else {Object[Vrab97].Cast_DDJ = 0;} Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DUA = 0; Object[Vrab97].Cast_DUJ = 0; Object[Vrab97].Cast_DJA = 0;}
            if(Object[Vrab97].Input_J == 1){Object[Vrab97].Cast_J = 5; if(Object[Vrab97].Cast_DRJ == 2){Object[Vrab97].Cast_DRJ = 3;} else {Object[Vrab97].Cast_DRJ = 0;} if(Object[Vrab97].Cast_DLJ == 2){Object[Vrab97].Cast_DLJ = 3;} else {Object[Vrab97].Cast_DLJ = 0;} if(Object[Vrab97].Cast_DDJ == 2){Object[Vrab97].Cast_DDJ = 3;} else {Object[Vrab97].Cast_DDJ = 0;} if(Object[Vrab97].Cast_DUJ == 2){Object[Vrab97].Cast_DUJ = 3;} else {Object[Vrab97].Cast_DUJ = 0;} if(Object[Vrab97].Cast_DJA == 1){Object[Vrab97].Cast_DJA = 2;} else {Object[Vrab97].Cast_DJA = 0;} Object[Vrab97].Cast_DRA = 0; Object[Vrab97].Cast_DLA = 0; Object[Vrab97].Cast_DDA = 0; Object[Vrab97].Cast_DUA = 0;}
            if(Object[Vrab97].Input_A == 1){Object[Vrab97].Cast_A = 5; if(Object[Vrab97].Cast_DRA == 2){Object[Vrab97].Cast_DRA = 3;} else {Object[Vrab97].Cast_DRA = 0;} if(Object[Vrab97].Cast_DLA == 2){Object[Vrab97].Cast_DLA = 3;} else {Object[Vrab97].Cast_DLA = 0;} if(Object[Vrab97].Cast_DDA == 2){Object[Vrab97].Cast_DDA = 3;} else {Object[Vrab97].Cast_DDA = 0;} if(Object[Vrab97].Cast_DUA == 2){Object[Vrab97].Cast_DUA = 3;} else {Object[Vrab97].Cast_DUA = 0;} if(Object[Vrab97].Cast_DJA == 2){Object[Vrab97].Cast_DJA = 3;} else {Object[Vrab97].Cast_DJA = 0;} Object[Vrab97].Cast_DRJ = 0; Object[Vrab97].Cast_DLJ = 0; Object[Vrab97].Cast_DDJ = 0; Object[Vrab97].Cast_DUJ = 0;}
           } 
@@ -407,21 +670,31 @@
             int1 Vrab94 = false;
             switch(Vrab96)
             {
-             case 110: case 212: Vrab94 = true; break;
+             case 110: case 212: case 213: case 214: case 216: case 217: Vrab94 = true; break;
              default: break;
             }
             switch(Vrab95)
             {
-             case 0: case 1: case 4: case 5: Vrab94 = true; break;
+             case 0: case 1: Vrab94 = true; break;
              default: break;
             }
-            if(Vrab94){if(Object[Vrab97].Input_Left >= 1 && Object[Vrab97].Input_Right == 0) Object[Vrab97].Facing = false; if(Object[Vrab97].Input_Right >= 1 && Object[Vrab97].Input_Left == 0) Object[Vrab97].Facing = true;}
+            if(Vrab94)
+            {
+             if(Object[Vrab97].Input_Left >= 1 && Object[Vrab97].Input_Right == 0) if(Object[Vrab97].Facing){if(Vrab96 == 213 || Vrab96 == 216) Object[Vrab97].Frame += 1; if(Vrab96 == 214 || Vrab96 == 217) Object[Vrab97].Frame -= 1; Object[Vrab97].Facing = false;}
+             if(Object[Vrab97].Input_Right >= 1 && Object[Vrab97].Input_Left == 0)if(!Object[Vrab97].Facing){if(Vrab96 == 213 || Vrab96 == 216) Object[Vrab97].Frame += 1; if(Vrab96 == 214 || Vrab96 == 217) Object[Vrab97].Frame -= 1; Object[Vrab97].Facing = true;}
+            }
            }
            if(Vrab95 == 0 || Vrab95 == 1)
            {
-            if(Object[Vrab97].Cast_LL >= 246){Vrab95 = 2; Object[Vrab97].Facing = false;}
-            if(Object[Vrab97].Cast_RR >= 246){Vrab95 = 2; Object[Vrab97].Facing = true;}
+            if(Object[Vrab97].Cast_LL != 0) if(Object[Vrab97].Input_Left == 1 && Object[Vrab97].Input_Right == 0){Vrab95 = 2; Object[Vrab97].Facing = false;}
+            if(Object[Vrab97].Cast_RR != 0) if(Object[Vrab97].Input_Right == 1 && Object[Vrab97].Input_Left == 0){Vrab95 = 2; Object[Vrab97].Facing = true;}
            }
+           if(Vrab95 == 0 || Vrab95 == 1 || Vrab95 == 10 || Vrab95 == 15)
+           {
+            if(Object[Vrab97].Input_Left == 1 && Object[Vrab97].Input_Right == 0){Object[Vrab97].Cast_LL = 10; Object[Vrab97].Cast_RR = 0;}
+            if(Object[Vrab97].Input_Right == 1 && Object[Vrab97].Input_Left == 0){Object[Vrab97].Cast_RR = 10; Object[Vrab97].Cast_LL = 0;}
+           }
+           if(Object[Vrab97].Cast_LL != 10 && Object[Vrab97].Cast_RR != 10) if((Object[Vrab97].Input_Left == 1 && Object[Vrab97].Input_Right == 0) || (Object[Vrab97].Input_Right == 1 && Object[Vrab97].Input_Left == 0)){Object[Vrab97].Cast_LL = 0; Object[Vrab97].Cast_RR = 0;}
            if(Vrab95 == 0 || Vrab95 == 1)
            {
             xint64 Vrab94 = Object[Vrab97].Data->walking_speed; xint64 Vrab93 = Object[Vrab97].Data->walking_speedz; int1 Vrab92 = false;
@@ -626,42 +899,129 @@
      std::vector < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW > Draw() fastened
      {
       std::vector < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW > Vect01;
-      
-      {
-       std::vector < insize > Vect02; std::vector < uint32 > Vect03; std::vector < xint64 > Vect04;
-       insize Vrab01 = Object.size(); while(Vrab01 != 0)
-       {
-        Vrab01 -= 1;
-        statics insize Vrab02 = Vect02.size(); statics uint32 Vrab03 = Object[Vrab01].Data->type; statics xint64 Vrab04 = Object[Vrab01].Z;
-        insize Vrab05 = 0; while(Vrab05 != Vrab02)
-        {
-         if(Vrab04 < Vect04[Vrab05]) break;
-         if(Vrab03 < Vect03[Vrab05]) break;
-         Vrab05 += 1;
-        }
-        if(Vrab05 == Vrab02){Vect02.push_back(Vrab01); Vect03.push_back(Vrab03); Vect04.push_back(Vrab04);} else
-        {Vect02.insert(Vect02.begin() + Vrab05, Vrab01); Vect03.insert(Vect03.begin() + Vrab05, Vrab03); Vect04.insert(Vect04.begin() + Vrab05, Vrab04);}
-       }
 
-       statics insize Vrab02 = Vect02.size(); insize Vrab03 = 0;
-       while(Vrab03 != Vrab02)
-       {
-        Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW()); statics insize Vrab04 = Vect02[Vrab03];
-        Vect01[Vrab03].X = L_Rounding64(Object[Vrab04].X); Vect01[Vrab03].Y = L_Rounding64(Object[Vrab04].Y); Vect01[Vrab03].Z = L_Rounding64(Object[Vrab04].Z); if(Object[Vrab04].Data->type == 0) Vect01[Vrab03].Name = Object[Vrab04].Name; Vect01[Vrab03].Player = Object[Vrab04].Player - 1; if(Object[Vrab04].Team < 5) Vect01[Vrab03].Team = ruint8(Object[Vrab04].Team) + 1;
-        Vect01[Vrab03].HP = Object[Vrab04].HP; Vect01[Vrab03].DHP = Object[Vrab04].DHP; Vect01[Vrab03].MHP = Object[Vrab04].MHP; Vect01[Vrab03].MP = Object[Vrab04].MP; Vect01[Vrab03].MMP = Object[Vrab04].MMP;
-        statics insize Vrab05 = Object[Vrab04].Frame; if(Vrab05 < Object[Vrab04].Data->Frame.size()) if(Object[Vrab04].Data->Frame[Vrab05].Exist)
+      {
+       std::vector < insize > Vect02; std::vector < uint8 > Vect03; std::vector < xint64 > Vect04;
+
+       // Sorting Order
         {
-         statics insize Vrab06 = Object[Vrab04].Data->Frame[Vrab05].pic; statics insize Vrab07 = Object[Vrab04].Data->file_Index.size(); insize Vrab08 = 0;
-         while(Vrab08 < Vrab07){if(Vrab06 < Object[Vrab04].Data->file_Index[Vrab08]) break; Vrab08 += 1;}
-         if(Vrab08 < Vrab07)
+         insize Vrab01 = Object.size(); while(Vrab01 != 0)
          {
-          Vect01[Vrab03].Pic = Object[Vrab04].Data->file[Vrab08].Picture_Index + Vrab06; statics insize Vrab09 = Object[Vrab04].Data->file[Vrab08].Picture_Mirror_Index; if(Vrab09 != rinsize(-1)) Vect01[Vrab03].Pic_M = Vrab09 + Vrab06;
-          if(Vrab08 > 0){Vect01[Vrab03].Pic -= Object[Vrab04].Data->file_Index[Vrab08 - 1]; if(Vrab09 != rinsize(-1)) Vect01[Vrab03].Pic_M -= Object[Vrab04].Data->file_Index[Vrab08 - 1];}
-          Vect01[Vrab03].Facing = Object[Vrab04].Facing; Vect01[Vrab03].CenX = Object[Vrab04].Data->Frame[Vrab05].centerx; Vect01[Vrab03].CenY = Object[Vrab04].Data->Frame[Vrab05].centery; Vect01[Vrab03].W = Object[Vrab04].Data->file[Vrab08].w;
+          Vrab01 -= 1;
+          if(!Object[Vrab01].Exist) continue;
+          statics uint8 Vrab02 = Object[Vrab01].Data->type; statics xint64 Vrab03 = Object[Vrab01].Z;
+          statics insize Vrab04 = Vect02.size(); insize Vrab05 = 0; while(Vrab05 != Vrab04)
+          {
+           if(Vrab03 < Vect04[Vrab05]) break;
+           if(Vrab03 == Vect04[Vrab05]) if(Vrab02 < Vect03[Vrab05]) break;
+           Vrab05 += 1;
+          }
+          if(Vrab05 == Vrab04){Vect02.push_back(Vrab01); Vect03.push_back(Vrab02); Vect04.push_back(Vrab03);} else
+          {Vect02.insert(Vect02.begin() + Vrab05, Vrab01); Vect03.insert(Vect03.begin() + Vrab05, Vrab02); Vect04.insert(Vect04.begin() + Vrab05, Vrab03);}
          }
         }
-        Vrab03 += 1;
-       }
+        {
+         insize Vrab01 = Effect.size(); while(Vrab01 != 0)
+         {
+          Vrab01 -= 1;
+          if(!Effect[Vrab01].Exist) continue;
+          statics xint64 Vrab02 = Effect[Vrab01].Z;
+          statics insize Vrab03 = Vect02.size(); insize Vrab04 = 0; while(Vrab04 != Vrab03)
+          {
+           if(Vrab02 < Vect04[Vrab04]) break;
+           Vrab04 += 1;
+          }
+          if(Vrab04 == Vrab02){Vect02.push_back(Vrab01); Vect03.push_back(255ui8); Vect04.push_back(Vrab02);} else
+          {Vect02.insert(Vect02.begin() + Vrab04, Vrab01); Vect03.insert(Vect03.begin() + Vrab04, 255ui8); Vect04.insert(Vect04.begin() + Vrab04, Vrab02);}
+         }
+        }
+       //-//
+
+       // Shadows
+        {
+         statics insize Vrab01 = Backgrounds[Background].shadow_Index;
+         statics xint64 Vrab02 = rxint64(Backgrounds[Background].shadowsize[0]), Vrab03 = rxint64(Backgrounds[Background].shadowsize[1]);
+         statics int64 Vrab04 = rint64(Vrab02 / 2), Vrab05 = rint64(Vrab03 / 2);
+         insize Vrab06 = Object.size(); insize Vrab07 = 0;
+         while(Vrab06 != 0)
+         {
+          Vrab06 -= 1;
+          if(!Object[Vrab06].Exist) continue;
+          statics insize Vrab08 = Object[Vrab06].Data->id; if(Vrab08 == 223 || Vrab08 == 224) continue;
+          statics int32 Vrab09 = Object[Vrab06].Blink; if(Vrab09 < 70){if(Vrab09 % 4 > 1) continue;} else {continue;}
+          statics insize Vrab10 = Object[Vrab06].Frame; if(Vrab10 < Object[Vrab06].Data->Frame.size()) if(Object[Vrab06].Data->Frame[Vrab10].Exist) if(Object[Vrab06].Data->Frame[Vrab10].state == 3005) continue;
+          Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+          Vect01[Vrab07].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+          Vect01[Vrab07].Effect->Pic = Vrab01;
+          Vect01[Vrab07].Effect->X = L_Rounding64(Object[Vrab06].X) - Vrab04;
+          Vect01[Vrab07].Effect->Y = L_Rounding64(Object[Vrab06].Z) - Vrab05;
+          Vect01[Vrab07].Effect->W = L_Rounding64((Vrab02 * Object[Vrab06].Scale) - Vrab02);
+          Vect01[Vrab07].Effect->H = L_Rounding64((Vrab03 * Object[Vrab06].Scale) - Vrab03);
+          Vrab07 += 1;
+         }
+        }
+       //-//
+
+       // Entities
+        {
+         insize Vrab01 = Vect01.size();
+         statics insize Vrab02 = Vect02.size(); insize Vrab03 = 0; while(Vrab03 < Vrab02)
+         {
+          if(Vect03[Vrab03] == 255ui8)
+          {
+
+          } else
+          {
+           statics insize Vrab04 = Vect02[Vrab03];
+           statics int32 Vrab05 = Object[Vrab04].Blink; statics insize Vrab06 = Object[Vrab04].Frame; insize Vrab07 = rinsize(-1), Vrab08 = Vrab07; int64 Vrab09 = 0, Vrab10 = 0;
+           if(Vrab05 < 25 && Vrab05 % 4 < 2)
+           if(Vrab06 < Object[Vrab04].Data->Frame.size()) if(Object[Vrab04].Data->Frame[Vrab06].Exist)
+           {
+            statics insize Vrab11 = Object[Vrab04].Data->Frame[Vrab06].pic; statics insize Vrab12 = Object[Vrab04].Data->file_Index.size(); insize Vrab13 = 0;
+            while(Vrab13 < Vrab12){if(Vrab11 < Object[Vrab04].Data->file_Index[Vrab13]) break; Vrab13 += 1;}
+            if(Vrab13 < Vrab12)
+            {
+             Vrab07 = Object[Vrab04].Data->file[Vrab13].Picture_Index + Vrab11; statics insize Vrab14 = Object[Vrab04].Data->file[Vrab13].Picture_Mirror_Index; if(Vrab14 != rinsize(-1)) Vrab08 = Vrab14 + Vrab11;
+             if(Vrab13 > 0){Vrab07 -= Object[Vrab04].Data->file_Index[Vrab13 - 1]; if(Vrab14 != rinsize(-1)) Vrab08 -= Object[Vrab04].Data->file_Index[Vrab13 - 1];}
+             Vrab09 = Object[Vrab04].Data->file[Vrab13].w; Vrab10 = Object[Vrab04].Data->file[Vrab13].h;
+            }
+           }
+           if(Vrab06 != rinsize(-1))
+           {
+            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+            Vect01[Vrab01].Type = true;
+            Vect01[Vrab01].Object = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > ();
+            Vect01[Vrab01].Object->Pic = Vrab07; Vect01[Vrab01].Object->Pic_M = Vrab08;
+            if(Object[Vrab04].Facing)
+            {
+             Vect01[Vrab01].Object->Facing = true;
+             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) - Object[Vrab04].Data->Frame[Vrab06].centerx;
+            } else
+            {
+             Vect01[Vrab01].Object->Facing = false;
+             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) + Object[Vrab04].Data->Frame[Vrab06].centerx - Vrab09;
+            }
+            Vect01[Vrab01].Object->Z = L_Rounding64(Object[Vrab04].Z);
+            Vect01[Vrab01].Object->Y = Vect01[Vrab01].Object->Z + L_Rounding64(Object[Vrab04].Y) - rint64(Object[Vrab04].Data->Frame[Vrab06].centery);
+            {statics xint64 Vrab11 = rxint64(Object[Vrab04].Data->Frame[Vrab06].centery) / 2; Vect01[Vrab01].Object->Y -= L_Rounding64((Vrab11 * Object[Vrab04].Scale) - Vrab11);}
+            Vect01[Vrab01].Object->W = L_Rounding64(rxint64(Vrab09) * Object[Vrab04].Scale) - Vrab09;
+            Vect01[Vrab01].Object->H = L_Rounding64(rxint64(Vrab10) * Object[Vrab04].Scale) - Vrab10;
+            if(Object[Vrab04].Name != "")
+            {
+             Vect01[Vrab01].Object->Character = true;
+             Vect01[Vrab01].Object->Info = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO > ();
+             Vect01[Vrab01].Object->Info->Name = Object[Vrab04].Name;
+             Vect01[Vrab01].Object->Info->X = L_Rounding64(Object[Vrab04].X); Vect01[Vrab01].Object->Info->Y = L_Rounding64(Object[Vrab04].Z); Vect01[Vrab01].Object->Info->C = Object[Vrab04].Data->Frame[Vrab06].centery;
+             Vect01[Vrab01].Object->Info->HP = Object[Vrab04].HP; Vect01[Vrab01].Object->Info->DHP = Object[Vrab04].DHP; Vect01[Vrab01].Object->Info->MHP = Object[Vrab04].MHP; Vect01[Vrab01].Object->Info->MP = Object[Vrab04].MP; Vect01[Vrab01].Object->Info->MMP = Object[Vrab04].MMP;
+             statics insize Vrab11 = Object[Vrab04].Team; if(Vrab11 < 6){Vect01[Vrab01].Object->Info->Color = ruint8(Vrab11) + 1;} else {Vect01[Vrab01].Object->Info->Color = 0;}
+            }
+            Vrab01 += 1;
+           }
+          }
+          Vrab03 += 1;
+         }
+        }
+       //-//
       }
 
       return Vect01;
@@ -1094,6 +1454,141 @@
       }
      }
      uint8  Frame()                                                                  fastened {return 8ui8;}
+     int0   Angel(asIScriptEngine *Engi01, asIScriptEngine *Engi02, asIScriptEngine *Engi03, unique < HEPTA_LF2_ENCHANTED_ENGINE1 > Uniq01) fastened
+     {
+      Engi03->Release();
+      uint8 Vrab01 = 0;
+      while(Vrab01 != 2)
+      {
+       int1 Vrab02 = false;
+       asIScriptEngine *Engi04 = NULL;
+       switch(Vrab01)
+       {
+        case 0: Engi04 = Engi01; break;
+        case 1: Engi04 = Engi02; Vrab02 = true; break;
+        default: break;
+       }
+       Vrab01 += 1;
+
+       Engi04->RegisterObjectType("ENGINE", 0, asOBJ_REF | asOBJ_NOCOUNT);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(bool Value)",   asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (int1 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(int8 Value)",   asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (int8 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(int16 Value)",  asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (int16 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(int32 Value)",  asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (int32 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(int64 Value)",  asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (int64 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(uint8 Value)",  asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (uint8 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(uint16 Value)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (uint16 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(uint32 Value)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (uint32 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(uint64 Value)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (uint64 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(float Value)",  asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (xint32 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(double Value)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (xint64 Vrab01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print(const string &in String)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, C_Print, (statics string &Temp01), int0), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Print_Clear()",       asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, C_Clear), asCALL_THISCALL);
+
+       Engi04->RegisterObjectMethod("ENGINE", "void Input_Clear()",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputClear), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Up()",           asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputUP), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Left()",         asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputLEFT), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Down()",         asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputDOWN), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Right()",        asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputRIGHT), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Attack()",       asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputATTACK), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Defend()",       asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputDEFEND), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Jump()",         asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputJUMP), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Command()",      asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputCOMMAND), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Up_Hold()",      asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputUPH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Left_Hold()",    asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputLEFTH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Down_Hold()",    asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputDOWNH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Right_Hold()",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputRIGHTH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Attack_Hold()",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputATTACKH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Defend_Hold()",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputDEFENDH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Jump_Hold()",    asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputJUMPH), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "void Command_Hold()", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_InputCOMMANDH), asCALL_THISCALL);
+
+       Engi04->RegisterObjectMethod("ENGINE", "int32 Random(int32 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Random), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int32 Set_Enemy(int32 Object)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Aggring), asCALL_THISCALL);
+
+       Engi04->RegisterObjectMethod("ENGINE", "bool   Get_bool(uint64 Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int1), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int8   Get_char(uint64 Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int8), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int8   Get_int8(uint64 Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int8), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int16  Get_int16(uint64 Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int16), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int32  Get_int(uint64 Address)",    asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int32), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int32  Get_int32(uint64 Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int32), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int64  Get_int64(uint64 Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int64), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint8  Get_uint8(uint64 Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint8), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint16 Get_uint16(uint64 Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint16), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint32 Get_uint32(uint64 Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint32), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint64 Get_uint64(uint64 Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint64), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "float  Get_float(uint64 Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_xint32), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "double Get_double(uint64 Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_xint64), asCALL_THISCALL);
+
+       Engi04->RegisterObjectMethod("ENGINE", "bool   Get_bool(const string &in Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int1S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int8   Get_char(const string &in Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int8S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int8   Get_int8(const string &in Address)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int8S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int16  Get_int16(const string &in Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int16S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int32  Get_int(const string &in Address)",    asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int32S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int32  Get_int32(const string &in Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int32S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "int64  Get_int64(const string &in Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_int64S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint8  Get_uint8(const string &in Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint8S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint16 Get_uint16(const string &in Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint16S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint32 Get_uint32(const string &in Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint32S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "uint64 Get_uint64(const string &in Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_uint64S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "float  Get_float(const string &in Address)",  asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_xint32S), asCALL_THISCALL);
+       Engi04->RegisterObjectMethod("ENGINE", "double Get_double(const string &in Address)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Gets_xint64S), asCALL_THISCALL);
+
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 Background",     asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, Background));
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 Maximum_Object", asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumObject));
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 Maximum_Frame",  asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumFrame));
+       Engi04->RegisterObjectProperty("ENGINE", "const int32  Maximum_MP",     asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumMP));
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 Max_Object",     asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumObject));
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 Max_Frame",      asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumFrame));
+       Engi04->RegisterObjectProperty("ENGINE", "const int32  Max_MP",         asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, MaximumMP));
+       Engi04->RegisterObjectProperty("ENGINE", "const uint32 User",           asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, User));
+
+       if(Vrab02)
+       {
+        Engi04->RegisterObjectMethod("ENGINE", "uint32 Copy_Frame(uint32 Data, uint32 Frame1, uint32 Frame2)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Copy), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "uint32 Copy_Data_Frame(uint32 Data1, uint32 Data2, uint32 Frame1, uint32 Frame2)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Copys), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "uint32 Get_ID_Data(uint32 ID)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Address), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "uint32 Set_Object(int32 Owner, uint32 ID, int32 Frame, double X, double Y, double Z, bool Facing)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Generate), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void   Draw_RECT(int32 X_Position, int32 Y_Position, uint32 Width, uint32 Height, uint8 Red, uint8 Green, uint8 Blue)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Draw), asCALL_THISCALL);
+      
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_bool(uint64 Address, bool Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int1), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_char(uint64 Address, int8 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int8), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int8(uint64 Address, int8 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int8), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int16(uint64 Address, int16 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int16), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int(uint64 Address, int32 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int32), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int32(uint64 Address, int32 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int32), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int64(uint64 Address, int64 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int64), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint8(uint64 Address, uint8 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint8), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint16(uint64 Address, uint16 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint16), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint32(uint64 Address, uint32 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint32), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint64(uint64 Address, uint64 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint64), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_float(uint64 Address, float Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_xint32), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_double(uint64 Address, double Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_xint64), asCALL_THISCALL);
+
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_bool(const string &in Address, bool Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int1S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_char(const string &in Address, int8 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int8S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int8(const string &in Address, int8 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int8S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int16(const string &in Address, int16 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int16S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int(const string &in Address, int32 Value)",     asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int32S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int32(const string &in Address, int32 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int32S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_int64(const string &in Address, int64 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_int64S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint8(const string &in Address, uint8 Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint8S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint16(const string &in Address, uint16 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint16S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint32(const string &in Address, uint32 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint32S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_uint64(const string &in Address, uint64 Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_uint64S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_float(const string &in Address, float Value)",   asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_xint32S), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Set_double(const string &in Address, double Value)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets_xint64S), asCALL_THISCALL);
+      
+        Engi04->RegisterObjectMethod("ENGINE", "void Sets(uint64 Address, const string &in Assembly)",           asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_Sets), asCALL_THISCALL);
+        Engi04->RegisterObjectMethod("ENGINE", "void Sets(const string &in Address, const string &in Assembly)", asMETHOD(HEPTA_LF2_ENCHANTED_ENGINE1, L_SetsS), asCALL_THISCALL);
+
+        Engi04->RegisterObjectProperty("ENGINE", "const int32 Module_ID", asOFFSET(HEPTA_LF2_ENCHANTED_ENGINE1, ModuleID));
+       }
+     
+       Engi04->RegisterGlobalProperty("const GAME Game", Uniq01.get());
+       Engi04->RegisterGlobalProperty("const ENGINE Engine", Uniq01.get());
+      }
+     }
      string Debug() fastened {return std::to_string(Object[0].X_Vel);}
      private:
       insize Vrab001 = 0;
@@ -1107,8 +1602,10 @@
       insize Background = 0;
       insize Independent_Team = 0;
       insize Max = 0;
+
       std::vector < int1 > Selectable_Char;
       std::vector < std::vector < uint32 > > Animation;
+      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT > Effect;
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > Object;
      
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT > Objects;         // In-Game's objects.
@@ -1129,7 +1626,102 @@
        {statics insize Vrab04 = Objects.size(); insize Vrab05 = 0; while(Vrab05 < Vrab04){if(Objects[Vrab05].id == Vrab01){Object[Vrab03].Data = &Objects[Vrab05]; break;} Vrab05 += 1;} if(Vrab05 == Vrab04) return rinsize(-1); Object[Vrab03].Exist = true; return Vrab03;}
       }
     };
-
+    
+    struct HEPTA_LF2_ENCHANTED_ANGELSCRIPT
+    {
+     int0   Start()     fastened
+     {
+      Vrab004 = true;
+      int32 Vrab01 = 0; if(Vrab003 > 127){Vrab01 = 0;} else {Vrab01 = 255;}
+      int16 Vrab02 = 0; if(Vrab001) Vrab02 = 400;
+      statics int16 Vrab03 = Vrab002 & 0xFF;
+      AllocConsole();
+      HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
+      freopen("CONIN$", "rb", stdin);   // reopen stdin handle as console window input
+      freopen("CONOUT$", "wb", stdout); // reopen stout handle as console window output
+      freopen("CONOUT$", "wb", stderr); // reopen stderr handle as console window output
+      SMALL_RECT Rect01 = {0, 0, Vrab03, (Vrab03 / 2)};
+      CONSOLE_SCREEN_BUFFER_INFOEX Info01; Info01.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+      SetConsoleScreenBufferSize(Hand01, {Vrab03, (int16)((Vrab03 / 2) - 2 + Vrab02)});
+      GetConsoleScreenBufferInfoEx(Hand01, &Info01);
+      Info01.wAttributes = true; Info01.srWindow = Rect01;
+      Info01.ColorTable[0] = Vrab003 + (Vrab003 << 8) + (Vrab003 << 16);
+      Info01.ColorTable[1] = Vrab01 + (Vrab01 << 8) + (Vrab01 << 16);
+      Info01.ColorTable[7] = Info01.ColorTable[1];
+      SetConsoleScreenBufferInfoEx(Hand01, &Info01);
+      SetConsoleScreenBufferSize(Hand01, {Vrab03, (int16)((Vrab03 / 2) - 2 + Vrab02)});
+      SetConsoleTitleA("AngelScript's Console");
+     }
+     int0   End()       fastened {ShowWindow(GetConsoleWindow(), 0); FreeConsole(); Vrab004 = false;}
+     int0   Switch()    fastened {if(Vrab004){End();} else {Start();}}
+     int0   Print(statics string Temp01) fastened {Temp001 << Temp01;}
+     int0   Message(statics asSMessageInfo *Mesg01, int0*) fastened
+     {
+	  if(Mesg01->section[0] == '\0')
+	  {
+	   printf("%s - %s\n", Mesg01->type == asMSGTYPE_ERROR ? ">< ERROR" : Mesg01->type == asMSGTYPE_WARNING ? ")( WARNING" : "() INFO", Mesg01->message);
+	  } else if(Mesg01->row == 0 && Mesg01->col == 0)
+	  {
+	   printf("%s { %s } - %s\n", Mesg01->type == asMSGTYPE_ERROR ? ">< ERROR" : Mesg01->type == asMSGTYPE_WARNING ? ")( WARNING" : "() INFO", L_Focus(Mesg01->section).c_str(), Mesg01->message);
+	  } else
+	  {
+	   printf("%s { %s [%d, %d] } - %s\n", Mesg01->type == asMSGTYPE_ERROR ? ">< ERROR" : Mesg01->type == asMSGTYPE_WARNING ? ")( WARNING" : "() INFO", L_Focus(Mesg01->section).c_str(), Mesg01->row, Mesg01->col, Mesg01->message);
+	  }
+	 }
+     int0   Set()       fastened
+     {
+      if(Vrab005) Reset();
+      int8 Vrab01 = 0;
+      while(Vrab01 != 3)
+      {
+       asIScriptEngine  *Engi01 = NULL;
+       asIScriptContext *Cont01 = NULL;
+       statics int1 Vrab02 = Vrab01 == 1;
+       Engi01 = asCreateScriptEngine(ANGELSCRIPT_VERSION); if(! Engi01) return;
+       Engi01->SetMessageCallback(asMETHOD(HEPTA_LF2_ENCHANTED_ANGELSCRIPT, Message), NULL, asCALL_CDECL);
+       Cont01 = Engi01->CreateContext();
+       RegisterScriptArray(Engi01, true);
+       RegisterScriptMath(Engi01);
+       RegisterScriptMathComplex(Engi01);
+       RegisterStdString(Engi01);
+       RegisterStdStringUtils(Engi01);
+       switch(Vrab01)
+       {
+        case 0: Engi001 = Engi01; Cont001 = Cont01; break;
+        case 1: Engi002 = Engi01; Cont002 = Cont01; break;
+        case 2: Engi003 = Engi01; Cont003 = Cont01; break;
+        default: break; 
+       }
+       Vrab01 += 1;
+      }
+      Vrab005 = true;
+     }
+     int0   Reset()     fastened
+     {
+      Modu001 = NULL;
+      Engi001->ShutDownAndRelease(); Engi002->ShutDownAndRelease(); Engi003->ShutDownAndRelease();
+      Cont001->Unprepare(); Cont001->Release(); Cont002->Unprepare(); Cont002->Release(); Cont003->Unprepare(); Cont003->Release();
+      if(Vrab004) End();
+      Vrab005 = false;
+     }
+     int1   Available() fastened {return Vrab005;}
+     string Version()   fastened {return ANGELSCRIPT_VERSION_STRING;}
+     private:
+      int1   Vrab001 = false;
+      int16  Vrab002 = 60;
+      int32  Vrab003 = 0;
+      int1   Vrab004 = false;
+      int1   Vrab005 = false;
+      stream Temp001;
+      
+      asIScriptModule  *Modu001 = NULL;
+      asIScriptEngine  *Engi001 = NULL;
+      asIScriptEngine  *Engi002 = NULL;
+      asIScriptEngine  *Engi003 = NULL;
+      asIScriptContext *Cont001 = NULL;
+      asIScriptContext *Cont002 = NULL;
+      asIScriptContext *Cont003 = NULL;
+    };
     struct HEPTA_LF2_ENCHANTED_INFO_MANAGER
     {
      int64 Runtime = 0;
@@ -1168,7 +1760,7 @@
      uint32 Camera_Speed = 100;
      insize Max_SFX = 20;
      insize Max_Object = 2000;
-     string Address = "Database\\Game\\Enchanted\\Origin";
+     string Address = "Database\\Game\\Enchanted\\Origin\\";
      string Data_Address = "data\\data.txt";
 
      // Engine 0 : Original 's Setting
@@ -1238,7 +1830,8 @@
      // Production
       HEPTA_LF2_ENCHANTED_MEMORY Memory[2];                      // System's Memory.
       unique < HEPTA_LF2_ENCHANTED_ENGINE1 > Engine1;            // System's In-Game. (Engine 0)
-    //unique < HEPTA_LF2_ENCHANTED_ENGINE2 > Engine2;             // System's In-Game. (Engine 1)
+    //unique < HEPTA_LF2_ENCHANTED_ENGINE2 > Engine2;            // System's In-Game. (Engine 1)
+      unique < HEPTA_LF2_ENCHANTED_ANGELSCRIPT > Angel;          // System's AngelScript.
       std::vector < insize > Pic_Index_Interface;                // System's pics.
       std::vector < insize > Back_Index_Interface;               // System's background.
       std::vector < insize > Sound_Index_Interface;              // System's sounds.
@@ -1354,7 +1947,7 @@
        }
       }
       string Difficult(statics uint8 Vrab01) fastened {switch(Vrab01){case 0: return "Easy"; case 1: return "Normal"; case 2: return "Hard"; default: return "CRAZY!";}}
-      string Version() fastened {return "v1.0.230215";}
+      string Version() fastened {return "1.0.230331";}
      //-//
      // Core Functions
       int0   Update_Window(uint32 Vrab01, uint32 Vrab02, int1 Vrab03, string Temp01 = "Little Fighter 2 Enchanted 4th") fastened
@@ -1368,8 +1961,9 @@
        Display_CenX = L_Rounding64(rxint64(Vrab01) / 2); Display_CenY = L_Rounding64(rxint64(Vrab02) / 2);
        Display_W = rint64(rint32(Vrab01)); Display_H = rint64(rint32(Vrab02));
       }
-      int0   Save_Memory(statics string Temp01) fastened
+      int0   Save_Memory() fastened
       {
+       statics string Temp01 = "Database\\Game\\Enchanted\\config.ini";
        std::ofstream File01(L_Execute(Temp01));
        if(!File01.is_open()) return;
 
@@ -1410,10 +2004,11 @@
 
        File01.close();
       }
-      int0   Load_Memory(statics string Temp01) fastened
+      int0   Load_Memory() fastened
       {
+       statics string Temp01 = "Database\\Game\\Enchanted\\config.ini";
        std::ifstream File01(Temp01); 
-       if(!File01.is_open()){Save_Memory(Temp01); File01.open(Temp01);}
+       if(!File01.is_open()){Save_Memory(); File01.open(Temp01);}
        if(!File01.is_open()) return;
 
        string Temp02;
@@ -1815,6 +2410,37 @@
   int32  L_Numbering(string Temp01)       fastened {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
   int32  L_Rounding(xint64 Vrab01)        fastened {if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint32(Vrab01); return rint32(Vrab01) + 1;}
   int64  L_Rounding64(xint64 Vrab01)      fastened {if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint64(Vrab01); return rint64(Vrab01) + 1;}
+  uint64 L_Interprocessing(statics string &Temp01) fastened 
+  {
+   insize Vrab01 = Temp01.size(); uint64 Vrab02 = 0; uint64 Vrab03 = 0;
+   while(Vrab01 != 0)
+   {
+    Vrab01 -= 1;
+    switch(Temp01.at(Vrab01))
+    {
+     case '0': break;
+     case '1': Vrab03 += (1ULL << Vrab02); break;
+     case '2': Vrab03 += (2ULL << Vrab02); break;
+     case '3': Vrab03 += (3ULL << Vrab02); break;
+     case '4': Vrab03 += (4ULL << Vrab02); break;
+     case '5': Vrab03 += (5ULL << Vrab02); break;
+     case '6': Vrab03 += (6ULL << Vrab02); break;
+     case '7': Vrab03 += (7ULL << Vrab02); break;
+     case '8': Vrab03 += (8ULL << Vrab02); break;
+     case '9': Vrab03 += (9ULL << Vrab02); break;
+     case 'A': case 'a': Vrab03 += (10ULL << Vrab02); break;
+     case 'B': case 'b': Vrab03 += (11ULL << Vrab02); break;
+     case 'C': case 'c': Vrab03 += (12ULL << Vrab02); break;
+     case 'D': case 'd': Vrab03 += (13ULL << Vrab02); break;
+     case 'E': case 'e': Vrab03 += (14ULL << Vrab02); break;
+     case 'F': case 'f': Vrab03 += (15ULL << Vrab02); break;
+     case 'x': case 'X': return Vrab03;
+     default: return 0;
+    }
+    Vrab02 += 4;
+   }
+   return Vrab03;
+  }
   uint64 L_Random(uint64 Vrab01)          fastened {Varb0015 += 1; Varb0016 += Varb0015; Varb0017 -= Varb0016; Varb0018 ^= Varb0017; Varb0018 |= Varb0016; Varb0018 -= Varb0015; Varb0016 *= Varb0018; Varb0016 %= ruint64(ruint32(-1)) + 1; return ruint64(L_Rounding64((rxint64(Varb0016) / rxint64(0xFFFFFFFF) * rxint64(Vrab01))));}
   xint64 L_Doubling(string Temp01)        fastened 
   {
@@ -1891,6 +2517,7 @@
    return Temp01;
   }
   string L_Revoke(string Temp01, uint8 Vrab01, uint8 Vrab02) fastened {insize Vrab03 = Temp01.size(); while(Vrab03 != 0){Vrab03 -= 1; if(Temp01.at(Vrab03) == Vrab01) Temp01.at(Vrab03) = Vrab02;} return Temp01;}
+  string L_Focus(statics string Temp01)   fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; statics int8 Vrab02 = Temp01.at(Vrab01); if(Vrab02 == '\\' || Vrab02 == '/'){Vrab01 += 1; return string(Temp01, Vrab01, Temp01.size() - Vrab01);}} return Temp01;}
  //-//
  // Prime Functions
   int0 P_EngineInput(DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01)
@@ -2032,7 +2659,7 @@
     Varb0004 = 2;
     Enchanted->Initialization = false;
     Enchanted->Pic_Index_Interface.clear(); Enchanted->Sound_Index_Interface.clear(); Enchanted->Back_Index_Interface.clear(); statics string Temp01 = Enchanted->Memory[0].Address;
-    Enchanted->Load_Memory(Temp01 + "config.ini"); Enchanted->Save_Memory(Temp01 + "config.ini"); Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 100) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}
+    Enchanted->Load_Memory(); Enchanted->Save_Memory(); Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 100) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}
     Enchanted->Update_Window(Enchanted->Memory[0].Screen_W, Enchanted->Memory[0].Screen_H, Enchanted->Memory[0].Fullscreen);
     // Interface's background load.
      {
@@ -2070,7 +2697,7 @@
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 38, 154, 169));       // Index : 17 (Main Buttons)
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 38, 154, 18));        // Index : 18 (Main Buttons - Game Start)
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 67, 154, 20));        // Index : 19 (Main Buttons - Network Game)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 99, 154, 19));        // Index : 20 (Main Buttons - Game Settings)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 98, 154, 20));        // Index : 20 (Main Buttons - General Settings)
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 129, 154, 20));       // Index : 21 (Main Buttons - Control Settings)
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 161, 154, 19));       // Index : 22 (Main Buttons - Recording Info)
       Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 191, 154, 16));       // Index : 23 (Main Buttons - Official Fansite)
@@ -2168,13 +2795,14 @@
      }
     //-//
      Enchanted->Post_Info("Platform Version : " + Enchanted->Version() + " (Beta).");
-   } else {if(Enchanted->Memory[0].Fullscreen != Varb0014){Enchanted->Memory[0].Fullscreen = Varb0014; Enchanted->Save_Memory(Enchanted->Memory[0].Address + "config.ini");} L_Random(0); Enchanted->Tick += 1; if(Enchanted->Tick == 0xFFFFFFFFFFFFFFFF) Enchanted->Tick = 0xFFFFFFFFFFFEBF; Enchanted->Draw = true; Enchanted->Number_Of_Sound = 0; Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 100) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}}
+     Enchanted->Angel = std::make_unique < HEPTA_LF2_ENCHANTED_ANGELSCRIPT > ();
+   } else {if(L_Input(Enchanted->Memory[0].F12) == 1 && (Input.CONS_LALT >= 1 || Input.CONS_RALT >= 1)) Enchanted->Angel->Switch(); if(Enchanted->Memory[0].Fullscreen != Varb0014){Enchanted->Memory[0].Fullscreen = Varb0014; Enchanted->Save_Memory();} L_Random(0); Enchanted->Tick += 1; if(Enchanted->Tick == 0xFFFFFFFFFFFFFFFF) Enchanted->Tick = 0xFFFFFFFFFFFEBF; Enchanted->Draw = true; Enchanted->Number_Of_Sound = 0; Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 100) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}}
 
    {
     statics int64 &Vrab03 = Enchanted->Display_CenX, &Vrab04 = Enchanted->Display_CenY, &Vrab05 = Enchanted->Display_W, &Vrab06 = Enchanted->Display_H;
     switch(Enchanted->Menu)
     {
-     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 252: case 253: case 254: case 255: // Main Menu
+     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 250: case 251: case 252: case 253: case 254: case 255: // Main Menu
       {
        G_SetDisplay(6, Enchanted->Pic_Index_Interface[68], 0, 0, 0, 255ui8, Vrab05, Vrab06);
        G_SetDisplay(2, Enchanted->Background1, 0, Vrab04 - 275ll);
@@ -2188,8 +2816,8 @@
          {
           uint8 Vrab07 = 0;
           if(L_In(Vrab03 - 80, Vrab04 - 86, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[18], Vrab03 - 77, Vrab04 - 85); if(L_On(Vrab03 - 80, Vrab04 - 86, 160, 20)) Vrab07 = 1;}
-        //if(L_In(Vrab03 - 80, Vrab04 - 55, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[19], Vrab03 - 77, Vrab04 - 56); if(L_On(Vrab03 - 80, Vrab04 - 55, 160, 20)) Vrab07 = 2;}
-          if(L_In(Vrab03 - 80, Vrab04 - 24, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[20], Vrab03 - 77, Vrab04 - 24); if(L_On(Vrab03 - 80, Vrab04 - 24, 160, 20)) Vrab07 = 3;}
+          if(L_In(Vrab03 - 80, Vrab04 - 55, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[19], Vrab03 - 77, Vrab04 - 56); if(L_On(Vrab03 - 80, Vrab04 - 55, 160, 20)) Vrab07 = 2;}
+          if(L_In(Vrab03 - 80, Vrab04 - 24, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[20], Vrab03 - 77, Vrab04 - 25); if(L_On(Vrab03 - 80, Vrab04 - 24, 160, 20)) Vrab07 = 3;}
           if(L_In(Vrab03 - 80, Vrab04 + 7, 160, 20)) {Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[21], Vrab03 - 77, Vrab04 + 6);  if(L_On(Vrab03 - 80, Vrab04 + 7, 160, 20))  Vrab07 = 4;}
           if(L_In(Vrab03 - 80, Vrab04 + 38, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[22], Vrab03 - 77, Vrab04 + 38); if(L_On(Vrab03 - 80, Vrab04 + 38, 160, 20)) Vrab07 = 5;}
           if(L_In(Vrab03 - 80, Vrab04 + 69, 160, 20)){Enchanted->Draw = false; G_SetDisplay(2, Enchanted->Pic_Index_Interface[23], Vrab03 - 77, Vrab04 + 68); if(L_On(Vrab03 - 80, Vrab04 + 69, 160, 20)) Vrab07 = 6;}
@@ -2204,10 +2832,10 @@
            statics int64 Vrab12 = Vrab03 - 95, Vrab13 = 190, Vrab14 = 26; int64 Vrab15 = Vrab04 - 1;
            switch(ruint8(Enchanted->Runtime1))
            {
-            case 1: Vrab15 -= 89; case 0: if(Vrab08) Enchanted->Runtime1 = 6; if(Vrab09) Enchanted->Runtime1 = 3; if(Vrab10) Vrab07 = 1;
+            case 1: Vrab15 -= 89; case 0: if(Vrab08) Enchanted->Runtime1 = 6; if(Vrab09) Enchanted->Runtime1 = 2; if(Vrab10) Vrab07 = 1;
             break;
             case 2: Vrab15 -= 58; if(Vrab08) Enchanted->Runtime1 = 1; if(Vrab09) Enchanted->Runtime1 = 3; if(Vrab10) Vrab07 = 2; break;
-            case 3: Vrab15 -= 27; if(Vrab08) Enchanted->Runtime1 = 1; if(Vrab09) Enchanted->Runtime1 = 4; if(Vrab10) Vrab07 = 3; break;
+            case 3: Vrab15 -= 27; if(Vrab08) Enchanted->Runtime1 = 2; if(Vrab09) Enchanted->Runtime1 = 4; if(Vrab10) Vrab07 = 3; break;
             case 4: Vrab15 += 4; if(Vrab08) Enchanted->Runtime1 = 3; if(Vrab09) Enchanted->Runtime1 = 5; if(Vrab10) Vrab07 = 4; break;
             case 5: Vrab15 += 35; if(Vrab08) Enchanted->Runtime1 = 4; if(Vrab09) Enchanted->Runtime1 = 6; if(Vrab10) Vrab07 = 5; break;
             case 6: Vrab15 += 66; if(Vrab08) Enchanted->Runtime1 = 5; if(Vrab09) Enchanted->Runtime1 = 1; if(Vrab10) Vrab07 = 6; break;
@@ -2221,7 +2849,7 @@
           {
            case 1: if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(255);} else {Enchanted->Reset(1, 0, 120, Enchanted->Runtime3);} break;
            case 2: break;
-           case 3: break;
+           case 3: Enchanted->Memory[1] = Enchanted->Memory[0]; if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(251);} else {Enchanted->Reset(250, 0, 120, Enchanted->Runtime3);} break;
            case 4: Enchanted->Memory[1] = Enchanted->Memory[0]; if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(255);} else {Enchanted->Reset(254, 0, 120, Enchanted->Runtime3);} break;
            case 5: Enchanted->Memory[1] = Enchanted->Memory[0]; if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(253);} else {Enchanted->Reset(252, 0, 120, Enchanted->Runtime3);} break;
            case 6: ShellExecuteW(0, 0, L"http://www.lf-empire.de", 0, 0, SW_SHOW); break;
@@ -2437,7 +3065,7 @@
           
           if(Enchanted->Runtime3 == 7) Enchanted->Reset(4, 0, 100);
 
-          if(Enchanted->Runtime3 == 8){{int1 Vrab07 = false; switch(Enchanted->Memory[0].Engine){case 1: break; default: Vrab07 = Enchanted->Engine1->Warning(); break;} if(Vrab07) Enchanted->Post_Info("Warning(s) found while processing the data(s), check \"Database\\Log.log\" for details.");} Enchanted->Reset(7, 0, 0, 180); Enchanted->String[0] = "<none>"; Enchanted->String[1] = "<none>"; if(Enchanted->File1.is_open()) Enchanted->File1.close();}
+          if(Enchanted->Runtime3 == 8){{int1 Vrab07 = false; switch(Enchanted->Memory[0].Engine){case 1: break; default: Vrab07 = Enchanted->Engine1->Warning(); break;} if(Vrab07) Enchanted->Post_Info("Warning(s) found while processing the data(s), check \"Database\\Log.log\" for details.");} Enchanted->Angel->Set(); if(Enchanted->Angel->Available()){Enchanted->Post_Info("AngelScript Version : " + Enchanted->Angel->Version() + ".");} else {Enchanted->Post_Info("Failed in initializing AngelScript.");} Enchanted->Reset(7, 0, 0, 180); Enchanted->String[0] = "<none>"; Enchanted->String[1] = "<none>"; if(Enchanted->File1.is_open()) Enchanted->File1.close();}
 
           {
            G_SetDisplay(0, 0x0, 0, 0, 0, 180, Vrab05, Vrab06);
@@ -2619,6 +3247,7 @@
                case 1: break;
                default: Enchanted->Engine1.reset(); break;
               }
+              Enchanted->Angel->Reset();
               Enchanted->Runtime1 = 7; Enchanted->Runtime2 = 0;
              }
             break;
@@ -2644,6 +3273,25 @@
            G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(L_Rounding((rxint64(30 - Enchanted->Runtime2) / 30) * 255.0)), Vrab05, Vrab06);
            if(Enchanted->Runtime2 <= 30){Enchanted->Runtime2 += 1;} else {Enchanted->Reset(8);}
           }
+         }
+        break;
+        case 250: // Platform Setting - Animation Phase
+         {
+          if(Enchanted->Runtime2 > 120)
+          {if(Enchanted->Runtime3 > 2) Enchanted->Runtime3 -= 3; Enchanted->Runtime1 -= ((Enchanted->Runtime2 - 120) / 12); Enchanted->Runtime2 += 1;} else
+          {if(Enchanted->Runtime3 < 180) Enchanted->Runtime3 += 3; Enchanted->Runtime1 += (Enchanted->Runtime2 / 12); Enchanted->Runtime2 -= 1;}
+          G_SetDisplay(0, 0x0, 0, 0, 0, Enchanted->Runtime3, Vrab05, Vrab06);
+          
+          {}
+
+          if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Reset(251);
+          if(Enchanted->Runtime2 == 241) Enchanted->Reset(0, 0, 0, Enchanted->Runtime3);
+         }
+        break;
+        case 251: // Platform Setting
+         {
+          G_SetDisplay(0, 0x0, 0, 0, 0, 180, Vrab05, Vrab06); uint8 Vrab07 = 0;
+         
          }
         break;
         case 252: // Recording Info - Animation Phase
@@ -2842,7 +3490,7 @@
           switch(Vrab07)
           {
            case 6: {statics string Temp01 = Enchanted->Memory[0].Address + Enchanted->Memory[1].Record_Address; if(L_Exist(Temp01)) ShellExecuteW(0, 0, std::wstring(Temp01.begin(), Temp01.end()).c_str(), 0, 0, SW_SHOW);} break;
-           case 7: Enchanted->Memory[0] = Enchanted->Memory[1]; Enchanted->Save_Memory(Enchanted->Memory[0].Address + "config.ini");
+           case 7: Enchanted->Memory[0] = Enchanted->Memory[1]; Enchanted->Save_Memory();
            case 9:
             if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(0);} else {Enchanted->Reset(252, 550, 121, 180);}
            break;
@@ -2998,7 +3646,7 @@
           
           switch(Vrab07)
           {
-           case 41: Enchanted->Memory[0] = Enchanted->Memory[1]; Enchanted->Save_Memory(Enchanted->Memory[0].Address + "config.ini");
+           case 41: Enchanted->Memory[0] = Enchanted->Memory[1]; Enchanted->Save_Memory();
            case 42:
             if(Enchanted->Memory[0].Skip_Animation){Enchanted->Reset(0);} else {Enchanted->Reset(254, 550, 121, 180);}
            break;
@@ -3260,8 +3908,7 @@
        if(Enchanted->Runtime1 >= 605)
        {
         if(Enchanted->Runtime1 < 896){Enchanted->Runtime1 += 1; statics uint64 Vrab09 = Enchanted->Runtime1; if(Vrab09 >= 785 && Vrab09 < 845){Enchanted->Runtime2 += (Vrab09 - 785) / 12;} if(Vrab09 >= 845 && Vrab09 < 905){Enchanted->Runtime2 += (60 - (Vrab09 - 845)) / 12;}  if(Vrab09 >= 894) Enchanted->Runtime2 += 1;}
-        statics int64 Vrab09 = -rint64(Enchanted->Runtime2 % 1000) + 6, Vrab10 = Vrab06 - 174;
-        G_SetDisplay(0, 0x0, Vrab09 + 124, Vrab10 + 87, 0, 255ui8, 122, 16); G_SetDisplay(0, 0x0, Vrab09 + 124, Vrab10 + 111, 0, 255ui8, 100, 16);
+        statics int64 Vrab09 = Vrab03 - 394 - rint64(Enchanted->Runtime2 % 1000), Vrab10 = Vrab04 + 51;
         int1 Vrab11 = L_Input(Varb0021) == 1, Vrab12 = L_Input(Varb0023) == 1, Vrab13 = L_Input(Varb0020) == 1, Vrab14 = L_Input(Varb0022) == 1, Vrab15 = L_Input(Varb0024) == 1, Vrab16 = false;
         if(!Vrab11){for(insize Vrab17 = 0; Vrab17 < 4; ++Vrab17){Vrab11 = (L_Input(Enchanted->Memory[0].P_Input[Vrab17][0]) == 1); if(Vrab11) break;}}
         if(!Vrab12){for(insize Vrab17 = 0; Vrab17 < 4; ++Vrab17){Vrab12 = (L_Input(Enchanted->Memory[0].P_Input[Vrab17][1]) == 1); if(Vrab12) break;}}
@@ -3293,6 +3940,7 @@
          default: Temp01 = Enchanted->Engine1->Place(Enchanted->Select_Background); break;
         }
         if(Temp01.size() > 14) Temp01.resize(14);
+        G_SetDisplay(0, 0x0, Vrab09 + 124, Vrab10 + 87, 0, 255ui8, 122, 16); G_SetDisplay(0, 0x0, Vrab09 + 124, Vrab10 + 111, 0, 255ui8, 100, 16);
         Enchanted->Print_Text(Vrab09 + 127, Vrab10 + 86, 0, L_Revoke(Temp01, '_', ' '));
         Enchanted->Print_Text(Vrab09 + 127, Vrab10 + 110, 0, Enchanted->Difficult(Enchanted->Select_Difficult));
         G_SetDisplay(2, Enchanted->Pic_Index_Interface[67], Vrab09, Vrab10);
@@ -3439,33 +4087,54 @@
         }
        }
        {
-        insize Vrab07 = 0; int64 Vrab08 = 0; int64 Vrab09 = 0;
-        switch(Enchanted->Memory[0].Engine)
+        statics insize Vrab07 = Vect02.size(); insize Vrab08 = 0;
+        while(Vrab08 < Vrab07)
         {
-         case 1: break;
-         default: statics auto Back01 = Enchanted->Engine1->Shadow(); Vrab07 = Back01->shadow_Index; Vrab08 = rint64(rxint64(Back01->shadowsize[0]) / 2); Vrab09 = rint64(rxint64(Back01->shadowsize[1]) / 2); break;
-        }
-        statics insize Vrab10 = Vect02.size(); insize Vrab11 = 0;
-        while(Vrab11 < Vrab10)
-        {
-         G_SetDisplay(2, Vrab07, Vect02[Vrab11].X - Vrab08 - Enchanted->CameraX, Vect02[Vrab11].Z - Vrab09 - Enchanted->CameraY); Vrab11 += 1;
-        }
-        Vrab11 = 0; while(Vrab11 < Vrab10)
-        {
-         if(Vect02[Vrab11].Facing)
-         {G_SetDisplay(4, Vect02[Vrab11].Pic, Vect02[Vrab11].X - Vect02[Vrab11].CenX - Enchanted->CameraX, Vect02[Vrab11].Z + Vect02[Vrab11].Y - Vect02[Vrab11].CenY - Enchanted->CameraY);} else
+         if(Vect02[Vrab08].Type)
          {
-          statics insize Vrab12 = Vect02[Vrab11].Pic_M;
-          if(Vrab12 != rinsize(-1))
-          {G_SetDisplay(5, Vrab12, Vect02[Vrab11].X + Vect02[Vrab11].CenX - Vect02[Vrab11].W - Enchanted->CameraX, Vect02[Vrab11].Z + Vect02[Vrab11].Y - Vect02[Vrab11].CenY - Enchanted->CameraY);} else
-          {G_SetDisplay(4, Vect02[Vrab11].Pic, Vect02[Vrab11].X + Vect02[Vrab11].CenX - Vect02[Vrab11].W - Enchanted->CameraX, Vect02[Vrab11].Z + Vect02[Vrab11].Y - Vect02[Vrab11].CenY - Enchanted->CameraY, 1);}
+          auto Auto01 = Vect02[Vrab08].Object.release();
+          statics insize Vrab09 = Auto01->Pic_M; statics int64 Vrab10 = Auto01->X - Enchanted->CameraX, Vrab11 = Auto01->Y - Enchanted->CameraY;
+          if(Auto01->Facing)
+          {
+           G_SetDisplay(4, Auto01->Pic, Vrab10, Vrab11, 0ui8, Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
+          } else
+          {
+           if(Vrab09 != rinsize(-1))
+           {
+            G_SetDisplay(5, Vrab09, Vrab10, Vrab11, 0ui8, Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
+           } else
+           {
+            G_SetDisplay(4, Auto01->Pic, Vrab10, Vrab11, 1ui8, Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
+           }
+          }
+          if(Auto01->Character)
+          {
+           statics int64 Vrab12 = rint64(Auto01->Info->Name.size()) * 9; statics int64 Vrab13 = Auto01->Info->X - Enchanted->CameraX - L_Rounding64(rxint64(Vrab12) / 2.0);
+           int64 Vrab14 = Vrab13;
+           if(Vrab14 + Vrab12 > 800) Vrab14 = 800 - Vrab12;
+           if(Vrab14 < 0) Vrab14 = 0;
+           Enchanted->Print_Text(Vrab14, Auto01->Info->Y - Enchanted->CameraY + 2, Auto01->Info->Color, Auto01->Info->Name);
+           {
+            uint8 Vrab15 = 0, Vrab16 = 0, Vrab17 = 0, Vrab18 = 0;
+            switch(Auto01->Info->Integrate)
+            {
+             case 0: Vrab15 = 71; Vrab16 = 73; Vrab17 = 74; Vrab18 = 76; break;
+             default: break;
+            }
+            G_SetDisplay(2, Enchanted->Pic_Index_Interface[Vrab16], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Info->Y - Auto01->Info->C - Enchanted->CameraY - 15, 0ui8, 255ui8, L_Rounding64((Auto01->Info->DHP / Auto01->Info->MHP) * rxint64(60)), 5);
+            G_SetDisplay(2, Enchanted->Pic_Index_Interface[Vrab15], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Info->Y - Auto01->Info->C - Enchanted->CameraY - 15, 0ui8, 255ui8, L_Rounding64((Auto01->Info->HP / Auto01->Info->MHP) * rxint64(60)), 5);
+            G_SetDisplay(2, Enchanted->Pic_Index_Interface[Vrab18], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Info->Y - Auto01->Info->C - Enchanted->CameraY - 10, 0ui8, 255ui8, 60, 5);
+            G_SetDisplay(2, Enchanted->Pic_Index_Interface[Vrab17], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Info->Y - Auto01->Info->C - Enchanted->CameraY - 10, 0ui8, 255ui8, L_Rounding64((Auto01->Info->MP / Auto01->Info->MMP) * rxint64(60)), 5);
+           }
+          }
+         } else
+         {
+          auto Auto01 = Vect02[Vrab08].Effect.release();
+          uint8 Vrab09 = 0; if(Auto01->Facing) Vrab09 = 1;
+          uint8 Vrab10 = 2; if(Auto01->Sprite) Vrab10 = 4;
+          G_SetDisplay(Vrab10, Auto01->Pic, Auto01->X - Enchanted->CameraX, Auto01->Y - Enchanted->CameraY, Vrab09, Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
          }
-         statics int64 Vrab12 = rint64(Vect02[Vrab11].Name.size()) * 9; statics int64 Vrab13 = Vect02[Vrab11].X - L_Rounding64(rxint64(Vrab12) / 2.0) - Enchanted->CameraX;
-         int64 Vrab14 = Vrab13;
-         if(Vrab14 + Vrab12 > 800) Vrab14 = 800 - Vrab12;
-         if(Vrab14 < 0) Vrab14 = 0;
-         Enchanted->Print_Text(Vrab14, Vect02[Vrab11].Z - Enchanted->CameraY + 2, Vect02[Vrab11].Team, Vect02[Vrab11].Name);
-         Vrab11 += 1;
+         Vrab08 += 1;
         }
        }
        Enchanted->Print_Text(3, 15, 0, Enchanted->Engine1->Debug());
@@ -3594,1036 +4263,31 @@
 
 
 
-  /*
- int0 LF2_Enchanted(uint32 Vrab01, uint64 Vrab99) fastened
-   {
-   if(Enchanted->Initialization)
-   {
-    Enchanted->Initialization = false;
-    Enchanted->Update_Window(800, 450, "LF2");
-    Enchanted->Sound_Index_Interface.clear();
-    Enchanted->Pic_Index_Interface.clear();
-    {
-     statics string Temp01 = "System\\Interface\\Enchanted\\", Temp02 = ".bmp"; Enchanted->Memory[0].Data_Address = "data\\data.txt"; Enchanted->Load_Memory(Temp01 + "config.ini"); Enchanted->Save_Memory(Temp01 + "config.ini");
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS0" + Temp02, 16, 16, 15, 15));     // Index : 0
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS1" + Temp02, 16, 16, 15, 15));     // Index : 1
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS2" + Temp02, 16, 16, 15, 15));     // Index : 2
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS3" + Temp02, 16, 16, 15, 15));     // Index : 3
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS4" + Temp02, 16, 16, 15, 15));     // Index : 4
-     Enchanted->Pic_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS5" + Temp02, 16, 16, 15, 15));     // Index : 5
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 0, 12, 12));        // Index : 6 (Info Bar Top-Left Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 13, 0, 12, 12));       // Index : 7 (Info Bar Top-Right Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 13, 12, 12));       // Index : 8 (Info Bar Bottom-Left Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 13, 13, 12, 12));      // Index : 9 (Info Bar Bottom-Right Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 12, 0, 1, 3));         // Index : 10 (Info Bar Horizontal Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 12, 3, 1));         // Index : 11 (Info Bar Vertical Corner)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR2" + Temp02, 0, 0, 200, 200));     // Index : 12 (Info Bar Area)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "CURSOR" + Temp02));                        // Index : 13
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "CURSOR2" + Temp02));                       // Index : 14
 
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 0, 800, 37));           // Index : 15 (Copyright)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 38, 490, 79));          // Index : 16 (Title)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 491, 38, 154, 169));       // Index : 17 (Main Buttons)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 38, 154, 18));        // Index : 18 (Main Buttons - Game Start)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 67, 154, 20));        // Index : 19 (Main Buttons - Network Game)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 99, 154, 19));        // Index : 20 (Main Buttons - Game Settings)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 129, 154, 20));       // Index : 21 (Main Buttons - Control Settings)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 161, 154, 19));       // Index : 22 (Main Buttons - Recording Info)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 646, 191, 154, 16));       // Index : 23 (Main Buttons - Official Fansite)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 118, 151, 26));         // Index : 24 (Ok Button)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 145, 151, 26));         // Index : 25 (Ok Button)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 152, 118, 151, 26));       // Index : 26 (Cancel Button)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 152, 145, 151, 26));       // Index : 27 (Cancel Button)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 801, 0, 704, 353));        // Index : 28 (Control Setting Menu)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 587, 300, 106, 91));       // Index : 29 (Input - Keyboard)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 694, 208, 106, 91));       // Index : 30 (Input - Joy1)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 587, 208, 106, 91));       // Index : 31 (Input - Joy2)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 694, 392, 106, 91));       // Index : 32 (Input - Joy3)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 694, 300, 106, 91));       // Index : 33 (Input - Joy4)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 118, 186, 169));      // Index : 34 (Game Buttons)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 288, 186, 14));       // Index : 35 (Game Buttons - Versus)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 319, 186, 18));       // Index : 36 (Game Buttons - Stage)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 349, 186, 19));       // Index : 37 (Game Buttons - Championship)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 380, 186, 15));       // Index : 38 (Game Buttons - Battle)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 411, 186, 19));       // Index : 39 (Game Buttons - Recording Playback)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 304, 443, 186, 14));       // Index : 40 (Game Buttons - Return)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 1506, 0, 744, 437));       // Index : 41 (Character Selection)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 1264, 354, 120, 66));      // Index : 42 (Character Selection - Press Attack to Join)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 1385, 354, 120, 66));      // Index : 43 (Character Selection - Press Attack to Join2)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 1385, 421, 120, 120));     // Index : 44 (Character Selection - Random)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 535, 208, 51, 58));        // Index : 45 (Character Selection - Counter - 5)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 535, 267, 51, 58));        // Index : 46 (Character Selection - Counter - 4)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 535, 326, 51, 58));        // Index : 47 (Character Selection - Counter - 3)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 590, 392, 51, 58));        // Index : 48 (Character Selection - Counter - 2)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 642, 392, 51, 58));        // Index : 49 (Character Selection - Counter - 1)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 172, 303, 87));         // Index : 50 (Character Selection - Computer Player)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 491, 208, 6, 10));         // Index : 51 (Character Selection - Computer Player - 0)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 498, 208, 6, 10));         // Index : 52 (Character Selection - Computer Player - 1)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 505, 208, 6, 10));         // Index : 53 (Character Selection - Computer Player - 2)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 512, 208, 6, 10));         // Index : 54 (Character Selection - Computer Player - 3)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 519, 208, 6, 10));         // Index : 55 (Character Selection - Computer Player - 4)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 526, 208, 6, 10));         // Index : 56 (Character Selection - Computer Player - 5)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 491, 219, 6, 10));         // Index : 57 (Character Selection - Computer Player - 6)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 498, 219, 6, 10));         // Index : 58 (Character Selection - Computer Player - 7)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 505, 219, 6, 10));         // Index : 59 (Character Selection - Computer Player - 0 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 512, 219, 6, 10));         // Index : 60 (Character Selection - Computer Player - 1 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 519, 219, 6, 10));         // Index : 61 (Character Selection - Computer Player - 2 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 526, 219, 6, 10));         // Index : 62 (Character Selection - Computer Player - 3 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 491, 230, 6, 10));         // Index : 63 (Character Selection - Computer Player - 4 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 498, 230, 6, 10));         // Index : 64 (Character Selection - Computer Player - 5 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 505, 230, 6, 10));         // Index : 65 (Character Selection - Computer Player - 6 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 512, 230, 6, 10));         // Index : 66 (Character Selection - Computer Player - 7 Active)
-     Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp01 + "MENU" + Temp02, 0, 260, 264, 168));        // Index : 67 (Character Selection - Menu)
-    }
-    {
-     statics string Temp01 = "System\\Audio\\Enchanted\\", Temp02 = ".wav";
-     Enchanted->Sound_Index_Interface.push_back(G_SetSound(Temp01 + "m_ok" + Temp02));       // Index : 0
-     Enchanted->Sound_Index_Interface.push_back(G_SetSound(Temp01 + "m_cancel" + Temp02));   // Index : 1
-    }
-   }
 
-   {
-    statics int64 &Vrab02 = Enchanted->Display_CenX, &Vrab03 = Enchanted->Display_CenY, &Vrab04 = Enchanted->Display_W, &Vrab05 = Enchanted->Display_H;
-    switch(Enchanted->Menu)
-    {
-     case 0: case 1: case 2: case 3: case 4: case 5: case 6:
-     {
-      G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-      G_SetDisplay(2, Enchanted->Pic_Index_Interface[15], Vrab02 - 400, Vrab05 - 45);
-      G_SetDisplay(2, Enchanted->Pic_Index_Interface[16], Vrab02 - 245, L_Rounding64(rxint64(Vrab03) / 2) - 79);
-      G_SetDisplay(2, Enchanted->Pic_Index_Interface[17], Vrab02 - 77, Vrab03 - 85);
-      
-      switch(Enchanted->Menu)
-      {
-       case 0:
-        {
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 86, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[18], Vrab02 - 77, Vrab03 - 85); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) - 86, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(0, 0, 55, 1);}}
-         //if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 55, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[19], Vrab02 - 77, Vrab03 - 56);}
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 24, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[20], Vrab02 - 77, Vrab03 - 24); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) - 24, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); }}
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 7, 160, 20)) {G_SetDisplay(2, Enchanted->Pic_Index_Interface[21], Vrab02 - 77, Vrab03 + 6);  if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 7, 160, 20) && Input.MOUS_Left_Release == 1) {G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(0, 0, 0, 11); Enchanted->Memory[1] = Enchanted->Memory[0];}}
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 38, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[22], Vrab02 - 77, Vrab03 + 38); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 38, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); }}
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 69, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[23], Vrab02 - 77, Vrab03 + 68); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 69, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); ShellExecuteW(0, 0, L"http://www.lf-empire.de", 0, 0, SW_SHOW);}}
-         if(Enchanted->Runtime < 165 && Enchanted->Runtime > 0){Enchanted->Runtime -= 3; G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Enchanted->Runtime), Vrab04, Vrab05);}
-        }
-       break;
-       case 1:
-        {
-         G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Enchanted->Runtime += 3), Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 + 45 - (Enchanted->Runtime2), Vrab03 - 24, 100, 0);
-         Enchanted->Runtime2 += (Enchanted->Runtime3 / 3); Enchanted->Runtime3 -= 1;
-         if(Enchanted->Runtime3 == 0) Enchanted->Reset(0, 0, 30, 2);
-        }
-       break;
-       case 2:
-        {
-         statics int64 Vrab06 = L_Rounding64(rxint64(Enchanted->Runtime2) / 2), Vrab07 = L_Rounding64(rxint64(Enchanted->Runtime2) / 4);
-         G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 - 450 - Vrab06, Vrab03 - 24 - Vrab07, 100 + (Vrab06 * 2), Vrab06);
-         Enchanted->Runtime2 += (Enchanted->Runtime3 / 3); Enchanted->Runtime3 -= 1;
-         if(Enchanted->Runtime3 == 0) Enchanted->Reset(0, 0, 0, 3);
-        }
-       break;
-       case 3:
-        {
-         statics int64 Vrab06 = L_Rounding64(145.0 / 2), Vrab07 = L_Rounding64(145.0 / 4);
-         G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 - 450 - Vrab06, Vrab03 - 24 - Vrab07, 100 + (Vrab06 * 2), Vrab06);
-         
-         Enchanted->Runtime += 1; if(Enchanted->Runtime == 82) Enchanted->Runtime = 2; if(Enchanted->Runtime == 162) Enchanted->Runtime = 82;
-         if(Enchanted->Runtime == 1)
-         {
-          Enchanted->String[0] = Enchanted->String[1] = "<none>";
-          Enchanted->File.open(Enchanted->Memory[0].Data_Address);
-          if(!Enchanted->File.is_open()){Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "Either can't be found or inaccessible."; Enchanted->Reset(0, 0, 32, 4);} else
-          {
-           string Temp01;
-           while(Enchanted->File)
-           {
-            Enchanted->File >> Temp01; if(!Enchanted->File) break; if(Temp01[0] == '#'){std::getline(Enchanted->File, Temp01); continue;}
-            if(Temp01 == "<object>") goto Labl01;
-           }
-           {Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "\"<object>\" is undefined in that file."; Enchanted->Reset(0, 0, 32, 4);}
-          }
-         } else
-         {
-          Labl01:
-          if(Enchanted->File2.is_open()) goto Labl03; Enchanted->String[1] = "<none>"; 
-          if(Enchanted->Runtime <= 80)
-          {
-           string Temp01;
-           while(Enchanted->File)
-           {
-            Enchanted->File >> Temp01; if(!Enchanted->File) break; if(Temp01[0] == '#'){std::getline(Enchanted->File, Temp01); continue;}
-            if(Temp01 == "id:")
-            {
-             Enchanted->Data_Read = 0ui8;
-             Enchanted->File >> Temp01; statics uint32 Vrab08 = L_Numbering(Temp01);
-             Enchanted->File >> Temp01; if(Temp01 != "type:"){Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "\"id: " + std::to_string(Vrab08) + "\" isn't followed with \"type:\"."; Enchanted->Reset(0, 0, 32, 4); goto Labl02;}
-             Enchanted->File >> Temp01; statics uint32 Vrab09 = L_Numbering(Temp01);
-             Enchanted->File >> Temp01; if(Temp01 != "file:"){Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "\"id: " + std::to_string(Vrab08) + " type: " + std::to_string(Vrab09) + "\" isn't followed with \"file:\"."; Enchanted->Reset(0, 0, 32, 4); goto Labl02;}
-             Enchanted->File >> Temp01; 
-             {statics string Temp02 = L_Lowercase(string(Temp01, Temp01.size() - 4, 4)); if(Temp02 != ".txt" && Temp02 != ".dat") continue;}
-             Enchanted->String[0] = Temp01;
-             Enchanted->Runtime2 = Enchanted->Object.size(); Enchanted->Object.resize(rinsize(Enchanted->Runtime2) + 1);
-             Enchanted->Object[rinsize(Enchanted->Runtime2)].id = Vrab08;
-             Enchanted->Object[rinsize(Enchanted->Runtime2)].type = Vrab09;
-             if(Vrab09 == 0 && (Vrab08 < 30 || Vrab08 > 100)) Enchanted->Select_AvailableChar.push_back(rinsize(Enchanted->Runtime2));
-             if(Enchanted->File2.is_open()) Enchanted->File2.close(); Enchanted->File2.open(Temp01, std::ios::binary | std::ios::in);
-             if(!Enchanted->File2.is_open()){Enchanted->String[2] = "\"" + Temp01 + "\""; Enchanted->String[3] = "Either can't be found or inaccessible."; Enchanted->Reset(0, 0, 32, 4); goto Labl02;} else
-             {
-              if(L_Lowercase(string(Temp01, Temp01.size() - 4, 4)) == ".dat")
-              {
-               stream Temp02; Temp02 << Enchanted->File2.rdbuf(); Enchanted->File2.close();
-               string Temp03 = Temp02.str(); statics string Temp04 = "SiuHungIsAGoodBearBecauseHeIsVeryGood";
-               statics insize Vrab10 = Temp03.size(); insize Vrab11 = 12; statics insize Vrab12 = Temp04.size();
-               for(uint32 Vrab13 = 123; Vrab13 < Vrab10; ++Vrab13){Temp03.at(Vrab13) -= Temp04.at(Vrab11); Vrab11 += 1; if(Vrab11 == Vrab12) Vrab11 = 0;}
-               std::ofstream File01("data\\temporary.txt", std::ios::binary | std::ios::out); Temp03.erase(0, 123); File01 << Temp03; File01.close();
-               Enchanted->File2.open("data\\temporary.txt", std::ios::binary | std::ios::in);
-              }
-             }
-             goto Labl03;
-            }
-            if(Temp01 == "<object_end>")
-            {
-             Enchanted->Runtime += 80; Enchanted->String[0] = "<none>"; 
-             while(Enchanted->File)
-             {
-              Enchanted->File >> Temp01; if(!Enchanted->File) break; if(Temp01[0] == '#'){std::getline(Enchanted->File, Temp01); continue;}
-              if(Temp01 == "<background>") goto Labl01;
-             }
-             {Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "\"<background>\" is undefined in that file."; Enchanted->Reset(0, 0, 32, 4);}
-             goto Labl02;
-            }
-            if(Temp01 == "<file_editing>") break;
-            if(Temp01 == "<background>") break;
-           }
-           {Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "Unexpected end of \"<object>\". It should be closed with \"<object_end>\" syntax."; Enchanted->Reset(0, 0, 32, 4);} goto Labl02;
-          } else
-          {
-           string Temp01;
-           while(Enchanted->File)
-           {
-            Enchanted->File >> Temp01; if(!Enchanted->File) break; if(Temp01[0] == '#'){std::getline(Enchanted->File, Temp01); continue;}
-            if(Temp01 == "id:"){Enchanted->File >> Temp01; continue;}
-            if(Temp01 == "file:")
-            {
-             Enchanted->Data_Read = 0ui8;
-             Enchanted->File >> Temp01; 
-             {statics string Temp02 = L_Lowercase(string(Temp01, Temp01.size() - 4, 4)); if(Temp02 != ".txt" && Temp02 != ".dat") continue;}
-             Enchanted->String[0] = Temp01;
-             Enchanted->Runtime2 = Enchanted->Background.size(); Enchanted->Background.resize(rinsize(Enchanted->Runtime2) + 1);
-             if(Enchanted->File2.is_open()) Enchanted->File2.close(); Enchanted->File2.open(Temp01, std::ios::binary | std::ios::in);
-             if(!Enchanted->File2.is_open()){Enchanted->String[2] = "\"" + Temp01 + "\""; Enchanted->String[3] = "Either can't be found or inaccessible."; Enchanted->Reset(0, 0, 32, 4); goto Labl02;} else
-             {
-              if(L_Lowercase(string(Temp01, Temp01.size() - 4, 4)) == ".dat")
-              {
-               stream Temp02; Temp02 << Enchanted->File2.rdbuf(); Enchanted->File2.close();
-               string Temp03 = Temp02.str(); statics string Temp04 = "SiuHungIsAGoodBearBecauseHeIsVeryGood";
-               statics insize Vrab10 = Temp03.size(); insize Vrab11 = 12; statics insize Vrab12 = Temp04.size();
-               for(uint32 Vrab13 = 123; Vrab13 < Vrab10; ++Vrab13){Temp03.at(Vrab13) -= Temp04.at(Vrab11); Vrab11 += 1; if(Vrab11 == Vrab12) Vrab11 = 0;}
-               std::ofstream File01("data\\temporary.txt", std::ios::binary | std::ios::out); Temp03.erase(0, 123); File01 << Temp03; File01.close();
-               Enchanted->File2.open("data\\temporary.txt", std::ios::binary | std::ios::in);
-              }
-             }
-             goto Labl03;
-            }
-            if(Temp01 == "<background_end>"){Enchanted->Runtime = 0; goto Labl02;}
-            if(Temp01 == "<file_editing>") break;
-            if(Temp01 == "<object>") break;
-           }
-           {Enchanted->String[2] = "\"" + Enchanted->Memory[0].Data_Address + "\""; Enchanted->String[3] = "Unexpected end of \"<background>\". It should be closed with \"<background_end>\" syntax."; Enchanted->Reset(0, 0, 32, 4);} goto Labl02;
-          }
-          Labl03:
-          if(Enchanted->Runtime <= 81)
-          {
-           string Temp01; uint8 Vrab08 = Enchanted->Data_Read; insize Vrab10 = 0, Vrab11 = 0;
-           while(Enchanted->File2)
-           {
-            if(Vrab08 != 254ui8){Enchanted->File2 >> Temp01; if(!Enchanted->File2) break; if(Temp01.at(0) == '#'){std::getline(Enchanted->File2, Temp01); continue;}} else
-            {
-             if(Enchanted->Runtime3 != ruint64(Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size()))
-             {
-              if(Enchanted->Runtime3 == 0) Enchanted->Object[rinsize(Enchanted->Runtime2)].file_Index = Spic0001.size();
-              Enchanted->String[1] = Enchanted->Object[rinsize(Enchanted->Runtime2)].file[rinsize(Enchanted->Runtime3)].address;
-              statics insize Vrab09 = G_SetSprite(Enchanted->String[1], Enchanted->Object[rinsize(Enchanted->Runtime2)].file[rinsize(Enchanted->Runtime3)].row, Enchanted->Object[rinsize(Enchanted->Runtime2)].file[rinsize(Enchanted->Runtime3)].col, Enchanted->Object[rinsize(Enchanted->Runtime2)].file[rinsize(Enchanted->Runtime3)].w, Enchanted->Object[rinsize(Enchanted->Runtime2)].file[rinsize(Enchanted->Runtime3)].h);
-              if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4);} else {Enchanted->Data_Read = 254ui8;}
-              Enchanted->Runtime3 += 1; goto Labl02;
-             } else
-             {Vrab08 = 0; continue;}
-            }
-            switch(Vrab08)
-            {
-             case 0:
-              if(Temp01 == "<bmp_begin>")               {Vrab08 = 1; continue;}
-              if(Temp01 == "<weapon_strength_list>")    {Vrab08 = 2; continue;}
-              if(Temp01 == "<frame>")                   {Vrab08 = 3; Enchanted->File2 >> Temp01; statics insize Vrab09 = rinsize(L_Numbering(Temp01)); statics insize Vrab12 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame.size(); if(Vrab12 <= Vrab09) Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame.resize(Vrab09 + 1); Vrab10 = Vrab09; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].Exist = true; Enchanted->File2 >> Temp01; std::ofstream OP("sda.txt"); OP << Vrab10; OP.close(); continue;}
-             break;
-             case 1:
-              if(Temp01 == "<bmp_end>")                 {Vrab08 = 254ui8; Enchanted->Runtime3 = 0; continue;}
-              if(Temp01 == "name:")                     {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].name; continue;}
-              if(Temp01 == "head:")                     {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSprite(Enchanted->String[1], 1, 1, 120, 121); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].head_Index = Vrab09; Enchanted->Data_Read = Vrab08; Vrab08 = 255ui8;} break;}
-              if(Temp01 == "small:")                    {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSprite(Enchanted->String[1], 1, 1, 40, 45); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].small_Index = Vrab09; Enchanted->Data_Read = Vrab08; Vrab08 = 255ui8;} break;}
-              if(string(Temp01, 0, 5) == "file(")       {Vrab10 = Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].file.resize(Vrab10 + 1); Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].file[Vrab10].address; continue;}
-              if(Temp01 == "w:")                        {Enchanted->File2 >> Temp01; if(Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size() > 0){Enchanted->Object[rinsize(Enchanted->Runtime2)].file[Vrab10].w = ruint32(L_Numbering(Temp01));} continue;}
-              if(Temp01 == "h:")                        {Enchanted->File2 >> Temp01; if(Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size() > 0){Enchanted->Object[rinsize(Enchanted->Runtime2)].file[Vrab10].h = ruint32(L_Numbering(Temp01));} continue;}
-              if(Temp01 == "row:")                      {Enchanted->File2 >> Temp01; if(Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size() > 0){Enchanted->Object[rinsize(Enchanted->Runtime2)].file[Vrab10].row = ruint32(L_Numbering(Temp01));} continue;}
-              if(Temp01 == "col:")                      {Enchanted->File2 >> Temp01; if(Enchanted->Object[rinsize(Enchanted->Runtime2)].file.size() > 0){Enchanted->Object[rinsize(Enchanted->Runtime2)].file[Vrab10].col = ruint32(L_Numbering(Temp01));} continue;}
-              if(Temp01 == "walking_frame_rate")        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].walking_frame_rate = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "running_frame_rate")        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].running_frame_rate = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "walking_speed")             {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].walking_speed; continue;}
-              if(Temp01 == "walking_speedz")            {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].walking_speedz; continue;}
-              if(Temp01 == "running_speed")             {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].running_speed; continue;}
-              if(Temp01 == "running_speedz")            {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].running_speedz; continue;}
-              if(Temp01 == "heavy_walking_speed")       {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].heavy_walking_speed; continue;}
-              if(Temp01 == "heavy_walking_speedz")      {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].heavy_walking_speedz; continue;}
-              if(Temp01 == "heavy_running_speed")       {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].heavy_running_speed; continue;}
-              if(Temp01 == "heavy_running_speedz")      {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].heavy_running_speedz; continue;}
-              if(Temp01 == "jump_height")               {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].jump_height; continue;}
-              if(Temp01 == "jump_distance")             {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].jump_distance; continue;}
-              if(Temp01 == "jump_distancez")            {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].jump_distancez; continue;}
-              if(Temp01 == "dash_height")               {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].dash_height; continue;}
-              if(Temp01 == "dash_distance")             {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].dash_distance; continue;}
-              if(Temp01 == "dash_distancez")            {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].dash_distancez; continue;}
-              if(Temp01 == "rowing_height")             {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].rowing_height; continue;}
-              if(Temp01 == "rowing_distance")           {Enchanted->File2 >> Enchanted->Object[rinsize(Enchanted->Runtime2)].rowing_distance; continue;}
-              if(Temp01 == "weapon_hp:")                {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].weapon_hp = L_Numbering(Temp01); continue;}
-              if(Temp01 == "weapon_drop_hurt:")         {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].weapon_drop_hurt = L_Numbering(Temp01); continue;}
-              if(Temp01 == "weapon_hit_sound:")         {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSound(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8; break;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].weapon_hit_sound_Index = Vrab09; continue;}}
-              if(Temp01 == "weapon_drop_sound:")        {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSound(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8; break;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].weapon_drop_sound_Index = Vrab09; continue;}}
-              if(Temp01 == "weapon_broken_sound:")      {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSound(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8; break;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].weapon_broken_sound_Index = Vrab09; continue;}}
-             break;
-             case 2:
-              if(Temp01 == "<weapon_strength_list_end>"){Vrab08 = 0; continue;}
-              if(Temp01 == "entry:")                    {Enchanted->File2 >> Temp01; Vrab10 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength.resize(Vrab10 + 1); continue;}
-              if(Temp01 == "zwidth:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].zwidth = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvx:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].dvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvy:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].dvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "fall:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].fall = L_Numbering(Temp01); continue;}
-              if(Temp01 == "arest:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].arest = L_Numbering(Temp01); continue;}
-              if(Temp01 == "vrest:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].vrest = L_Numbering(Temp01); continue;}
-              if(Temp01 == "respond:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].respond = L_Numbering(Temp01); continue;}
-              if(Temp01 == "effect:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].effect = L_Numbering(Temp01); continue;}
-              if(Temp01 == "bdefend:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].bdefend = L_Numbering(Temp01); continue;}
-              if(Temp01 == "injury:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Strength[Vrab10].injury = L_Numbering(Temp01); continue;}
-             break;
-             case 3:
-              if(Temp01 == "<frame_end>")               {Vrab08 = 0; continue;}
-              if(Temp01 == "pic:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].pic = L_Numbering(Temp01); continue;}
-              if(Temp01 == "state:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].state = L_Numbering(Temp01); continue;}
-              if(Temp01 == "wait:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wait = L_Numbering(Temp01); continue;}
-              if(Temp01 == "next:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].next = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvx:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].dvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvy:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].dvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvz:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].dvz = L_Numbering(Temp01); continue;}
-              if(Temp01 == "centerx:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].centerx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "centery:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].centery = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_a:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_a = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_d:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_d = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_j:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_j = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Fa:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Fa = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Fj:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Fj = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Da:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Da = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Dj:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Dj = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Ua:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Ua = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_Uj:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_Uj = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hit_ja:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].hit_ja = L_Numbering(Temp01); continue;}
-              if(Temp01 == "mp:")                       {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].mp = L_Numbering(Temp01); continue;}
-              if(Temp01 == "sound:")                    {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetSound(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4); Vrab08 = 255ui8; break;} else {Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].sound_index = Vrab09; continue;}}
-              if(Temp01 == "bpoint:")                   {Vrab08 = 4; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bpoint.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bpoint.resize(Vrab11 + 1); continue;}
-              if(Temp01 == "cpoint:")                   {Vrab08 = 5; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint.resize(Vrab11 + 1); continue;}
-              if(Temp01 == "wpoint:")                   {Vrab08 = 6; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint.resize(Vrab11 + 1); continue;}
-              if(Temp01 == "opoint:")                   {Vrab08 = 7; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint.resize(Vrab11 + 1); continue;}
-              if(Temp01 == "itr:")                      {Vrab08 = 8; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr.resize(Vrab11 + 1); continue;}
-              if(Temp01 == "bdy:")                      {Vrab08 = 9; Vrab11 = Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy.size(); Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy.resize(Vrab11 + 1); continue;}
-             break;
-             case 4:
-              if(Temp01 == "bpoint_end:")               {Vrab08 = 3; continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bpoint[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bpoint[Vrab11].y = L_Numbering(Temp01); continue;}
-             break;
-             case 5:
-              if(Temp01 == "cpoint_end:")               {Vrab08 = 3; continue;}
-              if(Temp01 == "kind:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].kind = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "vaction:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].vaction = L_Numbering(Temp01); continue;}
-              if(Temp01 == "aaction:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].aaction = L_Numbering(Temp01); continue;}
-              if(Temp01 == "daction:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].daction = L_Numbering(Temp01); continue;}
-              if(Temp01 == "jaction:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].jaction = L_Numbering(Temp01); continue;}
-              if(Temp01 == "taction:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].taction = L_Numbering(Temp01); continue;}
-              if(Temp01 == "throwvx:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].throwvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "throwvy:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].throwvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "throwvz:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].throwvz = L_Numbering(Temp01); continue;}
-              if(Temp01 == "throwinjury:")              {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].throwinjury = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dircontrol:")               {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].dircontrol = L_Numbering(Temp01); continue;}
-              if(Temp01 == "hurtable:")                 {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].hurtable = L_Numbering(Temp01); continue;}
-              if(Temp01 == "decrease:")                 {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].decrease = L_Numbering(Temp01); continue;}
-              if(Temp01 == "cover:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].cover = L_Numbering(Temp01); continue;}
-              if(Temp01 == "injury:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].injury = L_Numbering(Temp01); continue;}
-              if(Temp01 == "fronthurtact:")             {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].fronthurtact = L_Numbering(Temp01); continue;}
-              if(Temp01 == "backhurtact:")              {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].cpoint[Vrab11].backhurtact = L_Numbering(Temp01); continue;}
-             break;
-             case 6:
-              if(Temp01 == "wpoint_end:")               {Vrab08 = 3; continue;}
-              if(Temp01 == "kind:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].kind = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvx:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].dvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvy:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].dvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvz:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].dvz = L_Numbering(Temp01); continue;}
-              if(Temp01 == "weaponact:")                {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].weaponact = L_Numbering(Temp01); continue;}
-              if(Temp01 == "attacking:")                {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].attacking = L_Numbering(Temp01); continue;}
-              if(Temp01 == "cover:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].wpoint[Vrab11].cover = L_Numbering(Temp01); continue;}
-             break;
-             case 7:
-              if(Temp01 == "opoint_end:")               {Vrab08 = 3; continue;}
-              if(Temp01 == "kind:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].kind = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvx:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].dvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvy:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].dvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "oid:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].oid = L_Numbering(Temp01); continue;}
-              if(Temp01 == "action:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].action = L_Numbering(Temp01); continue;}
-              if(Temp01 == "facing:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].opoint[Vrab11].facing = L_Numbering(Temp01); continue;}
-             break;
-             case 8: case 10: case 11:
-              if(Temp01 == "itr_end:")                  {Vrab08 = 3; continue;}
-              if(Temp01 == "kind:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].kind = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "w:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].w = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "h:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].h = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "zwidth:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].zwidth = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "dvx:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].dvx = L_Numbering(Temp01); continue;}
-              if(Temp01 == "dvy:")                      {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].dvy = L_Numbering(Temp01); continue;}
-              if(Temp01 == "fall:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].fall = L_Numbering(Temp01); continue;}
-              if(Temp01 == "arest:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].arest = L_Numbering(Temp01); continue;}
-              if(Temp01 == "vrest:")                    {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].vrest = L_Numbering(Temp01); continue;}
-              if(Temp01 == "respond:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].respond = L_Numbering(Temp01); continue;}
-              if(Temp01 == "effect:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].effect = L_Numbering(Temp01); continue;}
-              if(Temp01 == "bdefend:")                  {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].bdefend = L_Numbering(Temp01); continue;}
-              if(Temp01 == "injury:")                   {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].injury = L_Numbering(Temp01); continue;}
-              if(Temp01 == "catchingact:")              {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].catchingact[0] = L_Numbering(Temp01); Vrab08 = 10; continue;}
-              if(Temp01 == "caughtact:")                {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].caughtact[0] = L_Numbering(Temp01); Vrab08 = 11; continue;}
-              if(Vrab08 == 10){Vrab08 = 8; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].catchingact[1] = L_Numbering(Temp01); continue;}
-              if(Vrab08 == 11){Vrab08 = 8; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].itr[Vrab11].caughtact[1] = L_Numbering(Temp01); continue;}
-             break;
-             case 9:
-              if(Temp01 == "bdy_end:")                  {Vrab08 = 3; continue;}
-              if(Temp01 == "kind:")                     {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy[Vrab11].kind = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy[Vrab11].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy[Vrab11].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "w:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy[Vrab11].w = ruint32(L_Numbering(Temp01)); continue;}
-              if(Temp01 == "h:")                        {Enchanted->File2 >> Temp01; Enchanted->Object[rinsize(Enchanted->Runtime2)].Frame[Vrab10].bdy[Vrab11].h = ruint32(L_Numbering(Temp01)); continue;}
-             break;
-             default: break;
-            }
-            if(Vrab08 == 255ui8) goto Labl02;
-           }
-           if(Enchanted->File2.is_open()) Enchanted->File2.close(); goto Labl01;
-          } else
-          {
-           string Temp01; uint8 Vrab08 = Enchanted->Data_Read; insize Vrab10 = 0;
-           while(Enchanted->File2)
-           {
-            Enchanted->File2 >> Temp01; if(!Enchanted->File2) break; if(Temp01.at(0) == '#'){std::getline(Enchanted->File2, Temp01); continue;}
-            switch(Vrab08)
-            {
-             case 0: case 1: case 2: case 3: case 4: case 5:
-              if(Temp01 == "name:")       {Enchanted->File2 >> Enchanted->Background[rinsize(Enchanted->Runtime2)].name; continue;}
-              if(Temp01 == "width:")      {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].width = L_Numbering(Temp01); continue;}
-              if(Temp01 == "zboundary:")  {Enchanted->File2 >> Temp01; Vrab08 = 1; Enchanted->Background[rinsize(Enchanted->Runtime2)].zboundary[0] = L_Numbering(Temp01); continue;}
-              if(Temp01 == "perspective:"){Enchanted->File2 >> Temp01; Vrab08 = 2; Enchanted->Background[rinsize(Enchanted->Runtime2)].perspective[0] = L_Numbering(Temp01); continue;}
-              if(Temp01 == "shadow:")     {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetPic(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4);} else {Enchanted->Background[rinsize(Enchanted->Runtime2)].shadow_Index = Vrab09; Enchanted->Data_Read = 3;} Vrab08 = 255ui8; break;}
-              if(Temp01 == "layer:")      {Enchanted->File2 >> Enchanted->String[1]; statics insize Vrab09 = G_SetPic(Enchanted->String[1]); if(Vrab09 == rinsize(-1)){Enchanted->Not_Found(); Enchanted->Reset(0, 0, 32, 4);} else {statics insize Vrab11 = Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer.size(); Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer.resize(Vrab11 + 1); Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab11].image_Index = Vrab09; Enchanted->Data_Read = 6;} Vrab08 = 255ui8; break;}
-              if(Vrab08 == 1){Vrab08 = 0; Enchanted->Background[rinsize(Enchanted->Runtime2)].zboundary[1] = L_Numbering(Temp01); continue;}
-              if(Vrab08 == 2){Vrab08 = 0; Enchanted->Background[rinsize(Enchanted->Runtime2)].perspective[1] = L_Numbering(Temp01); continue;}
-              if(Vrab08 == 3){Vrab08 = 4; continue;}
-              if(Vrab08 == 4){Vrab08 = 5; Enchanted->Background[rinsize(Enchanted->Runtime2)].shadowsize[0] = L_Numbering(Temp01); continue;}
-              if(Vrab08 == 5){Vrab08 = 0; Enchanted->Background[rinsize(Enchanted->Runtime2)].shadowsize[1] = L_Numbering(Temp01); continue;}
-             break;
-             case 6: Vrab10 = Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer.size() - 1; Vrab08 = 7;
-             case 7:
-              if(Temp01 == "layer_end")    {Vrab08 = 0; continue;}
-              if(Temp01 == "transparency:"){Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].transparency = L_Numbering(Temp01); continue;}
-              if(Temp01 == "width:")       {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].width = L_Numbering(Temp01); continue;}
-              if(Temp01 == "height:")      {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].height = L_Numbering(Temp01); continue;}
-              if(Temp01 == "x:")           {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].x = L_Numbering(Temp01); continue;}
-              if(Temp01 == "y:")           {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].y = L_Numbering(Temp01); continue;}
-              if(Temp01 == "cc:")          {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].cc = L_Numbering(Temp01); continue;}
-              if(Temp01 == "c1:")          {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].c1 = L_Numbering(Temp01); continue;}
-              if(Temp01 == "c2:")          {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].c2 = L_Numbering(Temp01); continue;}
-              if(Temp01 == "rect:")        
-              {
-               Enchanted->File2 >> Temp01; statics uint32 Vrab09 = ruint32(L_Numbering(Temp01));
-               statics uint32 Vrab11 = (8 * ((Vrab09 / 2048) % 32)) + ((4 * ((Vrab09 / 32) % 64) + 7) / 256) + 5;
-               statics uint32 Vrab12 = (((4 * ((Vrab09 / 32) % 64)) + 7) % 256) - 4;
-               statics uint32 Vrab13 = (8 * (Vrab09 % 32)) + 9;
-               Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].rect32 = Vrab13 + (Vrab12 << 8) + (Vrab11 << 16);
-               continue;
-              }
-              if(Temp01 == "rect32:")      {Enchanted->File2 >> Temp01; Enchanted->Background[rinsize(Enchanted->Runtime2)].Layer[Vrab10].rect32 = L_Numbering(Temp01); continue;}
-             break;
-             default: break;
-            }
-            if(Vrab08 == 255ui8) goto Labl02;
-           }
-           if(Enchanted->File2.is_open()) Enchanted->File2.close(); goto Labl01;
-          }
-         }
-         Labl02:
-         if(Enchanted->Menu == 3 && Enchanted->Runtime == 0){Enchanted->Reset(0, 0, 0, 7); Enchanted->Data_Read = 165;}
 
-         string Temp01 = "Loading data(s)"; statics uint64 Vrab08 = Enchanted->Runtime % 80; if(Vrab08 / 20 > 0) Temp01.push_back('.'); if(Vrab08 / 40 > 0) Temp01.push_back('.'); if(Vrab08 / 60 > 0) Temp01.push_back('.');
-         string Temp02 = Enchanted->String[0]; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-         string Temp03 = Enchanted->String[1]; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
 
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 - 24 - Vrab07, 0, Temp01);
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 + 14 - Vrab07, 0, Temp02);
-         Enchanted->Print_Text(Vrab04 - 448 - Vrab06 + 243 - (rint64(Temp03.size()) * 9), Vrab03 + 33 - Vrab07, 0, Temp03);
-        }
-       break;
-       case 4:
-        {
-         statics int64 Vrab06 = L_Rounding64(145.0 / 2), Vrab07 = L_Rounding64(145.0 / 4);
-         G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 - 450 - Vrab06, Vrab03 - 24 - Vrab07, 100 + (Vrab06 * 2), Vrab06);
-         string Temp01 = "Loading data(s)...";
-         string Temp02 = Enchanted->String[0]; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-         string Temp03 = Enchanted->String[1]; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 - 24 - Vrab07, 2, Temp01);
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 + 14 - Vrab07, 0, Temp02);
-         Enchanted->Print_Text(Vrab04 - 448 - Vrab06 + 243 - (rint64(Temp03.size()) * 9), Vrab03 + 33 - Vrab07, 0, Temp03);
 
-         int32 Vrab08 = 15;
-         if(Enchanted->String[2].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[2].size();
-         if(Enchanted->String[3].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[3].size();
-         statics int32 Vrab09 = L_Rounding(rxint64(rint64(Vrab08) - 1) * 4.5) - 1;
 
-         Enchanted->Print_Bar(Vrab02 - Vrab09 - 8, Vrab05 - Enchanted->Runtime2, (ruint64(Vrab09) * 2) + 14, Vrab06 + 6);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[2].size())) * 4.5), Vrab05 - Enchanted->Runtime2, 0, Enchanted->String[2]);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[3].size())) * 4.5), Vrab05 - Enchanted->Runtime2 + 19, 0, Enchanted->String[3]);
-         G_SetDisplay(2, Enchanted->Pic_Index_Interface[24], Vrab02 - 76, Vrab05 - Enchanted->Runtime2 + 51);
-         
-         Enchanted->Runtime2 += (Enchanted->Runtime3 / 3); Enchanted->Runtime3 -= 1;
-         if(Enchanted->Runtime3 == 0) Enchanted->Reset(0, 0, 0, 5);
-        }
-       break;
-       case 5:
-        {
-         if(Enchanted->Runtime == 0)
-         {
-          Enchanted->Runtime += 1;
-          if(Enchanted->File.is_open()) Enchanted->File.close();
-          if(Enchanted->File2.is_open()) Enchanted->File2.close();
-          G_ClearSprite(6);
-          G_ClearPic(68);
-          //G_CleanUnreferencedImage();
-          Enchanted->Object.clear();
-          Enchanted->Background.clear();
-          Enchanted->Select_AvailableChar.clear();
-         }
-         statics int64 Vrab06 = L_Rounding64(145.0 / 2), Vrab07 = L_Rounding64(145.0 / 4);
-         G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 - 450 - Vrab06, Vrab03 - 24 - Vrab07, 100 + (Vrab06 * 2), Vrab06);
-         string Temp01 = "Loading data(s)...";
-         string Temp02 = Enchanted->String[0]; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-         string Temp03 = Enchanted->String[1]; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 - 24 - Vrab07, 2, Temp01);
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 + 14 - Vrab07, 0, Temp02);
-         Enchanted->Print_Text(Vrab04 - 448 - Vrab06 + 243 - (rint64(Temp03.size()) * 9), Vrab03 + 33 - Vrab07, 0, Temp03);
-         int32 Vrab08 = 15;
-         if(Enchanted->String[2].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[2].size();
-         if(Enchanted->String[3].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[3].size();
-         statics int32 Vrab09 = L_Rounding(rxint64(rint64(Vrab08) - 1) * 4.5) - 1;
-         Enchanted->Print_Bar(Vrab02 - Vrab09 - 8, Vrab05 - 165, (ruint64(Vrab09) * 2) + 14, Vrab06 + 6);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[2].size())) * 4.5), Vrab05 - 165, 0, Enchanted->String[2]);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[3].size())) * 4.5), Vrab05 - 146, 0, Enchanted->String[3]);
-  
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 76, rint32(Vrab05) - 114, 151, 26)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[25], Vrab02 - 76, Vrab05 - 114); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 76, rint32(Vrab05) - 114, 151, 26) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(165, 0, 1, 6);}} else
-         {G_SetDisplay(2, Enchanted->Pic_Index_Interface[24], Vrab02 - 76, Vrab05 - 114);}
-        }
-       break;
-       case 6:
-        {
-         statics int64 Vrab06 = L_Rounding64(145.0 / 2), Vrab07 = L_Rounding64(145.0 / 4);
-         G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Enchanted->Runtime -= 3), Vrab04, Vrab05);
-         Enchanted->Print_Bar(Vrab04 - 450 - Vrab06, Vrab03 - 24 - Vrab07 - (Enchanted->Runtime2), 100 + (Vrab06 * 2), Vrab06);
-         string Temp01 = "Loading data(s)...";
-         string Temp02 = Enchanted->String[0]; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-         string Temp03 = Enchanted->String[1]; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 - 24 - Vrab07 - (Enchanted->Runtime2), 2, Temp01);
-         Enchanted->Print_Text(Vrab04 - 447 - Vrab06, Vrab03 + 14 - Vrab07 - (Enchanted->Runtime2), 0, Temp02);
-         Enchanted->Print_Text(Vrab04 - 448 - Vrab06 + 243 - (rint64(Temp03.size()) * 9), Vrab03 + 33 - Vrab07 - (Enchanted->Runtime2), 0, Temp03);
-         int32 Vrab08 = 15;
-         if(Enchanted->String[2].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[2].size();
-         if(Enchanted->String[3].size() > rinsize(Vrab08)) Vrab08 = Enchanted->String[3].size();
-         statics int32 Vrab09 = L_Rounding(rxint64(rint64(Vrab08) - 1) * 4.5) - 1;
-         Enchanted->Print_Bar(Vrab02 - Vrab09 - 8, Vrab05 - 165 + (Enchanted->Runtime2), (ruint64(Vrab09) * 2) + 14, Vrab06 + 6);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[2].size())) * 4.5), Vrab05 - 165 + (Enchanted->Runtime2), 0, Enchanted->String[2]);
-         Enchanted->Print_Text(Vrab02 - L_Rounding64(rxint64(rint64(Enchanted->String[3].size())) * 4.5), Vrab05 - 146 + (Enchanted->Runtime2), 0, Enchanted->String[3]);
-         G_SetDisplay(2, Enchanted->Pic_Index_Interface[24], Vrab02 - 76, Vrab05 - 114 + (Enchanted->Runtime2));
 
-         Enchanted->Runtime2 += (Enchanted->Runtime3 / 2); Enchanted->Runtime3 += 1;
-         if(Enchanted->Runtime3 == 40) Enchanted->Reset(Enchanted->Runtime);
-        }
-       break;
-       default: break;
-      }
-     }
-     break;
-     case 7:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[15], Vrab02 - 400, Vrab05 - 45);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[16], Vrab02 - 245, L_Rounding64(rxint64(Vrab03) / 2) - 79);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[17], Vrab02 - 77 - (Enchanted->Runtime2), Vrab03 - 85);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[34], Vrab02 + 663 - (Enchanted->Runtime), Vrab03 - 85);
 
-       statics int64 Vrab06 = L_Rounding64(145.0 / 2), Vrab07 = L_Rounding64(145.0 / 4);
-       G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Enchanted->Data_Read -= 3), Vrab04, Vrab05);
-       Enchanted->Print_Bar(Vrab04 - 450 - Vrab06 - (Enchanted->Runtime2), Vrab03 - 24 - Vrab07, 100 + (Vrab06 * 2), Vrab06); 
-       string Temp01 = "Loading data(s) - Completed"; 
-       string Temp02 = Enchanted->String[0]; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-       string Temp03 = Enchanted->String[1]; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-       Enchanted->Print_Text(Vrab04 - 447 - Vrab06 - (Enchanted->Runtime2), Vrab03 - 24 - Vrab07, 1, Temp01);
-       Enchanted->Print_Text(Vrab04 - 447 - Vrab06 - (Enchanted->Runtime2), Vrab03 + 14 - Vrab07, 0, Temp02);
-       Enchanted->Print_Text(Vrab04 - 448 - Vrab06 + 243 - (rint64(Temp03.size()) * 9) - (Enchanted->Runtime2), Vrab03 + 33 - Vrab07, 0, Temp03);
 
-       Enchanted->Runtime += ((55 - Enchanted->Runtime3) / 2);
-       Enchanted->Runtime2 += (Enchanted->Runtime3 / 2); Enchanted->Runtime3 += 1;
-       if(Enchanted->Runtime3 == 55) Enchanted->Reset(0, 0, 0, 8);
-      }
-     break;
-     case 8: case 9:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[15], Vrab02 - 400, Vrab05 - 45);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[16], Vrab02 - 245, L_Rounding64(rxint64(Vrab03) / 2) - 79);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[34], Vrab02 - 93, Vrab03 - 85);
-       
-       switch(Enchanted->Menu)
-       {
-        case 8:
-         {
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 86, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[35], Vrab02 - 93, Vrab03 - 85); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) - 86, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(0, 0, 0, 9);}}
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 55, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[36], Vrab02 - 93, Vrab03 - 54); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) - 55, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013);}}
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) - 24, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[37], Vrab02 - 93, Vrab03 - 24); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) - 24, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013);}}
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 7, 160, 20)) {G_SetDisplay(2, Enchanted->Pic_Index_Interface[38], Vrab02 - 93, Vrab03 + 7);  if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 7, 160, 20) && Input.MOUS_Left_Release == 1) {G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013);}}
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 38, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[39], Vrab02 - 93, Vrab03 + 38); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 38, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013);}}
-          if(L_Within(Input.MOUS_X, Input.MOUS_Y, rint32(Vrab02) - 80, rint32(Vrab03) + 69, 160, 20)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[40], Vrab02 - 93, Vrab03 + 70); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, rint32(Vrab02) - 80, rint32(Vrab03) + 69, 160, 20) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013);}}
-          switch(Enchanted->Runtime)
-          {
-           case 0:
-           default: break;
-          }
-         }
-        break;
-        case 9:
-         {
-          if(Enchanted->Runtime == 255) Enchanted->Runtime2 = 1;
-          if(Enchanted->Runtime2 == 0)
-          {
-           Enchanted->Runtime += 17;
-           if(Enchanted->Runtime3 == 1 || Enchanted->Runtime3 == 2)
-           {
-            G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-            G_SetDisplay(2, Enchanted->Pic_Index_Interface[41], Vrab02 - 372, Vrab03 - 218);
-            if(Enchanted->Runtime3 == 2){G_SetDisplay(2, Enchanted->Pic_Index_Interface[67], 0, 0); G_SetDisplay(0, 0x0, 124, 87, 0, 255ui8, 122, 16); G_SetDisplay(0, 0x0, 124, 111, 0, 255ui8, 100, 16);}
-           }
-          } else 
-          {
-           Enchanted->Runtime -= 17;
-           if(Enchanted->Runtime3 == 0)
-           {
-            G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-            G_SetDisplay(2, Enchanted->Pic_Index_Interface[41], Vrab02 - 372, Vrab03 - 218);
-           }
-           if(Enchanted->Runtime3 == 2)
-           {
-            G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-            Enchanted->Reset(0, 0, 0, 13);
-           }
-           if(Enchanted->Runtime3 == 3)
-           {
-            G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-            G_SetDisplay(2, Enchanted->Pic_Index_Interface[41], Vrab02 - 372, Vrab03 - 218);
-            G_SetDisplay(2, Enchanted->Pic_Index_Interface[67], 0, 0);
-            G_SetDisplay(0, 0x0, 124, 87, 0, 255ui8, 122, 16);
-            G_SetDisplay(0, 0x0, 124, 111, 0, 255ui8, 100, 16);
-           }
-          }
-          G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Enchanted->Runtime), Vrab04, Vrab05);
-          if(Enchanted->Runtime2 == 1 && Enchanted->Runtime == 0) if(Enchanted->Runtime3 == 3){Enchanted->Reset(0, 0, 11, 10);} else {if(Enchanted->Runtime3 == 0){Enchanted->Reset(0, 0, 0, 10); for(insize Vrab06 = 0; Vrab06 < 8; ++Vrab06){if((Enchanted->Select_Active[Vrab06] > 12 && Enchanted->Select_Active[Vrab06] <= 16) || Enchanted->Select_Active[Vrab06] == 20) Enchanted->Select_Index[Vrab06] = 0; Enchanted->Select_Active[Vrab06] = 0;}} else {if(Enchanted->Runtime3 == 2){Enchanted->Reset(0, 0, 0, 13);} else {Enchanted->Reset(0, 0, 0, 8);}}}
-         }
-        break;
-        default: break;
-       }
-      }
-     break;
-     case 10:
-      {
-       Enchanted->Runtime += 1; if(Enchanted->Runtime == 20) Enchanted->Runtime = 0;
-       G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-       statics int64 Vrab06 = Vrab02 - 372, Vrab07 = Vrab03 - 248; G_SetDisplay(2, Enchanted->Pic_Index_Interface[41], Vrab06, Vrab07 + 30);
-       int64 Vrab08 = 0;
 
-       if(Enchanted->Runtime3 == 0)
-       {
-        while(Vrab08 != 4){if(Enchanted->Select_Active[Vrab08] != 0) break; Vrab08 += 1;}
-        if(Vrab08 == 4)
-        {for(Vrab08 = 0; Vrab08 < 4; ++Vrab08) if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][5]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Reset(0, 0, 99, 9);}} else
-        {Vrab08 = 0; while(Vrab08 != 4){statics uint8 Vrab09 = Enchanted->Select_Active[Vrab08]; if(Vrab09 >= 1 && Vrab09 <= 8) break; Vrab08 += 1;} if(Vrab08 == 4) Enchanted->Runtime3 = 1;}
-       }
 
-       if(Enchanted->Runtime3 == 1)
-       {
-        for(Vrab08 = 0; Vrab08 < 4; ++Vrab08) if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][5]) == 1) Enchanted->Runtime2 += 60;
-        Enchanted->Runtime2 += 1; if(Enchanted->Runtime2 > 299) Enchanted->Reset(0, 0, 2, 10);
-       }
 
-       if(Enchanted->Runtime3 >= 3 && Enchanted->Runtime3 < 10)
-       {
-        while(Enchanted->Select_Active[Enchanted->Runtime2] != 0 && Enchanted->Select_Active[Enchanted->Runtime2] <= 16) Enchanted->Runtime2 += 1;
-        if(Enchanted->Select_Active[Enchanted->Runtime2] == 0) Enchanted->Select_Active[Enchanted->Runtime2] = 17;
-        for(uint8 Vrab13 = 0; Vrab13 < 4; ++Vrab13)
-        {
-         if(Enchanted->Select_Active[Enchanted->Runtime2] == 17)
-         {
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][0]) == 1) Enchanted->Select_Index[Enchanted->Runtime2] = 0;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][2]) == 1) Enchanted->Select_Index[Enchanted->Runtime2] -= 1;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][3]) == 1) Enchanted->Select_Index[Enchanted->Runtime2] += 1;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Select_Active[Enchanted->Runtime2] = 18;}
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][5]) == 1)
-          {
-           G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013);
-           Enchanted->Select_Active[Enchanted->Runtime2] = 0; Enchanted->Runtime2 -= 1;
-           if(Enchanted->Runtime2 == ruint64(-1)){Enchanted->Runtime3 = 2; Enchanted->Runtime2 = 0; break;}
-           while(Enchanted->Select_Active[Enchanted->Runtime2] != 0 && Enchanted->Select_Active[Enchanted->Runtime2] <= 16){Enchanted->Runtime2 -= 1; if(Enchanted->Runtime2 == ruint64(-1)){Enchanted->Runtime3 = 2; Enchanted->Runtime2 = 0; break;}}
-           if(Enchanted->Runtime3 != 2) Enchanted->Select_Active[Enchanted->Runtime2] = 18;
-           break;
-          }
-         } else
-         {
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][2]) == 1) Enchanted->Select_Team[Enchanted->Runtime2] -= 1;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][3]) == 1) Enchanted->Select_Team[Enchanted->Runtime2] += 1;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Select_Active[Enchanted->Runtime2] = 19; Enchanted->Runtime2 += 1; Enchanted->Runtime3 += 1; if(Enchanted->Runtime3 == 10) Enchanted->Runtime2 = 0;}
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][5]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Select_Active[Enchanted->Runtime2] = 17;}
-         }
-         if(Enchanted->Select_Index[Enchanted->Runtime2] == rinsize(-1)) Enchanted->Select_Index[Enchanted->Runtime2] = Enchanted->Select_AvailableChar.size();
-         if(Enchanted->Select_Index[Enchanted->Runtime2] == Enchanted->Select_AvailableChar.size() + 1) Enchanted->Select_Index[Enchanted->Runtime2] = 0;
-         if(Enchanted->Select_Team[Enchanted->Runtime2] == 255ui8) Enchanted->Select_Team[Enchanted->Runtime2] = 5;
-         if(Enchanted->Select_Team[Enchanted->Runtime2] == 6) Enchanted->Select_Team[Enchanted->Runtime2] = 0;
-        }
-       }
 
-       for(Vrab08 = 0; Vrab08 < 4; ++Vrab08)
-       for(int64 Vrab09 = 0; Vrab09 < 2; ++Vrab09)
-       {
-        statics insize Vrab10 = rinsize((4 * Vrab09) + Vrab08);
-        if(Vrab09 == 0)
-        if(Enchanted->Runtime3 <= 1)
-        if(Enchanted->Select_Active[Vrab08] == 0)
-        {
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] = ruint8(Vrab08) + 1; Enchanted->Runtime3 = 0; Enchanted->Runtime2 = 0;}
-        } else
-        {
-         if(Enchanted->Runtime3 == 0)
-         if(Enchanted->Select_Active[Vrab08] > 4)
-         {
-          if(Enchanted->Select_Active[Vrab08] > 8)
-          {
-           if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][5]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] -= 4;}
-          } else
-          {
-           if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] += 4;}
-           if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][5]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] -= 4;}
-           if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][2]) == 1) Enchanted->Select_Team[Vrab08] -= 1;
-           if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][3]) == 1) Enchanted->Select_Team[Vrab08] += 1;
-          }
-         } else
-         {
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] += 4;}
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][5]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Select_Active[Vrab08] = 0;}
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][0]) == 1) Enchanted->Select_Index[Vrab08] = 0;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][2]) == 1) Enchanted->Select_Index[Vrab08] -= 1;
-          if(L_Input(Enchanted->Memory[0].P_Input[Vrab08][3]) == 1) Enchanted->Select_Index[Vrab08] += 1;
-         }
-        }
 
-        if(Enchanted->Select_Active[Vrab10] == 0)
-        {
-         if(Enchanted->Runtime3 == 0)
-         {
-          G_SetDisplay(2, Enchanted->Pic_Index_Interface[42 + rinsize((Enchanted->Runtime % 10) / 5)], Vrab06 + 107 + (Vrab08 * 153), Vrab07 + 76 + (Vrab09 * 212));
-          Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(5.0 * 4.5), Vrab07 + 173 + (Vrab09 * 212), ruint8(Enchanted->Runtime / 10), "Join?");
-         } else
-         {
-          if(Enchanted->Runtime3 == 1)
-          {
-           G_SetDisplay(2, Enchanted->Pic_Index_Interface[45 + rinsize(Enchanted->Runtime2 / 60)], Vrab06 + 142 + (Vrab08 * 153), Vrab07 + 81 + (Vrab09 * 212));
-          }
-         }
-        } else
-        {
-         if(Enchanted->Select_Index[Vrab10] == rinsize(-1)) Enchanted->Select_Index[Vrab10] = Enchanted->Select_AvailableChar.size();
-         if(Enchanted->Select_Index[Vrab10] == Enchanted->Select_AvailableChar.size() + 1) Enchanted->Select_Index[Vrab10] = 0;
 
-         if(Enchanted->Select_Index[Vrab10] == 0)
-         {G_SetDisplay(2, Enchanted->Pic_Index_Interface[44], Vrab06 + 107 + (Vrab08 * 153), Vrab07 + 49 + (Vrab09 * 212));} else
-         {
-          G_SetDisplay(4, Enchanted->Object[Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab10] - 1]].head_Index, Vrab06 + 107 + (Vrab08 * 153), Vrab07 + 49 + (Vrab09 * 212));
-         }
 
-         if(Enchanted->Select_Active[Vrab10] <= 16)
-         {
-          Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(rxint64(Enchanted->Memory[0].P_Name[(Enchanted->Select_Active[Vrab10] - 1) % 4].size()) * 4.5), Vrab07 + 173 + (Vrab09 * 212), 0, Enchanted->Memory[0].P_Name[(Enchanted->Select_Active[Vrab10] - 1) % 4]);
-         } else
-         {
-          Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(8.0 * 4.5), Vrab07 + 173 + (Vrab09 * 212), 0, "Computer");
-         }
 
-         if(Enchanted->Select_Active[Vrab10] <= 4 || Enchanted->Select_Active[Vrab10] == 17)
-         {
-          if(Enchanted->Select_Index[Vrab10] == 0){Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(6.0 * 4.5), Vrab07 + 195 + (Vrab09 * 212), ruint8(Enchanted->Runtime / 10), "Random");} else
-          {Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(rxint64(Enchanted->Object[Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab10] - 1]].name.size()) * 4.5), Vrab07 + 195 + (Vrab09 * 212), ruint8(Enchanted->Runtime / 10), Enchanted->Object[Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab10] - 1]].name);}
-         } else
-         {
-          if(Enchanted->Select_Index[Vrab10] == 0){Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(6.0 * 4.5), Vrab07 + 195 + (Vrab09 * 212), 0, "Random");} else
-          {Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(rxint64(Enchanted->Object[Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab10] - 1]].name.size()) * 4.5), Vrab07 + 195 + (Vrab09 * 212), 0, Enchanted->Object[Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab10] - 1]].name);}
-          
-          if(Enchanted->Select_Team[Vrab10] == 255ui8) Enchanted->Select_Team[Vrab10] = 5;
-          if(Enchanted->Select_Team[Vrab10] == 6) Enchanted->Select_Team[Vrab10] = 0;
-          if((Enchanted->Select_Active[Vrab10] > 4 && Enchanted->Select_Active[Vrab10] <= 8) || Enchanted->Select_Active[Vrab10] == 18)
-          {
-           if(Enchanted->Select_Team[Vrab10] == 0){Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(11.0 * 4.5), Vrab07 + 217 + (Vrab09 * 212), ruint8(Enchanted->Runtime / 10), "Independent");} else
-           {Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(6.0 * 4.5), Vrab07 + 217 + (Vrab09 * 212), ruint8(Enchanted->Runtime / 10), "Team " + std::to_string(Enchanted->Select_Team[Vrab10]));}
-          } else
-          {
-           if(Enchanted->Select_Team[Vrab10] == 0){Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(11.0 * 4.5), Vrab07 + 217 + (Vrab09 * 212), 0, "Independent");} else
-           {Enchanted->Print_Text(Vrab06 + 169 + (Vrab08 * 153) - L_Rounding64(6.0 * 4.5), Vrab07 + 217 + (Vrab09 * 212), 0, "Team " + std::to_string(Enchanted->Select_Team[Vrab10]));}
-          }
-         }
-        }
-       }
 
-       if(Enchanted->Runtime3 == 2)
-       {
-        statics int64 Vrab09 = Vrab02 - 152, Vrab10 = Vrab03 - 44;
-        G_SetDisplay(2, Enchanted->Pic_Index_Interface[50], Vrab09, Vrab10);
-        uint8 Vrab11 = 0; uint8 Vrab12 = 0;
-        for(uint8 Vrab13 = 0; Vrab13 < 8; ++Vrab13){if(Enchanted->Select_Active[Vrab13] != 0){Vrab11 += 1; if(Vrab12 == 0){Vrab12 = Enchanted->Select_Team[Vrab13];} else {if(Vrab12 != Enchanted->Select_Team[Vrab13]) Vrab12 = 6;}}}
-        int1 Vect01[8]{};
-        if((Vrab12 == 0 && Vrab11 > 1) || Vrab12 == 6)
-        {Vect01[0] = true;} else {if(Enchanted->Runtime2 == 0) Enchanted->Runtime2 = 1;}
-        for(uint8 Vrab13 = 1; Vrab13 < 9 - Vrab11; ++Vrab13) Vect01[Vrab13] = true;
-        for(uint8 Vrab13 = 0; Vrab13 < 4; ++Vrab13)
-        {
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][2]) == 1){Enchanted->Runtime2 -= 1; if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Runtime2 = 7; while(!Vect01[Enchanted->Runtime2]){Enchanted->Runtime2 -= 1; if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Runtime2 = 7;}}
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][3]) == 1){Enchanted->Runtime2 += 1; if(Enchanted->Runtime2 == 8) Enchanted->Runtime2 = 0; while(!Vect01[Enchanted->Runtime2]){Enchanted->Runtime2 += 1; if(Enchanted->Runtime2 == 8) Enchanted->Runtime2 = 0;}}
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab13][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Runtime3 = 10 - Enchanted->Runtime2; Enchanted->Runtime2 = 0;}
-        }
-        if(Enchanted->Runtime3 == 2)
-        for(int64 Vrab13 = 0; Vrab13 < 8; ++Vrab13)
-        {
-         if(Vect01[Vrab13]){G_SetDisplay(2, Enchanted->Pic_Index_Interface[59 + rinsize(Vrab13)], Vrab09 + 43 + (Vrab13 * 30), Vrab10 + 53);} else {G_SetDisplay(2, Enchanted->Pic_Index_Interface[51 + rinsize(Vrab13)], Vrab09 + 43 + (Vrab13 * 30), Vrab10 + 53);}
-         if(Enchanted->Runtime2 == ruint64(Vrab13)){G_SetDisplay(1, 0xFFFFFF, Vrab09 + 38 + (Vrab13 * 30), Vrab10 + 48, 0, 255ui8, 16, 20); if((Enchanted->Runtime % 10) / 5 == 0) G_SetDisplay(1, 0xFFFFFF, Vrab09 + 37 + (Vrab13 * 30), Vrab10 + 47, 0, 255ui8, 18, 22);}
-        }
-       }
 
-       if(Enchanted->Runtime3 == 11)
-       {
-        G_SetDisplay(2, Enchanted->Pic_Index_Interface[67], 0, 0);
-        G_SetDisplay(0, 0x0, 124, 87, 0, 255ui8, 122, 16);
-        G_SetDisplay(0, 0x0, 124, 111, 0, 255ui8, 100, 16);
-        for(uint8 Vrab09 = 0; Vrab09 < 4; ++Vrab09)
-        {
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][0]) == 1){Enchanted->Runtime2 -= 1; if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Runtime2 = 5;}
-         if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][1]) == 1){Enchanted->Runtime2 += 1; if(Enchanted->Runtime2 == 6) Enchanted->Runtime2 = 0;}
-         if(Enchanted->Runtime2 == 0) if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(0, 0, 100, 9); break;}
-         if(Enchanted->Runtime2 == 1) if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); for(insize Vrab10 = 0; Vrab10 < 8; ++Vrab10){if((Enchanted->Select_Active[Vrab10] > 12 && Enchanted->Select_Active[Vrab10] <= 16) || Enchanted->Select_Active[Vrab10] == 20) Enchanted->Select_Index[Vrab10] = 0; Enchanted->Select_Active[Vrab10] = 0;} Enchanted->Runtime2 = 0; Enchanted->Runtime3 = 0; break;}
-         if(Enchanted->Runtime2 == 2) if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); for(uint8 Vrab10 = 0; Vrab10 < 8; ++Vrab10){int1 Vrab11 = false; if(Enchanted->Select_Active[Vrab10] > 12 && Enchanted->Select_Active[Vrab10] <= 16){Enchanted->Select_Active[Vrab10] -= 4; Vrab11 = true;} if(Enchanted->Select_Active[Vrab10] == 20){Enchanted->Select_Active[Vrab10] = 19; Vrab11 = true;} if(Vrab11) Enchanted->Select_Index[Vrab10] = 0;} Enchanted->Runtime3 = 10; break;}
-         if(Enchanted->Runtime2 == 5) if(L_Input(Enchanted->Memory[0].P_Input[Vrab09][4]) == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Reset(0, 0, 99, 9); break;}
-        }
-        if(Enchanted->Menu == 10 && Enchanted->Runtime3 == 11)
-        {
-         G_SetDisplay(1, 0xFFFFFF, 13, 13 + (24 * Enchanted->Runtime2), 0, 255ui8, 238, 20);
-         if((Enchanted->Runtime % 10) / 5 == 0) G_SetDisplay(1, 0xFFFFFF, 12, 12 + (24 * Enchanted->Runtime2), 0, 255ui8, 240, 22);
-        }
-       }
-       if(Enchanted->Runtime3 == 10)
-       {
-        Enchanted->Runtime3 += 1; statics insize Vrab09 = Enchanted->Select_AvailableChar.size();
-        std::vector < insize > Vect01;
-        for(insize Vrab10 = 0; Vrab10 < Vrab09; ++Vrab10){statics insize Vrab11 = Enchanted->Object[Enchanted->Select_AvailableChar[Vrab10]].id; if(Vrab11 >= 1 && Vrab11 <= 29) Vect01.push_back(Vrab10);}
-        for(int64 Vrab10 = 0; Vrab10 < 8; ++Vrab10) if(Enchanted->Select_Active[Vrab10] != 0) if(Enchanted->Select_Index[Vrab10] != 0){insize Vrab11 = Vect01.size(); while(Vrab11 != 0){Vrab11 -= 1; if(Vect01[Vrab11] == Enchanted->Select_Index[Vrab10] - 1){Vect01.erase(Vect01.begin() + Vrab11); break;}}}
-        for(int64 Vrab10 = 0; Vrab10 < 8; ++Vrab10)
-        if(Enchanted->Select_Active[Vrab10] != 0)
-        if(Enchanted->Select_Index[Vrab10] == 0)
-        {
-         if(Enchanted->Select_Active[Vrab10] > 8 && Enchanted->Select_Active[Vrab10] <= 12) Enchanted->Select_Active[Vrab10] += 4;
-         if(Enchanted->Select_Active[Vrab10] == 19) Enchanted->Select_Active[Vrab10] = 20;
-         if(Vect01.size() > 0)
-         {
-          statics insize Vrab11 = rinsize(L_Random(Vect01.size() - 1));
-          Enchanted->Select_Index[Vrab10] = Vect01[Vrab11] + 1;
-          Vect01.erase(Vect01.begin() + Vrab11);
-         } else
-         {
-          Enchanted->Select_Index[Vrab10] = rinsize(L_Random(Enchanted->Select_AvailableChar.size() - 1)) + 1;
-         } 
-        }
-       }
 
-       if(Enchanted->Runtime3 >= 99) Enchanted->Runtime3 -= 98;
-      }
-     break;
-     case 11:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-       if(Enchanted->Runtime3 < 6){Enchanted->Runtime += Enchanted->Runtime2;} else {Enchanted->Runtime -= Enchanted->Runtime2;} if(Enchanted->Runtime3 % 6 == 0){Enchanted->Runtime2 += 1;} if(Enchanted->Runtime3 % 6 == 3){Enchanted->Runtime2 -= 1;} if(Enchanted->Runtime2 == 14){Enchanted->Runtime3 += 3; Enchanted->Runtime2 -= 1;} if(Enchanted->Runtime3 % 3 != 2){Enchanted->Runtime3 += 1;} else {Enchanted->Runtime3 -= 2;}
-       
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[15], Vrab02 - 400, Vrab05 - 45 - (Enchanted->Runtime));
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[16], Vrab02 - 245, L_Rounding64(rxint64(Vrab03) / 2) - 79 - (Enchanted->Runtime));
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[17], Vrab02 - 77, Vrab03 - 85 - (Enchanted->Runtime));
-       
-       statics int64 Vrab06 = Vrab02 - 352, Vrab07 = Vrab03 + 370 - (Enchanted->Runtime);
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[28], Vrab06, Vrab07);
-       for(uint64 Vrab08 = 0; Vrab08 < 4; ++Vrab08)
-       {
-        if(Enchanted->Memory[1].P_Name[Vrab08] == "") Enchanted->Memory[1].P_Name[Vrab08] = "P" + std::to_string(Vrab08 + 1);
-        Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding64(rxint64(Enchanted->Memory[1].P_Name[Vrab08].size()) * 4.5), Vrab07 + 35, 0, Enchanted->Memory[1].P_Name[Vrab08]);
-        G_SetDisplay(2, Enchanted->Pic_Index_Interface[29 + Enchanted->Memory[1].P_Con[Vrab08]], Vrab06 + 148 + (139 * Vrab08), Vrab07 + 61);
-        uint64 Vrab09 = 0; if(Enchanted->Memory[1].P_Con[Vrab08] != 0) Vrab09 = 7;
-        for(uint64 Vrab10 = Vrab09; Vrab10 < Vrab09 + 7; ++Vrab10)
-        {
-         statics string Temp01 = Enchanted->Input_Name(Enchanted->Memory[1].P_Input[Vrab08][Vrab10]);
-         Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding(rxint64(Temp01.size()) * 4.5), Vrab07 + 159 + (22 * (Vrab10 - Vrab09)), 0, Temp01);
-        }
-       }
-       
-       if(Enchanted->Runtime3 < 6)
-       {if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Reset(0, 0, 0, 12);} else
-       {if(Enchanted->Runtime2 == ruint64(-1)) Enchanted->Reset();}
-      }
-     break;
-     case 12:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, Vrab04, Vrab05);
-       statics int64 Vrab06 = Vrab02 - 352, Vrab07 = Vrab03 - 177;
-       G_SetDisplay(2, Enchanted->Pic_Index_Interface[28], Vrab06, Vrab07);
-       {statics int32 Vrab08 = rint32(Vrab06) + 362, Vrab09 = rint32(Vrab07) + 320; if(L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab08, Vrab09, 151, 26)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[25], Vrab08, Vrab09); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, Vrab08, Vrab09, 151, 26) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[0], Varb0012, Varb0013); Enchanted->Reset(547, 0, 6, 11); Enchanted->Memory[0] = Enchanted->Memory[1]; Enchanted->Save_Memory("System\\Interface\\Enchanted\\config.ini");}}}
-       {statics int32 Vrab08 = rint32(Vrab06) + 534, Vrab09 = rint32(Vrab07) + 320; if(L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab08, Vrab09, 151, 26)){G_SetDisplay(2, Enchanted->Pic_Index_Interface[27], Vrab08, Vrab09); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, Vrab08, Vrab09, 151, 26) && Input.MOUS_Left_Release == 1){G_SetSoundplay(Enchanted->Sound_Index_Interface[1], Varb0012, Varb0013); Enchanted->Reset(547, 0, 6, 11);}}}
 
-       for(uint64 Vrab08 = 0; Vrab08 < 4; ++Vrab08)
-       {
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab06 + 148 + (139 * Vrab08), Vrab07 + 35, 106, 19))
-        if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, Vrab06 + 148 + (139 * Vrab08), Vrab07 + 35, 106, 19) && Input.MOUS_Left_Release == 1)
-        {statics auto Vrab09 = ruint64(Vrab08) + 1; if(Enchanted->Runtime2 == Vrab09){Enchanted->Runtime2 = 0;} else {Enchanted->Runtime2 = Vrab09;}}
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab06 + 148 + (139 * Vrab08), Vrab07 + 61, 106, 91))
-        if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, Vrab06 + 148 + (139 * Vrab08), Vrab07 + 61, 106, 91) && Input.MOUS_Left_Release == 1)
-        {Enchanted->Memory[1].P_Con[Vrab08] += 1; Enchanted->Memory[1].P_Con[Vrab08] %= 5;}
-        
-        if(Enchanted->Runtime2 == ruint64(Vrab08) + 1)
-        {
-         L_Typing(Enchanted->Memory[1].P_Name[Vrab08]); if(Enchanted->Memory[1].P_Name[Vrab08].size() > 100) Enchanted->Memory[1].P_Name[Vrab08].resize(100); if(Input.CONS_ENTER == 1) Enchanted->Runtime2 = 0;
-         Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding64(rxint64(Enchanted->Memory[1].P_Name[Vrab08].size()) * 4.5), Vrab07 + 35, 1, Enchanted->Memory[1].P_Name[Vrab08]);
-        } else
-        {
-         if(Enchanted->Memory[1].P_Name[Vrab08] == "") Enchanted->Memory[1].P_Name[Vrab08] = "P" + std::to_string(Vrab08 + 1);
-         Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding64(rxint64(Enchanted->Memory[1].P_Name[Vrab08].size()) * 4.5), Vrab07 + 35, 0, Enchanted->Memory[1].P_Name[Vrab08]);
-        }
-        G_SetDisplay(2, Enchanted->Pic_Index_Interface[29 + Enchanted->Memory[1].P_Con[Vrab08]], Vrab06 + 148 + (139 * Vrab08), Vrab07 + 61);
-        uint64 Vrab09 = 0; if(Enchanted->Memory[1].P_Con[Vrab08] != 0) Vrab09 = 7;
-        for(uint64 Vrab10 = Vrab09; Vrab10 < Vrab09 + 7; ++Vrab10)
-        {
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab06 + 148 + (139 * Vrab08), Vrab07 + 159 + (22 * (Vrab10 - Vrab09)), 106, 19))
-         if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left,Vrab06 + 148 + (139 * Vrab08), Vrab07 + 159 + (22 * (Vrab10 - Vrab09)), 106, 19) && Input.MOUS_Left_Release == 1)
-         {statics auto Vrab11 = (ruint64(Vrab08) * 7) + 5 + (Vrab10 - Vrab09); if(Enchanted->Runtime2 == Vrab11){Enchanted->Runtime2 = 0;} else {Enchanted->Runtime2 = Vrab11;}}
-         
-         statics string Temp01 = Enchanted->Input_Name(Enchanted->Memory[1].P_Input[Vrab08][Vrab10]);
-         if(Enchanted->Runtime2 == (ruint64(Vrab08) * 7) + 5 + (Vrab10 - Vrab09))
-         {
-          statics uint8 Vrab11 = L_Press(); if(Vrab11 != 255ui8){Enchanted->Memory[1].P_Input[Vrab08][Vrab10] = Vrab11; Enchanted->Runtime2 = 0;}
-          Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding(rxint64(Temp01.size()) * 4.5), Vrab07 + 159 + (22 * (Vrab10 - Vrab09)), 1, Temp01);
-         } else {Enchanted->Print_Text(Vrab06 + 203 + (139 * Vrab08) - L_Rounding(rxint64(Temp01.size()) * 4.5), Vrab07 + 159 + (22 * (Vrab10 - Vrab09)), 0, Temp01);}
-        }
-       }
-      }
-     break;
-     case 13:
-      {
-       Enchanted->Runtime += 1; if(Enchanted->Runtime == 0xFFFFFFFFFFFFFFFF){Enchanted->Reset(255, 0, 3, 9); Enchanted->Game->Background += 1; Enchanted->Game->Object.clear(); Enchanted->Game.reset(); break;} if(Enchanted->Runtime == 0xFFFFFFFFFFFFFFF0) Enchanted->Runtime = 0xFFFFFFFFFFFFFFEF;
-       
-       // Initialization
-        if(Enchanted->Runtime == 1)
-        {
-         Enchanted->Game = std::make_unique < HEPTA_LF2_ENCHANTED_GAME > ();
-         Enchanted->Game->Background -= 0;
-         Enchanted->Game->Independent_Team = 5;
-         for(uint8 Vrab06 = 0; Vrab06 < 8; ++Vrab06)
-         {
-          if(Enchanted->Select_Active[Vrab06] == 0) continue;
-          statics insize Vrab07 = Enchanted->Game->Object.size(); Enchanted->Game->Object.resize(Vrab07 + 1);
-          Enchanted->Game->Object[Vrab07].Index = Enchanted->Select_AvailableChar[Enchanted->Select_Index[Vrab06] - 1];
-          if(Enchanted->Select_Active[Vrab06] < 8 || Enchanted->Select_Active[Vrab06] > 16){Enchanted->Game->Object[Vrab07].Player = 9; Enchanted->Game->Object[Vrab07].Name = "Com";} else
-          {
-           if(Enchanted->Select_Active[Vrab06] > 12){Enchanted->Game->Object[Vrab07].Player = Enchanted->Select_Active[Vrab06] - 13;} else
-           {Enchanted->Game->Object[Vrab07].Player = Enchanted->Select_Active[Vrab06] - 9;}
-           Enchanted->Game->Object[Vrab07].Name = Enchanted->Memory[0].P_Name[Enchanted->Game->Object[Vrab07].Player];
-          }
-          if(Enchanted->Select_Team[Vrab06] == 0)
-          {Enchanted->Game->Object[Vrab07].Actual_Team = (Enchanted->Game->Object[Vrab07].Team = (Enchanted->Game->Independent_Team += 1));} else {Enchanted->Game->Object[Vrab07].Actual_Team = (Enchanted->Game->Object[Vrab07].Team = Enchanted->Select_Team[Vrab06]);}
-         }
-        }
-       //-//
 
-       // Mechanism
-        Enchanted->Camera_Y = 550 - rint64(Enchanted->Display_H);
-        if(Enchanted->Game->Background < Enchanted->Background.size())
-        {
-         Enchanted->Resist_Offside();
-         Enchanted->Inputs();
 
-        
-         Enchanted->Draw_Background();
-         Enchanted->Draw_Character();
-        
-         Enchanted->Print_Text(3, 30, 0, std::to_string(Enchanted->Game->Object.size()));
-        }
-       //-//
 
-       if(Enchanted->Runtime <= 15) G_SetDisplay(0, 0x0, 0, 0, 0, 255ui8 - (ruint8(Enchanted->Runtime) * 17), Vrab04, Vrab05);
-       if(Enchanted->Runtime > 0xFFFFFFFFFFFFFFF0) G_SetDisplay(0, 0x0, 0, 0, 0, (ruint8(Enchanted->Runtime - 0xFFFFFFFFFFFFFFF0) * 17), Vrab04, Vrab05);
-       if(Input.CONS_F4 == 1) Enchanted->Runtime = 0xFFFFFFFFFFFFFFF0;
-      }
-     break;
-     default: break;
-    }
-   }
 
-   G_SetDisplay(0, 0x0, -Enchanted->Display_W, -Enchanted->Display_H, 0, 255ui8, Enchanted->Display_W, rint64(Enchanted->Display_H) * 3); G_SetDisplay(0, 0x0, Enchanted->Display_W, -Enchanted->Display_H, 0, 255ui8, Enchanted->Display_W, rint64(Enchanted->Display_H) * 3);
-   G_SetDisplay(0, 0x0, 0, Enchanted->Display_H, 0, 255ui8, Enchanted->Display_W, Enchanted->Display_H); G_SetDisplay(0, 0x0, 0, -Enchanted->Display_H, 0, 255ui8, Enchanted->Display_W, Enchanted->Display_H);
-   if(Input.MOUS_X == Enchanted->Mouse_X && Input.MOUS_Y == Enchanted->Mouse_Y && Input.MOUS_Left == 0){if((++Enchanted->Mouse_Standby) == 255ui8) Enchanted->Mouse_Standby = 254ui8;} else {Enchanted->Mouse_Standby = 0ui8;}
-   if(Enchanted->Mouse_Standby < 150ui8){ShowCursor(TRUE); G_SetDisplay(2, Enchanted->Pic_Index_Interface[13], Input.MOUS_X - 3ull, Input.MOUS_Y - 3ull);} else {if(Enchanted->Mouse_Standby == 153ui8){ShowCursor(FALSE); SetCursor(NULL);}}
-   Enchanted->Mouse_X = Input.MOUS_X; Enchanted->Mouse_Y = Input.MOUS_Y;
-   if(Input.MOUS_Left >= 1 && Enchanted->Draw)
-   {
-    int64 Vrab02 = Input.MOUS_X; int64 Vrab03 = Input.MOUS_Y;
-    int64 Vrab04 = Input.MOUS_X_Left; int64 Vrab05 = Input.MOUS_Y_Left;
-    if(Vrab04 < Vrab02){Vrab02 = Vrab04; Vrab04 = Input.MOUS_X;}
-    if(Vrab05 < Vrab03){Vrab03 = Vrab05; Vrab05 = Input.MOUS_Y;}
-    Vrab04 -= Vrab02; Vrab05 -= Vrab03;
-    if(Vrab04 > 10 || Vrab05 > 10)
-    G_SetDisplay(1, 0xFF00, Vrab02, Vrab03, 0, 255ui8, Vrab04, Vrab05);
-    if(Vrab04 > 2 && Vrab05 > 2)
-    G_SetDisplay(0, 0x00FF00, Vrab02 + 1, Vrab03 + 1, 0, 50ui8, Vrab04 - 2, Vrab05 - 2);
-   }
-   Enchanted->Print_Text(3, 0, 0, std::to_string(Vrab01));
-   Enchanted->Print_Text(3, 15, 0, std::to_string(L_Random(10)));
-  }
- //-/*/
- 
 
 
 
@@ -4633,1319 +4297,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- // Earlier Declaration
-  int32  L_Numbering(string) fastened;
- //-//
- // Memory
-  struct HEPTA_INPUT
-  {
-   uint8 MAIN_1;
-   uint8 MAIN_2;
-   uint8 MAIN_3;
-   uint8 MAIN_4;
-   uint8 MAIN_5;
-   uint8 MAIN_6;
-   uint8 MAIN_7;
-   uint8 MAIN_8;
-   uint8 MAIN_9;
-   uint8 MAIN_0;
-   uint8 MAIN_A;
-   uint8 MAIN_B;
-   uint8 MAIN_C;
-   uint8 MAIN_D;
-   uint8 MAIN_E;
-   uint8 MAIN_F;
-   uint8 MAIN_G;
-   uint8 MAIN_H;
-   uint8 MAIN_I;
-   uint8 MAIN_J;
-   uint8 MAIN_K;
-   uint8 MAIN_L;
-   uint8 MAIN_M;
-   uint8 MAIN_N;
-   uint8 MAIN_O;
-   uint8 MAIN_P;
-   uint8 MAIN_Q;
-   uint8 MAIN_R;
-   uint8 MAIN_S;
-   uint8 MAIN_T;
-   uint8 MAIN_U;
-   uint8 MAIN_V;
-   uint8 MAIN_W;
-   uint8 MAIN_X;
-   uint8 MAIN_Y;
-   uint8 MAIN_Z;
-   uint8 CORE_ESC;
-   uint8 CORE_F1;
-   uint8 CORE_F2;
-   uint8 CORE_F3;
-   uint8 CORE_F4;
-   uint8 CORE_F5;
-   uint8 CORE_F6;
-   uint8 CORE_F7;
-   uint8 CORE_F8;
-   uint8 CORE_F9;
-   uint8 CORE_F10;
-   uint8 CORE_F11;
-   uint8 CORE_F12;
-   uint8 CORE_PSCREEN;
-   uint8 CORE_DELETE;
-   uint8 CORE_BACKSPACE;
-   uint8 CORE_TAB;
-   uint8 CORE_CAPSLOCK;
-   uint8 CORE_ENTER;
-   uint8 CORE_LSHIFT;
-   uint8 CORE_RSHIFT;
-   uint8 CORE_LCTRL;
-   uint8 CORE_RCTRL;
-   uint8 CORE_LALT;
-   uint8 CORE_RALT;
-   uint8 CORE_LWIN;
-   uint8 CORE_RWIN;
-   uint8 CORE_UP;
-   uint8 CORE_LEFT;
-   uint8 CORE_DOWN;
-   uint8 CORE_RIGHT;
-   uint8 NUMS_1;
-   uint8 NUMS_2;
-   uint8 NUMS_3;
-   uint8 NUMS_4;
-   uint8 NUMS_5;
-   uint8 NUMS_6;
-   uint8 NUMS_7;
-   uint8 NUMS_8;
-   uint8 NUMS_9;
-   uint8 NUMS_0;
-   uint8 NUMS_ENTER;
-   uint8 NUMS_INSERT;
-   uint8 NUMS_DELETE;
-   uint8 NUMS_NUMLOCK;
-   uint8 NUMS_ADD;
-   uint8 NUMS_SUB;
-   uint8 NUMS_SLASH;
-   uint8 NUMS_MULTIPLE;
-   uint8 NUMS_DOT;
-   uint8 SYMB_BACKTICK;
-   uint8 SYMB_UNDERSCORE;
-   
-   int32 MOUS_X;
-   int32 MOUS_Y;
-   uint8 MOUS_Left;
-   uint8 MOUS_Right;
-   uint8 MOUS_Mid;
-   uint8 MOUS_Left_Release;
-   uint8 MOUS_Right_Release;
-   uint8 MOUS_Mid_Release;
-   int32 MOUS_X_Left;
-   int32 MOUS_Y_Left;
-   int32 MOUS_X_Right;
-   int32 MOUS_Y_Right;
-   int32 MOUS_X_Mid;
-   int32 MOUS_Y_Mid;
-
-   int1  CAPS_ON;
-  };
-  struct HEPTA_LF2_ENCHANTED_CONFIG 
-  {
-   uint8 P_Con[4]{};
-   uint8 P_Input[4][14]{};
-   string P_Name[4]{};
-  };
-  struct HEPTA_LF2_ENCHANTED
-  {
-   uint8 Menu;
-   int32 Mouse_X; int32 Mouse_Y; uint8 Mouse_Standby;
-   uint64 Runtime; uint64 Runtime2; uint64 Runtime3;
-   
-   string String, String_Load, String_Load2;
-   std::ifstream File;
-   std::streampos Lastread;
-
-   HEPTA_LF2_ENCHANTED_CONFIG Config[2];
-   std::vector < insize > Sound_Index;
-   std::vector < insize > Sprite_Index_Interface;
-   std::vector < insize > Sprite_Index_Character;
-   
-   int0 PrintText(int32 Vrab01, int32 Vrab02, uint8 Vrab03, statics string &Temp01)
-   {
-    statics insize Vrab04 = Temp01.size(); insize Vrab05 = 0; int64 Vrab06 = rint64(Vrab01); Vrab03 %= 6;
-    while(Vrab05 != Vrab04)
-    {
-     G_SetDisplay(4, Sprite_Index_Interface[rinsize(Vrab03)] + rinsize(Temp01.at(Vrab05)), Vrab06, Vrab02);
-     Vrab05 += 1; Vrab06 += 9;
-    }
-   }
-   int0 Load(statics string Temp01)
-   {
-    std::ifstream File01(Temp01); 
-    if(!File01.is_open()){std::ofstream File02(Temp01); File02 << ""; File02.close(); File01.open(Temp01);}
-    string Temp02;
-    if(File01){File01 >> Config[1].P_Name[0];} else {return;}
-    if(File01){File01 >> Config[1].P_Name[1];} else {return;}
-    if(File01){File01 >> Config[1].P_Name[2];} else {return;}
-    if(File01){File01 >> Config[1].P_Name[3];} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][0] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][1] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][2] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][3] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][4] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][5] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][6] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][0] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][1] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][2] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][3] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][4] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][5] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][6] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][0] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][1] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][2] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][3] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][4] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][5] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][6] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][0] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][1] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][2] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][3] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][4] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][5] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][6] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][7] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][8] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][9] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][10] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][11] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][12] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[0][13] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][7] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][8] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][9] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][10] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][11] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][12] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[1][13] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][7] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][8] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][9] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][10] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][11] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][12] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[2][13] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][7] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][8] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][9] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][10] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][11] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][12] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Input[3][13] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Con[0] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Con[1] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Con[2] = ruint8(L_Numbering(Temp02));} else {return;}
-    if(File01){File01 >> Temp02; Config[1].P_Con[3] = ruint8(L_Numbering(Temp02));} else {return;}
-    Config[0] = Config[1];
-   }
-   int0 Save(statics string Temp01)
-   {
-    std::ofstream File01(Temp01);
-    if(!File01.is_open()) return;
-
-    File01 << Config[0].P_Name[0] << " " << Config[0].P_Name[1] << " " << Config[0].P_Name[2] << " " << Config[0].P_Name[3] << "\n";
-    File01 << ruint32(Config[0].P_Input[0][0]) << " " << ruint32(Config[0].P_Input[0][1]) << " " << ruint32(Config[0].P_Input[0][2]) << " " << ruint32(Config[0].P_Input[0][3]) << " " << ruint32(Config[0].P_Input[0][4]) << " " << ruint32(Config[0].P_Input[0][5]) << " " << ruint32(Config[0].P_Input[0][6]) << "\n";
-    File01 << ruint32(Config[0].P_Input[1][0]) << " " << ruint32(Config[0].P_Input[1][1]) << " " << ruint32(Config[0].P_Input[1][2]) << " " << ruint32(Config[0].P_Input[1][3]) << " " << ruint32(Config[0].P_Input[1][4]) << " " << ruint32(Config[0].P_Input[1][5]) << " " << ruint32(Config[0].P_Input[1][6]) << "\n";
-    File01 << ruint32(Config[0].P_Input[2][0]) << " " << ruint32(Config[0].P_Input[2][1]) << " " << ruint32(Config[0].P_Input[2][2]) << " " << ruint32(Config[0].P_Input[2][3]) << " " << ruint32(Config[0].P_Input[2][4]) << " " << ruint32(Config[0].P_Input[2][5]) << " " << ruint32(Config[0].P_Input[2][6]) << "\n";
-    File01 << ruint32(Config[0].P_Input[3][0]) << " " << ruint32(Config[0].P_Input[3][1]) << " " << ruint32(Config[0].P_Input[3][2]) << " " << ruint32(Config[0].P_Input[3][3]) << " " << ruint32(Config[0].P_Input[3][4]) << " " << ruint32(Config[0].P_Input[3][5]) << " " << ruint32(Config[0].P_Input[3][6]) << "\n";
-    File01 << ruint32(Config[0].P_Input[0][7]) << " " << ruint32(Config[0].P_Input[0][8]) << " " << ruint32(Config[0].P_Input[0][9]) << " " << ruint32(Config[0].P_Input[0][10]) << " " << ruint32(Config[0].P_Input[0][11]) << " " << ruint32(Config[0].P_Input[0][12]) << " " << ruint32(Config[0].P_Input[0][13]) << "\n";
-    File01 << ruint32(Config[0].P_Input[1][7]) << " " << ruint32(Config[0].P_Input[1][8]) << " " << ruint32(Config[0].P_Input[1][9]) << " " << ruint32(Config[0].P_Input[1][10]) << " " << ruint32(Config[0].P_Input[1][11]) << " " << ruint32(Config[0].P_Input[1][12]) << " " << ruint32(Config[0].P_Input[1][13]) << "\n";
-    File01 << ruint32(Config[0].P_Input[2][7]) << " " << ruint32(Config[0].P_Input[2][8]) << " " << ruint32(Config[0].P_Input[2][9]) << " " << ruint32(Config[0].P_Input[2][10]) << " " << ruint32(Config[0].P_Input[2][11]) << " " << ruint32(Config[0].P_Input[2][12]) << " " << ruint32(Config[0].P_Input[2][13]) << "\n";
-    File01 << ruint32(Config[0].P_Input[3][7]) << " " << ruint32(Config[0].P_Input[3][8]) << " " << ruint32(Config[0].P_Input[3][9]) << " " << ruint32(Config[0].P_Input[3][10]) << " " << ruint32(Config[0].P_Input[3][11]) << " " << ruint32(Config[0].P_Input[3][12]) << " " << ruint32(Config[0].P_Input[3][13]) << "\n";
-    File01 << ruint32(Config[0].P_Con[0]) << " " << ruint32(Config[0].P_Con[1]) << " " << ruint32(Config[0].P_Con[2]) << " " << ruint32(Config[0].P_Con[3]);
-
-    File01.close();
-   }
-   string InputName(uint8 Vrab01)
-   {
-    switch(Vrab01)
-    {
-     case 0: return "<none>";
-     case 1: return "1";
-     case 2: return "2";
-     case 3: return "3";
-     case 4: return "4";
-     case 5: return "5";
-     case 6: return "6";
-     case 7: return "7";
-     case 8: return "8";
-     case 9: return "9";
-     case 10: return "0";
-     case 11: return "A";
-     case 12: return "B";
-     case 13: return "C";
-     case 14: return "D";
-     case 15: return "E";
-     case 16: return "F";
-     case 17: return "G";
-     case 18: return "H";
-     case 19: return "I";
-     case 20: return "J";
-     case 21: return "K";
-     case 22: return "L";
-     case 23: return "M";
-     case 24: return "N";
-     case 25: return "O";
-     case 26: return "P";
-     case 27: return "Q";
-     case 28: return "R";
-     case 29: return "S";
-     case 30: return "T";
-     case 31: return "U";
-     case 32: return "V";
-     case 33: return "W";
-     case 34: return "X";
-     case 35: return "Y";
-     case 36: return "Z";
-     case 37: return "0";
-     default: return "";
-    }
-   }
-   int0 Info_Bar(int64 Vrab01, int64 Vrab02, uint64 Vrab03, uint64 Vrab04)
-   {
-    if(Vrab03 % 2 == 1) Vrab03 += 1; if(Vrab04 % 2 == 1) Vrab04 += 1;
-    G_SetDisplay(2, Sprite_Index_Interface[26], Vrab01 - 12, Vrab02 - 12);
-    G_SetDisplay(2, Sprite_Index_Interface[27], Vrab01 + Vrab03 + 1, Vrab02 - 12);
-    G_SetDisplay(2, Sprite_Index_Interface[28], Vrab01 - 12, Vrab02 + Vrab04 + 1);
-    G_SetDisplay(2, Sprite_Index_Interface[29], Vrab01 + Vrab03 + 1, Vrab02 + Vrab04 + 1);
-    G_SetDisplay(2, Sprite_Index_Interface[30], Vrab01, Vrab02 - 12, 0ui8, 255ui8, Vrab03);
-    G_SetDisplay(2, Sprite_Index_Interface[30], Vrab01, Vrab02 + Vrab04 + 10, 0ui8, 255ui8, Vrab03);
-    G_SetDisplay(2, Sprite_Index_Interface[31], Vrab01 - 12, Vrab02, 0ui8, 255ui8, 0, Vrab04);
-    G_SetDisplay(2, Sprite_Index_Interface[31], Vrab01 + Vrab03 + 10, Vrab02, 0ui8, 255ui8, 0, Vrab04);
-
-    {
-     uint64 Vrab05 = Vrab04 + 1; uint64 Vrab06 = ruint64(-1);
-     while(Vrab05 > 0)
-     {
-      uint64 Vrab07 = Vrab05 / 200; if(Vrab07 > 0){Vrab07 = 200;} else {Vrab07 = Vrab05 % 200;} Vrab05 -= Vrab07; Vrab06 += 1;
-      G_SetDisplay(3, Sprite_Index_Interface[32], Vrab01 - 9, Vrab02 + (Vrab06 * 200), 0ui8, 255ui8, 9, Vrab07, 0, 1);
-      G_SetDisplay(3, Sprite_Index_Interface[32], Vrab01 + Vrab03 + 1, Vrab02 + (Vrab06 * 200), 0ui8, 255ui8, 9, Vrab07, 0, 1);
-     }
-    }
-    {
-     uint64 Vrab05 = Vrab04 + 19; uint64 Vrab06 = ruint64(-1);
-     while(Vrab05 > 0)
-     {
-      uint64 Vrab07 = Vrab05 / 200; if(Vrab07 > 0){Vrab07 = 200;} else {Vrab07 = Vrab05 % 200;} Vrab05 -= Vrab07; Vrab06 += 1;
-      uint64 Vrab08 = Vrab03 + 1; uint64 Vrab09 = ruint64(-1);
-      while(Vrab08 > 0)
-      {
-       uint64 Vrab10 = Vrab08 / 198; if(Vrab10 > 0){Vrab10 = 198;} else {Vrab10 = Vrab08 % 198;} Vrab08 -= Vrab10; Vrab09 += 1;
-       G_SetDisplay(3, Sprite_Index_Interface[32], Vrab01 + (Vrab09 * 198), Vrab02 - 9 + (Vrab06 * 200), 0ui8, 255ui8, Vrab10, Vrab07, 1, 0);
-      }
-     }
-    }
-   }
-  };
-
-  // Non-Basic
-   HEPTA_INPUT Input;                  // Inputs
-   string Text0001;                   // Language Text
-   std::ifstream File0001;            // -
-   std::ofstream File0002;            // -
-
-  // Basic
-   uint64 Varb0001 = 0;               // App Runtime
-   uint32 Varb0002 = 800;             // Display W
-   uint32 Varb0003 = 600;             // Display H
-   uint8 Varb0004 = 1;                // FPS Ratio
-   int1 Varb0005 = true;              // Keep aspect ratio?
-   int1 Varb0006 = true;              // Limit displayed resolution if window's resolution is higher than display's resolution?
-   int1 Varb0007 = false;             // Update Display?
-   uint32 Varb0008 = 0;               // X Display Offset
-   uint32 Varb0009 = 0;               // Y Display Offset
-   xint64 Varb0010 = 1;               // Mouse Offset Ratio
-   xint64 Varb0012 = 0.6;             // Volume
-   uint64 Varb0013 = 0;               // Menu
-   uint64 Varb0014 = 0;               // Random Seed
-   uint64 Varb0025 = 0;               // Random Seed 2
-   uint64 Varb0015 = 0;               // Random Seed 3
-   uint64 Varb0016 = 0;               // Random Seed 4
-   int1 Varb0017 = false;             // LF2 Enchanted
-
-  // Enchanted Memory
-   unique < HEPTA_LF2_ENCHANTED > Ench0001;    //
-
-  // Temporals
-   std::vector < uint32 > Vect0001;   // Random Accessed Vector
-
- //-//
- // Light Functions
-  uint8  L_Press()
-  {
-   if(Input.CORE_ESC == 1) return 0ui8;
-   if(Input.MAIN_1 == 1) return 1ui8;
-   if(Input.MAIN_2 == 1) return 2ui8;
-   if(Input.MAIN_3 == 1) return 3ui8;
-   if(Input.MAIN_4 == 1) return 4ui8;
-   if(Input.MAIN_5 == 1) return 5ui8;
-   if(Input.MAIN_6 == 1) return 6ui8;
-   if(Input.MAIN_7 == 1) return 7ui8;
-   if(Input.MAIN_8 == 1) return 8ui8;
-   if(Input.MAIN_9 == 1) return 9ui8;
-   if(Input.MAIN_0 == 1) return 10ui8;
-   if(Input.MAIN_A == 1) return 11ui8;
-   if(Input.MAIN_B == 1) return 12ui8;
-   if(Input.MAIN_C == 1) return 13ui8;
-   if(Input.MAIN_D == 1) return 14ui8;
-   if(Input.MAIN_E == 1) return 15ui8;
-   if(Input.MAIN_F == 1) return 16ui8;
-   if(Input.MAIN_G == 1) return 17ui8;
-   if(Input.MAIN_H == 1) return 18ui8;
-   if(Input.MAIN_I == 1) return 19ui8;
-   if(Input.MAIN_J == 1) return 20ui8;
-   if(Input.MAIN_K == 1) return 21ui8;
-   if(Input.MAIN_L == 1) return 22ui8;
-   if(Input.MAIN_M == 1) return 23ui8;
-   if(Input.MAIN_N == 1) return 24ui8;
-   if(Input.MAIN_O == 1) return 25ui8;
-   if(Input.MAIN_P == 1) return 26ui8;
-   if(Input.MAIN_Q == 1) return 27ui8;
-   if(Input.MAIN_R == 1) return 28ui8;
-   if(Input.MAIN_S == 1) return 29ui8;
-   if(Input.MAIN_T == 1) return 30ui8;
-   if(Input.MAIN_U == 1) return 31ui8;
-   if(Input.MAIN_V == 1) return 32ui8;
-   if(Input.MAIN_W == 1) return 33ui8;
-   if(Input.MAIN_X == 1) return 34ui8;
-   if(Input.MAIN_Y == 1) return 35ui8;
-   if(Input.MAIN_Z == 1) return 36ui8;
-   return 255ui8;
-  }
-  int0   L_Typing(string &Temp01)
-  {
-   if(Input.CAPS_ON)
-   {
-    {statics uint8 Vrab01 = Input.MAIN_A; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('A'); if(Vrab01 == 40) Input.MAIN_A = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_B; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('B'); if(Vrab01 == 40) Input.MAIN_B = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_C; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('C'); if(Vrab01 == 40) Input.MAIN_C = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_D; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('D'); if(Vrab01 == 40) Input.MAIN_D = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_E; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('E'); if(Vrab01 == 40) Input.MAIN_E = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_F; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('F'); if(Vrab01 == 40) Input.MAIN_F = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_G; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('G'); if(Vrab01 == 40) Input.MAIN_G = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_H; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('H'); if(Vrab01 == 40) Input.MAIN_H = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_I; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('I'); if(Vrab01 == 40) Input.MAIN_I = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_J; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('J'); if(Vrab01 == 40) Input.MAIN_J = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_K; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('K'); if(Vrab01 == 40) Input.MAIN_K = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_L; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('L'); if(Vrab01 == 40) Input.MAIN_L = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_M; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('M'); if(Vrab01 == 40) Input.MAIN_M = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_N; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('N'); if(Vrab01 == 40) Input.MAIN_N = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_O; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('O'); if(Vrab01 == 40) Input.MAIN_O = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_P; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('P'); if(Vrab01 == 40) Input.MAIN_P = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Q; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('Q'); if(Vrab01 == 40) Input.MAIN_Q = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_R; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('R'); if(Vrab01 == 40) Input.MAIN_R = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_S; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('S'); if(Vrab01 == 40) Input.MAIN_S = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_T; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('T'); if(Vrab01 == 40) Input.MAIN_T = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_U; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('U'); if(Vrab01 == 40) Input.MAIN_U = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_V; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('V'); if(Vrab01 == 40) Input.MAIN_V = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_W; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('W'); if(Vrab01 == 40) Input.MAIN_W = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_X; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('X'); if(Vrab01 == 40) Input.MAIN_X = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Y; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('Y'); if(Vrab01 == 40) Input.MAIN_Y = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Z; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('Z'); if(Vrab01 == 40) Input.MAIN_Z = 253;}
-   } else
-   {
-    {statics uint8 Vrab01 = Input.MAIN_A; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('a'); if(Vrab01 == 40) Input.MAIN_A = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_B; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('b'); if(Vrab01 == 40) Input.MAIN_B = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_C; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('c'); if(Vrab01 == 40) Input.MAIN_C = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_D; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('d'); if(Vrab01 == 40) Input.MAIN_D = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_E; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('e'); if(Vrab01 == 40) Input.MAIN_E = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_F; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('f'); if(Vrab01 == 40) Input.MAIN_F = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_G; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('g'); if(Vrab01 == 40) Input.MAIN_G = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_H; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('h'); if(Vrab01 == 40) Input.MAIN_H = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_I; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('i'); if(Vrab01 == 40) Input.MAIN_I = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_J; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('j'); if(Vrab01 == 40) Input.MAIN_J = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_K; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('k'); if(Vrab01 == 40) Input.MAIN_K = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_L; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('l'); if(Vrab01 == 40) Input.MAIN_L = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_M; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('m'); if(Vrab01 == 40) Input.MAIN_M = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_N; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('n'); if(Vrab01 == 40) Input.MAIN_N = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_O; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('o'); if(Vrab01 == 40) Input.MAIN_O = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_P; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('p'); if(Vrab01 == 40) Input.MAIN_P = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Q; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('q'); if(Vrab01 == 40) Input.MAIN_Q = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_R; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('r'); if(Vrab01 == 40) Input.MAIN_R = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_S; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('s'); if(Vrab01 == 40) Input.MAIN_S = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_T; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('t'); if(Vrab01 == 40) Input.MAIN_T = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_U; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('u'); if(Vrab01 == 40) Input.MAIN_U = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_V; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('v'); if(Vrab01 == 40) Input.MAIN_V = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_W; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('w'); if(Vrab01 == 40) Input.MAIN_W = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_X; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('x'); if(Vrab01 == 40) Input.MAIN_X = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Y; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('y'); if(Vrab01 == 40) Input.MAIN_Y = 253;}
-    {statics uint8 Vrab01 = Input.MAIN_Z; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('z'); if(Vrab01 == 40) Input.MAIN_Z = 253;}
-   }
-   {statics uint8 Vrab01 = Input.MAIN_0; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('0'); if(Vrab01 == 40) Input.MAIN_0 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_1; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('1'); if(Vrab01 == 40) Input.MAIN_1 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_2; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('2'); if(Vrab01 == 40) Input.MAIN_2 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_3; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('3'); if(Vrab01 == 40) Input.MAIN_3 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_4; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('4'); if(Vrab01 == 40) Input.MAIN_4 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_5; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('5'); if(Vrab01 == 40) Input.MAIN_5 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_6; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('6'); if(Vrab01 == 40) Input.MAIN_6 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_7; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('7'); if(Vrab01 == 40) Input.MAIN_7 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_8; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('8'); if(Vrab01 == 40) Input.MAIN_8 = 253;}
-   {statics uint8 Vrab01 = Input.MAIN_9; if(Vrab01 == 1 || Vrab01 == 254) Temp01.push_back('9'); if(Vrab01 == 40) Input.MAIN_9 = 253;}
-   {statics uint8 Vrab01 = Input.CORE_BACKSPACE; if(Vrab01 == 1 || Vrab01 == 254) if(Temp01.size() > 0) Temp01.pop_back(); if(Vrab01 == 40) Input.CORE_BACKSPACE = 253;}
-  }
-  int1   L_Within(int32 Vrab01, int32 Vrab02, int32 Vrab03, int32 Vrab04, uint32 Vrab05, uint32 Vrab06)
-  {
-   if(Vrab01 >= Vrab03 && Vrab01 <= rint32(Vrab03 + Vrab05))
-   if(Vrab02 >= Vrab04 && Vrab02 <= rint32(Vrab04 + Vrab06))
-   return true;
-   return false;
-  }
-  int32  L_Rounding(xint64 Vrab01){if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint32(Vrab01); return rint32(Vrab01) + 1;}
-  int32  L_Numbering(string Temp01) fastened {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
-  int64  L_Rounding64(xint64 Vrab01){if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint64(Vrab01); return rint64(Vrab01) + 1;}
-  uint64 L_Random(uint64 Vrab01)
-  {
-   Varb0016 += 69; Varb0015 += Varb0016; Varb0013 &= Varb0015; Varb0014 += 1; Varb0016 -= Varb0014; Varb0014 |= Varb0001;
-   return ruint64(L_Rounding64((rxint64(rint64(Varb0014)) / rxint64(0xFFFFFFFFFFFFFFFF)) * rxint64(rint64(Vrab01))));
-  }
-  string L_Lowercase(string Temp01)     fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
- //-//
- // Prime Functions
-  int0 P_EngineInput(std::unique_ptr < DirectX::Keyboard > *Inpt01, std::unique_ptr < DirectX::GamePad > *Inpt02, std::unique_ptr < DirectX::Mouse > *Inpt03)
-  {
-   auto Inpt05 = (*Inpt01)->GetState();
-   if(Inpt05.D0){if((++Input.MAIN_0) == 255ui8) Input.MAIN_0 = 250ui8;} else {Input.MAIN_0 = 0ui8;}
-   if(Inpt05.D1){if((++Input.MAIN_1) == 255ui8) Input.MAIN_1 = 250ui8;} else {Input.MAIN_1 = 0ui8;}
-   if(Inpt05.D2){if((++Input.MAIN_2) == 255ui8) Input.MAIN_2 = 250ui8;} else {Input.MAIN_2 = 0ui8;}
-   if(Inpt05.D3){if((++Input.MAIN_3) == 255ui8) Input.MAIN_3 = 250ui8;} else {Input.MAIN_3 = 0ui8;}
-   if(Inpt05.D4){if((++Input.MAIN_4) == 255ui8) Input.MAIN_4 = 250ui8;} else {Input.MAIN_4 = 0ui8;}
-   if(Inpt05.D5){if((++Input.MAIN_5) == 255ui8) Input.MAIN_5 = 250ui8;} else {Input.MAIN_5 = 0ui8;}
-   if(Inpt05.D6){if((++Input.MAIN_6) == 255ui8) Input.MAIN_6 = 250ui8;} else {Input.MAIN_6 = 0ui8;}
-   if(Inpt05.D7){if((++Input.MAIN_7) == 255ui8) Input.MAIN_7 = 250ui8;} else {Input.MAIN_7 = 0ui8;}
-   if(Inpt05.D8){if((++Input.MAIN_8) == 255ui8) Input.MAIN_8 = 250ui8;} else {Input.MAIN_8 = 0ui8;}
-   if(Inpt05.D9){if((++Input.MAIN_9) == 255ui8) Input.MAIN_9 = 250ui8;} else {Input.MAIN_9 = 0ui8;}
-   if(Inpt05.A){if((++Input.MAIN_A) == 255ui8) Input.MAIN_A = 250ui8;} else {Input.MAIN_A = 0ui8;}
-   if(Inpt05.B){if((++Input.MAIN_B) == 255ui8) Input.MAIN_B = 250ui8;} else {Input.MAIN_B = 0ui8;}
-   if(Inpt05.C){if((++Input.MAIN_C) == 255ui8) Input.MAIN_C = 250ui8;} else {Input.MAIN_C = 0ui8;}
-   if(Inpt05.D){if((++Input.MAIN_D) == 255ui8) Input.MAIN_D = 250ui8;} else {Input.MAIN_D = 0ui8;}
-   if(Inpt05.E){if((++Input.MAIN_E) == 255ui8) Input.MAIN_E = 250ui8;} else {Input.MAIN_E = 0ui8;}
-   if(Inpt05.F){if((++Input.MAIN_F) == 255ui8) Input.MAIN_F = 250ui8;} else {Input.MAIN_F = 0ui8;}
-   if(Inpt05.G){if((++Input.MAIN_G) == 255ui8) Input.MAIN_G = 250ui8;} else {Input.MAIN_G = 0ui8;}
-   if(Inpt05.H){if((++Input.MAIN_H) == 255ui8) Input.MAIN_H = 250ui8;} else {Input.MAIN_H = 0ui8;}
-   if(Inpt05.I){if((++Input.MAIN_I) == 255ui8) Input.MAIN_I = 250ui8;} else {Input.MAIN_I = 0ui8;}
-   if(Inpt05.J){if((++Input.MAIN_J) == 255ui8) Input.MAIN_J = 250ui8;} else {Input.MAIN_J = 0ui8;}
-   if(Inpt05.K){if((++Input.MAIN_K) == 255ui8) Input.MAIN_K = 250ui8;} else {Input.MAIN_K = 0ui8;}
-   if(Inpt05.L){if((++Input.MAIN_L) == 255ui8) Input.MAIN_L = 250ui8;} else {Input.MAIN_L = 0ui8;}
-   if(Inpt05.M){if((++Input.MAIN_M) == 255ui8) Input.MAIN_M = 250ui8;} else {Input.MAIN_M = 0ui8;}
-   if(Inpt05.N){if((++Input.MAIN_N) == 255ui8) Input.MAIN_N = 250ui8;} else {Input.MAIN_N = 0ui8;}
-   if(Inpt05.O){if((++Input.MAIN_O) == 255ui8) Input.MAIN_O = 250ui8;} else {Input.MAIN_O = 0ui8;}
-   if(Inpt05.P){if((++Input.MAIN_P) == 255ui8) Input.MAIN_P = 250ui8;} else {Input.MAIN_P = 0ui8;}
-   if(Inpt05.Q){if((++Input.MAIN_Q) == 255ui8) Input.MAIN_Q = 250ui8;} else {Input.MAIN_Q = 0ui8;}
-   if(Inpt05.R){if((++Input.MAIN_R) == 255ui8) Input.MAIN_R = 250ui8;} else {Input.MAIN_R = 0ui8;}
-   if(Inpt05.S){if((++Input.MAIN_S) == 255ui8) Input.MAIN_S = 250ui8;} else {Input.MAIN_S = 0ui8;}
-   if(Inpt05.T){if((++Input.MAIN_T) == 255ui8) Input.MAIN_T = 250ui8;} else {Input.MAIN_T = 0ui8;}
-   if(Inpt05.U){if((++Input.MAIN_U) == 255ui8) Input.MAIN_U = 250ui8;} else {Input.MAIN_U = 0ui8;}
-   if(Inpt05.V){if((++Input.MAIN_V) == 255ui8) Input.MAIN_V = 250ui8;} else {Input.MAIN_V = 0ui8;}
-   if(Inpt05.W){if((++Input.MAIN_W) == 255ui8) Input.MAIN_W = 250ui8;} else {Input.MAIN_W = 0ui8;}
-   if(Inpt05.X){if((++Input.MAIN_X) == 255ui8) Input.MAIN_X = 250ui8;} else {Input.MAIN_X = 0ui8;}
-   if(Inpt05.Y){if((++Input.MAIN_Y) == 255ui8) Input.MAIN_Y = 250ui8;} else {Input.MAIN_Y = 0ui8;}
-   if(Inpt05.Z){if((++Input.MAIN_Z) == 255ui8) Input.MAIN_Z = 250ui8;} else {Input.MAIN_Z = 0ui8;}
-   if(Inpt05.Escape){if((++Input.CORE_ESC) == 255ui8) Input.CORE_ESC = 250ui8;} else {Input.CORE_ESC = 0ui8;}
-   if(Inpt05.F1){if((++Input.CORE_F1) == 255ui8) Input.CORE_F1 = 250ui8;} else {Input.CORE_F1 = 0ui8;}
-   if(Inpt05.F2){if((++Input.CORE_F2) == 255ui8) Input.CORE_F2 = 250ui8;} else {Input.CORE_F2 = 0ui8;}
-   if(Inpt05.F3){if((++Input.CORE_F3) == 255ui8) Input.CORE_F3 = 250ui8;} else {Input.CORE_F3 = 0ui8;}
-   if(Inpt05.F4){if((++Input.CORE_F4) == 255ui8) Input.CORE_F4 = 250ui8;} else {Input.CORE_F4 = 0ui8;}
-   if(Inpt05.F5){if((++Input.CORE_F5) == 255ui8) Input.CORE_F5 = 250ui8;} else {Input.CORE_F5 = 0ui8;}
-   if(Inpt05.F6){if((++Input.CORE_F6) == 255ui8) Input.CORE_F6 = 250ui8;} else {Input.CORE_F6 = 0ui8;}
-   if(Inpt05.F7){if((++Input.CORE_F7) == 255ui8) Input.CORE_F7 = 250ui8;} else {Input.CORE_F7 = 0ui8;}
-   if(Inpt05.F8){if((++Input.CORE_F8) == 255ui8) Input.CORE_F8 = 250ui8;} else {Input.CORE_F8 = 0ui8;}
-   if(Inpt05.F9){if((++Input.CORE_F9) == 255ui8) Input.CORE_F9 = 250ui8;} else {Input.CORE_F9 = 0ui8;}
-   if(Inpt05.F10){if((++Input.CORE_F10) == 255ui8) Input.CORE_F10 = 250ui8;} else {Input.CORE_F10 = 0ui8;}
-   if(Inpt05.F11){if((++Input.CORE_F11) == 255ui8) Input.CORE_F11 = 250ui8;} else {Input.CORE_F11 = 0ui8;}
-   if(Inpt05.F12){if((++Input.CORE_F12) == 255ui8) Input.CORE_F12 = 250ui8;} else {Input.CORE_F12 = 0ui8;}
-   if(Inpt05.PrintScreen){if((++Input.CORE_PSCREEN) == 255ui8) Input.CORE_PSCREEN = 250ui8;} else {Input.CORE_PSCREEN = 0ui8;}
-   if(Inpt05.Delete){if((++Input.CORE_DELETE) == 255ui8) Input.CORE_DELETE = 250ui8;} else {Input.CORE_DELETE = 0ui8;}
-   if(Inpt05.Back){if((++Input.CORE_BACKSPACE) == 255ui8) Input.CORE_BACKSPACE = 250ui8;} else {Input.CORE_BACKSPACE = 0ui8;}
-   if(Inpt05.Tab){if((++Input.CORE_TAB) == 255ui8) Input.CORE_TAB = 250ui8;} else {Input.CORE_TAB = 0ui8;}
-   if(Inpt05.Enter){if((++Input.CORE_ENTER) == 255ui8) Input.CORE_ENTER = 250ui8;} else {Input.CORE_ENTER = 0ui8;}
-   if(Inpt05.CapsLock){if((++Input.CORE_CAPSLOCK) == 255ui8) Input.CORE_CAPSLOCK = 250ui8; if(Input.CORE_CAPSLOCK == 1) Input.CAPS_ON = !Input.CAPS_ON;} else {Input.CORE_CAPSLOCK = 0ui8;}
-   if(Inpt05.LeftShift){if((++Input.CORE_LSHIFT) == 255ui8) Input.CORE_LSHIFT = 250ui8;} else {Input.CORE_LSHIFT = 0ui8;}
-   if(Inpt05.RightShift){if((++Input.CORE_RSHIFT) == 255ui8) Input.CORE_RSHIFT = 250ui8;} else {Input.CORE_RSHIFT = 0ui8;}
-   if(Inpt05.LeftControl){if((++Input.CORE_LCTRL) == 255ui8) Input.CORE_LCTRL = 250ui8;} else {Input.CORE_LCTRL = 0ui8;}
-   if(Inpt05.RightControl){if((++Input.CORE_RCTRL) == 255ui8) Input.CORE_RCTRL = 250ui8;} else {Input.CORE_RCTRL = 0ui8;}
-   if(Inpt05.LeftAlt){if((++Input.CORE_LALT) == 255ui8) Input.CORE_LALT = 250ui8;} else {Input.CORE_LALT = 0ui8;}
-   if(Inpt05.RightAlt){if((++Input.CORE_RALT) == 255ui8) Input.CORE_RALT = 250ui8;} else {Input.CORE_RALT = 0ui8;}
-   if(Inpt05.LeftWindows){if((++Input.CORE_LWIN) == 255ui8) Input.CORE_LWIN = 250ui8;} else {Input.CORE_LWIN = 0ui8;}
-   if(Inpt05.RightWindows){if((++Input.CORE_RWIN) == 255ui8) Input.CORE_RWIN = 250ui8;} else {Input.CORE_RWIN = 0ui8;}
-   if(Inpt05.Up){if((++Input.CORE_UP) == 255ui8) Input.CORE_UP = 250ui8;} else {Input.CORE_UP = 0ui8;}
-   if(Inpt05.Left){if((++Input.CORE_LEFT) == 255ui8) Input.CORE_LEFT = 250ui8;} else {Input.CORE_LEFT = 0ui8;}
-   if(Inpt05.Down){if((++Input.CORE_DOWN) == 255ui8) Input.CORE_DOWN = 250ui8;} else {Input.CORE_DOWN = 0ui8;}
-   if(Inpt05.Right){if((++Input.CORE_RIGHT) == 255ui8) Input.CORE_RIGHT = 250ui8;} else {Input.CORE_RIGHT = 0ui8;}
-   auto Inpt06 = (*Inpt02)->GetState(0);
-   auto Inpt07 = (*Inpt03)->GetState();
-   Input.MOUS_X = L_Rounding(rxint64(Inpt07.x) / Varb0010) - Varb0008;
-   Input.MOUS_Y = L_Rounding(rxint64(Inpt07.y) / Varb0010) - Varb0009;
-   if(Inpt07.leftButton){if((++Input.MOUS_Left) == 255ui8) Input.MOUS_Left = 250ui8; Input.MOUS_Left_Release = 0ui8;} else {Input.MOUS_Left = 0ui8; if((++Input.MOUS_Left_Release) == 255ui8) Input.MOUS_Left_Release = 250ui8;}
-   if(Inpt07.middleButton){if((++Input.MOUS_Mid) == 255ui8) Input.MOUS_Mid = 250ui8; Input.MOUS_Mid_Release = 0ui8;} else {Input.MOUS_Mid = 0ui8; if((++Input.MOUS_Mid_Release) == 255ui8) Input.MOUS_Mid_Release = 250ui8;}
-   if(Inpt07.rightButton){if((++Input.MOUS_Right) == 255ui8) Input.MOUS_Right = 250ui8; Input.MOUS_Right_Release = 0ui8;} else {Input.MOUS_Right = 0ui8; if((++Input.MOUS_Right_Release) == 255ui8) Input.MOUS_Right_Release = 250ui8;}
-   if(Input.MOUS_Left == 1){Input.MOUS_X_Left = Input.MOUS_X; Input.MOUS_Y_Left = Input.MOUS_Y;}
-   if(Input.MOUS_Mid == 1){Input.MOUS_X_Mid = Input.MOUS_X; Input.MOUS_Y_Mid = Input.MOUS_Y;}
-   if(Input.MOUS_Right == 1){Input.MOUS_X_Right = Input.MOUS_X; Input.MOUS_Y_Right = Input.MOUS_Y;}
-   return;
-  }
-  int0 P_EngineFrame(xint64 Vrab01, xint64 Vrab02, uint32 Vrab03, uint32 Vrab04)
-  {
-   Varb0001 += 1; if(Varb0001 == 0xFFFFFFFFFFFFFFFF) Varb0001 = 0xFFFFFFFFFFFFFF;
-   UNREFERENCED_PARAMETER(Vrab01); UNREFERENCED_PARAMETER(Vrab02); UNREFERENCED_PARAMETER(Vrab03);//UNREFERENCED_PARAMETER(Vrab04);
-
-   if(Varb0001 == 1) // Enter LF2 Enchanted.
-   {
-    Varb0013 = 0; Ench0001 = std::make_unique < HEPTA_LF2_ENCHANTED > (); Varb0017 = true; Ench0001->Load("System\\Interface\\Enchanted\\config.ini");
-    Varb0002 = 794; Varb0003 = 550; Game0001->OnWindowSizeChanged(Varb0002, Varb0003);
-    SetWindowPos(Game0001->m_deviceResources->GetWindow(), HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Varb0002 + 16), static_cast < LONG > (Varb0003 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-   }
-
-   if(Varb0017)
-   {
-    switch(Ench0001->Menu)
-    {
-     case 0: case 3: case 4: case 5: case 6: case 7:
-      {
-       if(Ench0001->Menu == 0)
-       if(Ench0001->Runtime == 0) // Load basic interface.
-       {
-        ++Ench0001->Runtime;
-        {
-         Ench0001->Sound_Index.clear(); statics string Temp01 = "System\\Audio\\Music\\"; 
-         Ench0001->Sound_Index.push_back(G_SetSound(Temp01 + "main.wav"));                  // Index : 0
-        }
-        Ench0001->Sprite_Index_Interface.clear(); statics string Temp01 = "System\\Interface\\Enchanted\\"; statics string Temp02 = ".bmp";
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS0" + Temp02, 16, 16, 15, 15));    // Index : 0
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS1" + Temp02, 16, 16, 15, 15));    // Index : 1
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS2" + Temp02, 16, 16, 15, 15));    // Index : 2
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS3" + Temp02, 16, 16, 15, 15));    // Index : 3
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS4" + Temp02, 16, 16, 15, 15));    // Index : 4
-        Ench0001->Sprite_Index_Interface.push_back(G_SetSprite(Temp01 + "WORDS5" + Temp02, 16, 16, 15, 15));    // Index : 5
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "LF2_CURSOR" + Temp02));                   // Index : 6
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "LF2_CURSOR2" + Temp02));                  // Index : 7
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 0, 0, 794, 37));     // Index : 8  (Copyright)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 0, 41, 496, 80));    // Index : 9  (Title)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP5" + Temp02, 0, 0, 280, 180));   // Index : 10 (Buttons)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 535, 105, 255, 25)); // Index : 11 (Game Start Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 535, 137, 255, 25)); // Index : 12 (Network Game Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 535, 169, 255, 25)); // Index : 13 (Control Setting Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP5" + Temp02, 285, 0, 240, 25));  // Index : 14 (Recording Info Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP5" + Temp02, 285, 32, 240, 25)); // Index : 15 (Official Website Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP2" + Temp02, 0, 0, 704, 353));   // Index : 16 (Control Setting)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 489, 426, 151, 26)); // Index : 17 (OK Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP" + Temp02, 643, 426, 151, 26)); // Index : 18 (Cancel Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "CS6" + Temp02, 0, 0, 106, 91));           // Index : 19 (Input Keyboard)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "CS2" + Temp02, 0, 0, 106, 91));           // Index : 20 (Input Joy1)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "CS3" + Temp02, 0, 0, 106, 91));           // Index : 21 (Input Joy2)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "CS4" + Temp02, 0, 0, 106, 91));           // Index : 22 (Input Joy3)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "CS5" + Temp02, 0, 0, 106, 91));           // Index : 23 (Input Joy4)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP5" + Temp02, 528, 0, 240, 25));  // Index : 24 (Game Setting Button)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP5" + Temp02, 528, 32, 240, 25)); // Index : 25 (Official Website Button2)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 0, 12, 12));       // Index : 26 (Info Bar Top-Left Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 13, 0, 12, 12));      // Index : 27 (Info Bar Top-Right Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 13, 12, 12));      // Index : 28 (Info Bar Bottom-Left Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 13, 13, 12, 12));     // Index : 29 (Info Bar Bottom-Right Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 12, 0, 1, 3));        // Index : 30 (Info Bar Horizontal Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR" + Temp02, 0, 12, 3, 1));        // Index : 31 (Info Bar Vertical Corner)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "INFO_BAR2" + Temp02, 0, 0, 200, 200));    // Index : 32 (Info Bar Area)
-        Ench0001->Sprite_Index_Interface.push_back(G_SetPic(Temp01 + "MENU_CLIP2" + Temp02, 495, 354, 151, 26));// Index : 33 (Ok Button)
-
-        //G_SetMusic(Ench0001->Sound_Index[0], Varb0012);
-       }
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, 794, 550);
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[8], 0, 505);
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[9], 397 - 248, 65);
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[10], 397 - 130, 175);
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[25], 283, 346);
-
-       if(Ench0001->Menu == 0)
-       {
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 192, 160, 20)){G_SetDisplay(2, Ench0001->Sprite_Index_Interface[11], 281, 188); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 397 - 80, 192, 160, 20) && Input.MOUS_Left_Release == 1){Ench0001->Menu = 3; Ench0001->Runtime = 0; Ench0001->Runtime3 = 55;}}
-        //if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 244, 160, 20)) G_SetDisplay(2, Ench0001->Sprite_Index_Interface[12], 281, 240);
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 256, 160, 20)){G_SetDisplay(2, Ench0001->Sprite_Index_Interface[13], 281, 252); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 397 - 80, 256, 160, 20) && Input.MOUS_Left_Release == 1){Ench0001->Menu = 1; Ench0001->Runtime = 0; Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 0; Ench0001->Config[1] = Ench0001->Config[0];}}
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 288, 160, 20)) G_SetDisplay(2, Ench0001->Sprite_Index_Interface[24], 283, 282);
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 320, 160, 20)) G_SetDisplay(2, Ench0001->Sprite_Index_Interface[14], 283, 314);
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 397 - 80, 352, 160, 20)){G_SetDisplay(2, Ench0001->Sprite_Index_Interface[15], 283, 346); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 397 - 80, 352, 160, 20) && Input.MOUS_Left_Release == 1) ShellExecute(0, 0, L"http://www.lf2.net", 0, 0, SW_SHOW);}
-        break;
-       }
-       if(Ench0001->Menu == 3)
-       {
-        G_SetDisplay(0, 0x0, 0, 0, 0, ruint8(Ench0001->Runtime += 3), 794, 550);
-        Ench0001->Info_Bar(842 - (Ench0001->Runtime2), 275, 100, 0);
-        Ench0001->Runtime2 += (Ench0001->Runtime3 / 3); Ench0001->Runtime3 -= 1;
-        if(Ench0001->Runtime3 == 0){Ench0001->Menu = 4; Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 30;}
-        break;
-       }
-       if(Ench0001->Menu == 4)
-       {
-        statics int64 Vrab05 = L_Rounding(rxint64(Ench0001->Runtime2) / 2);
-        statics int64 Vrab06 = L_Rounding(rxint64(Ench0001->Runtime2) / 4);
-        G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, 794, 550);
-        Ench0001->Info_Bar(842 - 495 - Vrab05, 275 - Vrab06, 100 + (Vrab05 * 2), Vrab05);
-        Ench0001->Runtime2 += (Ench0001->Runtime3 / 3); Ench0001->Runtime3 -= 1;
-        if(Ench0001->Runtime3 == 0){Ench0001->Menu = 5; Ench0001->Runtime = 0; Ench0001->Runtime2 = 0;}
-        break;
-       }
-       if(Ench0001->Menu == 5)
-       {
-        if(Ench0001->Runtime == 0)
-        {
-         Ench0001->String_Load = Ench0001->String_Load2 = "<none>";
-         Ench0001->File.open("data\\data.txt");
-         if(!Ench0001->File.is_open()){Ench0001->String = "Either \"data.txt\" cannot be found or it's inaccessible."; Ench0001->Menu = 6; Ench0001->Runtime = ruint64(-1); Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 34;}
-        }
-        Ench0001->Runtime += 1; if(Ench0001->Runtime == 0xFFFFFFFFFFFFFFFF) Ench0001->Runtime = 0xFFFFFFFFFFFFFFFE;
-        statics int64 Vrab05 = L_Rounding(145.0 / 2);
-        statics int64 Vrab06 = L_Rounding(145.0 / 4);
-        G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, 794, 550);
-        Ench0001->Info_Bar(842 - 495 - Vrab05, 275 - Vrab06, 100 + (Vrab05 * 2), Vrab05);
-        string Temp01 = "Loading data(s)"; statics uint64 Vrab07 = Ench0001->Runtime % 80; if(Vrab07 / 20 > 0) Temp01.push_back('.'); if(Vrab07 / 40 > 0) Temp01.push_back('.'); if(Vrab07 / 60 > 0) Temp01.push_back('.');
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 275 - rint32(Vrab06), 0, Temp01);
-        string Temp02 = Ench0001->String_Load; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 313 - rint32(Vrab06), 0, Temp02);
-        string Temp03 = Ench0001->String_Load2; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-        Ench0001->PrintText(842 - 493 + 243 - rint32(Vrab05) - (Temp03.size() * 9), 332 - rint32(Vrab06), 0, Temp03);
-        break;
-       }
-       if(Ench0001->Menu == 6)
-       {
-        statics int64 Vrab05 = L_Rounding(145.0 / 2);
-        statics int64 Vrab06 = L_Rounding(145.0 / 4);
-        G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, 794, 550);
-        Ench0001->Info_Bar(842 - 495 - Vrab05, 275 - Vrab06, 100 + (Vrab05 * 2), Vrab05);
-        string Temp01 = "Loading data(s)...";
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 275 - rint32(Vrab06), 0, Temp01);
-        string Temp02 = Ench0001->String_Load; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 313 - rint32(Vrab06), 0, Temp02);
-        string Temp03 = Ench0001->String_Load2; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-        Ench0001->PrintText(842 - 493 + 243 - rint32(Vrab05) - (Temp03.size() * 9), 332 - rint32(Vrab06), 0, Temp03);
-        
-        Ench0001->Info_Bar(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 575 - Vrab06 - Ench0001->Runtime2, Ench0001->String.size() * 9, Vrab05 + 6);
-        Ench0001->PrintText(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 575 - Vrab06 - Ench0001->Runtime2, 0, Ench0001->String);
-        Ench0001->PrintText(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 594 - Vrab06 - Ench0001->Runtime2, 0, Ench0001->String);
-        G_SetDisplay(2, Ench0001->Sprite_Index_Interface[33], 392 - 70, 624 - Vrab06 - Ench0001->Runtime2);
-
-        Ench0001->Runtime2 += (Ench0001->Runtime3 / 3); Ench0001->Runtime3 -= 1;
-        if(Ench0001->Runtime3 == 0){Ench0001->Menu = 7; Ench0001->Runtime3 = 0;}
-        break;
-       }
-       if(Ench0001->Menu == 7)
-       {
-        statics int64 Vrab05 = L_Rounding(145.0 / 2);
-        statics int64 Vrab06 = L_Rounding(145.0 / 4);
-        G_SetDisplay(0, 0x0, 0, 0, 0, 165ui8, 794, 550);
-        Ench0001->Info_Bar(842 - 495 - Vrab05, 275 - Vrab06, 100 + (Vrab05 * 2), Vrab05);
-        string Temp01 = "Loading data(s)...";
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 275 - rint32(Vrab06), 0, Temp01);
-        string Temp02 = Ench0001->String_Load; if(Temp02.size() > 25){Temp02 = string(Temp02, Temp02.size() - 25, 25); Temp02.at(0) = Temp02.at(1) = Temp02.at(2) = '.';} Temp02 += " :";
-        Ench0001->PrintText(842 - 492 - rint32(Vrab05), 313 - rint32(Vrab06), 0, Temp02);
-        string Temp03 = Ench0001->String_Load2; if(Temp03.size() > 26){Temp03 = string(Temp03, Temp03.size() - 26, 26); Temp03.at(0) = Temp03.at(1) = Temp03.at(2) = '.';}
-        Ench0001->PrintText(842 - 493 + 243 - rint32(Vrab05) - (Temp03.size() * 9), 332 - rint32(Vrab06), 0, Temp03);
-        
-        Ench0001->Info_Bar(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 575 - Vrab06 - Ench0001->Runtime2, Ench0001->String.size() * 9, Vrab05 + 6);
-        Ench0001->PrintText(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 575 - Vrab06 - Ench0001->Runtime2, 0, Ench0001->String);
-        Ench0001->PrintText(392 - L_Rounding(rxint64(Ench0001->String.size() - 1) * 4.5), 594 - Vrab06 - Ench0001->Runtime2, 0, Ench0001->String);
-        G_SetDisplay(2, Ench0001->Sprite_Index_Interface[33], 392 - 70, 624 - Vrab06 - Ench0001->Runtime2);
-
-        Ench0001->PrintText(3, 15, 0, std::to_string(Ench0001->Runtime2));
-        break;
-       }
-      }
-     break;
-     case 1:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, 794, 550);
-       if(Ench0001->Runtime3 < 6){Ench0001->Runtime += Ench0001->Runtime2;} else {Ench0001->Runtime -= Ench0001->Runtime2;} if(Ench0001->Runtime3 % 6 == 0){Ench0001->Runtime2 += 1;} if(Ench0001->Runtime3 % 6 == 3){Ench0001->Runtime2 -= 1;} if(Ench0001->Runtime2 == 14){Ench0001->Runtime3 += 3; Ench0001->Runtime2 -= 1;} if(Ench0001->Runtime3 % 3 != 2){Ench0001->Runtime3 += 1;} else {Ench0001->Runtime3 -= 2;}
-       
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[8], 0, 505 - (Ench0001->Runtime));
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[9], 397 - 248, 65 - (Ench0001->Runtime));
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[10], 397 - 130, 175 - (Ench0001->Runtime));
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[25], 283, 346 - (Ench0001->Runtime));
-       
-       if(Ench0001->Runtime3 < 6)
-       {if(Ench0001->Runtime2 == ruint64(-1)){Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 0; Ench0001->Menu = 2;}} else
-       {if(Ench0001->Runtime2 == ruint64(-1)){Ench0001->Runtime = 1; Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 0; Ench0001->Menu = 0;}}
-
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[16], 397 - 352, 85 - (Ench0001->Runtime) + 550);
-       for(uint32 Vrab05 = 0; Vrab05 < 4; ++Vrab05)
-       {
-        if(Ench0001->Config[1].P_Name[Vrab05] == "") Ench0001->Config[1].P_Name[Vrab05] = "P" + std::to_string(Vrab05 + 1);
-        Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Ench0001->Config[1].P_Name[Vrab05].size()) * 4.5), 124 - rint32(Ench0001->Runtime) + 547, 0, Ench0001->Config[1].P_Name[Vrab05]);
-        G_SetDisplay(2, Ench0001->Sprite_Index_Interface[19 + Ench0001->Config[1].P_Con[Vrab05]], 193 + (rint64(139) * Vrab05), 149 - rint32(Ench0001->Runtime) + 547);
-        uint32 Vrab08 = 0; if(Ench0001->Config[1].P_Con[Vrab05] != 0) Vrab08 = 7;
-        for(uint32 Vrab06 = Vrab08; Vrab06 < Vrab08 + 7; ++Vrab06)
-        {
-         statics string Temp01 = Ench0001->InputName(Ench0001->Config[1].P_Input[Vrab05][Vrab06]);
-         Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Temp01.size()) * 4.5), 248 + (22 * (Vrab06 - Vrab08)) - rint32(Ench0001->Runtime) + 547, 0, Temp01);
-        }
-       }
-      }
-     break;
-     case 2:
-      {
-       G_SetDisplay(0, 0x10206C, 0, 0, 0, 255ui8, 794, 550);
-       G_SetDisplay(2, Ench0001->Sprite_Index_Interface[16], 397 - 352, 85 + 3);
-       if(L_Within(Input.MOUS_X, Input.MOUS_Y, 407, 408, 151, 26)){G_SetDisplay(2, Ench0001->Sprite_Index_Interface[17], 407, 408); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 407, 408, 151, 26) && Input.MOUS_Left_Release == 1){Ench0001->Config[0] = Ench0001->Config[1]; Ench0001->Save("System\\Interface\\Enchanted\\config.ini"); Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 6; Ench0001->Menu = 1;}}
-       if(L_Within(Input.MOUS_X, Input.MOUS_Y, 579, 408, 151, 26)){G_SetDisplay(2, Ench0001->Sprite_Index_Interface[18], 579, 408); if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 579, 408, 151, 26) && Input.MOUS_Left_Release == 1){Ench0001->Runtime2 = 0; Ench0001->Runtime3 = 6; Ench0001->Menu = 1;}}
-      
-       for(uint32 Vrab05 = 0; Vrab05 < 4; ++Vrab05)
-       {
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 193 + (rint64(139) * Vrab05),  124, 106, 19))
-        if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 193 + (rint64(139) * Vrab05),  124, 106, 19) && Input.MOUS_Left_Release == 1)
-        {statics auto Vrab07 = ruint64(Vrab05) + 1; if(Ench0001->Runtime2 == Vrab07){Ench0001->Runtime2 = 0;} else {Ench0001->Runtime2 = Vrab07;}}
-
-        if(Ench0001->Runtime2 == ruint64(Vrab05) + 1)
-        {L_Typing(Ench0001->Config[1].P_Name[Vrab05]); if(Ench0001->Config[1].P_Name[Vrab05].size() > 100) Ench0001->Config[1].P_Name[Vrab05].resize(100); Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Ench0001->Config[1].P_Name[Vrab05].size()) * 4.5), 124, 1, Ench0001->Config[1].P_Name[Vrab05]);} else
-        {
-         if(Ench0001->Config[1].P_Name[Vrab05] == "") Ench0001->Config[1].P_Name[Vrab05] = "P" + std::to_string(Vrab05 + 1);
-         Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Ench0001->Config[1].P_Name[Vrab05].size()) * 4.5), 124, 0, Ench0001->Config[1].P_Name[Vrab05]);
-        }
-        
-        if(L_Within(Input.MOUS_X, Input.MOUS_Y, 193 + (rint64(139) * Vrab05),  149, 106, 91))
-        if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 193 + (rint64(139) * Vrab05),  149, 106, 91) && Input.MOUS_Left_Release == 1)
-        {Ench0001->Config[1].P_Con[Vrab05] += 1; Ench0001->Config[1].P_Con[Vrab05] %= 5;}
-
-        G_SetDisplay(2, Ench0001->Sprite_Index_Interface[19 + Ench0001->Config[1].P_Con[Vrab05]], 193 + (rint64(139) * Vrab05), 149);
-        uint32 Vrab08 = 0; if(Ench0001->Config[1].P_Con[Vrab05] != 0) Vrab08 = 7;
-        for(uint32 Vrab06 = Vrab08; Vrab06 < Vrab08 + 7; ++Vrab06)
-        {
-         statics string Temp01 = Ench0001->InputName(Ench0001->Config[1].P_Input[Vrab05][Vrab06]);
-
-         if(L_Within(Input.MOUS_X, Input.MOUS_Y, 193 + (rint64(139) * Vrab05),  248 + (22 * (Vrab06 - Vrab08)), 106, 19))
-         if(L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, 193 + (rint64(139) * Vrab05),  248 + (22 * (Vrab06 - Vrab08)), 106, 19) && Input.MOUS_Left_Release == 1)
-         {statics auto Vrab07 = (ruint64(Vrab05) * 7) + 5 + (Vrab06 - Vrab08); if(Ench0001->Runtime2 == Vrab07){Ench0001->Runtime2 = 0;} else {Ench0001->Runtime2 = Vrab07;}}
-
-         if(Ench0001->Runtime2 == (ruint64(Vrab05) * 7) + 5 + (Vrab06 - Vrab08))
-         {Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Temp01.size()) * 4.5), 248 + (22 * (Vrab06 - Vrab08)), 1, Temp01); statics uint8 Vrab07 = L_Press(); if(Vrab07 != 255ui8){Ench0001->Config[1].P_Input[Vrab05][Vrab06] = Vrab07; Ench0001->Runtime2 = 0;}} else
-         {Ench0001->PrintText(247 + (139 * Vrab05) - L_Rounding(rxint64(Temp01.size()) * 4.5), 248 + (22 * (Vrab06 - Vrab08)), 0, Temp01);}
-        }
-       }
-      }
-     break;
-     default: Varb0017 = false; break;
-    }
-    
-    if(Input.MOUS_X == Ench0001->Mouse_X && Input.MOUS_Y == Ench0001->Mouse_Y){if((++Ench0001->Mouse_Standby) == 255ui8) Ench0001->Mouse_Standby = 254ui8;} else {Ench0001->Mouse_Standby = 0ui8;}
-    if(Ench0001->Mouse_Standby < 150ui8){ShowCursor(TRUE); G_SetDisplay(2, Ench0001->Sprite_Index_Interface[6], Input.MOUS_X - 3ull, Input.MOUS_Y - 3ull);} else {if(Ench0001->Mouse_Standby == 153ui8){ShowCursor(FALSE); SetCursor(NULL);}}
-    Ench0001->Mouse_X = Input.MOUS_X; Ench0001->Mouse_Y = Input.MOUS_Y;
-    if(Input.MOUS_Left >= 1)
-    {
-     int64 Vrab05 = Input.MOUS_X; int64 Vrab06 = Input.MOUS_Y;
-     int64 Vrab07 = Input.MOUS_X_Left; int64 Vrab08 = Input.MOUS_Y_Left;
-     if(Vrab07 < Vrab05){Vrab05 = Vrab07; Vrab07 = Input.MOUS_X;}
-     if(Vrab08 < Vrab06){Vrab06 = Vrab08; Vrab08 = Input.MOUS_Y;}
-     Vrab07 -= Vrab05; Vrab08 -= Vrab06;
-     if(Vrab07 > 10 || Vrab08 > 10)
-     G_SetDisplay(1, 0xFF00, Vrab05, Vrab06, 0, 255ui8, Vrab07, Vrab08);
-     if(Vrab07 > 2 && Vrab08 > 2)
-     G_SetDisplay(0, 0x00FF00, Vrab05 + 1, Vrab06 + 1, 0, 50ui8, Vrab07 - 2, Vrab08 - 2);
-    }
-    Ench0001->PrintText(3, 0, 0, std::to_string(Vrab04));
-    G_SetDisplay(0, 0x0, -794, -550, 0, 255ui8, 794, 1650); G_SetDisplay(0, 0x0, 794, -550, 0, 255ui8, 794, 1650); G_SetDisplay(0, 0x0, 0, 550, 0, 255ui8, 794, 550); G_SetDisplay(0, 0x0, 0, -550, 0, 255ui8, 794, 550);
-   }
-
-
-
-
-
-
-    /*remains int1 Vrab05 = true;
-    statics string Temp01 = "System\\Interface\\Enchanted\\";
-    if(Vrab05)
-    {
-     Vrab05 = false; insize Vrab06 = 1; insize Vrab07 = rinsize(-1); Vect1001.clear(); Vect1001.push_back(0);
-     while((Vrab07 = G_SetSprite(Temp01 + "BACK" + std::to_string(Vrab06) + ".bmp", 1, 1, Varb0002, Varb0003)) != rinsize(-1))
-     {
-      Vrab06 += 1; Vect1001.push_back(Vrab07);
-     }
-     Vect1001[0] = Vrab06 - 1;
-     Vect1002[0] = L_Random(Vect1001[0]);
-    }
-    G_SetDisplay(2, Vect1001[rinsize(Vect1002[0]) + 1 + (Varb0001 % Vect1001[0])], 0, 0);
-    std::ofstream OP("DSAD.txt"); OP << Vect1001[0] << " " << Vect1002[0] << " " << Vect1001[1] << " : " << Input.MOUS_X << " " << Input.MOUS_Y << (Temp01 + "BACK" + std::to_string(13) + ".bmp"); OP.close();
-   }
-  }
- //-//*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Memory / Variables
-/*
- struct E_INPUT {
- uint8 MAIN_1;
- uint8 MAIN_2;
- uint8 MAIN_3;
- uint8 MAIN_4;
- uint8 MAIN_5;
- uint8 MAIN_6;
- uint8 MAIN_7;
- uint8 MAIN_8;
- uint8 MAIN_9;
- uint8 MAIN_0;
- uint8 MAIN_A;
- uint8 MAIN_B;
- uint8 MAIN_C;
- uint8 MAIN_D;
- uint8 MAIN_E;
- uint8 MAIN_F;
- uint8 MAIN_G;
- uint8 MAIN_H;
- uint8 MAIN_I;
- uint8 MAIN_J;
- uint8 MAIN_K;
- uint8 MAIN_L;
- uint8 MAIN_M;
- uint8 MAIN_N;
- uint8 MAIN_O;
- uint8 MAIN_P;
- uint8 MAIN_Q;
- uint8 MAIN_R;
- uint8 MAIN_S;
- uint8 MAIN_T;
- uint8 MAIN_U;
- uint8 MAIN_V;
- uint8 MAIN_W;
- uint8 MAIN_X;
- uint8 MAIN_Y;
- uint8 MAIN_Z;
- uint8 CORE_ESC;
- uint8 CORE_F1;
- uint8 CORE_F2;
- uint8 CORE_F3;
- uint8 CORE_F4;
- uint8 CORE_F5;
- uint8 CORE_F6;
- uint8 CORE_F7;
- uint8 CORE_F8;
- uint8 CORE_F9;
- uint8 CORE_F10;
- uint8 CORE_F11;
- uint8 CORE_F12;
- uint8 CORE_PSCREEN;
- uint8 CORE_DELETE;
- uint8 CORE_BACKSPACE;
- uint8 CORE_TAB;
- uint8 CORE_CAPSLOCK;
- uint8 CORE_ENTER;
- uint8 CORE_LSHIFT;
- uint8 CORE_RSHIFT;
- uint8 CORE_LCTRL;
- uint8 CORE_RCTRL;
- uint8 CORE_LALT;
- uint8 CORE_RALT;
- uint8 CORE_LWIN;
- uint8 CORE_RWIN;
- uint8 CORE_UP;
- uint8 CORE_LEFT;
- uint8 CORE_DOWN;
- uint8 CORE_RIGHT;
- uint8 NUMS_1;
- uint8 NUMS_2;
- uint8 NUMS_3;
- uint8 NUMS_4;
- uint8 NUMS_5;
- uint8 NUMS_6;
- uint8 NUMS_7;
- uint8 NUMS_8;
- uint8 NUMS_9;
- uint8 NUMS_0;
- uint8 NUMS_ENTER;
- uint8 NUMS_INSERT;
- uint8 NUMS_DELETE;
- uint8 NUMS_NUMLOCK;
- uint8 NUMS_ADD;
- uint8 NUMS_SUB;
- uint8 NUMS_SLASH;
- uint8 NUMS_MULTIPLE;
- uint8 NUMS_DOT;
- uint8 SYMB_BACKTICK;
- uint8 SYMB_UNDERSCORE;
- };
-
- // Non-Basic
-  E_INPUT Input;                  // Inputs
-  string Text0001;                   // Language Text
-  std::ifstream File0001;            // -
-  std::ofstream File0002;            // -
-
- // Basic
-  uint64 Varb0001 = 0;               // App Runtime
-  uint32 Varb0002 = 800;             // Display W
-  uint32 Varb0003 = 600;             // Display H
-  uint8 Varb0004 = 1;                // FPS Ratio
-  int1 Varb0005 = true;              // Keep aspect ratio?
-  int1 Varb0006 = true;              // Limit displayed resolution if window's resolution is higher than display's resolution?
-  int1 Varb0007 = false;             // Update Display?
-  int1 Varb0008 = false;              // CPU Graphing?
-
- // Temporals (Process-Wise)
-  std::vector < uint32 > Vect0001;   // Random Accessed Vector
-
-//-//
-//Dynamic Memory / Variables
- struct COLOUR {uint8 Red; uint8 Green; uint8 Blue; uint8 Trans;};
- struct DISPLAY {uint8 Type; insize Target; int32 Post_X1; int32 Post_Y1; uint8 Effect; uint8 Trans; string Text; int32 Post_X2; int32 Post_X3; int32 Post_X4; int32 Post_Y2; int32 Post_Y3; int32 Post_Y4;};
- struct SPRITE {insize BMP; uint32 W; uint32 H; uint32 Row; insize Zeroth;};
- struct OBJ_DATA_ID {int1 Exist = false; int1 Loaded = false; uint8 Type = 255; string Address = ""; insize PropertyAdd; insize FrameNum; insize FrameAdd; insize GuideAdd;};
- struct OBJ_DATA_PR {string Name; insize Face; insize Small; insize PicNum; insize PicAdd; uint32 MaxHP; uint32 MovementSpeed; xint64 Weight; uint8 Speciality[15]; insize StartingFrame;};
- struct OBJ_DATA_PP {insize Address; uint32 W; uint32 H; uint32 Row; uint32 Col;};
- struct OBJ_DATA_FM {insize Number; int8 FType; uint32 State; uint32 State2; uint32 State3; uint32 CenterX; uint32 CenterY; uint32 Wait; insize Next; uint32 Vx; uint32 Vy; uint32 Vz; uint8 InputType[18]; insize InputFrame[18]; insize Sound; uint32 MP; int1 HeldA; insize HeldAAdd; int1 HeldB; insize HeldBAdd; int1 Catch; insize CatchAdd; int1 Body; insize BodyAdd; insize SpointNum; insize SpointAdd; insize BpointNum; insize BpointAdd; insize FpointNum; insize FpointAdd; insize IpointNum; insize IpointAdd; insize RpointNum; insize RpointAdd; insize OpointNum; insize OpointAdd;};
- struct OBJ_DATA_FD {uint8 Kind; uint32 X; uint32 Y; uint32 W; uint32 H; uint16 Rotate;};
- struct OBJ_DATA_FA {uint8 kind; uint32 X; uint32 Y; uint32 Z; insize Action; insize Velocity;};
- struct OBJ_DATA_FH {uint8 kind; uint32 X; uint32 Y; uint32 Z; insize Action; insize Velocity;};
- struct OBJ_DATA_FC {};
- struct OBJ_DATA_FS {};
- struct OBJ_DATA_FF {};
- struct OBJ_DATA_FB {};
- struct OBJ_DATA_FI {};
- struct OBJ_DATA_FR {};
- struct OBJ_DATA_FO {};
- struct OBJ_DATA_GD {};
- 
- std::vector < std::vector < COLOUR > > Display;
- std::vector < DISPLAY > DisplayStack;
-
- std::vector < SPRITE > Sprite;
- std::vector < insize > Sprite_Index;
-
- std::vector < COLOUR > BMP_Color;
- std::vector < insize > BMP_Index;
- std::vector < uint32 > BMP_Width;
- std::vector < uint32 > BMP_Height;
- std::vector < string > BMP_Address;
- 
- std::vector < OBJ_DATA_ID > DATA_ID;           // -
- std::vector < OBJ_DATA_PR > DATA_Property;     // +>> (+0)Name; (+1)Face; (+2)Small; (+3)Pic_Num; (+4)Pic_Add; (+5)MaxHP; (+6)MovementSpeed; (+7)Weight; (+8 - +22)Speciality; (+23)StartingFrame;
- std::vector < OBJ_DATA_PP > DATA_Property_Pic; // +>> (+0)Address; (+1)W; (+2)H; (+3)Row; (+4)Col;
- std::vector < OBJ_DATA_FM > DATA_Frame;        // +>> (+0)Number; (+1)FType; (+2)State; (+3)State2; (+4)State3; (+5)CenterX; (+6)CenterY; (+7)Wait; (+8)Next; (+9)Vx; (+10)Vy; (+11)Vz; (+12 - +29)in_##; (+30)Sound; (+31)MP; (+32)HeldA; (+33)HeldA_Add; (+34)HeldB; (+35)HeldB_Add; (+36)Catch; (+37)Catch_Add; (+38)Body; (+39)Body_Add; (+40)SPoint_Num; (+41)SPoint_Add; (+42)BPoint_Num; (+43)BPoint_Add; (+44)FPoint_Num; (+45)FPoint_Add; (+46)IPoint_Num; (+47)IPoint_Add; (+48)RPoint_Num; (+49)RPoint_Add; (+50)OPoint_Num; (+51)OPoint_Add;
- std::vector < OBJ_DATA_FD > DATA_Frame_Body;   // +>> (+0)Kind; (+1)X; (+2)Y; (+3)W; (+4)H; (+5)Rotate;
- std::vector < OBJ_DATA_FA > DATA_Frame_HeldA;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector < OBJ_DATA_FH > DATA_Frame_HeldB;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Attack;
- std::vector < OBJ_DATA_FC > DATA_Frame_Catch;  // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)Action; (+5)Hurt_Act;
- std::vector < OBJ_DATA_FS > DATA_Frame_SPoint; // +>> (+0)Pic; (+1)X1; (+2)Y1; (+3)X2; (+4)Y2; (+5)X3; (+6)Y3; (+7)X4; (+8)Y4; (+9)Trans;
- std::vector < OBJ_DATA_FF > DATA_Frame_FPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z;
- std::vector < OBJ_DATA_FB > DATA_Frame_BPoint; // +>> (+0)X; (+1)Y;
- std::vector < OBJ_DATA_FI > DATA_Frame_IPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape; (+8)X_Rot; (+9)Y_Rot; (+10)Z_Rot (+11)Kind; ...
- std::vector < OBJ_DATA_FR > DATA_Frame_RPoint; // +>> (+0)Dimension; (+1)X; (+2)Y; (+3)Z; (+4)W; (+5)H; (+6)L; (+7)Shape;
- std::vector < OBJ_DATA_FO > DATA_Frame_OPoint; // +>> (+0)Kind; (+1)X; (+2)Y; (+3)Z; (+4)ID; (+5)Action;
- std::vector < OBJ_DATA_GD > DATA_Guide;        // -
-
- std::vector < insize > INDEX_Language;     // -
- std::vector < insize > INDEX_Frame;        // -
-//-//
-// Light Functions
- int1   L_Open(const string &Temp01)            {if(File0001.is_open()) File0001.close(); File0001.open(Temp01, std::ios::binary | std::ios::in); if(File0001.is_open()) return true; return false;}
- int1   L_Exist(const string &Temp01)  fastened {struct stat Vrab01; return (stat(Temp01.c_str(), &Vrab01) == 0);}
- int1   L_Create(const string &Temp01)          {if(File0002.is_open()) File0002.close(); File0002.open(Temp01, std::ios::binary | std::ios::out); if(File0002.is_open()) return true; return false;}
- int1   L_SetLang(uint8 Vrab01)        fastened {switch(Vrab01){case 0: if(!L_Open(HEPTA_LOCATION_LANG_EN)) return false; break; case 1: if(!L_Open(HEPTA_LOCATION_LANG_ID)) return false; break; case 2: if(!L_Open(HEPTA_LOCATION_LANG_CN)) return false; break; case 3: if(!L_Open(HEPTA_LOCATION_LANG_CN2)) return false; break; case 4: if(!L_Open(HEPTA_LOCATION_LANG_RU)) return false; break; case 5: if(!L_Open(HEPTA_LOCATION_LANG_JP)) return false; break; default: return false;} stream Strn01; Strn01 << File0001.rdbuf(); File0001.close(); const string Temp01 = Strn01.str(); INDEX_Language.clear(); INDEX_Language.resize(0); Text0001 = ""; const insize Vrab03 = Temp01.length(); insize Vrab04 = 0; insize Vrab05 = 0; insize Vrab06 = 0; while(Vrab04 < Vrab03){if(Temp01[Vrab04] == '<') if(Temp01[Vrab04 + 1] == '/') if(Temp01[Vrab04 + 2] == '>'){Labl01: Vrab04 += 3; INDEX_Language.push_back(Vrab05); Vrab06 = 0; while(Temp01[Vrab04 + Vrab06] == ' ') Vrab06 += 1; if(Temp01[Vrab04 + Vrab06] == '\n'){Vrab06 += 1; Vrab04 += Vrab06;} else {if(Temp01[Vrab04 + Vrab06] == '/') if(Temp01[Vrab04 + Vrab06 + 1] == '/'){while(Temp01[Vrab04 + Vrab06 + 2] != '\n') Vrab06 += 1; Vrab06 += 3; Vrab04 += Vrab06;}}} if(Temp01[Vrab04] == '/') if(Temp01[Vrab04 + 1] == '/'){Labl02: Vrab04 += 2; while(Temp01[Vrab04] != '\n') Vrab04 += 1;} if(Temp01[Vrab04] == '\n'){Vrab06 = 1; while(Temp01[Vrab04 + Vrab06] == '\n') Vrab06 += 1; if(Temp01[Vrab04 + Vrab06] == '<') if(Temp01[Vrab04 + Vrab06 + 1] == '/') if(Temp01[Vrab04 + Vrab06 + 2] == '>'){Vrab04 += Vrab06; goto Labl01;}} if(Temp01[Vrab04] == ' '){Vrab06 = 1; while(Temp01[Vrab04 + Vrab06] == ' ') Vrab06 += 1; if(Temp01[Vrab04 + Vrab06] == '/') if(Temp01[Vrab04 + Vrab06 + 1] == '/'){Vrab04 += Vrab06; goto Labl02;}} Text0001 += Temp01[Vrab04]; Vrab05 += 1; Vrab04 += 1;} return true;}
- string L_GetLang(insize Vrab01)       fastened {if(Vrab01 >= INDEX_Language.size()) return "[ERROR]"; string Temp01 = ""; for(insize Vrab02 = INDEX_Language[Vrab01]; Vrab02 < INDEX_Language[Vrab01 + 1]; ++Vrab02) Temp01 += Text0001[Vrab02]; return Temp01;}
- string L_Lowercase(string Temp01)     fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
- string L_Execute(const string Temp01)          {string Temp02 = Temp01; uint32 Vrab01 = Temp02.size() - 1; while(Vrab01 != 0 && Temp02.at(Vrab01) != '\\') Vrab01 -= 1; if(Vrab01 > 0) Temp02.erase(Vrab01, Temp02.size() - Vrab01); std::filesystem::create_directories(Temp02); return Temp01;}
-  
- int32 INT32Rounding(xint64 Vrab01){if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint32(Vrab01); return rint32(Vrab01) + 1;}
- int64 INT64Rounding(xint64 Vrab01){if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return rint64(Vrab01); return rint64(Vrab01) + 1;}
- xint64 XINT64Rounding(xint64 Vrab01){if(rint64(Vrab01) == rxint64(rint64(Vrab01 + 0.5))) return Vrab01; return Vrab01 + 1;}
- xint64 RatioLeft(xint64 Vrab01){return Vrab01 - rxint64(rint64(Vrab01));}
- xint64 RatioRight(xint64 Vrab01){return 1 - (Vrab01 - rxint64(rint64(Vrab01)));}
-//-//
-// Core Functions
- int0   C_BMP_Clear()                    fastened {BMP_Color.clear(); BMP_Index.clear(); BMP_Width.clear(); BMP_Height.clear(); BMP_Address.clear();}
- insize C_BMP_Load(const string &Temp01) fastened
- {
-  string Temp02 = L_Lowercase(Temp01);
-  {
-   const insize Vrab01 = BMP_Address.size(); insize Vrab02 = 0; while(Vrab01 != Vrab02){if(Temp02 == BMP_Address[Vrab02]) return Vrab02; Vrab02 += 1;}
-  }
-  BMP Bitm01(Temp01.c_str()); const insize Vrab01 = Bitm01.bmp_info_header.width * Bitm01.bmp_info_header.height; if(Bitm01.bmp_info_header.compression != 3 && Bitm01.bmp_info_header.bit_count != 3 && Bitm01.bmp_info_header.size_image != 0 && Bitm01.data.size() != Vrab01 * 3) return rinsize(-1);
-  const insize Vrab02 = Bitm01.data.size(); insize Vrab03 = rinsize(-1); const insize Vrab04 = BMP_Color.size(); insize Vrab05 = 0; const insize Vrab06 = Bitm01.bmp_info_header.width; insize Vrab07 = Vrab06; insize Vrab08 = (Bitm01.bmp_info_header.height - 1) * Vrab06 * 3;
-  BMP_Color.resize(Vrab04 + Vrab01); BMP_Index.push_back(Vrab04); BMP_Width.push_back(Bitm01.bmp_info_header.width); BMP_Height.push_back(Bitm01.bmp_info_header.height); BMP_Address.push_back(Temp02);
-  while(Vrab05 != Vrab01)
-  {
-   BMP_Color[Vrab04 + Vrab05].Blue = Bitm01.data[Vrab08 + ++Vrab03];
-   BMP_Color[Vrab04 + Vrab05].Green = Bitm01.data[Vrab08 + ++Vrab03];
-   BMP_Color[Vrab04 + Vrab05].Red = Bitm01.data[Vrab08 + ++Vrab03];
-   Vrab05 += 1; Vrab07 -= 1; if(Vrab07 == 0){Vrab07 = Vrab06; Vrab08 -= Vrab06 * 3; Vrab03 = rinsize(-1);}
-  }
-  return (BMP_Address.size() - 1);
- }
- int0   C_Sprite_Clear() fastened {Sprite.clear(); Sprite_Index.clear();}
- insize Game::C_Sprite_Set(const string &Temp01, uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04) fastened
- {
-  if(Varb0008)
-  {
-   const insize Vrab05 = C_BMP_Load(Temp01);
-   if(Vrab05 == rinsize(-1))
-   {
-    const insize Vrab06 = Sprite_Index.size(); const insize Vrab07 = Vrab06 + (Vrab03 * Vrab04);
-    Sprite_Index.resize(Vrab07);
-    for(insize Vrab08 = Vrab06; Vrab08 < Vrab07; ++Vrab08)
-    Sprite_Index[Vrab08] = rinsize(-1);
-    return rinsize(-1);
-   } else
-   {
-    const insize Vrab06 = Sprite.size(); const insize Vrab07 = Sprite_Index.size(); 
-    Sprite.push_back({Vrab05, Vrab01, Vrab02, Vrab03, Vrab07});
-    const insize Vrab08 = Vrab07 + (Vrab03 * Vrab04);
-    Sprite_Index.resize(Vrab08);
-    for(insize Vrab09 = Vrab07; Vrab09 < Vrab08; ++Vrab09)
-    Sprite_Index[Vrab09] = Vrab06;
-    return Vrab07;
-   }
-  } else
-  {
-
-   return 0;
-  }
- }
- int0   C_Display(const uint8 Vrab01, const insize Vrab02, const int32 Vrab03 = 0, const int32 Vrab04 = 0, const uint8 Vrab05 = 0, const string Temp01 = "", const int32 Vrab06 = 0, const int32 Vrab07 = 0, const int32 Vrab08 = 0, const int32 Vrab09 = 0, const int32 Vrab10 = 0, const int32 Vrab11 = 0, const int8 Vrab12 = 0)
- {
-  const insize Vrab13 = DisplayStack.size();
-  DisplayStack.resize(Vrab13 + 1);
-  DisplayStack[Vrab13].Type = Vrab01;
-  DisplayStack[Vrab13].Target = Vrab02;
-  DisplayStack[Vrab13].Post_X1 = Vrab03;
-  DisplayStack[Vrab13].Post_Y1 = Vrab04;
-  DisplayStack[Vrab13].Effect = Vrab05;
-  DisplayStack[Vrab13].Text = Temp01;
-  DisplayStack[Vrab13].Post_X2 = Vrab06;
-  DisplayStack[Vrab13].Post_X3 = Vrab07;
-  DisplayStack[Vrab13].Post_X4 = Vrab08;
-  DisplayStack[Vrab13].Post_Y2 = Vrab09;
-  DisplayStack[Vrab13].Post_Y3 = Vrab10;
-  DisplayStack[Vrab13].Post_Y4 = Vrab11;
-  DisplayStack[Vrab13].Trans = Vrab12;
- }
-//-//
-//AngelScript's Communication
- 
-//-//
-//Main Functions
- int0 Game::Engine_Display() fastened
- {
-  if(Varb0008)
-  {
-  if(Display.size() != Varb0002)
-  {Display.resize(Varb0002); for(insize Vrab01 = 0; Vrab01 < Varb0002; ++Vrab01) Display[Vrab01].resize(Varb0003);} else
-  {if(Display[0].size() != Varb0003){Display.resize(Varb0002); for(insize Vrab01 = 0; Vrab01 < Varb0002; ++Vrab01) Display[Vrab01].resize(Varb0003);}}
-
-  {
-   for(insize Vrab01 = 0; Vrab01 < Varb0002; ++Vrab01)
-   for(insize Vrab02 = 0; Vrab02 < Varb0003; ++Vrab02)
-   {
-    Display[Vrab01][Vrab02].Green = (uint8)((uint32)(Varb0001 + (Vrab01 / 2)) % 256);
-    Display[Vrab01][Vrab02].Blue = 0ui8;
-    Display[Vrab01][Vrab02].Red = 0ui8;
-   }//Display[Vrab05].Red = (uint8)((uint32)(Varb0001 + Vrab05) % 256);} //{switch(Vrab05 % 3){case 0: Display[Vrab05].Green = 0; break; case 1: Display[Vrab05].Blue = 0; break; case 2: Display[Vrab05].Red = 0; break; default: break;}}
-  }
-
-  const insize Vrab01 = DisplayStack.size();
-  for(insize Vrab02 = 0; Vrab02 < Vrab01; ++Vrab02) switch(DisplayStack[Vrab02].Type)
-  {
-   case 0: // Simple PIC Display
-   {
-    if(DisplayStack[Vrab02].Target >= Sprite_Index.size()) break;
-    const insize Vrab03 = Sprite_Index[DisplayStack[Vrab02].Target];
-    const insize Vrab04 = Sprite[Vrab03].BMP;
-    const insize Vrab05 = (Sprite[Vrab03].W + 1) * (DisplayStack[Vrab02].Target - Sprite[Vrab03].Zeroth); insize Vrab06 = (Sprite[Vrab03].H) * ((DisplayStack[Vrab02].Target - Sprite[Vrab03].Zeroth) / Sprite[Vrab03].Row);
-    std::ofstream Labo("shj.txt"); Labo << Vrab05 << " " << Vrab06; Labo.close();
-    const insize Vrab07 = Vrab05 + Sprite[Vrab03].W; const insize Vrab08 = Vrab06 + Sprite[Vrab03].H; insize Vrab10 = rinsize(DisplayStack[Vrab02].Post_Y1);
-    if(DisplayStack[Vrab02].Effect == 0)
-    {
-     while(Vrab06 != Vrab08)
-     {
-      if(Vrab10 >= 0 && Vrab10 < Varb0003)
-      {
-       const insize Vrab11 = Vrab06 * BMP_Width[Vrab04];
-       insize Vrab12 = Vrab05; insize Vrab09 = rinsize(DisplayStack[Vrab02].Post_X1);
-       while(Vrab12 != Vrab07)
-       {
-        if(Vrab09 >= 0 && Vrab09 < Varb0002)
-        {
-         const auto Vrab13 = BMP_Color[BMP_Index[Vrab04] + Vrab11 + Vrab12];
-         if(Vrab13.Blue != 0ui8 || Vrab13.Green != 0ui8 || Vrab13.Red != 0ui8) 
-         Display[Vrab09][Vrab10] = Vrab13;
-        }
-        Vrab12 += 1; Vrab09 += 1;
-       }
-      }
-      Vrab06 += 1; Vrab10 += 1;
-     }
-    } else
-    {
-     while(Vrab06 != Vrab08)
-     {
-      if(Vrab10 >= 0 && Vrab10 < Varb0003)
-      {
-       const insize Vrab11 = Vrab06 * BMP_Width[Vrab04];
-       insize Vrab12 = Vrab05; insize Vrab09 = rinsize(DisplayStack[Vrab02].Post_X1) + Sprite[Vrab03].W;
-       while(Vrab12 != Vrab07)
-       {
-        if(Vrab09 >= 0 && Vrab09 < Varb0002)
-        {
-         const auto Vrab13 = BMP_Color[BMP_Index[Vrab04] + Vrab11 + Vrab12];
-         if(Vrab13.Blue != 0ui8 || Vrab13.Green != 0ui8 || Vrab13.Red != 0ui8) 
-         Display[Vrab09][Vrab10] = Vrab13;
-        }
-        Vrab12 += 1; Vrab09 -= 1;
-       }
-      }
-      Vrab06 += 1; Vrab10 += 1;
-     }
-    }
-   }
-   break;
-   default: break;
-  }
-  } else
-  {
-   m_spriteBatch->Begin();
-
-   const auto Vrab01 = m_spriteBatch.get();
-   m_source[0]->Draw(Vrab01, {0, 0});
-
-   m_spriteBatch->End();
-  }
-  DisplayStack.clear();
- }
- int0 Engine_Input(std::unique_ptr < DirectX::Keyboard > *Inpt01, std::unique_ptr < DirectX::GamePad > *Inpt02, std::unique_ptr < DirectX::Mouse > *Inpt03)
- {
-  auto Inpt05 = (*Inpt01)->GetState();
-  if(Inpt05.D0){if((++Input.MAIN_0) == 255ui8) Input.MAIN_0 = 254ui8;} else {Input.MAIN_0 = 0ui8;}
-  if(Inpt05.D1){if((++Input.MAIN_1) == 255ui8) Input.MAIN_1 = 254ui8;} else {Input.MAIN_1 = 0ui8;}
-  if(Inpt05.D2){if((++Input.MAIN_2) == 255ui8) Input.MAIN_2 = 254ui8;} else {Input.MAIN_2 = 0ui8;}
-  if(Inpt05.D3){if((++Input.MAIN_3) == 255ui8) Input.MAIN_3 = 254ui8;} else {Input.MAIN_3 = 0ui8;}
-  if(Inpt05.D4){if((++Input.MAIN_4) == 255ui8) Input.MAIN_4 = 254ui8;} else {Input.MAIN_4 = 0ui8;}
-  if(Inpt05.D5){if((++Input.MAIN_5) == 255ui8) Input.MAIN_5 = 254ui8;} else {Input.MAIN_5 = 0ui8;}
-  if(Inpt05.D6){if((++Input.MAIN_6) == 255ui8) Input.MAIN_6 = 254ui8;} else {Input.MAIN_6 = 0ui8;}
-  if(Inpt05.D7){if((++Input.MAIN_7) == 255ui8) Input.MAIN_7 = 254ui8;} else {Input.MAIN_7 = 0ui8;}
-  if(Inpt05.D8){if((++Input.MAIN_8) == 255ui8) Input.MAIN_8 = 254ui8;} else {Input.MAIN_8 = 0ui8;}
-  if(Inpt05.D9){if((++Input.MAIN_9) == 255ui8) Input.MAIN_9 = 254ui8;} else {Input.MAIN_9 = 0ui8;}
-  if(Inpt05.A){if((++Input.MAIN_A) == 255ui8) Input.MAIN_A = 254ui8;} else {Input.MAIN_A = 0ui8;}
-  if(Inpt05.B){if((++Input.MAIN_B) == 255ui8) Input.MAIN_B = 254ui8;} else {Input.MAIN_B = 0ui8;}
-  if(Inpt05.C){if((++Input.MAIN_C) == 255ui8) Input.MAIN_C = 254ui8;} else {Input.MAIN_C = 0ui8;}
-  if(Inpt05.D){if((++Input.MAIN_D) == 255ui8) Input.MAIN_D = 254ui8;} else {Input.MAIN_D = 0ui8;}
-  if(Inpt05.E){if((++Input.MAIN_E) == 255ui8) Input.MAIN_E = 254ui8;} else {Input.MAIN_E = 0ui8;}
-  if(Inpt05.F){if((++Input.MAIN_F) == 255ui8) Input.MAIN_F = 254ui8;} else {Input.MAIN_F = 0ui8;}
-  if(Inpt05.G){if((++Input.MAIN_G) == 255ui8) Input.MAIN_G = 254ui8;} else {Input.MAIN_G = 0ui8;}
-  if(Inpt05.H){if((++Input.MAIN_H) == 255ui8) Input.MAIN_H = 254ui8;} else {Input.MAIN_H = 0ui8;}
-  if(Inpt05.I){if((++Input.MAIN_I) == 255ui8) Input.MAIN_I = 254ui8;} else {Input.MAIN_I = 0ui8;}
-  if(Inpt05.J){if((++Input.MAIN_J) == 255ui8) Input.MAIN_J = 254ui8;} else {Input.MAIN_J = 0ui8;}
-  if(Inpt05.K){if((++Input.MAIN_K) == 255ui8) Input.MAIN_K = 254ui8;} else {Input.MAIN_K = 0ui8;}
-  if(Inpt05.L){if((++Input.MAIN_L) == 255ui8) Input.MAIN_L = 254ui8;} else {Input.MAIN_L = 0ui8;}
-  if(Inpt05.M){if((++Input.MAIN_M) == 255ui8) Input.MAIN_M = 254ui8;} else {Input.MAIN_M = 0ui8;}
-  if(Inpt05.N){if((++Input.MAIN_N) == 255ui8) Input.MAIN_N = 254ui8;} else {Input.MAIN_N = 0ui8;}
-  if(Inpt05.O){if((++Input.MAIN_O) == 255ui8) Input.MAIN_O = 254ui8;} else {Input.MAIN_O = 0ui8;}
-  if(Inpt05.P){if((++Input.MAIN_P) == 255ui8) Input.MAIN_P = 254ui8;} else {Input.MAIN_P = 0ui8;}
-  if(Inpt05.Q){if((++Input.MAIN_Q) == 255ui8) Input.MAIN_Q = 254ui8;} else {Input.MAIN_Q = 0ui8;}
-  if(Inpt05.R){if((++Input.MAIN_R) == 255ui8) Input.MAIN_R = 254ui8;} else {Input.MAIN_R = 0ui8;}
-  if(Inpt05.S){if((++Input.MAIN_S) == 255ui8) Input.MAIN_S = 254ui8;} else {Input.MAIN_S = 0ui8;}
-  if(Inpt05.T){if((++Input.MAIN_T) == 255ui8) Input.MAIN_T = 254ui8;} else {Input.MAIN_T = 0ui8;}
-  if(Inpt05.U){if((++Input.MAIN_U) == 255ui8) Input.MAIN_U = 254ui8;} else {Input.MAIN_U = 0ui8;}
-  if(Inpt05.V){if((++Input.MAIN_V) == 255ui8) Input.MAIN_V = 254ui8;} else {Input.MAIN_V = 0ui8;}
-  if(Inpt05.W){if((++Input.MAIN_W) == 255ui8) Input.MAIN_W = 254ui8;} else {Input.MAIN_W = 0ui8;}
-  if(Inpt05.X){if((++Input.MAIN_X) == 255ui8) Input.MAIN_X = 254ui8;} else {Input.MAIN_X = 0ui8;}
-  if(Inpt05.Y){if((++Input.MAIN_Y) == 255ui8) Input.MAIN_Y = 254ui8;} else {Input.MAIN_Y = 0ui8;}
-  if(Inpt05.Z){if((++Input.MAIN_Z) == 255ui8) Input.MAIN_Z = 254ui8;} else {Input.MAIN_Z = 0ui8;}
-  if(Inpt05.Escape){if((++Input.CORE_ESC) == 255ui8) Input.CORE_ESC = 254ui8;} else {Input.CORE_ESC = 0ui8;}
-  if(Inpt05.F1){if((++Input.CORE_F1) == 255ui8) Input.CORE_F1 = 254ui8;} else {Input.CORE_F1 = 0ui8;}
-  if(Inpt05.F2){if((++Input.CORE_F2) == 255ui8) Input.CORE_F2 = 254ui8;} else {Input.CORE_F2 = 0ui8;}
-  if(Inpt05.F3){if((++Input.CORE_F3) == 255ui8) Input.CORE_F3 = 254ui8;} else {Input.CORE_F3 = 0ui8;}
-  if(Inpt05.F4){if((++Input.CORE_F4) == 255ui8) Input.CORE_F4 = 254ui8;} else {Input.CORE_F4 = 0ui8;}
-  if(Inpt05.F5){if((++Input.CORE_F5) == 255ui8) Input.CORE_F5 = 254ui8;} else {Input.CORE_F5 = 0ui8;}
-  if(Inpt05.F6){if((++Input.CORE_F6) == 255ui8) Input.CORE_F6 = 254ui8;} else {Input.CORE_F6 = 0ui8;}
-  if(Inpt05.F7){if((++Input.CORE_F7) == 255ui8) Input.CORE_F7 = 254ui8;} else {Input.CORE_F7 = 0ui8;}
-  if(Inpt05.F8){if((++Input.CORE_F8) == 255ui8) Input.CORE_F8 = 254ui8;} else {Input.CORE_F8 = 0ui8;}
-  if(Inpt05.F9){if((++Input.CORE_F9) == 255ui8) Input.CORE_F9 = 254ui8;} else {Input.CORE_F9 = 0ui8;}
-  if(Inpt05.F10){if((++Input.CORE_F10) == 255ui8) Input.CORE_F10 = 254ui8;} else {Input.CORE_F10 = 0ui8;}
-  if(Inpt05.F11){if((++Input.CORE_F11) == 255ui8) Input.CORE_F11 = 254ui8;} else {Input.CORE_F11 = 0ui8;}
-  if(Inpt05.F12){if((++Input.CORE_F12) == 255ui8) Input.CORE_F12 = 254ui8;} else {Input.CORE_F12 = 0ui8;}
-  if(Inpt05.PrintScreen){if((++Input.CORE_PSCREEN) == 255ui8) Input.CORE_PSCREEN = 254ui8;} else {Input.CORE_PSCREEN = 0ui8;}
-  if(Inpt05.Delete){if((++Input.CORE_DELETE) == 255ui8) Input.CORE_DELETE = 254ui8;} else {Input.CORE_DELETE = 0ui8;}
-  if(Inpt05.Back){if((++Input.CORE_BACKSPACE) == 255ui8) Input.CORE_BACKSPACE = 254ui8;} else {Input.CORE_BACKSPACE = 0ui8;}
-  if(Inpt05.Tab){if((++Input.CORE_TAB) == 255ui8) Input.CORE_TAB = 254ui8;} else {Input.CORE_TAB = 0ui8;}
-  if(Inpt05.Enter){if((++Input.CORE_ENTER) == 255ui8) Input.CORE_ENTER = 254ui8;} else {Input.CORE_ENTER = 0ui8;}
-  if(Inpt05.CapsLock){if((++Input.CORE_CAPSLOCK) == 255ui8) Input.CORE_CAPSLOCK = 254ui8;} else {Input.CORE_CAPSLOCK = 0ui8;}
-  if(Inpt05.LeftShift){if((++Input.CORE_LSHIFT) == 255ui8) Input.CORE_LSHIFT = 254ui8;} else {Input.CORE_LSHIFT = 0ui8;}
-  if(Inpt05.RightShift){if((++Input.CORE_RSHIFT) == 255ui8) Input.CORE_RSHIFT = 254ui8;} else {Input.CORE_RSHIFT = 0ui8;}
-  if(Inpt05.LeftControl){if((++Input.CORE_LCTRL) == 255ui8) Input.CORE_LCTRL = 254ui8;} else {Input.CORE_LCTRL = 0ui8;}
-  if(Inpt05.RightControl){if((++Input.CORE_RCTRL) == 255ui8) Input.CORE_RCTRL = 254ui8;} else {Input.CORE_RCTRL = 0ui8;}
-  if(Inpt05.LeftAlt){if((++Input.CORE_LALT) == 255ui8) Input.CORE_LALT = 254ui8;} else {Input.CORE_LALT = 0ui8;}
-  if(Inpt05.RightAlt){if((++Input.CORE_RALT) == 255ui8) Input.CORE_RALT = 254ui8;} else {Input.CORE_RALT = 0ui8;}
-  if(Inpt05.LeftWindows){if((++Input.CORE_LWIN) == 255ui8) Input.CORE_LWIN = 254ui8;} else {Input.CORE_LWIN = 0ui8;}
-  if(Inpt05.RightWindows){if((++Input.CORE_RWIN) == 255ui8) Input.CORE_RWIN = 254ui8;} else {Input.CORE_RWIN = 0ui8;}
-  if(Inpt05.Up){if((++Input.CORE_UP) == 255ui8) Input.CORE_UP = 254ui8;} else {Input.CORE_UP = 0ui8;}
-  if(Inpt05.Left){if((++Input.CORE_LEFT) == 255ui8) Input.CORE_LEFT = 254ui8;} else {Input.CORE_LEFT = 0ui8;}
-  if(Inpt05.Down){if((++Input.CORE_DOWN) == 255ui8) Input.CORE_DOWN = 254ui8;} else {Input.CORE_DOWN = 0ui8;}
-  if(Inpt05.Right){if((++Input.CORE_RIGHT) == 255ui8) Input.CORE_RIGHT = 254ui8;} else {Input.CORE_RIGHT = 0ui8;}
-  auto Inpt06 = (*Inpt02)->GetState(0);
-  auto Inpt07 = (*Inpt03)->GetState();
-  return;
- }
- int0 Engine_Main(xint64 Vrab01, xint64 Vrab02, uint32 Vrab03, uint32 Vrab04)
- {
-  Varb0001 += 1;
-  if(Varb0001 == 1)
-  {
-   Vect0001.resize(4);
-   Vect0001[0] = g_game->C_Sprite_Set("System\\Sprite\\Template\\template_0_mirror.bmp", 79, 79, 19, 6);
-   Vect0001[0] = g_game->C_Sprite_Set("System\\Sprite\\Template\\template_0.bmp", 79, 79, 19, 6);
-  }
-  
-  for(uint32 Vrab69 = 0; Vrab69 < 50; ++Vrab69)
-  C_Display(0, Vect0001[0], Vect0001[1] + (Vrab69 * 5), Vect0001[2] + (Vrab69 * 5), ruint8(Vect0001[3]));
-  std::ofstream DO("ADD.txt"); DO << DisplayStack.size() << " : " << Vect0001[0]; DO.close();
-
-
-  if(Input.MAIN_1 == 1){Vect0001[0] += 1;}
-  if(Input.MAIN_2 == 1){Vect0001[0] -= 1;}
-  if(Input.MAIN_3 == 1){Vect0001[1] += 1;}//std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(3); for(uint32 Vrab99 = 0; Vrab99 < BMP_Color.size(); ++Vrab99) KO << (int32)BMP_Color[Vrab99].Red << " " << (int32)BMP_Color[Vrab99].Green << " " << (int32)BMP_Color[Vrab99].Blue << " | ";}
-  if(Input.MAIN_4 == 1){Vect0001[1] -= 1;} //std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(4);}
-  if(Input.MAIN_5 == 1){Vect0001[2] += 1;}//std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(5);}
-  if(Input.MAIN_6 == 1){Vect0001[2] -= 1;} //std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(6);}
-  if(Input.MAIN_7 == 1){if(Vect0001[3] == 1){Vect0001[3] = 0;} else {Vect0001[3] = 1;}}
-  if(Input.MAIN_8 == 1){std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(8);}
-  if(Input.MAIN_9 == 1){std::ofstream KO("asds.txt"); L_SetLang(0); KO << L_GetLang(9);}
-  if(Input.MAIN_0 == 1){C_BMP_Load("System\\Sprite\\Template\\template_0.bmp");}
-  return;
- }
-//-//
-*/
 #endif
