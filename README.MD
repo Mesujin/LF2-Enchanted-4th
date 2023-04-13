@@ -24,7 +24,7 @@ To modify, generally you'll need [Microsoft Visual Studio](https://visualstudio.
 If you're not familiar with GitHub, here's the link to download this source. <br/>
 > Download Source : https://github.com/Mesujin/LF2-Enchanted-4th/archive/refs/heads/Official_Release.zip
 
-You might missing something if you're purely download the source instead of clone it.
+But you might missing something if you're purely download the source instead of clone it.
 
 <br/>
 
