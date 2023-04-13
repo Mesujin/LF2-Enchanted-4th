@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.jpg" width="120"/>
+  <img src="PIC.JPG" width="120"/>
   <h1>LF2 Enchanted 4th | Hepta: Enchanted </h2>
   Most resources belong to Marti Wong & Starsky Wong, developers of LF2
 </div>
