@@ -401,18 +401,23 @@
     Rect01.left = Vrab002; Rect01.top = Vrab003; Rect01.right = Vrab002 + Vrab004; Rect01.bottom = Vrab003 + Vrab005;
     if(ruint32(Rect01.right) > Vrab006) Rect01.right = Vrab006;
     if(ruint32(Rect01.bottom) > Vrab007) Rect01.bottom = Vrab007;
+    if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+    if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
    RECT Get_Specified()
    {
     RECT Rect01;
-    Rect01.left = Vrab002 + 1; Rect01.top = Vrab003 + 1; Rect01.right = Vrab002 + Vrab004 - 1; Rect01.bottom = Vrab003 + Vrab005 - 1;
+    Rect01.left = Vrab002; Rect01.right = Vrab002 + Vrab004; if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;}
+    Rect01.top = Vrab003; Rect01.bottom = Vrab003 + Vrab005; if(Vrab005 > 2){Rect01.top += 1; Rect01.bottom -= 1;}
     if(ruint32(Rect01.right) > Vrab006) Rect01.right = Vrab006 - 1;
     if(ruint32(Rect01.bottom) > Vrab007) Rect01.bottom = Vrab007 - 1;
+    if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+    if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
    DirectX::XMFLOAT2 Get_Center(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004 - 2) / 2)), rxint32(rint32(rxint32(Vrab005 - 2) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid(){uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
    private:
     insize Vrab001;
     uint32 Vrab002;
@@ -440,6 +445,8 @@
     Rect01.left = Vrab03; Rect01.top = Vrab04; Rect01.right = Vrab03 + Vrab004; Rect01.bottom = Vrab04 + Vrab005;
     if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007;
     if(ruint32(Rect01.bottom) > Vrab008) Rect01.bottom = Vrab008;
+    if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+    if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
    RECT Get_Specified(insize Vrab01)
@@ -448,13 +455,16 @@
     statics LONG Vrab03 = (LONG)((Vrab004 + 1) * (Vrab02 % Vrab002));
     statics LONG Vrab04 = (LONG)((Vrab005 + 1) * (Vrab02 / Vrab002));
     RECT Rect01;
-    Rect01.left = Vrab03 + 1; Rect01.top = Vrab04 + 1; Rect01.right = Vrab03 + Vrab004 - 1; Rect01.bottom = Vrab04 + Vrab005 - 1;
+    Rect01.left = Vrab03; Rect01.right = Vrab03 + Vrab004; if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;}
+    Rect01.top = Vrab04; Rect01.bottom = Vrab04 + Vrab005; if(Vrab005 > 2){Rect01.top += 1; Rect01.bottom -= 1;}
     if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007 - 1;
     if(ruint32(Rect01.bottom) > Vrab008) Rect01.bottom = Vrab008 - 1;
+    if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+    if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
    DirectX::XMFLOAT2 Get_Center(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004 - 2) / 2)), rxint32(rint32(rxint32(Vrab005 - 2) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid(){uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
    private:
     insize Vrab001;
     uint32 Vrab002;
@@ -493,14 +503,14 @@
      HRESULT Vrab001;
    };
    inline int0 ThrowIfFailed(HRESULT Hres01){if(FAILED(Hres01)) throw HEPTA_EXCEPTION(Hres01);}
-   inline std::vector < uint8_t > CSO_Read(_In_z_ const wchar_t* Temp01)
+   inline std::vector < uint8_t > CSO_Read(_In_z_ statics wchar_t* Temp01)
    {
     std::ifstream File01(Temp01, std::ios::in | std::ios::binary | std::ios::ate);
     #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
      if(!File01)
      {
       wchar_t Temp02[_MAX_PATH] = {};
-      if(!GetModuleFileNameW(nullptr, Temp02, _MAX_PATH)) throw std::system_error(std::error_code(static_cast < int32 > (GetLastError()), std::system_category()), "GetModuleFileNameW");
+      if(!GetModuleFileNameW(nullptr, Temp02, _MAX_PATH)) throw std::system_error(std::error_code(rint32(GetLastError()), std::system_category()), "GetModuleFileNameW");
      
       wchar_t Temp03[_MAX_DRIVE]; wchar_t Temp04[_MAX_PATH];
       if(_wsplitpath_s(Temp02, Temp03, _MAX_DRIVE, Temp04, _MAX_PATH, nullptr, 0, nullptr, 0)) throw std::runtime_error("_wsplitpath_s");
@@ -512,7 +522,7 @@
      }
     #endif
     if(!File01) throw std::runtime_error("CSO_Read");
-    const std::streampos Post01 = File01.tellg();
+    statics std::streampos Post01 = File01.tellg();
     if(!File01) throw std::runtime_error("CSO_Read");
     std::vector < uint8_t > Temp02;
     Temp02.resize(size_t(Post01));

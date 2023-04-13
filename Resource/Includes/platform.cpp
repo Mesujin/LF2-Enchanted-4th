@@ -101,8 +101,7 @@
   } else
   {
    Rect01.right = Varb0002; Rect01.bottom = Varb0003;
-   if(Vrab05 < Vrab06)
-   {Varb0010 = Vrab06; Varb0011 = Vrab05;} else {Varb0010 = Vrab05; Varb0011 = Vrab06;}
+   Varb0010 = Vrab05; Varb0011 = Vrab06;
   }
 
   if(m_outputSize == Rect01)
@@ -192,10 +191,13 @@
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
+    DirectX::XMMATRIX Matx01 = DirectX::XMMatrixIdentity();
+    DirectX::XMVECTOR Vect01 = DirectX::XMMatrixDeterminant(Matx01);
+    Matx01 = DirectX::XMMatrixInverse(&Vect01, Matx01);
     Pics001->Begin(DirectX::SpriteSortMode_Deferred, Stat001->NonPremultiplied(), Samp001.Get(), nullptr, nullptr, [=]
      {
       m_deviceResources->GetD3DDeviceContext()->PSSetShader(Grap001.Get(), nullptr, 0);
-     }
+     }, Matx01
     );
     
     statics insize Vrab01 = Disp0001.size();

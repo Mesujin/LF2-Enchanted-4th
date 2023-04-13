@@ -32,7 +32,7 @@ In modifying the source, you could start from `platform.cpp`, but everything els
 Make sure to build this source with `Release` setup. <br/>
 
 
-To run this source after you build it, you'll need to copy the data from the game (simply everything in the "System") as it doesn't included here, but don't overwrite. 
+To run this source after you build it, you'll need to copy the data from the game (simply everything in the "Database") since it doesn't included here, but don't overwrite. 
 
 <br>
 
