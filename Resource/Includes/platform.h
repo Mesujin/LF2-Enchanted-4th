@@ -590,6 +590,14 @@
    }
    insize G_SetSound(statics string Temp01)
    {
+    {
+     insize Vrab01 = Temp01.size();
+     string Temp02 = Temp01; while(Vrab01 != 0){Vrab01 -= 1; if(Temp02.at(Vrab01) >= 'A' && Temp02.at(Vrab01) <= 'Z') Temp02.at(Vrab01) += 32;}
+     Temp02 = string(Temp02, Temp02.size() - 4, 4);
+     int1 Vrab02 = true;
+     if(Temp02 == ".wav") Vrab02 = false;
+     if(Vrab02) return rinsize(-1);
+    }
     insize Vrab01 = 0; statics insize Vrab02 = Audi0001.size(); while(Vrab01 != Vrab02){if(Audi0001[Vrab01]->Address == Temp01) break; Vrab01 += 1;}
     if(Vrab01 == Vrab02) Audi0001.push_back(std::make_unique < HEPTA_AUDINGS > (Temp01, Game0001->GetAudio()));
     if(Audi0001[Vrab01]->Success)
