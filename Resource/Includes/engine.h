@@ -12,8 +12,10 @@
 #ifndef _HEPTA_PRAGMA_ENGINE_H
  #define _HEPTA_PRAGMA_ENGINE_H
  // Commands
+  #include <random>
   #include <chrono>
   #include <filesystem>
+  #include <math.h>
   #include "platform.h"
   
   // AngelScript
@@ -37,6 +39,7 @@
   uint64 L_Interprocessing(statics string&) fastened;
   xint64 L_Positive64(xint64) fastened;
   xint64 L_Doubling(string) fastened;
+  xint64 L_Distance(xint64, xint64, xint64, xint64) fastened;
   string L_Number(insize) fastened;
   string L_Lowercase(string) fastened;
   string L_Spacemaker(string) fastened;
@@ -151,8 +154,8 @@
     };
     struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT
     {
-     int1 Sprite = false;
      int1 Facing = false;
+     uint8 Type = 0;
      uint8 Trans = 255;
      int64 X = 0, Y = 0, W = 0, H = 0;
      uint32 Rotate = 0;
@@ -249,6 +252,10 @@
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_OPOINT > opoint;
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_IPOINT > itr;
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_HPOINT > bdy;
+     
+     // Runtime Data
+     int32 bdy_X = 0, bdy_Y = 0, bdy_W = 0, bdy_H = 0;
+     int32 itr_X = 0, itr_Y = 0, itr_W = 0, itr_H = 0, itr_Z = 0;
     };
     struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_STRENGTH
     {
@@ -296,14 +303,14 @@
     struct HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT
     {
      int1 Exist = true; int1 Lock = false; int1 Facing = false; int1 Landing = false; int1 Affected = false;
-     insize Frame = 0, Frame2 = 0, Wait = 0, Team = 0, Owner = 0, Clone = rinsize(-1), Held = rinsize(-1), Hold = rinsize(-1);
+     insize Frame = 0, Frame2 = 0, Wait = 0, Team = 0, Owner = 0, Pic_Shift = 0;
      xint64 X = 0, Y = 0, Z = 0; insize D = 0;
      xint64 X_Vel = 0, Y_Vel = 0, Z_Vel = 0;
      xint64 Scale = 1.0;
      uint32 Walk_Animation = 0; uint32 Walk_Phase = 0;
      uint32 Run_Animation = 0; uint32 Run_Phase = 0;
 
-     insize Target = rinsize(-1);
+     insize Target = rinsize(-1), Clone = rinsize(-1), Held = rinsize(-1), Hold = rinsize(-1);
 
      uint8  Player = 9;
      insize Index = 0;
@@ -311,6 +318,8 @@
      xint64 MHP = 0, DHP = 0, HP = 0, SP = 0, MMP = 0, MP = 0;
      int32  Blink = 0;
      int32  Fall = 0;
+     uint16 Arest = 0;
+     std::vector < uint16 > Vrest;
      
      
      
@@ -319,6 +328,8 @@
      uint8 Press_A = 0, Press_D = 0, Press_J = 0, Press_RR = 0, Press_LL = 0;
      uint8 Cast_A = 0, Cast_D = 0, Cast_J = 0, Cast_DRA = 0, Cast_DLA = 0, Cast_DRJ = 0, Cast_DLJ = 0, Cast_DDA = 0, Cast_DDJ = 0, Cast_DUA = 0, Cast_DUJ = 0, Cast_DJA = 0;
      HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT *Data;
+     std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT* > Trans_Address; int1 Trans = false;
+     std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT* > Return_Address; int1 Return = false;
     };
     struct HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT
     {
@@ -560,8 +571,8 @@
       Background = Vrab02; if(Background >= Backgrounds.size()) Background = 0;
       Difficult = Vrab03;
       Max = Vrab04; Effect.clear(); Object.clear();
-      Playtime = 0;
-      Pause = false; Frame_Pause = false; Speed = 2; F6 = false;
+      Playtime = 0; Move = false;
+      Pause = false; Frame_Pause = false; Speed = 2; F6 = false; Hitboxes = false; Fill_Hitboxes = false;
       Animation[Background].clear(); if(Backgrounds[Background].width < 800) Backgrounds[Background].Shift = L_Rounding(rxint64(800 - Backgrounds[Background].width) / 2);
      }
      int0   Set(statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics string Temp01)
@@ -602,8 +613,9 @@
        if(Frame_Pause){Pause = true; Frame_Pause = false;} if(Vrab02) if(Pause){Pause = false; Frame_Pause = true;} else {Pause = true;}
        if(Vrab03) if(Speed != 0) Speed -= 1;
        if(Vrab04) if(Speed != 4) Speed += 1;
-       if(Vrab05) Polish = !Polish;
+       if(Vrab05) if(Fill_Hitboxes){Hitboxes = false; Fill_Hitboxes = false;} else {if(Hitboxes){Fill_Hitboxes = true;} else {Hitboxes = true;}}
        if(Vrab06) F6 = !F6;
+       if(Vrab07){statics insize Vrab99 = Object.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Object[Vrab98].Exist) if(Object[Vrab98].Data->type == 0){Object[Vrab98].DHP = Object[Vrab98].MHP; Object[Vrab98].HP = Object[Vrab98].DHP; Object[Vrab98].MP = Object[Vrab98].MMP;}}
        if(Vrab09){statics insize Vrab99 = Object.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Object[Vrab98].Exist) if(Object[Vrab98].Data->type != 0 && Object[Vrab98].Data->type != 5) Remove(Vrab98);}
       }
 
@@ -665,12 +677,13 @@
            int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95].next;
            if(Object[Vrab97].Wait > ruint32((Object[Vrab97].Data->Frame[Vrab95].wait + 1) * (Polish ? 4 : 1)) - 1 && Vrab94 != 0)
            {
-            if(Object[Vrab97].Data->Frame[Vrab95].state == 14 && Object[Vrab97].Wait >= 20) Object[Vrab97].Blink = -45;
-            Object[Vrab97].Wait = 0;
-           
-            if(Vrab94 < 0){Vrab94 = -Vrab94; Object[Vrab97].Facing = !Object[Vrab97].Facing;}
-            if(Vrab94 == 1000 || Vrab94 == 9998){Vrab96 = true; break;}
-            Object[Vrab97].Frame = ruint32(Vrab94);
+            {
+             statics int32 Vrab93 = Object[Vrab97].Data->Frame[Vrab95].state;
+             if(Vrab93 == 14 && Object[Vrab97].Wait >= 20) Object[Vrab97].Blink = -45;
+             if(Vrab94 < 0){Vrab94 = -Vrab94; Object[Vrab97].Facing = !Object[Vrab97].Facing;}
+             if(Vrab94 == 1000 || Vrab94 == 9998 || Vrab93 == 9998){Vrab96 = true; break;}
+            }
+            Object[Vrab97].Wait = 0; Object[Vrab97].Frame = ruint32(Vrab94);
             if(Object[Vrab97].Frame == 212)
             {
              Object[Vrab97].Landing = true;
@@ -697,13 +710,13 @@
            statics int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95].mp;
            if(Vrab94 < 0)
            {
-            if(Object[Vrab97].MP < rxint64(-Vrab94))
+            int32 Vrab93 = Object[Vrab97].Data->Frame[Vrab95].hit_d;
+            if(Vrab93 != 0 && (Object[Vrab97].MP < rxint64(-Vrab94) || ((Object[Vrab97].Facing ? (Object[Vrab97].Input_Left > 0 && Object[Vrab97].Input_Right == 0) : (Object[Vrab97].Input_Right > 0 && Object[Vrab97].Input_Left == 0)) && Object[Vrab97].Y >= 0)))
             {
-             int32 Vrab93 = Object[Vrab97].Data->Frame[Vrab95].hit_d;
              if(Vrab93 < 0){Vrab93 = -Vrab93; Object[Vrab97].Facing = !Object[Vrab97].Facing;}
              if(Vrab93 == 1000 || Vrab93 == 9998){Vrab96 = true; break;}
-             Object[Vrab97].Frame = Vrab93;
-            } else {Object[Vrab97].MP -= rxint64(-Vrab94);}
+             Object[Vrab97].Frame = Vrab93; Object[Vrab97].Wait = 0;
+            } else {Object[Vrab97].MP -= rxint64(-Vrab94); if(Object[Vrab97].MP < 0) Object[Vrab97].MP = 0;}
            }
            break;
           }
@@ -712,8 +725,22 @@
          
          // Disintegrate.
          {
-          statics xint64 Vrab96 = rxint64(Backgrounds[Background].Shift), Vrab95 = Vrab96 + rxint64(Backgrounds[Background].width);
-          if(Object[Vrab97].X < Vrab96 - 200 || Object[Vrab97].X > Vrab95 + 200){Remove(Vrab97); Vrab99 = Vect02.size(); Vrab98 += 1; continue;}
+          int1 Vrab96 = false;
+          while(true)
+          {
+           statics xint64 Vrab95 = rxint64(Backgrounds[Background].Shift), Vrab94 = Vrab95 + rxint64(Backgrounds[Background].width);
+           if(Object[Vrab97].X < Vrab95 - 200 || Object[Vrab97].X > Vrab94 + 200){Vrab96 = true; break;}
+           statics insize Vrab93 = Object[Vrab97].Frame; if(Vrab93 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab93].Exist) break;
+           statics int32 Vrab92 = Object[Vrab97].Data->Frame[Vrab93].state;
+           switch(Vrab92)
+           {
+            case 9999: if(Object[Vrab97].Y >= 0) Vrab96 = true; break;
+            case 9998: Vrab96 = true; break;
+            default: break;
+           }
+           break;
+          }
+          if(Vrab96){Remove(Vrab97); Vrab99 = Vect02.size(); Vrab98 += 1; continue;}
          }
 
          // Opoint.
@@ -737,8 +764,8 @@
 
              if(Vrab93 == 2){Object[Vrab89].Held = Vrab97; Object[Vrab97].Hold = Vrab89;}
              Object[Vrab89].Facing = Object[Vrab97].Data->Frame[Vrab96].opoint[Vrab94].facing % 10 == 1 ? (Vrab91 ? false : !Object[Vrab97].Facing) : (Vrab91 ? true : Object[Vrab97].Facing);
-             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owner = Object[Vrab97].Owner;
-             Object[Vrab89].Frame = rinsize(Object[Vrab97].Data->Frame[Vrab96].opoint[Vrab94].action);
+             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owner = Object[Vrab97].Owner; Object[Vrab89].Scale = Object[Vrab97].Scale;
+             Object[Vrab89].Frame = rinsize(Object[Vrab97].Data->Frame[Vrab96].opoint[Vrab94].action); if(Object[Vrab89].Data->type == 0) if(Object[Vrab97].Blink > 0) Object[Vrab89].Blink = Object[Vrab97].Blink;
 
              if(Object[Vrab97].Data->id == 52 || Object[Vrab97].Data->id == 5)
              {Object[Vrab89].HP = 10; Object[Vrab89].DHP = 10; Object[Vrab89].MHP = 10; Object[Vrab89].MP = 100; Object[Vrab89].MMP = 100; Object[Vrab89].Clone = Vrab97;} else
@@ -757,9 +784,9 @@
               {
                statics int32 Vrab87 = Object[Vrab89].Data->Frame[Vrab88].state;
                int1 Vrab86 = false;
-               switch(Vrab87){case 3000: case 3005: case 3006: Vrab86 = true; break; default: break;}
+               switch(Vrab87){case 3000: case 3006: Vrab86 = true; break; default: break;}
                if(Object[Vrab89].Data->type != 3 && Object[Vrab89].Data->type != 0) Vrab86 = true;
-               if(Vrab86) Object[Vrab89].Z_Vel = ((Object[Vrab97].Input_Down > 0 && Object[Vrab97].Input_Up == 0) ? 1.0 : ((Object[Vrab97].Input_Up > 0 && Object[Vrab97].Input_Down == 0) ? -1.0 : 0.0)) * (Object[Vrab89].Data->id == 211 ? 0.625 : 2.5);
+               if(Vrab86 && Object[Vrab89].Y <= 0) Object[Vrab89].Z_Vel = ((Object[Vrab97].Input_Down > 0 && Object[Vrab97].Input_Up == 0) ? 1.0 : ((Object[Vrab97].Input_Up > 0 && Object[Vrab97].Input_Down == 0) ? -1.0 : 0.0)) * (Object[Vrab89].Data->id == 211 ? 0.625 : 2.5);
               }
               break;
              }
@@ -803,11 +830,32 @@
         statics insize Vrab99 = Vect02.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
         {
          statics insize Vrab97 = Vect02[Vrab98];
-          
+         
+        // if(Object[Vrab97].Scale > 0.2) Object[Vrab97].Scale -= 0.0005;
+
          // Hardcoded Next.
          {
-          if(Object[Vrab97].Frame == 999){if(Object[Vrab97].Y < 0 && Object[Vrab97].Data->type != 3){Object[Vrab97].Frame = 212; Object[Vrab97].Landing = true;} else {Object[Vrab97].Frame = 0;}}
-          if(Object[Vrab97].Frame >= 1100 && Object[Vrab97].Frame <= 1299){Object[Vrab97].Blink = rint32(Object[Vrab97].Frame) - 1100; Object[Vrab97].Frame = 0;}
+          int1 Vrab96 = false; insize Vrab95 = 0;
+          if(Object[Vrab97].Frame == 999){Vrab96 = true; if(Object[Vrab97].Y < 0 && Object[Vrab97].Data->type != 3){Vrab95 = 212; Object[Vrab97].Landing = true;}}
+          if(Object[Vrab97].Frame >= 1100 && Object[Vrab97].Frame <= 1299)
+          {
+           statics int32 Vrab94 = rint32(Object[Vrab97].Frame) - 1100; Object[Vrab97].Blink = Vrab94;
+           std::vector < insize > Vect03 = Vect02; Vect03.erase(Vect03.begin() + Vrab98);
+           std::vector < insize > Vect04(1, Vrab97);
+           insize Vrab93 = Vect03.size();
+           while(Vrab93 != 0)
+           {
+            Vrab93 -= 1; statics insize Vrab92 = Object[Vect03[Vrab93]].Clone;
+            if(Vrab92 == rinsize(-1)){Vect03.erase(Vect03.begin() + Vrab93); continue;}
+            insize Vrab91 = Vect04.size();
+            while(Vrab91 != 0)
+            {
+             Vrab91 -= 1; if(Vrab92 == Vect04[Vrab91]){Vect04.push_back(Vect03[Vrab93]); if(Object[Vect03[Vrab93]].Data->type == 0 && L_Positive(Object[Vect03[Vrab93]].Blink) < Vrab94) Object[Vect03[Vrab93]].Blink = Vrab94; Vect03.erase(Vect03.begin() + Vrab93); Vrab93 = Vect03.size(); break;}
+            }
+           }
+           Vrab96 = true;
+          }
+          if(Vrab96){Object[Vrab97].Frame = Vrab95; Object[Vrab97].Wait = 0;}
          }
 
          // Sound Effect.
@@ -892,10 +940,38 @@
           // Cast Input.
           {
            int1 Vrab96 = false; insize Vrab95 = 0;
+
+           if(Object[Vrab97].Return)
+           if(Object[Vrab97].Cast_DJA >= 3)
+           {
+            int1 Vrab94 = true;
+            if(Object[Vrab97].Y < 0) Vrab94 = false;
+            if(Object[Vrab97].Hold != rinsize(-1))
+            if(Object[Object[Vrab97].Hold].Data->type == 2) Vrab94 = false;
+            while(true)
+            {
+             statics insize Vrab93 = Object[Vrab97].Frame; if(Vrab93 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab93].Exist) break;
+             switch(Object[Vrab97].Data->Frame[Vrab93].state)
+             {
+              case 0: case 1: case 2: case 4: break;
+              case 7: if(Vrab93 == 110) break; default: Vrab94 = false; break;
+             }
+             break;
+            }
+            if(Vrab94)
+            {
+             statics insize Vrab93 = Object[Vrab97].Return_Address.size() - 1;
+             Object[Vrab97].Data = Object[Vrab97].Return_Address[Vrab93]; Object[Vrab97].Return_Address.pop_back(); if(Vrab93 == 0) Object[Vrab97].Return = false;
+             if(Object[Vrab97].Trans){Object[Vrab97].Trans_Address.pop_back();} else {Object[Vrab97].Trans = true;}
+             Object[Vrab97].Frame = 245; Object[Vrab97].Wait = 0; Object[Vrab97].Y_Vel = 0;
+            }
+           }
+
+           if(!Vrab96)
            while(true)
            {
             statics insize Vrab94 = Object[Vrab97].Frame; if(Vrab94 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab94].Exist) break;
-  
+
             {statics insize Vrab93 = rinsize(L_Positive(Object[Vrab97].Data->Frame[Vrab94].hit_ja)); if(Object[Vrab97].Cast_DJA >= 3 && Vrab93 != 0){Object[Vrab97].Cast_DJA = 0; if(Vrab93 >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Vrab94].Exist) continue; if(Object[Vrab97].Data->Frame[Vrab94].hit_ja < 0) Object[Vrab97].Facing = !Object[Vrab97].Facing; Vrab96 = true; Vrab95 = Vrab93; break;}}
             {statics insize Vrab93 = rinsize(L_Positive(Object[Vrab97].Data->Frame[Vrab94].hit_Uj)); if(Object[Vrab97].Cast_DUJ >= 3 && Vrab93 != 0){Object[Vrab97].Cast_DUJ = 0; if(Vrab93 >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Vrab94].Exist) continue; if(Object[Vrab97].Data->Frame[Vrab94].hit_Uj < 0) Object[Vrab97].Facing = !Object[Vrab97].Facing; Vrab96 = true; Vrab95 = Vrab93; break;}}
             {statics insize Vrab93 = rinsize(L_Positive(Object[Vrab97].Data->Frame[Vrab94].hit_Ua)); if(Object[Vrab97].Cast_DUA >= 3 && Vrab93 != 0){Object[Vrab97].Cast_DUA = 0; if(Vrab93 >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Vrab94].Exist) continue; if(Object[Vrab97].Data->Frame[Vrab94].hit_Ua < 0) Object[Vrab97].Facing = !Object[Vrab97].Facing; Vrab96 = true; Vrab95 = Vrab93; break;}}
@@ -917,9 +993,19 @@
  
             break;
            }
-           if(Vrab96 && Vrab96 != 0)
+
+           if(Vrab96 && Vrab95 != 0)
            { 
             statics int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95].mp;
+
+            int1 Vrab93 = true;
+            switch(Object[Vrab97].Data->Frame[Vrab95].state)
+            {
+             case 501: Vrab93 = Object[Vrab97].Trans; break;
+             default: break;
+            }
+
+            if(Vrab93)
             if(Object[Vrab97].MP >= rxint64(Vrab94 % 1000))
             {
              if(Vrab94 > 0)
@@ -932,7 +1018,7 @@
                Object[Vrab97].Cast_A = 0; Object[Vrab97].Cast_D = 0; Object[Vrab97].Cast_J = 0; Object[Vrab97].Press_A = 0; Object[Vrab97].Press_D = 0; Object[Vrab97].Press_J = 0;
                break;
               }
-              } else
+             } else
              {
               Object[Vrab97].Frame = Vrab95; Object[Vrab97].Wait = 0; Object[Vrab97].MP -= rxint64(Vrab94);
               Object[Vrab97].Cast_A = 0; Object[Vrab97].Cast_D = 0; Object[Vrab97].Cast_J = 0; Object[Vrab97].Press_A = 0; Object[Vrab97].Press_D = 0; Object[Vrab97].Press_J = 0;
@@ -1080,11 +1166,120 @@
         }
        }
 
-       // Phase 3 : Velocity & Landing, Position Shift, Sound Effect.
+       // Phase 3 : Hardcoded States & Properties, Velocity & Landing, Position Shift, Sound Effect.
        {
-        statics insize Vrab99 = Vect02.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        statics insize Vrab99 = Vect02.size();
+        std::vector < xint64 > Vect03(Vrab99); std::vector < xint64 > Vect04(Vrab99); 
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
         {
          statics insize Vrab97 = Vect02[Vrab98];
+         Vect03[Vrab98] = Object[Vrab97].X; Vect04[Vrab98] = Object[Vrab97].Z;
+        }
+        
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         statics insize Vrab97 = Vect02[Vrab98];
+
+         // Hardcoded States & Properties
+         {
+          while(true)
+          {
+           statics insize Vrab96 = Object[Vrab97].Frame; if(Vrab96 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab96].Exist) break;
+
+           // States
+           {
+            statics int32 Vrab95 = Object[Vrab97].Data->Frame[Vrab96].state;
+            switch(Vrab95)
+            {
+             case 9996:
+              {
+              
+              }
+             break;
+             case 9995:
+              {
+               statics insize Vrab94 = Objects.size();
+               for(insize Vrab93 = 0; Vrab93 < Vrab94; ++Vrab93)
+               if(Objects[Vrab93].id == 50){Object[Vrab97].Data = &Objects[Vrab93]; Object[Vrab97].Frame = 0; Object[Vrab97].Wait = 0; break;}
+              }
+             break;
+             case 500:
+              {
+               if(Object[Vrab97].Trans)
+               {
+                Object[Vrab97].Return_Address.push_back(Object[Vrab97].Data); Object[Vrab97].Return = true;
+                Object[Vrab97].Data = Object[Vrab97].Trans_Address[Object[Vrab97].Trans_Address.size() - 1]; Object[Vrab97].Trans = false;
+               } else {Object[Vrab97].Frame = 0; Object[Vrab97].Wait = 0;}
+              }
+             break;
+             case 301:
+              {
+               statics xint64 Vrab94 = 1.6;
+               if(Object[Vrab97].Input_Up > 0 && Object[Vrab97].Input_Down == 0){if(Object[Vrab97].Z_Vel > -Vrab94) Object[Vrab97].Z_Vel = -Vrab94;}
+               if(Object[Vrab97].Input_Down > 0 && Object[Vrab97].Input_Up == 0){if(Object[Vrab97].Z_Vel < Vrab94) Object[Vrab97].Z_Vel = Vrab94;}
+              }
+             break;
+             case 19:
+              {
+               statics xint64 Vrab94 = Object[Vrab97].Data->running_speedz;
+               if(Object[Vrab97].Input_Up > 0 && Object[Vrab97].Input_Down == 0){if(-Vrab94 < 0){if(Object[Vrab97].Z_Vel > -Vrab94) Object[Vrab97].Z_Vel = -Vrab94;} if(-Vrab94 > 0){if(Object[Vrab97].Z_Vel < -Vrab94) Object[Vrab97].Z_Vel = -Vrab94;}}
+               if(Object[Vrab97].Input_Down > 0 && Object[Vrab97].Input_Up == 0){if(Vrab94 < 0){if(Object[Vrab97].Z_Vel > Vrab94) Object[Vrab97].Z_Vel = Vrab94;}    if(Vrab94 > 0){if(Object[Vrab97].Z_Vel < Vrab94) Object[Vrab97].Z_Vel = Vrab94;}}
+              }
+             case 18:
+              if(L_Random(2) == 0)
+              {
+               statics insize Vrab94 = Add(999);
+               if(Vrab94 != rinsize(-1))
+               {
+                Object[Vrab94].Facing = Object[Vrab97].Facing;
+                Object[Vrab94].Team = Object[Vrab97].Team; Object[Vrab94].Name = Object[Vrab97].Name; Object[Vrab94].Owner = Object[Vrab97].Owner; Object[Vrab94].Scale = Object[Vrab97].Scale;
+                Object[Vrab94].Frame = 140; if(Object[Vrab97].Blink > 0) Object[Vrab94].Blink = Object[Vrab97].Blink;
+
+                if(Object[Vrab97].Data->id == 52 || Object[Vrab97].Data->id == 5)
+                {Object[Vrab94].HP = 10; Object[Vrab94].DHP = 10; Object[Vrab94].MHP = 10; Object[Vrab94].MP = 100; Object[Vrab94].MMP = 100; Object[Vrab94].Clone = Vrab97;} else
+                {Object[Vrab94].HP = 500; Object[Vrab94].DHP = 500; Object[Vrab94].MHP = 10; Object[Vrab94].MP = 500; Object[Vrab94].MMP = 500;}
+
+                Object[Vrab94].X = Object[Vrab97].X - 17 + rxint64(L_Random(34)); Object[Vrab94].Y = Object[Vrab97].Y - 34 + rxint64(L_Random(34)); Object[Vrab94].Z = Object[Vrab97].Z + 1;
+                Object[Vrab94].X_Vel = Object[Vrab97].X_Vel - 2 + rxint64(L_Random(4)); Object[Vrab94].Y_Vel = Object[Vrab97].Y_Vel - rxint64(L_Random(4)); Object[Vrab94].Z_Vel = Object[Vrab97].Z_Vel;
+               }
+              }
+             break;
+             case 400: case 401:
+              if(Playtime % 2 == 0)
+              {
+               std::vector < insize > Vect05; xint64 Vrab94 = 0xFFFFFFFFFF;
+               for(insize Vrab93 = 0; Vrab93 < Vrab99; ++Vrab93)
+               if(Object[Vect02[Vrab93]].Data->type == 0)
+               if(Object[Vrab97].HP > 0)
+               if(Vrab95 == 400 ? Object[Vrab97].Team != Object[Vect02[Vrab93]].Team : (Object[Vrab97].Team == Object[Vect02[Vrab93]].Team && Vect02[Vrab93] != Vrab97))
+               {
+                statics xint64 Vrab92 = L_Distance(Object[Vrab97].X, Object[Vrab97].Z * 2.5, Vect03[Vrab93], Vect04[Vrab93] * 2.5);
+                if(Vrab92 <= Vrab94){if(Vrab92 < Vrab94) Vect05.clear(); Vect05.push_back(Vrab93); Vrab94 = Vrab92;}
+               }
+               statics insize Vrab93 = Vect05.size();
+               if(Vrab93 > 0)
+               {
+                if(Object[Vrab97].Player != 9) Move = true;
+                statics insize Vrab92 = Vect05[L_Random(Vrab93 - 1)];
+                Object[Vrab97].X = Vect03[Vrab92] + (Object[Vrab97].Facing ? -120 : 120);
+                Object[Vrab97].Z = Vect04[Vrab92];
+               }
+               Object[Vrab97].Y = 0; Object[Vrab97].Y_Vel = 0;
+              }
+             break;
+             default: break;
+            }
+           }
+
+           if(Vrab96 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab96].Exist) break;
+           if(Object[Vrab97].Data->type != 0)
+           {
+            xint64 Vrab95 = rxint64(Object[Vrab97].Data->Frame[Vrab96].hit_j); if(Vrab95 == 0) Vrab95 = 50;
+            Object[Vrab97].Z += (Vrab95 - 50) / (Polish ? 4 : 1);
+           }
+           break;
+          }
+         }
 
          // Velocity & Landing.
          {
@@ -1096,9 +1291,9 @@
            statics int1 Vrab92 = Object[Vrab97].Facing;
            if(Vrab95 < 0) if(Vrab92){if(Object[Vrab97].X_Vel > Vrab95) Object[Vrab97].X_Vel = Vrab95;} else {if(Object[Vrab97].X_Vel < -Vrab95) Object[Vrab97].X_Vel = -Vrab95;}
            if(Vrab95 > 0 && Vrab95 < 500) if(Vrab92){if(Object[Vrab97].X_Vel < Vrab95) Object[Vrab97].X_Vel = Vrab95;} else {if(Object[Vrab97].X_Vel > -Vrab95) Object[Vrab97].X_Vel = -Vrab95;}
-           if(Vrab95 >= 500) Object[Vrab97].X_Vel = Vrab95 - 550;
-           if(Vrab94 >= 500){Object[Vrab97].Y_Vel = Vrab94 - 550;} else {Object[Vrab97].Y_Vel += Vrab94 / (Polish ? 4 : 1);}
-           if(Vrab93 >= 500){Object[Vrab97].Z_Vel = Vrab93 - 550;} else
+           if(Vrab95 > 500) Object[Vrab97].X_Vel = Vrab95 - 550;
+           if(Vrab94 > 500){Object[Vrab97].Y_Vel = Vrab94 - 550;} else {Object[Vrab97].Y_Vel += Vrab94 / (Polish ? 4 : 1);}
+           if(Vrab93 > 500){Object[Vrab97].Z_Vel = Vrab93 - 550;} else
            {
             if(Object[Vrab97].Input_Up > 0 && Object[Vrab97].Input_Down == 0){if(-Vrab93 < 0){if(Object[Vrab97].Z_Vel > -Vrab93) Object[Vrab97].Z_Vel = -Vrab93;} if(-Vrab93 > 0){if(Object[Vrab97].Z_Vel < -Vrab93) Object[Vrab97].Z_Vel = -Vrab93;}}
             if(Object[Vrab97].Input_Down > 0 && Object[Vrab97].Input_Up == 0){if(Vrab93 < 0){if(Object[Vrab97].Z_Vel > Vrab93) Object[Vrab97].Z_Vel = Vrab93;}    if(Vrab93 > 0){if(Object[Vrab97].Z_Vel < Vrab93) Object[Vrab97].Z_Vel = Vrab93;}}
@@ -1110,16 +1305,18 @@
 
           if(Object[Vrab97].Y_Vel != 0.0)
           {
-           Object[Vrab97].Y += Object[Vrab97].Y_Vel / (Polish ? 4 : 1);
-           if(Object[Vrab97].Data->type != 3)
-           if(Object[Vrab97].Y >= 0)
+           int1 Vrab96 = true, Vrab95 = true, Vrab94 = false; insize Vrab93 = Object[Vrab97].Frame; while(true){if(Vrab93 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab93].Exist) break; Vrab94 = true; break;}
+
+           Object[Vrab97].Y += Object[Vrab97].Y_Vel / (Polish ? 4 : 1); if(Object[Vrab97].Y <= 0) Vrab96 = false;
+           if(Vrab94) if(Object[Vrab97].Data->Frame[Vrab93].state == 100){Vrab95 = false; Vrab93 = 94;}
+           switch(Object[Vrab97].Data->type){case 3: if(Vrab94) if(Object[Vrab97].Data->Frame[Vrab93].hit_Fa == 7){Vrab95 = false; Vrab93 = 60; break;} case 5: Vrab96 = false; break; default: break;}
+
+           if(Vrab96)
            {
-            int1 Vrab96 = true;
-            while(true){statics insize Vrab95 = Object[Vrab97].Frame; if(Vrab95 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab95].Exist) break; if(Object[Vrab97].Data->Frame[Vrab95].state == 100) Vrab96 = true; break;}
-            if(Vrab96)
+            if(Vrab95)
             {
              if(Object[Vrab97].Landing){Object[Vrab97].Frame = 215;} else {Object[Vrab97].Frame = 219;}
-            } else {Object[Vrab97].Frame = 94;}
+            } else {Object[Vrab97].Frame = Vrab93;}
             Object[Vrab97].Landing = false; if(Object[Vrab97].X_Vel != 0) Object[Vrab97].X_Vel /= 3; Object[Vrab97].Y_Vel = 0; Object[Vrab97].Y = 0; Object[Vrab97].Wait = 0;
            }
           }
@@ -1151,7 +1348,173 @@
         }
        }
 
-       // Phase 4 : Interact
+       // Phase 4 : Interact.
+       {
+        statics insize Vrab99 = Vect02.size();
+        
+        std::vector < insize > Vect03(Vrab99, rinsize(-1)); // Frame.
+        std::vector < xint64 > Vect04(Vrab99);              // X.
+        std::vector < xint64 > Vect05(Vrab99);              // Y.
+        std::vector < xint64 > Vect06(Vrab99);              // Z.
+        std::vector < insize > Vect07(Vrab99);              // D.
+        std::vector < int32 > Vect08(Vrab99);               // Fall.
+        std::vector < std::vector < int1 > > Vect09(Vrab99, std::vector < int1 >(Vrab99));
+        std::vector < xint64 > Vect10(Vrab99);              // Itr X
+        std::vector < xint64 > Vect11(Vrab99);              // Bdy X
+       
+        // Initializing Values.
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         statics insize Vrab97 = Vect02[Vrab98];
+         statics insize Vrab96 = Object[Vrab97].Frame; if(Vrab96 >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Vrab96].Exist) continue;
+         Vect03[Vrab98] = Vrab96;
+         Vect04[Vrab98] = Object[Vrab97].X; Vect05[Vrab98] = Object[Vrab97].Y; Vect06[Vrab98] = Object[Vrab97].Z; Vect07[Vrab98] = Object[Vrab97].D;
+         Vect07[Vrab98] = Object[Vrab97].Fall;
+         Vect10[Vrab98] = Object[Vrab97].X + (Object[Vrab97].Facing ? (Object[Vrab97].Data->Frame[Vrab96].itr_X - Object[Vrab97].Data->Frame[Vrab96].centerx) : (Object[Vrab97].Data->Frame[Vrab96].centerx - Object[Vrab97].Data->Frame[Vrab96].itr_X));
+         Vect11[Vrab98] = Object[Vrab97].X + (Object[Vrab97].Facing ? (Object[Vrab97].Data->Frame[Vrab96].bdy_X - Object[Vrab97].Data->Frame[Vrab96].centerx) : (Object[Vrab97].Data->Frame[Vrab96].centerx - Object[Vrab97].Data->Frame[Vrab96].bdy_X));
+        }
+
+        // Global Conditions Check.
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         if(Vect03[Vrab98] == rinsize(-1)) continue;
+         statics insize Vrab97 = Vect02[Vrab98];
+         if(Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr.size() > 0)
+         {
+          statics xint64 Vrab96 = Vect10[Vrab98] - (Object[Vrab97].Facing ? 0 : Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_W);
+          statics xint64 Vrab95 = Vect10[Vrab98] + (Object[Vrab97].Facing ? Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_W : 0);
+          statics xint64 Vrab94 = Vect05[Vrab98] - Object[Vrab97].Data->Frame[Vect03[Vrab98]].centery + Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_Y;
+          statics xint64 Vrab93 = Vrab94 + Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_H;
+          statics xint64 Vrab92 = Vect06[Vrab98] - (Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_Z) + 1;
+          statics xint64 Vrab91 = Vect06[Vrab98] + (Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr_Z) - 1;
+          for(insize Vrab90 = 0; Vrab90 < Vrab99; ++Vrab90)
+          {
+           if(Vrab90 == Vrab98) continue;
+           if(Vect03[Vrab90] == rinsize(-1)) continue;
+           statics insize Vrab89 = Vect02[Vrab90];
+           statics xint64 Vrab88 = Vect05[Vrab90] - Object[Vrab89].Data->Frame[Vect03[Vrab90]].centery + Object[Vrab89].Data->Frame[Vect03[Vrab90]].bdy_Y;
+           if(Object[Vrab89].Data->Frame[Vect03[Vrab90]].bdy.size() > 0)
+           {
+            if(Vect06[Vrab90] <= Vrab91 && Vect06[Vrab90] >= Vrab92)
+            if(Vrab95 >= Vect11[Vrab90] - (Object[Vrab89].Facing ? 0 : Object[Vrab89].Data->Frame[Vect03[Vrab90]].bdy_W) && Vrab96 <= Vect11[Vrab90] + (Object[Vrab89].Facing ? Object[Vrab89].Data->Frame[Vect03[Vrab90]].bdy_W : 0))
+            if(Vrab93 >= Vrab88 && Vrab94 <= Vrab88 + Object[Vrab89].Data->Frame[Vect03[Vrab90]].bdy_H)
+            Vect09[Vrab98][Vrab90] = true;
+           }
+          }
+         }
+        }
+
+        // Intializing Second Values.
+        Vect10.clear(); Vect11.clear();
+        std::vector < std::vector < std::vector < std::vector < xint64 > > > > Vect12(Vrab99);
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         if(Vect03[Vrab98] == rinsize(-1)) continue; Vect12[Vrab98].resize(2);
+         statics insize Vrab97 = Vect02[Vrab98]; statics insize Vrab96 = Vect03[Vrab98]; statics int1 Vrab95 = Object[Vrab97].Facing;
+         statics xint64 Vrab94 = Vect04[Vrab98] + ((Object[Vrab97].Facing ? -1.0 : 1.0) * rxint64(Object[Vrab97].Data->Frame[Vrab96].centerx));
+         statics xint64 Vrab93 = Vect05[Vrab98] - Object[Vrab97].Data->Frame[Vrab96].centery;
+         statics xint64 Vrab92 = Vect06[Vrab98];
+         insize Vrab91 = Object[Vrab97].Data->Frame[Vrab96].itr.size(); Vect12[Vrab98][0].resize(Vrab91);
+         while(Vrab91 != 0)
+         {
+          Vrab91 -= 1; Vect12[Vrab98][0][Vrab91].resize(6);
+          statics xint64 Vrab90 = Vrab93 + Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].y;
+          Vect12[Vrab98][0][Vrab91][2] = Vrab90; Vect12[Vrab98][0][Vrab91][3] = Vrab90 + Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].h;
+          xint64 Vrab89 = (Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].zwidth) - 1.0; if(Vrab89 == -1.0) Vrab89 = 14;
+          Vect12[Vrab98][0][Vrab91][4] = Vrab92 - Vrab89; Vect12[Vrab98][0][Vrab91][5] = Vrab92 + Vrab89;
+          if(Vrab95)
+          {
+           statics xint64 Vrab88 = Vrab94 + Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].x;
+           Vect12[Vrab98][0][Vrab91][0] = Vrab88; Vect12[Vrab98][0][Vrab91][1] = Vrab88 + Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].w;
+          } else
+          {
+           statics xint64 Vrab88 = Vrab94 - Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].x;
+           Vect12[Vrab98][0][Vrab91][1] = Vrab88; Vect12[Vrab98][0][Vrab91][0] = Vrab88 - Object[Vrab97].Data->Frame[Vrab96].itr[Vrab91].w;
+          }
+         }
+         Vrab91 = Object[Vrab97].Data->Frame[Vrab96].bdy.size(); Vect12[Vrab98][1].resize(Vrab91);
+         while(Vrab91 != 0)
+         {
+          Vrab91 -= 1; Vect12[Vrab98][1][Vrab91].resize(4);
+          statics xint64 Vrab90 = Vrab93 + Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].y;
+          Vect12[Vrab98][1][Vrab91][2] = Vrab90; Vect12[Vrab98][1][Vrab91][3] = Vrab90 + Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].h;
+          if(Vrab95)
+          {
+           statics xint64 Vrab88 = Vrab94 + Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].x;
+           Vect12[Vrab98][1][Vrab91][0] = Vrab88; Vect12[Vrab98][1][Vrab91][1] = Vrab88 + Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].w;
+          } else
+          {
+           statics xint64 Vrab88 = Vrab94 - Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].x;
+           Vect12[Vrab98][1][Vrab91][1] = Vrab88; Vect12[Vrab98][1][Vrab91][0] = Vrab88 - Object[Vrab97].Data->Frame[Vrab96].bdy[Vrab91].w;
+          }
+         }
+        }
+
+        // Earlier Interacts (Which cause the interactor to change it's frame or cause the interactor to respond by the interact, in this case ; Ik1, Ik2, Ik3, ik6, ik7, Ik8, ik14. Which randomization is also required for consistency.)
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         if(Vect03[Vrab98] == rinsize(-1)) continue;
+         statics insize Vrab97 = Vect02[Vrab98];
+
+        }
+
+        // Interacts.
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         if(Vect03[Vrab98] == rinsize(-1)) continue;
+         statics insize Vrab97 = Vect02[Vrab98];
+         for(insize Vrab96 = 0; Vrab96 < Vrab99; ++Vrab96)
+         {
+          if(!Vect09[Vrab98][Vrab96]) continue;
+          statics insize Vrab95 = Vect02[Vrab96];
+          statics insize Vrab94 = Vect12[Vrab98][0].size();
+          for(insize Vrab93 = 0; Vrab93 < Vrab94; ++Vrab93)
+          {
+           int1 Vrab92 = true;
+           {
+            // Base Conditionals.
+            statics int32 Vrab91 = Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr[Vrab93].kind; statics int32 Vrab90 = Object[Vrab95].Data->Frame[Vect03[Vrab96]].state;
+            switch(Vrab91)
+            {
+             case 1: case 2: case 3: case 6: case 7: case 8: case 14: Vrab92 = false; break;
+             case 4: case 5: break;
+             default: Vrab92 = Vrab90 == 10 || Vrab90 == 13 || (Object[Vrab97].Data->Frame[Vect03[Vrab98]].state == 18 ? (Object[Vrab97].Data->id == 211 ? (Object[Vrab97].Team != Object[Vrab95].Team) : true) : (Object[Vrab97].Team != Object[Vrab95].Team)); break;
+            }
+            
+            if(Object[Vrab95].Blink != 0) Vrab92 = false;
+            statics int32 Vrab89 = Object[Vrab97].Data->Frame[Vect03[Vrab98]].itr[Vrab93].vrest;
+            if(Vrab89 != 0)
+            {
+             statics insize Vrab88 = Object[Vrab95].Vrest.size(); if(Vrab88 <= Vrab97) Object[Vrab95].Vrest.resize(Vrab97 + 1);
+             if(Object[Vrab95].Vrest[Vrab97] != 0) Vrab92 = false;
+            } else
+            {
+             if(Object[Vrab97].Arest != 0) Vrab92 = false;
+            }
+            
+           }
+           if(!Vrab92) continue;
+           statics insize Vrab91 = Vect12[Vrab96][1].size();
+           for(insize Vrab90 = 0; Vrab90 < Vrab91; ++Vrab90)
+           {
+            int1 Vrab89 = true;
+            {
+             // Specified Conditionals.
+             Vrab89 = (Vect12[Vrab98][0][Vrab93][1] >= Vect12[Vrab96][1][Vrab90][0] && Vect12[Vrab98][0][Vrab93][0] <= Vect12[Vrab96][1][Vrab90][1] && Vect12[Vrab98][0][Vrab93][3] >= Vect12[Vrab96][1][Vrab90][2] && Vect12[Vrab98][0][Vrab93][2] <= Vect12[Vrab96][1][Vrab90][3] && Vect12[Vrab98][0][Vrab93][5] >= Object[Vrab95].Z && Vect12[Vrab98][0][Vrab93][4] <= Object[Vrab95].Z);
+            }
+            if(!Vrab89) continue;
+
+            // Hit.
+            {
+             Object[Vrab95].Frame = 226; Object[Vrab95].Wait = 0;
+            }
+           }
+          }
+         }
+        }
+       }
+
+       /*/ Phase 4 : Interact
        {
         statics insize Vrab99 = Vect02.size();
         
@@ -1227,6 +1590,7 @@
          }
         }
        }
+       */
 
        /*/ Phase 4 : Interact.
        {
@@ -1311,13 +1675,29 @@
        }
        */
 
-       // Phase 5 : Catch & Weapon, Position Shift.
+       // Phase 5 : Catching & Hold, Position Shift.
        {
-        insize Vrab99 = Vect02.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        insize Vrab99 = Vect02.size();
+        std::vector < xint64 > Vect03(Vrab99); std::vector < xint64 > Vect04(Vrab99); std::vector < xint64 > Vect05(Vrab99); std::vector < insize > Vect06(Vrab99, rinsize(-1)); 
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+        {
+         statics insize Vrab97 = Vect02[Vrab98];
+         Vect03[Vrab98] = Object[Vrab97].X; Vect04[Vrab98] = Object[Vrab97].Y; Vect05[Vrab98] = Object[Vrab97].Z;
+         if(Object[Vrab97].Frame >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Object[Vrab97].Frame].Exist) continue;
+         Vect06[Vrab98] = Object[Vrab97].Frame;
+        }
+        
+        for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
         {
          statics insize Vrab97 = Vect02[Vrab98];
          
-         //Position Shift
+         // Catching & Hold.
+         if(Vect06[Vrab98] != rinsize(-1))
+         {
+          
+         }
+
+         // Position Shift.
          {
           statics xint64 Vrab96 = rxint64(Backgrounds[Background].Shift), Vrab95 = Vrab96 + rxint64(Backgrounds[Background].width), Vrab94 = rxint64(Backgrounds[Background].zboundary[0]), Vrab93 = rxint64(Backgrounds[Background].zboundary[1]);
           if(Object[Vrab97].Lock)
@@ -1499,7 +1879,12 @@
           if(!Object[Vrab06].Exist) continue;
           statics insize Vrab08 = Object[Vrab06].Data->id; if(Vrab08 == 223 || Vrab08 == 224) continue;
           statics int32 Vrab09 = Object[Vrab06].Blink; if(Vrab09 < 70){if((Vrab09 % 4 > 1 && Vrab09 > 0) || (Vrab09 % 4 < -1 && Vrab09 < 0)) continue;} else {continue;}
-          statics insize Vrab10 = Object[Vrab06].Frame; if(Vrab10 < Object[Vrab06].Data->Frame.size()) if(Object[Vrab06].Data->Frame[Vrab10].Exist) if(Object[Vrab06].Data->Frame[Vrab10].state == 3005) continue;
+          statics insize Vrab10 = Object[Vrab06].Frame; if(Vrab10 < Object[Vrab06].Data->Frame.size()) if(Object[Vrab06].Data->Frame[Vrab10].Exist) switch(Object[Vrab06].Data->Frame[Vrab10].state)
+          {
+           case 3005: case 400: case 401:
+           continue;
+           default: break;
+          }
           Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
           Vect01[Vrab07].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
           Vect01[Vrab07].Effect->Pic = Vrab01;
@@ -1575,6 +1960,77 @@
          }
         }
        //-//
+
+       // Hitboxes
+        if(Hitboxes)
+        {
+         insize Vrab01 = Object.size(); insize Vrab02 = Vect01.size();
+         while(Vrab01 != 0)
+         {
+          Vrab01 -= 1;
+          if(!Object[Vrab01].Exist) continue;
+          statics insize Vrab03 = Object[Vrab01].Frame; if(Vrab03 < Object[Vrab01].Data->Frame.size()) if(Object[Vrab01].Data->Frame[Vrab03].Exist)
+          {
+           insize Vrab04 = Object[Vrab01].Data->Frame[Vrab03].bdy.size();
+           while(Vrab04 != 0)
+           {
+            Vrab04 -= 1;
+            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+            Vect01[Vrab02].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+            Vect01[Vrab02].Effect->Type = 3;
+            Vect01[Vrab02].Effect->Pic = 0xFF00;
+            Vect01[Vrab02].Effect->W = Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].w;
+            Vect01[Vrab02].Effect->H = Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].h;
+            Vect01[Vrab02].Effect->X = L_Rounding64(Object[Vrab01].X) + ((Object[Vrab01].Facing ? -1 : 1) * (rint64(Object[Vrab01].Data->Frame[Vrab03].centerx) - rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].x))) - (Object[Vrab01].Facing ? 0 : Vect01[Vrab02].Effect->W);
+            Vect01[Vrab02].Effect->Y = L_Rounding64(Object[Vrab01].Z + Object[Vrab01].Y) - (rint64(Object[Vrab01].Data->Frame[Vrab03].centery) - rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].y));
+            Vrab02 += 1;
+            if(Fill_Hitboxes)
+            if(Vect01[Vrab02 - 1].Effect->W > 2 && Vect01[Vrab02 - 1].Effect->H > 2)
+            {
+             Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+             Vect01[Vrab02].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+             Vect01[Vrab02].Effect->Type = 2;
+             Vect01[Vrab02].Effect->Trans = 50;
+             Vect01[Vrab02].Effect->Pic = 0xFF00;
+             Vect01[Vrab02].Effect->W = rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].w) - 2;
+             Vect01[Vrab02].Effect->H = rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].h) - 2;
+             Vect01[Vrab02].Effect->X = L_Rounding64(Object[Vrab01].X) + ((Object[Vrab01].Facing ? -1 : 1) * (rint64(Object[Vrab01].Data->Frame[Vrab03].centerx) - rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].x))) - (Object[Vrab01].Facing ? 0 : (Vect01[Vrab02].Effect->W + 2)) + 1;
+             Vect01[Vrab02].Effect->Y = L_Rounding64(Object[Vrab01].Z + Object[Vrab01].Y) - (rint64(Object[Vrab01].Data->Frame[Vrab03].centery) - rint64(Object[Vrab01].Data->Frame[Vrab03].bdy[Vrab04].y)) + 1;
+             Vrab02 += 1;
+            }
+           }
+           Vrab04 = Object[Vrab01].Data->Frame[Vrab03].itr.size();
+           while(Vrab04 != 0)
+           {
+            Vrab04 -= 1;
+            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+            Vect01[Vrab02].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+            Vect01[Vrab02].Effect->Type = 3;
+            Vect01[Vrab02].Effect->Pic = 0xFF0000; switch(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].kind){case 0: case 3: break; default: Vect01[Vrab02].Effect->Pic = 0xFFA500; break;}
+            Vect01[Vrab02].Effect->W = Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].w;
+            Vect01[Vrab02].Effect->H = Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].h;
+            Vect01[Vrab02].Effect->X = L_Rounding64(Object[Vrab01].X) + ((Object[Vrab01].Facing ? -1 : 1) * (rint64(Object[Vrab01].Data->Frame[Vrab03].centerx) - rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].x))) - (Object[Vrab01].Facing ? 0 : Vect01[Vrab02].Effect->W);
+            Vect01[Vrab02].Effect->Y = L_Rounding64(Object[Vrab01].Z + Object[Vrab01].Y) - (rint64(Object[Vrab01].Data->Frame[Vrab03].centery) - rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].y));
+            Vrab02 += 1;
+            if(Fill_Hitboxes)
+            if(Vect01[Vrab02 - 1].Effect->W > 2 && Vect01[Vrab02 - 1].Effect->H > 2)
+            {
+             Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+             Vect01[Vrab02].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+             Vect01[Vrab02].Effect->Type = 2;
+             Vect01[Vrab02].Effect->Trans = 50;
+             Vect01[Vrab02].Effect->Pic = 0xFF0000; switch(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].kind){case 0: case 3: break; default: Vect01[Vrab02].Effect->Pic = 0xFFA500; break;}
+             Vect01[Vrab02].Effect->W = rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].w) - 2;
+             Vect01[Vrab02].Effect->H = rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].h) - 2;
+             Vect01[Vrab02].Effect->X = L_Rounding64(Object[Vrab01].X) + ((Object[Vrab01].Facing ? -1 : 1) * (rint64(Object[Vrab01].Data->Frame[Vrab03].centerx) - rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].x))) - (Object[Vrab01].Facing ? 0 : (Vect01[Vrab02].Effect->W + 2)) + 1;
+             Vect01[Vrab02].Effect->Y = L_Rounding64(Object[Vrab01].Z + Object[Vrab01].Y) - (rint64(Object[Vrab01].Data->Frame[Vrab03].centery) - rint64(Object[Vrab01].Data->Frame[Vrab03].itr[Vrab04].y)) + 1;
+             Vrab02 += 1;
+            }
+           }
+          }
+         }
+        }
+       //-//
       }
 
       return Vect01;
@@ -1611,7 +2067,7 @@
      {
       statics uint8 Vrab03 = Decode(Temp01); if(Vrab03 < 4) return Vrab03;
       Vrab001 = Objects.size(); Vrab002 = 0; Vrab004 = 0; Objects.resize(Vrab001 + 1);
-      Objects[Vrab001].id = Vrab01; Objects[Vrab001].type = Vrab02;
+      Objects[Vrab001].id = Vrab01; Objects[Vrab001].type = Vrab02; Vect001.clear();
       std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){File01 << "[] INFO - Processing \"" + Temp01 + "\" object into the system.\n";}
       return 0;
      }
@@ -1651,7 +2107,7 @@
         case 0:
          if(Temp02 == "<bmp_begin>")               {Vrab002 = 1; continue;}
          if(Temp02 == "<weapon_strength_list>")    {Vrab002 = 2; continue;}
-         if(Temp02 == "<frame>")                   {Vrab002 = 3; File001 >> Temp02; statics insize Vrab05 = rinsize(L_Numbering(Temp02)); statics insize Vrab06 = Objects[Vrab001].Frame.size(); if(Vrab06 <= Vrab05) Objects[Vrab001].Frame.resize(Vrab05 + 1); Vrab03 = Vrab05; Objects[Vrab001].Frame[Vrab03].Exist = true; File001 >> Temp02; continue;}
+         if(Temp02 == "<frame>")                   {Vrab002 = 3; File001 >> Temp02; statics insize Vrab05 = rinsize(L_Numbering(Temp02)); statics insize Vrab06 = Objects[Vrab001].Frame.size(); if(Vrab06 <= Vrab05){Objects[Vrab001].Frame.resize(Vrab05 + 1); Vect001.resize(Vrab05 + 1);} Vrab03 = Vrab05; if(Objects[Vrab001].Frame[Vrab03].Exist && !Vect001[Vrab03]){Vect001[Vrab03] = true; Vrab003 = true; std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){File01 << ")( WARNING - \"<frame> " + std::to_string(Vrab03) + "\" was declared more than once, only the bottom one is going to be used.\n"; File01.close();}} Objects[Vrab001].Frame[Vrab03] = HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME(); Objects[Vrab001].Frame[Vrab03].Exist = true; File001 >> Temp02; continue;}
         break;
         case 1:
          if(Temp02 == "<bmp_end>")                 {Vrab002 = 99ui8; continue;}
@@ -1997,8 +2453,67 @@
      }
      string Finalizer(statics string Temp01)                                                 fastened 
      {
+      {
+       Vect001.clear();
+       insize Vrab01 = Objects.size(); 
+       while(Vrab01 != 0)
+       {
+        Vrab01 -= 1; insize Vrab02 = Objects[Vrab01].Frame.size();
+        while(Vrab02 != 0)
+        {
+         Vrab02 -= 1;
+         if(!Objects[Vrab01].Frame[Vrab02].Exist) continue;
+         insize Vrab03 = Objects[Vrab01].Frame[Vrab02].bdy.size();
+         if(Vrab03 > 0)
+         {
+          int32 Vrab04 = 0x7FFFFFFF, Vrab05 = 0x7FFFFFFF; uint32 Vrab06 = 0, Vrab07 = 0;
+          while(Vrab03 != 0)
+          {
+           Vrab03 -= 1;
+           statics int32 Vrab08 = Objects[Vrab01].Frame[Vrab02].bdy[Vrab03].x;
+           statics int32 Vrab09 = Objects[Vrab01].Frame[Vrab02].bdy[Vrab03].y;
+           if(Vrab04 > Vrab08) Vrab04 = Vrab08;
+           if(Vrab05 > Vrab09) Vrab05 = Vrab09;
+           statics uint32 Vrab10 = Objects[Vrab01].Frame[Vrab02].bdy[Vrab03].w;
+           statics uint32 Vrab11 = Objects[Vrab01].Frame[Vrab02].bdy[Vrab03].h;
+           if(Vrab06 < Vrab08 + Vrab10) Vrab06 = Vrab08 + Vrab10;
+           if(Vrab07 < Vrab09 + Vrab11) Vrab07 = Vrab09 + Vrab11;
+          }
+          Objects[Vrab01].Frame[Vrab02].bdy_X = Vrab04;
+          Objects[Vrab01].Frame[Vrab02].bdy_Y = Vrab05;
+          Objects[Vrab01].Frame[Vrab02].bdy_W = Vrab06 - Vrab04;
+          Objects[Vrab01].Frame[Vrab02].bdy_H = Vrab07 - Vrab05;
+         }
+         Vrab03 = Objects[Vrab01].Frame[Vrab02].itr.size();
+         if(Vrab03 > 0)
+         {
+          int32 Vrab04 = 0x7FFFFFFF, Vrab05 = 0x7FFFFFFF; uint32 Vrab06 = 0, Vrab07 = 0, Vrab08 = 0;
+          while(Vrab03 != 0)
+          {
+           Vrab03 -= 1;
+           statics int32 Vrab09 = Objects[Vrab01].Frame[Vrab02].itr[Vrab03].x;
+           statics int32 Vrab10 = Objects[Vrab01].Frame[Vrab02].itr[Vrab03].y;
+           if(Vrab04 > Vrab09) Vrab04 = Vrab09;
+           if(Vrab05 > Vrab10) Vrab05 = Vrab10;
+           statics uint32 Vrab11 = Objects[Vrab01].Frame[Vrab02].itr[Vrab03].w;
+           statics uint32 Vrab12 = Objects[Vrab01].Frame[Vrab02].itr[Vrab03].h;
+           if(Vrab06 < Vrab09 + Vrab11) Vrab06 = Vrab09 + Vrab11;
+           if(Vrab07 < Vrab10 + Vrab12) Vrab07 = Vrab10 + Vrab12;
+           uint32 Vrab13 = Objects[Vrab01].Frame[Vrab02].itr[Vrab03].zwidth; if(Vrab13 == 0) Vrab13 = 15;
+           if(Vrab08 < Vrab13) Vrab08 = Vrab13;
+          }
+          Objects[Vrab01].Frame[Vrab02].itr_X = Vrab04;
+          Objects[Vrab01].Frame[Vrab02].itr_Y = Vrab05;
+          Objects[Vrab01].Frame[Vrab02].itr_W = Vrab06 - Vrab04;
+          Objects[Vrab01].Frame[Vrab02].itr_H = Vrab07 - Vrab05;
+          Objects[Vrab01].Frame[Vrab02].itr_Z = Vrab08;
+         }
+        }
+       }
+      }
+
       string Temp02 = Temp01 + "data\\stage.dat"; if(!L_Exist(Temp02)) Temp02 = Temp01 + "data\\stage.txt";
-      {std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){File01 << "[] INFO - Processing \"" + Temp02 + "\" into the system.\n";}}
+      {std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){if(L_Exist(Temp02)){File01 << "[] INFO - Processing \"" + Temp02 + "\" into the system.\n";} else {File01 << "[] INFO - Cannot find \"" + Temp01 + "data\\stage.dat\" nor \"" + Temp02 + "\", resuming without Stage.\n";} File01.close();}}
       switch(Decode(Temp02))
       {
        case 1: Stages = std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_STAGE > (); return "F";
@@ -2068,6 +2583,7 @@
       }
      }
      int1   Staging()                                                                fastened {return Stages->Stage.size() != 0;}
+     int1   Reset()                                                                  fastened {statics int1 Vrab01 = Move; Move = false; return Vrab01;}
      string Info()                                                                   fastened {return "Origin Version : v2.1b.";}
      uint8  Frame()                                                                  fastened {if(Polish){switch(Speed){case 0: return 1ui8; case 1: return 2ui8; case 3: return 8ui8; case 4: return 16ui8; default: return 4ui8;}} else {switch(Speed){case 0: return 4ui8; case 1: return 8ui8; case 3: return 32ui8; case 4: return 64ui8; default: break;}} return 16ui8;}
      int64  Area()                                                                   fastened {return Backgrounds[Background].width;}
@@ -2206,14 +2722,16 @@
        Engi04->RegisterGlobalProperty("const ENGINE Engine", Uniq01.get());
       }
      }
-     string Debug()                                                                  fastened {insize Vrab01 = Object.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Object[Vrab01].Exist) Vrab02 += 1;} return std::to_string(Vrab02) + " " + std::to_string(Object[0].Y_Vel);}
+     string Debug()                                                                  fastened {insize Vrab01 = Object.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Object[Vrab01].Exist) Vrab02 += 1;} return std::to_string(Vrab02) + " " + std::to_string(L_Distance(Object[0].X, Object[0].Z * 2.5, Object[1].X, Object[1].Z * 2.5));}
      private:
       insize Vrab001 = 0;
       uint8  Vrab002 = 0;
       int1   Vrab003 = false;
       uint8  Vrab004 = 0;
+      std::vector < int1 > Vect001;
       std::ifstream File001;
 
+      int1   Move = false;
       uint8  Mode = 0;
       uint8  Difficult = 0;
       insize Background = 0;
@@ -2222,6 +2740,9 @@
       uint64 Playtime = 0;
 
       int1   Polish = false;
+      int1   Hitboxes = false;
+      int1   Fill_Hitboxes = true;
+
       int1   Pause = false;
       int1   Frame_Pause = false;
       int1   F6 = false;
@@ -2462,12 +2983,13 @@
       uint64 Tick = 0;                 // Playtime.
       uint64 Info_Slot = 0;            // Info current slot.
       insize Number_Of_Sound = 0;      // Max SFX.
+      insize Current_Music[2] = {rinsize(-1), rinsize(-1)}; //
      //-//
      // Event
       int1   Focused = true;
       uint64 Runtime1 = 0; uint64 Runtime2 = 0; uint8 Runtime3 = 0;
-      int64  CameraX = 0; xint64 CameraX_Acceleration = 0;
-      int64  CameraY = 0; xint64 CameraY_Acceleration = 0;
+      int64  CameraX = 0; xint64 CameraX_Acceleration = 0, CameraX_Post = 0;
+      int64  CameraY = 0; xint64 CameraY_Acceleration = 0, CameraY_Post = 0;
       xint64 Darktime1 = 0;
       insize Background1 = 0;
       insize Select_Background = 0; insize Select_Music = 0; uint8 Select_Mode = 0; uint8 Select_Difficult = 0;
@@ -2585,6 +3107,16 @@
        if(Number_Of_Sound == Memory[0].Max_SFX) return;
        Number_Of_Sound += 1;
        G_SetSoundplay(Vrab01, rxint32((rxint64(Vrab03) / 100) * rxint64(Varb0012)), rxint32(Varb0013 + Vrab02));
+      }
+      int0   Play_Music(statics insize Vrab01, statics xint32 Vrab02 = 0.0, statics uint32 Vrab03 = 100) fastened
+      {
+       if(Vrab01 == Current_Music[0]) return;
+       G_StopMusic(Current_Music[1]);
+       Current_Music[0] = Vrab01; Current_Music[1] = G_SetMusic(Vrab01, rxint32((rxint64(Vrab03) / 100) * rxint64(Varb0012)), rxint32(Varb0013 + Vrab02));
+      }
+      int0   Stop_Music() fastened
+      {
+       G_StopMusic(Current_Music[1]);
       }
       int0   Post_Info(statics string Temp01, statics int1 Vrab01 = false, statics int1 Vrab02 = false) fastened
       {
@@ -3141,7 +3673,7 @@
    }
    return Vrab03;
   }
-  uint64 L_Random(uint64 Vrab01)          fastened {Varb0015 += 1; /*/*/ Varb0016 += Varb0015; Varb0017 += 3; Varb0018 += 8; Varb0016 += Varb0017 + Varb0018; /*/*/ Varb0016 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Varb0016) / rxint64(0xFFFFFFFF) * rxint64(Vrab01))));}
+  uint64 L_Random(uint64 Vrab01)          fastened {remains std::mt19937 Vrab02; remains std::uniform_int_distribution < uint32 > Vrab03(0, ruint32(-1)); Varb0016 = Vrab03(Vrab02); Varb0016 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Varb0016) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));}
   xint64 L_Positive64(xint64 Vrab01)      fastened {if(Vrab01 < 0) return -Vrab01; return Vrab01;} 
   xint64 L_Doubling(string Temp01)        fastened 
   {
@@ -3205,6 +3737,10 @@
     }
    }
    return Vrab03;
+  }
+  xint64 L_Distance(xint64 Vrab01, xint64 Vrab02, xint64 Vrab03, xint64 Vrab04) fastened
+  {
+   return sqrt(pow(Vrab03 - Vrab01, 2) + pow(Vrab04 - Vrab02, 2));
   }
   string L_Number(insize Vrab01)          fastened {statics string Temp01 = std::to_string(Vrab01); Vrab01 %= 100; if(Vrab01 <= 10 || Vrab01 >= 20){switch(ruint8(Vrab01 % 10)){case 1: return Temp01 + "st"; case 2: return Temp01 + "nd"; case 3: return Temp01 + "rd"; default: return Temp01 + "th";}} else {return Temp01 + "th";}}
   string L_Lowercase(string Temp01)       fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
@@ -3379,130 +3915,130 @@
     // Interface's pic load.
      {
       statics string Temp02 = "Database\\Interface\\Enchanted\\", Temp03 = ".bmp";
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS0" + Temp03, 0, 0, 255, 255));        // Index : 0
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS1" + Temp03, 0, 0, 255, 255));        // Index : 1
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS2" + Temp03, 0, 0, 255, 255));        // Index : 2
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS3" + Temp03, 0, 0, 255, 255));        // Index : 3
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS4" + Temp03, 0, 0, 255, 255));        // Index : 4
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS5" + Temp03, 0, 0, 255, 255));        // Index : 5
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 278, 260, 12, 12));        // Index : 6 (Info Bar Top-Left Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 291, 260, 12, 12));        // Index : 7 (Info Bar Top-Right Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 278, 273, 12, 12));        // Index : 8 (Info Bar Bottom-Left Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 291, 273, 12, 12));        // Index : 9 (Info Bar Bottom-Right Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 290, 260, 1, 3));          // Index : 10 (Info Bar Horizontal Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 278, 272, 3, 1));          // Index : 11 (Info Bar Vertical Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 801, 382, 200, 200));      // Index : 12 (Info Bar Area)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "CURSOR1" + Temp03));                       // Index : 13
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "CURSOR2" + Temp03));                       // Index : 14
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 0, 800, 37));           // Index : 15 (Copyright)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 38, 490, 79));          // Index : 16 (Title)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 38, 154, 169));       // Index : 17 (Main Buttons)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 38, 154, 18));        // Index : 18 (Main Buttons - Game Start)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 67, 154, 20));        // Index : 19 (Main Buttons - Network Game)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 98, 154, 20));        // Index : 20 (Main Buttons - General Settings)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 129, 154, 20));       // Index : 21 (Main Buttons - Control Settings)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 161, 154, 19));       // Index : 22 (Main Buttons - Recording Info)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 646, 191, 154, 16));       // Index : 23 (Main Buttons - Official Fansite)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 118, 151, 26));         // Index : 24 (Ok Button)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 145, 151, 26));         // Index : 25 (Ok Button)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 152, 118, 151, 26));       // Index : 26 (Cancel Button)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 152, 145, 151, 26));       // Index : 27 (Cancel Button)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 801, 0, 704, 381));        // Index : 28 (Control Setting Menu)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 587, 300, 106, 91));       // Index : 29 (Input - Keyboard)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 694, 208, 106, 91));       // Index : 30 (Input - Joy1)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 587, 208, 106, 91));       // Index : 31 (Input - Joy2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 694, 392, 106, 91));       // Index : 32 (Input - Joy3)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 694, 300, 106, 91));       // Index : 33 (Input - Joy4)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 118, 186, 169));      // Index : 34 (Game Buttons)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 288, 186, 14));       // Index : 35 (Game Buttons - Versus)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 319, 186, 18));       // Index : 36 (Game Buttons - Stage)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 349, 186, 19));       // Index : 37 (Game Buttons - Championship)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 380, 186, 15));       // Index : 38 (Game Buttons - Battle)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 411, 186, 19));       // Index : 39 (Game Buttons - Recording Playback)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 304, 443, 186, 14));       // Index : 40 (Game Buttons - Return)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 1506, 0, 744, 437));       // Index : 41 (Character Selection)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 1264, 382, 120, 66));      // Index : 42 (Character Selection - Press Attack to Join)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 1385, 382, 120, 66));      // Index : 43 (Character Selection - Press Attack to Join2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 1001, 382, 120, 120));     // Index : 44 (Character Selection - Random)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 535, 208, 51, 58));        // Index : 45 (Character Selection - Counter - 5)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 535, 267, 51, 58));        // Index : 46 (Character Selection - Counter - 4)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 535, 326, 51, 58));        // Index : 47 (Character Selection - Counter - 3)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 590, 392, 51, 58));        // Index : 48 (Character Selection - Counter - 2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 642, 392, 51, 58));        // Index : 49 (Character Selection - Counter - 1)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 172, 303, 87));         // Index : 50 (Character Selection - Computer Player)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 208, 6, 10));         // Index : 51 (Character Selection - Computer Player - 0)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 498, 208, 6, 10));         // Index : 52 (Character Selection - Computer Player - 1)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 505, 208, 6, 10));         // Index : 53 (Character Selection - Computer Player - 2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 512, 208, 6, 10));         // Index : 54 (Character Selection - Computer Player - 3)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 519, 208, 6, 10));         // Index : 55 (Character Selection - Computer Player - 4)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 526, 208, 6, 10));         // Index : 56 (Character Selection - Computer Player - 5)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 219, 6, 10));         // Index : 57 (Character Selection - Computer Player - 6)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 498, 219, 6, 10));         // Index : 58 (Character Selection - Computer Player - 7)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 505, 219, 6, 10));         // Index : 59 (Character Selection - Computer Player - 0 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 512, 219, 6, 10));         // Index : 60 (Character Selection - Computer Player - 1 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 519, 219, 6, 10));         // Index : 61 (Character Selection - Computer Player - 2 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 526, 219, 6, 10));         // Index : 62 (Character Selection - Computer Player - 3 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 230, 6, 10));         // Index : 63 (Character Selection - Computer Player - 4 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 498, 230, 6, 10));         // Index : 64 (Character Selection - Computer Player - 5 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 505, 230, 6, 10));         // Index : 65 (Character Selection - Computer Player - 6 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 512, 230, 6, 10));         // Index : 66 (Character Selection - Computer Player - 7 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 0, 260, 264, 168));        // Index : 67 (Character Selection - Menu)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 208, 1, 1));          // Index : 68 (Color - 1) (#10206C)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 210, 1, 1));          // Index : 69 (Color - 2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 212, 1, 1));          // Index : 70 (Color - 3)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 214, 1, 1));          // Index : 71 (Color - 4)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 216, 1, 1));          // Index : 72 (Color - 5)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 218, 1, 1));          // Index : 73 (Color - 6)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 220, 1, 1));          // Index : 74 (Color - 7)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 222, 1, 1));          // Index : 75 (Color - 8)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 224, 1, 1));          // Index : 76 (Color - 9)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 226, 1, 1));          // Index : 77 (Color - 10)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 228, 1, 1));          // Index : 78 (Color - 11)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 230, 1, 1));          // Index : 79 (Color - 12)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 232, 1, 1));          // Index : 80 (Color - 13)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 234, 1, 1));          // Index : 81 (Color - 14)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 236, 1, 1));          // Index : 82 (Color - 15)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 533, 238, 1, 1));          // Index : 83 (Color - 16)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 307, 21, 21));        // Index : 84 (Input - Attack)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 307, 21, 21));        // Index : 85 (Input - Attack Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 285, 21, 21));        // Index : 86 (Input - Defend)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 329, 21, 21));        // Index : 87 (Input - Defend Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 285, 21, 21));        // Index : 88 (Input - Jump)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 329, 21, 21));        // Index : 89 (Input - Jump Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 241, 21, 21));        // Index : 90 (Input - Up)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 351, 21, 21));        // Index : 91 (Input - Up Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 241, 21, 21));        // Index : 92 (Input - Left)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 351, 21, 21));        // Index : 93 (Input - Left Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 263, 21, 21));        // Index : 94 (Input - Down)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 373, 21, 21));        // Index : 95 (Input - Down Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 263, 21, 21));        // Index : 96 (Input - Right)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 513, 373, 21, 21));        // Index : 97 (Input - Right Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 395, 66, 17));        // Index : 98 (Setting - Graphic)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 413, 66, 17));        // Index : 99 (Setting - Audio)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 491, 431, 66, 17));        // Index : 100 (Setting - Platform)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 2251, 0, 704, 338));       // Index : 101 (Recording Info)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 456, 484, 344, 23));       // Index : 102 (Recording Info - Button)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 286, 19, 19));        // Index : 103 (Check)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 306, 19, 19));        // Index : 104 (Check - Off)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 265, 286, 18, 18));        // Index : 105 (Info - Question)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 265, 305, 18, 18));        // Index : 106 (Info - Important)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 519, 230, 6, 10));         // Index : 107 (Character Selection - Computer Player - 8 Active)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 286, 326, 8, 8));          // Index : 108 (Menu Bar Top-Left Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 295, 326, 8, 8));          // Index : 109 (Menu Bar Top-Right Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 286, 335, 8, 8));          // Index : 110 (Menu Bar Bottom-Left Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 295, 335, 8, 8));          // Index : 111 (Menu Bar Bottom-Right Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 294, 326, 1, 8));          // Index : 112 (Menu Bar Horizontal-Top Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 286, 334, 8, 1));          // Index : 113 (Menu Bar Vertical-Left Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 294, 335, 1, 8));          // Index : 114 (Menu Bar Horizontal-Bottom Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 295, 334, 8, 1));          // Index : 115 (Menu Bar Vertical-Right Corner)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 294, 334, 1, 1));          // Index : 116 (Menu Bar Area)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 2956, 0, 169, 324));       // Index : 117 (Meta Character Selection - Char View)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 326, 1, 1));          // Index : 118 (Menu Bar Color - 1)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 328, 1, 1));          // Index : 119 (Menu Bar Color - 2)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 330, 1, 1));          // Index : 120 (Menu Bar Color - 3)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 332, 1, 1));          // Index : 121 (Menu Bar Color - 4)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU" + Temp03, 284, 334, 1, 1));          // Index : 122 (Menu Bar Color - 5)
-      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU2" + Temp03, 0, 0, 665, 900));         // Index : 123 (General Setting - Scrolling Display)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS0" + Temp03, 0, 0, 255, 255));         // Index : 0
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS1" + Temp03, 0, 0, 255, 255));         // Index : 1
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS2" + Temp03, 0, 0, 255, 255));         // Index : 2
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS3" + Temp03, 0, 0, 255, 255));         // Index : 3
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS4" + Temp03, 0, 0, 255, 255));         // Index : 4
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "WORDS5" + Temp03, 0, 0, 255, 255));         // Index : 5
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 278, 260, 12, 12));        // Index : 6 (Info Bar Top-Left Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 291, 260, 12, 12));        // Index : 7 (Info Bar Top-Right Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 278, 273, 12, 12));        // Index : 8 (Info Bar Bottom-Left Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 291, 273, 12, 12));        // Index : 9 (Info Bar Bottom-Right Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 290, 260, 1, 3));          // Index : 10 (Info Bar Horizontal Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 278, 272, 3, 1));          // Index : 11 (Info Bar Vertical Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 801, 382, 200, 200));      // Index : 12 (Info Bar Area)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "CURSOR1" + Temp03));                        // Index : 13
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "CURSOR2" + Temp03));                        // Index : 14
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 0, 800, 37));           // Index : 15 (Copyright)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 38, 490, 79));          // Index : 16 (Title)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 38, 154, 169));       // Index : 17 (Main Buttons)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 38, 154, 18));        // Index : 18 (Main Buttons - Game Start)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 67, 154, 20));        // Index : 19 (Main Buttons - Network Game)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 98, 154, 20));        // Index : 20 (Main Buttons - General Settings)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 129, 154, 20));       // Index : 21 (Main Buttons - Control Settings)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 161, 154, 19));       // Index : 22 (Main Buttons - Recording Info)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 646, 191, 154, 16));       // Index : 23 (Main Buttons - Official Fansite)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 118, 151, 26));         // Index : 24 (Ok Button)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 145, 151, 26));         // Index : 25 (Ok Button)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 152, 118, 151, 26));       // Index : 26 (Cancel Button)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 152, 145, 151, 26));       // Index : 27 (Cancel Button)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 801, 0, 704, 381));        // Index : 28 (Control Setting Menu)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 587, 300, 106, 91));       // Index : 29 (Input - Keyboard)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 694, 208, 106, 91));       // Index : 30 (Input - Joy1)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 587, 208, 106, 91));       // Index : 31 (Input - Joy2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 694, 392, 106, 91));       // Index : 32 (Input - Joy3)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 694, 300, 106, 91));       // Index : 33 (Input - Joy4)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 118, 186, 169));      // Index : 34 (Game Buttons)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 288, 186, 14));       // Index : 35 (Game Buttons - Versus)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 319, 186, 18));       // Index : 36 (Game Buttons - Stage)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 349, 186, 19));       // Index : 37 (Game Buttons - Championship)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 380, 186, 15));       // Index : 38 (Game Buttons - Battle)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 411, 186, 19));       // Index : 39 (Game Buttons - Recording Playback)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 304, 443, 186, 14));       // Index : 40 (Game Buttons - Return)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 1506, 0, 744, 437));       // Index : 41 (Character Selection)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 1264, 382, 120, 66));      // Index : 42 (Character Selection - Press Attack to Join)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 1385, 382, 120, 66));      // Index : 43 (Character Selection - Press Attack to Join2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 1001, 382, 120, 120));     // Index : 44 (Character Selection - Random)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 535, 208, 51, 58));        // Index : 45 (Character Selection - Counter - 5)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 535, 267, 51, 58));        // Index : 46 (Character Selection - Counter - 4)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 535, 326, 51, 58));        // Index : 47 (Character Selection - Counter - 3)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 590, 392, 51, 58));        // Index : 48 (Character Selection - Counter - 2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 642, 392, 51, 58));        // Index : 49 (Character Selection - Counter - 1)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 172, 303, 87));         // Index : 50 (Character Selection - Computer Player)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 208, 6, 10));         // Index : 51 (Character Selection - Computer Player - 0)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 498, 208, 6, 10));         // Index : 52 (Character Selection - Computer Player - 1)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 505, 208, 6, 10));         // Index : 53 (Character Selection - Computer Player - 2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 512, 208, 6, 10));         // Index : 54 (Character Selection - Computer Player - 3)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 519, 208, 6, 10));         // Index : 55 (Character Selection - Computer Player - 4)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 526, 208, 6, 10));         // Index : 56 (Character Selection - Computer Player - 5)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 219, 6, 10));         // Index : 57 (Character Selection - Computer Player - 6)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 498, 219, 6, 10));         // Index : 58 (Character Selection - Computer Player - 7)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 505, 219, 6, 10));         // Index : 59 (Character Selection - Computer Player - 0 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 512, 219, 6, 10));         // Index : 60 (Character Selection - Computer Player - 1 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 519, 219, 6, 10));         // Index : 61 (Character Selection - Computer Player - 2 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 526, 219, 6, 10));         // Index : 62 (Character Selection - Computer Player - 3 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 230, 6, 10));         // Index : 63 (Character Selection - Computer Player - 4 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 498, 230, 6, 10));         // Index : 64 (Character Selection - Computer Player - 5 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 505, 230, 6, 10));         // Index : 65 (Character Selection - Computer Player - 6 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 512, 230, 6, 10));         // Index : 66 (Character Selection - Computer Player - 7 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 0, 260, 264, 168));        // Index : 67 (Character Selection - Menu)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 208, 1, 1));          // Index : 68 (Color - 1) (#10206C)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 210, 1, 1));          // Index : 69 (Color - 2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 212, 1, 1));          // Index : 70 (Color - 3)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 214, 1, 1));          // Index : 71 (Color - 4)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 216, 1, 1));          // Index : 72 (Color - 5)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 218, 1, 1));          // Index : 73 (Color - 6)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 220, 1, 1));          // Index : 74 (Color - 7)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 222, 1, 1));          // Index : 75 (Color - 8)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 224, 1, 1));          // Index : 76 (Color - 9)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 226, 1, 1));          // Index : 77 (Color - 10)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 228, 1, 1));          // Index : 78 (Color - 11)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 230, 1, 1));          // Index : 79 (Color - 12)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 232, 1, 1));          // Index : 80 (Color - 13)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 234, 1, 1));          // Index : 81 (Color - 14)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 236, 1, 1));          // Index : 82 (Color - 15)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 533, 238, 1, 1));          // Index : 83 (Color - 16)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 307, 21, 21));        // Index : 84 (Input - Attack)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 307, 21, 21));        // Index : 85 (Input - Attack Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 285, 21, 21));        // Index : 86 (Input - Defend)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 329, 21, 21));        // Index : 87 (Input - Defend Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 285, 21, 21));        // Index : 88 (Input - Jump)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 329, 21, 21));        // Index : 89 (Input - Jump Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 241, 21, 21));        // Index : 90 (Input - Up)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 351, 21, 21));        // Index : 91 (Input - Up Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 241, 21, 21));        // Index : 92 (Input - Left)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 351, 21, 21));        // Index : 93 (Input - Left Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 263, 21, 21));        // Index : 94 (Input - Down)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 373, 21, 21));        // Index : 95 (Input - Down Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 263, 21, 21));        // Index : 96 (Input - Right)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 513, 373, 21, 21));        // Index : 97 (Input - Right Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 395, 66, 17));        // Index : 98 (Setting - Graphic)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 413, 66, 17));        // Index : 99 (Setting - Audio)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 491, 431, 66, 17));        // Index : 100 (Setting - Platform)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 2251, 0, 704, 338));       // Index : 101 (Recording Info)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 456, 484, 344, 23));       // Index : 102 (Recording Info - Button)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 286, 19, 19));        // Index : 103 (Check)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 306, 19, 19));        // Index : 104 (Check - Off)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 265, 286, 18, 18));        // Index : 105 (Info - Question)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 265, 305, 18, 18));        // Index : 106 (Info - Important)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 519, 230, 6, 10));         // Index : 107 (Character Selection - Computer Player - 8 Active)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 286, 326, 8, 8));          // Index : 108 (Menu Bar Top-Left Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 295, 326, 8, 8));          // Index : 109 (Menu Bar Top-Right Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 286, 335, 8, 8));          // Index : 110 (Menu Bar Bottom-Left Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 295, 335, 8, 8));          // Index : 111 (Menu Bar Bottom-Right Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 294, 326, 1, 8));          // Index : 112 (Menu Bar Horizontal-Top Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 286, 334, 8, 1));          // Index : 113 (Menu Bar Vertical-Left Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 294, 335, 1, 8));          // Index : 114 (Menu Bar Horizontal-Bottom Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 295, 334, 8, 1));          // Index : 115 (Menu Bar Vertical-Right Corner)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 294, 334, 1, 1));          // Index : 116 (Menu Bar Area)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 2956, 0, 169, 324));       // Index : 117 (Meta Character Selection - Char View)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 326, 1, 1));          // Index : 118 (Menu Bar Color - 1)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 328, 1, 1));          // Index : 119 (Menu Bar Color - 2)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 330, 1, 1));          // Index : 120 (Menu Bar Color - 3)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 332, 1, 1));          // Index : 121 (Menu Bar Color - 4)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU1" + Temp03, 284, 334, 1, 1));          // Index : 122 (Menu Bar Color - 5)
+      Enchanted->Pic_Index_Interface.push_back(G_SetPic(Temp02 + "MENU2" + Temp03, 0, 0, 665, 900));          // Index : 123 (General Setting - Scrolling Display)
      }
     //-//
     // Interface's sound load.
@@ -3510,11 +4046,15 @@
       statics string Temp02 = "Database\\Audio\\Enchanted\\", Temp03 = ".wav";
       Enchanted->Sound_Index_Interface.push_back(G_SetSound(Temp02 + "OK" + Temp03));       // Index : 0
       Enchanted->Sound_Index_Interface.push_back(G_SetSound(Temp02 + "CANCEL" + Temp03));   // Index : 1
+      
+      int1 Vrab03 = true; insize Vrab04 = 0;
+      while(Vrab03){Vrab04 += 1; Enchanted->Sound_Index_Interface.push_back(G_SetSound(Temp02 + "MUSIC" + std::to_string(Vrab04) + Temp03)); Vrab03 = Enchanted->Sound_Index_Interface[Vrab04 + 1] != rinsize(-1);}
+      Enchanted->Back_Index_Interface.pop_back();
      }
     //-//
      Enchanted->Post_Info("Platform Version : " + Enchanted->Version() + " (Beta).");
      Enchanted->Angel = std::make_unique < HEPTA_LF2_ENCHANTED_ANGELSCRIPT > ();
-   } else {Varb0005 = Enchanted->Memory[0].Aspect_Ratio; if(L_Input(Enchanted->Memory[0].F12) == 1 && (Input.CONS_LALT >= 1 || Input.CONS_RALT >= 1)) Enchanted->Angel->Switch(); if(Enchanted->Memory[0].Fullscreen != Varb0014){Enchanted->Memory[0].Fullscreen = Varb0014; Enchanted->Save_Memory();} L_Random(0); Enchanted->Tick += 1; if(Enchanted->Tick == 0xFFFFFFFFFFFFFFFF) Enchanted->Tick = 0xFFFFFFFFFFFEBF; Enchanted->Draw = true; Enchanted->Number_Of_Sound = 0; Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 30) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}}
+   } else {Varb0005 = Enchanted->Memory[0].Aspect_Ratio; if(L_Input(Enchanted->Memory[0].F12) == 1 && (Input.CONS_LALT >= 1 || Input.CONS_RALT >= 1)) Enchanted->Angel->Switch(); if(Enchanted->Memory[0].Fullscreen != Varb0014){Enchanted->Memory[0].Fullscreen = Varb0014; Enchanted->Save_Memory();} if(Enchanted->Menu != 10) L_Random(0); Enchanted->Tick += 1; if(Enchanted->Tick == 0xFFFFFFFFFFFFFFFF) Enchanted->Tick = 0xFFFFFFFFFFFEBF; Enchanted->Draw = true; Enchanted->Number_Of_Sound = 0; Varb0012 = rxint32((rxint64(Enchanted->Memory[0].Volume) / 30) * 0.1); if(Enchanted->Memory[0].Pan > 0){Varb0013 = rxint32(Enchanted->Memory[0].Pan) / 100;} else {Varb0013 = -(rxint32(-Enchanted->Memory[0].Pan) / 100);}}
 
    {
     statics int64 &Vrab03 = Enchanted->Display_CenX, &Vrab04 = Enchanted->Display_CenY, &Vrab05 = Enchanted->Display_W, &Vrab06 = Enchanted->Display_H;
@@ -3522,6 +4062,7 @@
     {
      case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 250: case 251: case 252: case 253: case 254: case 255: // Main Menu
       {
+       if(Enchanted->Sound_Index_Interface.size() > 2) Enchanted->Play_Music(Enchanted->Sound_Index_Interface[2]);
        G_SetDisplay(6, Enchanted->Pic_Index_Interface[68], 0, 0, 0, 255ui8, Vrab05, Vrab06);
        G_SetDisplay(2, Enchanted->Background1, 0, Vrab04 - 275ll);
        G_SetDisplay(2, Enchanted->Pic_Index_Interface[15], Vrab03 - 400, Vrab06 - 45);
@@ -3806,7 +4347,7 @@
            }
 
            {int1 Vrab07 = false; switch(Enchanted->Memory[0].Engine){case 1: break; default: Vrab07 = Enchanted->Engine1->Warning(); break;} if(Vrab07) Enchanted->Post_Info("Warning(s) found while processing the data(s), check \"Database\\Log.log\" for details.");}
-           Enchanted->Post_Info(Enchanted->Engine1->Info()); Enchanted->Angel->Set(); if(Enchanted->Angel->Available()){Enchanted->Post_Info("AngelScript Version : " + Enchanted->Angel->Version() + ".");} else {Enchanted->Post_Info("Failed in initializing AngelScript.");} Enchanted->Reset(7, 0, 0, 180); Enchanted->String[0] = "<none>"; Enchanted->String[1] = "<none>"; if(Enchanted->File1.is_open()) Enchanted->File1.close();
+           if(L_Exist("Database\\Temp.log")){std::ofstream File01(L_Execute("Database\\Temp.log"), std::ios::binary | std::ios::out); File01 << "You will find the last data that was processed here when there were irregularities or error in the data(s).\n\nIt's fine to remove/delete this file if you want, including \"Log.log\" too."; File01.close();} Enchanted->Post_Info(Enchanted->Engine1->Info()); Enchanted->Angel->Set(); if(Enchanted->Angel->Available()){Enchanted->Post_Info("AngelScript Version : " + Enchanted->Angel->Version() + ".");} else {Enchanted->Post_Info("Failed in initializing AngelScript.");} Enchanted->Reset(7, 0, 0, 180); Enchanted->String[0] = "<none>"; Enchanted->String[1] = "<none>"; if(Enchanted->File1.is_open()) Enchanted->File1.close();
            break;
           }
           
@@ -5037,10 +5578,39 @@
            {Vrab11 -= 1; if(Vect01[Vrab11].Sound == 0){Vrab09 += Vect01[Vrab11].X; Vrab10 += Vect01[Vrab11].Z - Vect01[Vrab11].Y;}}
            Vrab09 /= rxint64(Vrab08); Vrab10 /= rxint64(Vrab08);
           }
-          
+
           // Camera move.
           {
+           int1 Vrab11 = Enchanted->Runtime1 == 0;
+           switch(Enchanted->Memory[0].Engine)
+           {
+            case 1: break;
+            default: Vrab11 = Enchanted->Engine1->Reset(); break;
+           }
+           if(!Vrab11)
+           {
+            xint64 Vrab12 = (((Vrab09 - Enchanted->CameraX_Post) / 25.0) / 16.0) * rxint64(Varb0004), Vrab13 = ((Vrab12 / 3.0) / 16.0) * rxint64(Varb0004), Vrab14 = ((Vrab12 / 16.0) / 16.0) * rxint64(Varb0004);
 
+            if(Vrab12 != 0)
+            if(Vrab12 < 0)
+            {
+             if(Vrab12 > -0.05) Vrab12 = -0.05;
+             if(Enchanted->CameraX_Acceleration < Vrab12)
+             {if(Enchanted->CameraX_Acceleration - Vrab14 < Vrab12){Enchanted->CameraX_Acceleration -= Vrab14;} else {Enchanted->CameraX_Acceleration = Vrab12;}} else
+             {if(Enchanted->CameraX_Acceleration + Vrab13 > Vrab12){Enchanted->CameraX_Acceleration += Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab12;}}
+             if(Vrab12 == -0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration < Vrab09){Enchanted->CameraX_Post = Vrab09; Enchanted->CameraX_Acceleration = 0;}
+            } else
+            {
+             if(Vrab12 < 0.05) Vrab12 = 0.05;
+             if(Enchanted->CameraX_Acceleration > Vrab12)
+             {if(Enchanted->CameraX_Acceleration - Vrab14 > Vrab12){Enchanted->CameraX_Acceleration -= Vrab14;} else {Enchanted->CameraX_Acceleration = Vrab12;}} else
+             {if(Enchanted->CameraX_Acceleration + Vrab13 < Vrab12){Enchanted->CameraX_Acceleration += Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab12;}}
+             if(Vrab12 == 0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration > Vrab09){Enchanted->CameraX_Post = Vrab09; Enchanted->CameraX_Acceleration = 0;}
+            }
+
+            Vrab09 = Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration;
+            Vrab10 = Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration;
+           } else {Enchanted->CameraX_Acceleration = 0; Enchanted->CameraY_Acceleration = 0;}
           }
 
           // Camera cap.
@@ -5054,6 +5624,7 @@
            Vrab09 -= rxint64(Vrab03); Vrab10 -= rxint64(Vrab04);
            if(Vrab09 > rxint64(Vrab11 - Vrab05)) Vrab09 = rxint64(Vrab11 - Vrab05);
            if(Vrab09 < 0) Vrab09 = 0;
+           Enchanted->CameraX_Post = Vrab09 + rxint64(Vrab03); Enchanted->CameraY_Post = Vrab10 + rxint64(Vrab04);
           }
 
           Enchanted->CameraX = L_Rounding64(Vrab09); Enchanted->CameraY = L_Rounding64(Vrab10);
@@ -5142,7 +5713,7 @@
           {
            auto Auto01 = Vect03[Vrab08].Effect.release();
            uint8 Vrab09 = 0; if(Auto01->Facing) Vrab09 = 1;
-           uint8 Vrab10 = 2; if(Auto01->Sprite) Vrab10 = 4;
+           uint8 Vrab10 = 2; switch(Auto01->Type){case 1: Vrab10 = 4; break; case 2: Vrab10 = 0; break; case 3: Vrab10 = 1; break; default: break;} 
            G_SetDisplay(Vrab10, Auto01->Pic, Auto01->X - Enchanted->CameraX, Auto01->Y - Enchanted->CameraY, Vrab09, Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
           }
           Vrab08 += 1;
