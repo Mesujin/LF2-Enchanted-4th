@@ -436,28 +436,32 @@
    uint32 Get_Width(){return Vrab004;}
    insize Get_Offset(){return Vrab006;}
    insize Get_Target(){return Vrab001;}
-   RECT Get_Image(insize Vrab01)
+   RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)
    {
-    statics uint32 Vrab02 = ruint32(Vrab01 - Vrab006);
-    statics LONG Vrab03 = (Vrab004 + 1) * (Vrab02 % Vrab002);
-    statics LONG Vrab04 = (Vrab005 + 1) * (Vrab02 / Vrab002);
+    statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
+    statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
+    statics LONG Vrab05 = (LONG)((Vrab005 + 1) * (Vrab03 / Vrab002));
     RECT Rect01;
-    Rect01.left = Vrab03; Rect01.top = Vrab04; Rect01.right = Vrab03 + Vrab004; Rect01.bottom = Vrab04 + Vrab005;
-    if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007;
+    Rect01.left = Vrab04; Rect01.right = Vrab04 + (Vrab02 ? -Vrab004 : Vrab004);
+    Rect01.top = Vrab05; Rect01.bottom = Vrab05 + Vrab005;
+    if(Vrab02){if(ruint32(Rect01.right) < 0) Rect01.right = 0; auto Vrab06 = Rect01.right; Rect01.right = Rect01.left; Rect01.left = Vrab06;} else
+    {if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007;}
     if(ruint32(Rect01.bottom) > Vrab008) Rect01.bottom = Vrab008;
     if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   RECT Get_Specified(insize Vrab01)
+   RECT Get_Specified(statics insize Vrab01, statics int1 Vrab02 = false)
    {
-    statics uint32 Vrab02 = ruint32(Vrab01 - Vrab006);
-    statics LONG Vrab03 = (LONG)((Vrab004 + 1) * (Vrab02 % Vrab002));
-    statics LONG Vrab04 = (LONG)((Vrab005 + 1) * (Vrab02 / Vrab002));
+    statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
+    statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
+    statics LONG Vrab05 = (LONG)((Vrab005 + 1) * (Vrab03 / Vrab002));
     RECT Rect01;
-    Rect01.left = Vrab03; Rect01.right = Vrab03 + Vrab004; if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;}
-    Rect01.top = Vrab04; Rect01.bottom = Vrab04 + Vrab005; if(Vrab005 > 2){Rect01.top += 1; Rect01.bottom -= 1;}
-    if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007 - 1;
+    Rect01.left = Vrab04; Rect01.right = Vrab04 + (Vrab02 ? -Vrab004 : Vrab004);
+    Rect01.top = Vrab05; Rect01.bottom = Vrab05 + Vrab005;
+    if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;} if(Vrab005 > 2){Rect01.top += 1; Rect01.bottom -= 1;}
+    if(Vrab02){if(ruint32(Rect01.right) < 0) Rect01.right = 1; auto Vrab06 = Rect01.right; Rect01.right = Rect01.left; Rect01.left = Vrab06;} else
+    {if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007 - 1;}
     if(ruint32(Rect01.bottom) > Vrab008) Rect01.bottom = Vrab008 - 1;
     if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
