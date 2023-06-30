@@ -102,7 +102,12 @@
   #define absolut constexpr
   #define statics const
   #define univers virtual
+  #define stacked inline
   #define fastened noexcept
+ //-//
+  
+ // Earlier Function Declaration
+  int0 G_ToggleFullscreen() fastened;
  //-//
 
  // Stuctures / Classes
@@ -114,7 +119,6 @@
     protected:
      ~HEPTA_DEVICENOTIFY() = default;
    };
-   
    struct HEPTA_DEVICE
    {
     remains absolut uint32 c_FlipPresent  = 0x1;
@@ -312,7 +316,6 @@
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
-
   struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
   {
    HEPTA_GAME() fastened (false);
@@ -347,7 +350,6 @@
    // Device resources.
    std::unique_ptr < HEPTA_DEVICE > m_deviceResources;
 
-
    DirectX::AudioEngine *GetAudio(){return Aeng001.get();}
    ID3D11ShaderResourceView **GetRect(){return Trec001.ReleaseAndGetAddressOf();}
 
@@ -358,7 +360,6 @@
     int0 CreateDeviceDependentResources();
     int0 CreateWindowSizeDependentResources();
 
- 
     // Rendering loop timer.
     HEPTA_TIMING m_timer;
  
@@ -380,22 +381,21 @@
   struct HEPTA_IMAGE
   {
    HEPTA_IMAGE(statics string&, ID3D11Device*) fastened;
-   ~HEPTA_IMAGE() = default;
+   ~HEPTA_IMAGE(){Texture.Reset();}
    
-   int1 Success;
+   int1 Success = false;
    string Address;
    Microsoft::WRL::ComPtr < ID3D11ShaderResourceView > Texture;
   };
   struct HEPTA_PICTURE
   {
    HEPTA_PICTURE(insize, uint32, uint32, uint32, uint32);
-   ~HEPTA_PICTURE() = default;
    
-   int0 Relocate_Target(){Vrab001 -= 1;}
-   uint32 Get_Width(){return Vrab004;}
-   uint32 Get_Height(){return Vrab005;}
-   insize Get_Target(){return Vrab001;}
-   RECT Get_Image()
+   int0   Relocate_Target() fastened {Vrab001 -= 1;}
+   uint32 Get_Width()       fastened {return Vrab004;}
+   uint32 Get_Height()      fastened {return Vrab005;}
+   insize Get_Target()      fastened {return Vrab001;}
+   RECT Get_Image()         fastened 
    {
     RECT Rect01;
     Rect01.left = Vrab002; Rect01.top = Vrab003; Rect01.right = Vrab002 + Vrab004; Rect01.bottom = Vrab003 + Vrab005;
@@ -405,7 +405,7 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   RECT Get_Specified()
+   RECT Get_Specified()     fastened
    {
     RECT Rect01;
     Rect01.left = Vrab002; Rect01.right = Vrab002 + Vrab004; if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;}
@@ -416,8 +416,9 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   DirectX::XMFLOAT2 Get_Center(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid(){uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   DirectX::XMFLOAT2 Get_Center() fastened {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid()    fastened {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   
    private:
     insize Vrab001;
     uint32 Vrab002;
@@ -430,19 +431,18 @@
   struct HEPTA_SPRITE
   {
    HEPTA_SPRITE(insize, uint32, uint32, uint32, uint32, insize);
-   ~HEPTA_SPRITE() = default;
 
-   int0 Relocate_Target(){Vrab001 -= 1;}
-   uint32 Get_Width(){return Vrab004;}
-   insize Get_Offset(){return Vrab006;}
-   insize Get_Target(){return Vrab001;}
-   RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)
+   int0 Relocate_Target() fastened {Vrab001 -= 1;}
+   uint32 Get_Width()     fastened {return Vrab004;}
+   insize Get_Offset()    fastened {return Vrab006;}
+   insize Get_Target()    fastened {return Vrab001;}
+   RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)     fastened
    {
     statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
     statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
     statics LONG Vrab05 = (LONG)((Vrab005 + 1) * (Vrab03 / Vrab002));
     RECT Rect01;
-    Rect01.left = Vrab04; Rect01.right = Vrab04 + (Vrab02 ? -Vrab004 : Vrab004);
+    Rect01.left = Vrab04; Rect01.right = (Vrab02 ? (Vrab04 - Vrab004) : (Vrab04 + Vrab004));
     Rect01.top = Vrab05; Rect01.bottom = Vrab05 + Vrab005;
     if(Vrab02){if(ruint32(Rect01.right) < 0) Rect01.right = 0; auto Vrab06 = Rect01.right; Rect01.right = Rect01.left; Rect01.left = Vrab06;} else
     {if(ruint32(Rect01.right) > Vrab007) Rect01.right = Vrab007;}
@@ -451,13 +451,13 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   RECT Get_Specified(statics insize Vrab01, statics int1 Vrab02 = false)
+   RECT Get_Specified(statics insize Vrab01, statics int1 Vrab02 = false) fastened
    {
     statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
     statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
     statics LONG Vrab05 = (LONG)((Vrab005 + 1) * (Vrab03 / Vrab002));
     RECT Rect01;
-    Rect01.left = Vrab04; Rect01.right = Vrab04 + (Vrab02 ? -Vrab004 : Vrab004);
+    Rect01.left = Vrab04; Rect01.right = (Vrab02 ? (Vrab04 - Vrab004) : (Vrab04 + Vrab004));
     Rect01.top = Vrab05; Rect01.bottom = Vrab05 + Vrab005;
     if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;} if(Vrab005 > 2){Rect01.top += 1; Rect01.bottom -= 1;}
     if(Vrab02){if(ruint32(Rect01.right) < 0) Rect01.right = 1; auto Vrab06 = Rect01.right; Rect01.right = Rect01.left; Rect01.left = Vrab06;} else
@@ -467,8 +467,9 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   DirectX::XMFLOAT2 Get_Center(){return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid(){uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   DirectX::XMFLOAT2 Get_Center() fastened {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid()    fastened {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   
    private:
     insize Vrab001;
     uint32 Vrab002;
@@ -483,7 +484,7 @@
   struct HEPTA_AUDINGS
   {
    HEPTA_AUDINGS(statics string, DirectX::AudioEngine*);
-   ~HEPTA_AUDINGS() = default;
+   ~HEPTA_AUDINGS(){Sound.reset();}
 
    int1 Success = false;
    string Address;
@@ -495,65 +496,102 @@
    unique < DirectX::SoundEffectInstance > Instance;
    uint8 Active = 0ui8;
   };
+  struct HEPTA_EXCEPTION : public std::exception
+  {
+   HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
+   statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
+
+   private:
+    HRESULT Vrab001;
+  };
  //-//
- // Globals
-  int0 G_ToggleFullscreen() fastened;
-  namespace {
-   struct HEPTA_EXCEPTION : public std::exception
-   {
-    HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
-    statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
-    private:
-     HRESULT Vrab001;
-   };
-   inline int0 ThrowIfFailed(HRESULT Hres01){if(FAILED(Hres01)) throw HEPTA_EXCEPTION(Hres01);}
-   inline std::vector < uint8_t > CSO_Read(_In_z_ statics wchar_t* Temp01)
-   {
-    std::ifstream File01(Temp01, std::ios::in | std::ios::binary | std::ios::ate);
-    #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
-     if(!File01)
-     {
-      wchar_t Temp02[_MAX_PATH] = {};
-      if(!GetModuleFileNameW(nullptr, Temp02, _MAX_PATH)) throw std::system_error(std::error_code(rint32(GetLastError()), std::system_category()), "GetModuleFileNameW");
+  
+ // Memory / Variables
+  unique < HEPTA_GAME > Game0001;
+  std::vector < insize > Spic0001;
+  std::vector < HEPTA_IMAGE > Imge0001;
+  std::vector < HEPTA_SPRITE > Sprt0001;
+  std::vector < HEPTA_PICTURE > Pics0001;
+  std::vector < HEPTA_DISPLAY > Disp0001;
+  std::vector < HEPTA_SOUNDPLAY > Sond0001;
+  std::vector < unique < HEPTA_AUDINGS > > Audi0001;
+  std::vector < unique < HEPTA_MUSIC > > Isnd0001;
+ //-//
+
+ // Global Function
+  int0 ThrowIfFailed(HRESULT Hres01){if(FAILED(Hres01)) throw HEPTA_EXCEPTION(Hres01);}
+  std::vector < uint8_t > CSO_Read(_In_z_ statics wchar_t* Temp01)
+  {
+   std::ifstream File01(Temp01, std::ios::in | std::ios::binary | std::ios::ate);
+   #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+    if(!File01)
+    {
+     wchar_t Temp02[_MAX_PATH] = {};
+     if(!GetModuleFileNameW(nullptr, Temp02, _MAX_PATH)) throw std::system_error(std::error_code(rint32(GetLastError()), std::system_category()), "GetModuleFileNameW");
      
-      wchar_t Temp03[_MAX_DRIVE]; wchar_t Temp04[_MAX_PATH];
-      if(_wsplitpath_s(Temp02, Temp03, _MAX_DRIVE, Temp04, _MAX_PATH, nullptr, 0, nullptr, 0)) throw std::runtime_error("_wsplitpath_s");
+     wchar_t Temp03[_MAX_DRIVE]; wchar_t Temp04[_MAX_PATH];
+     if(_wsplitpath_s(Temp02, Temp03, _MAX_DRIVE, Temp04, _MAX_PATH, nullptr, 0, nullptr, 0)) throw std::runtime_error("_wsplitpath_s");
      
-      wchar_t Temp05[_MAX_PATH];
-      if(_wmakepath_s(Temp05, _MAX_PATH, Temp03, Temp04, Temp02, nullptr)) throw std::runtime_error("_wmakepath_s");
+     wchar_t Temp05[_MAX_PATH];
+     if(_wmakepath_s(Temp05, _MAX_PATH, Temp03, Temp04, Temp02, nullptr)) throw std::runtime_error("_wmakepath_s");
       
-      File01.open(Temp05, std::ios::in | std::ios::binary | std::ios::ate);
-     }
-    #endif
-    if(!File01) throw std::runtime_error("CSO_Read");
-    statics std::streampos Post01 = File01.tellg();
-    if(!File01) throw std::runtime_error("CSO_Read");
-    std::vector < uint8_t > Temp02;
-    Temp02.resize(size_t(Post01));
-    File01.seekg(0, std::ios::beg);
-    if(!File01) throw std::runtime_error("CSO_Read");
-    File01.read(reinterpret_cast < int8* >(Temp02.data()), Post01);
-    if(!File01) throw std::runtime_error("CSO_Read");
-    File01.close();
-    return Temp02;
+     File01.open(Temp05, std::ios::in | std::ios::binary | std::ios::ate);
+    }
+   #endif
+
+   if(!File01) throw std::runtime_error("CSO_Read");
+   statics std::streampos Post01 = File01.tellg();
+   if(!File01) throw std::runtime_error("CSO_Read");
+   std::vector < uint8_t > Temp02; Temp02.resize(size_t(Post01));  File01.seekg(0, std::ios::beg);
+   if(!File01) throw std::runtime_error("CSO_Read");
+   File01.read(reinterpret_cast < int8* >(Temp02.data()), Post01);
+   if(!File01) throw std::runtime_error("CSO_Read");
+   File01.close(); return Temp02;
+  }
+
+  // Engine's Contact
+   insize G_Load_Pic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) fastened
+   {
+    insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size(); while(Vrab05 != Vrab06){if(Imge0001[Vrab05].Address == Temp01 || Imge0001[Vrab05].Address == "") break; Vrab05 += 1;}
+    if(Vrab05 == Vrab06){Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));} else {if(!Imge0001[Vrab05].Success) Imge0001[Vrab05] = HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice());}
+    if(Imge0001[Vrab05].Success)
+    {
+     statics insize Vrab07 = Pics0001.size();
+     Pics0001.push_back(HEPTA_PICTURE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04));
+     return Vrab07;
+    } else {if(Vrab05 == Vrab06) Imge0001.pop_back(); return rinsize(-1);}
+   }
+   insize G_Load_Sprite(statics string Temp01, statics uint32 Vrab01, statics uint32 Vrab02, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 1) fastened
+   {
+    if(Vrab03 == 0 || Vrab04 == 0) return rinsize(-1);
+    insize Vrab05 = 0; statics insize Vrab10 = Imge0001.size(); while(Vrab05 != Vrab10){if(Imge0001[Vrab05].Address == Temp01) break; Vrab05 += 1;}
+    if(Vrab05 == Vrab10) Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));
+    if(Imge0001[Vrab05].Success)
+    {
+     statics insize Vrab06 = Sprt0001.size(); statics insize Vrab07 = Spic0001.size(); statics insize Vrab08 = (Vrab01 * Vrab02) + Vrab07; Spic0001.resize(Vrab08);
+     Sprt0001.push_back(HEPTA_SPRITE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04, Vrab07));
+     for(insize Vrab09 = Vrab07; Vrab09 < Vrab08; ++Vrab09) Spic0001[Vrab09] = Vrab06;
+     return Vrab07;
+    } else {Imge0001.pop_back(); return rinsize(-1);}
+   }
+   insize G_Load_Sound(statics string Temp01) fastened
+   {
+    insize Vrab01 = Temp01.size();
+    string Temp02 = Temp01; while(Vrab01 != 0){Vrab01 -= 1; if(Temp02.at(Vrab01) >= 'A' && Temp02.at(Vrab01) <= 'Z') Temp02.at(Vrab01) += 32;}
+    Temp02 = string(Temp02, Temp02.size() - 4, 4);
+    int1 Vrab02 = true;
+    if(Temp02 == ".wav") Vrab02 = false;
+    if(Vrab02) return rinsize(-1);
+    insize Vrab03 = 0; statics insize Vrab04 = Audi0001.size(); while(Vrab03 != Vrab04){if(Audi0001[Vrab03]->Address == Temp01) break; Vrab03 += 1;}
+    if(Vrab03 == Vrab04) Audi0001.push_back(std::make_unique < HEPTA_AUDINGS > (Temp01, Game0001->GetAudio()));
+    if(Audi0001[Vrab03]->Success){return Vrab03;} else {Audi0001.pop_back(); return rinsize(-1);}
    }
 
-   unique < HEPTA_GAME > Game0001;
-   std::vector < insize > Spic0001;
-   std::vector < HEPTA_IMAGE > Imge0001;
-   std::vector < HEPTA_SPRITE > Sprt0001;
-   std::vector < HEPTA_PICTURE > Pics0001;
-   std::vector < HEPTA_DISPLAY > Disp0001;
-   std::vector < HEPTA_SOUNDPLAY > Sond0001;
-   std::vector < unique < HEPTA_AUDINGS > > Audi0001;
-   std::vector < unique < HEPTA_MUSIC > > Isnd0001;
-   
-   int1 G_SetDisplay(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0)
+   int1   G_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) fastened
    {
     if(Vrab01 == 2 || Vrab01 == 6) if(Vrab02 >= Pics0001.size()) return false;
     if(Vrab01 == 4 || Vrab01 == 8) if(Vrab02 >= Spic0001.size()) return false;
-    statics insize Vrab13 = Disp0001.size();
-    Disp0001.resize(Vrab13 + 1);
+    statics insize Vrab13 = Disp0001.size(); if(Vrab13 >= rinsize(0xFFFFFFF)) return false; Disp0001.push_back(HEPTA_DISPLAY());
     Disp0001[Vrab13].Type = Vrab01;
     Disp0001[Vrab13].Target = Vrab02;
     Disp0001[Vrab13].Post_X1 = Vrab03;
@@ -568,140 +606,48 @@
     Disp0001[Vrab13].Post_Y4 = Vrab12;
     return true;
    }
-   insize G_SetPic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1)
-   {
-    insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size(); while(Vrab05 != Vrab06){if(Imge0001[Vrab05].Address == Temp01 || Imge0001[Vrab05].Address == "") break; Vrab05 += 1;}
-    if(Vrab05 == Vrab06){Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));} else {if(!Imge0001[Vrab05].Success) Imge0001[Vrab05] = HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice());}
-    if(Imge0001[Vrab05].Success)
-    {
-     statics insize Vrab07 = Pics0001.size();
-     Pics0001.push_back(HEPTA_PICTURE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04));
-     return Vrab07;
-    } else {if(Vrab05 == Vrab06) Imge0001.pop_back(); return rinsize(-1);}
-   }
-   insize G_SetSprite(statics string Temp01, statics uint32 Vrab01, statics uint32 Vrab02, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 1)
-   {
-    if(Vrab03 == 0 || Vrab04 == 0) return rinsize(-1);
-    insize Vrab05 = 0; statics insize Vrab10 = Imge0001.size(); while(Vrab05 != Vrab10){if(Imge0001[Vrab05].Address == Temp01) break; Vrab05 += 1;}
-    if(Vrab05 == Vrab10) Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));
-    if(Imge0001[Vrab05].Success)
-    {
-     statics insize Vrab06 = Sprt0001.size(); statics insize Vrab07 = Spic0001.size(); statics insize Vrab08 = (Vrab01 * Vrab02) + Vrab07; Spic0001.resize(Vrab08);
-     Sprt0001.push_back(HEPTA_SPRITE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04, Vrab07));
-     for(insize Vrab09 = Vrab07; Vrab09 < Vrab08; ++Vrab09) Spic0001[Vrab09] = Vrab06;
-     return Vrab07;
-    } else {Imge0001.pop_back(); return rinsize(-1);}
-   }
-   insize G_SetSound(statics string Temp01)
-   {
-    {
-     insize Vrab01 = Temp01.size();
-     string Temp02 = Temp01; while(Vrab01 != 0){Vrab01 -= 1; if(Temp02.at(Vrab01) >= 'A' && Temp02.at(Vrab01) <= 'Z') Temp02.at(Vrab01) += 32;}
-     Temp02 = string(Temp02, Temp02.size() - 4, 4);
-     int1 Vrab02 = true;
-     if(Temp02 == ".wav") Vrab02 = false;
-     if(Vrab02) return rinsize(-1);
-    }
-    insize Vrab01 = 0; statics insize Vrab02 = Audi0001.size(); while(Vrab01 != Vrab02){if(Audi0001[Vrab01]->Address == Temp01) break; Vrab01 += 1;}
-    if(Vrab01 == Vrab02) Audi0001.push_back(std::make_unique < HEPTA_AUDINGS > (Temp01, Game0001->GetAudio()));
-    if(Audi0001[Vrab01]->Success)
-    {return Vrab01;} else
-    {Audi0001.pop_back(); return rinsize(-1);}
-   }
-   int1 G_SetSoundplay(insize Vrab01, xint32 Vrab02 = 1, xint32 Vrab03 = 0)
+   int1   G_Set_Sound(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) fastened
    {
     if(Vrab01 >= Audi0001.size()) return false;
     Sond0001.push_back({Vrab01, Vrab03, Vrab02});
     return true;
    }
-   insize G_SetMusic(insize Vrab01, xint32 Vrab02 = 1,  xint32 Vrab03 = 0)
+   insize G_Set_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) fastened
    {
     if(Vrab01 >= Audi0001.size()) return rinsize(-1);
     statics insize Vrab04 = Isnd0001.size();
     Isnd0001.push_back(std::make_unique < HEPTA_MUSIC > (Audi0001[Vrab01]->Sound->CreateInstance(), 0ui8));
-    Isnd0001[Vrab04]->Instance->SetPan(Vrab03); Isnd0001[Vrab04]->Instance->SetVolume(Vrab02);
+    Isnd0001[Vrab04]->Instance->SetVolume(Vrab02); Isnd0001[Vrab04]->Instance->SetPan(Vrab03); 
     return Vrab04;
    }
-   int1 G_StopMusic(insize Vrab01)
+
+   int1   G_Control_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0, statics int1 Vrab04 = false) fastened
    {
-    if(Vrab01 >= Isnd0001.size()) return false;
-    Isnd0001[Vrab01]->Active = 2;
+    if(Vrab01 >= Isnd0001.size()) return false; if(Vrab04){Isnd0001[Vrab01]->Active = 2; return true;}
+    Isnd0001[Vrab01]->Instance->SetVolume(Vrab02); Isnd0001[Vrab01]->Instance->SetPan(Vrab03); 
     return true;
    }
-   int0 G_ClearSound(insize Vrab01 = 0) fastened
+   
+   int0   G_Unload_Pic(statics insize Vrab01 = 0) fastened
    {
-    insize Vrab02 = Audi0001.size();
-    while((Vrab02 -= 1) != Vrab01 - 1)
-    if(!Audi0001[Vrab02]->Sound->IsInUse()){Audi0001.pop_back();} else {break;}
+    if(Vrab01 >= Pics0001.size()) return;
+    Pics0001.erase(Pics0001.begin() + Vrab01, Pics0001.end());
    }
-   int0 G_ClearSprite(insize Vrab01 = 0) fastened
+   int0   G_Unload_Sprite(statics insize Vrab01 = 0) fastened
    {
     if(Vrab01 >= Sprt0001.size()) return; statics insize Vrab02 = Sprt0001[Vrab01].Get_Offset();
-    //insize Vrab03 = Spic0001.size() - 1;
-    //while(Vrab03 != Vrab02){Vrab03 -= 1; Spic0001.pop_back();}
-    //Vrab03 = Sprt0001.size() - 1;
-    //while(Vrab03 != Vrab01){Vrab03 -= 1; Sprt0001.pop_back();}
     Spic0001.erase(Spic0001.begin() + Vrab02, Spic0001.end());
     Sprt0001.erase(Sprt0001.begin() + Vrab01, Sprt0001.end());
    }
-   int0 G_ClearPic(insize Vrab01 = 0) fastened
+   int0   G_Unload_Sound(statics insize Vrab01 = 0) fastened
    {
-    if(Vrab01 >= Pics0001.size()) return;
-  //  insize Vrab02 = Pics0001.size() - 1;
-   // while(Vrab02 != Vrab01){Vrab02 -= 1; Pics0001.pop_back();}
-    Pics0001.erase(Pics0001.begin() + Vrab01, Pics0001.end());
+    if(Vrab01 >= Audi0001.size()) return;
+    Audi0001.erase(Audi0001.begin() + Vrab01, Audi0001.end());
    }
-   int0 G_CleanUnreferencedImage(insize Vrab01 = 0) fastened
+   int0   G_Unload_Image() fastened
    {
-    return;
-    insize Vrab02 = Imge0001.size(); if(Vrab01 >= Vrab02) return; statics insize Vrab03 = Sprt0001.size(), Vrab04 = Pics0001.size();
-    while(Vrab02 != Vrab01)
-    {
-     Vrab02 -= 1;
-     {insize Vrab05 = 0; while(Vrab05 != Vrab03){if(Sprt0001[Vrab05].Get_Target() == Vrab02) break; Vrab05 += 1;} if(Vrab05 != Vrab03) continue;} // Check whenever it's referenced or not.
-     {insize Vrab05 = 0; while(Vrab05 != Vrab04){if(Pics0001[Vrab05].Get_Target() == Vrab02) break; Vrab05 += 1;} if(Vrab05 != Vrab04) continue;} // Check whenever it's referenced or not.
-
-     // Not Referenced.
-     statics insize Vrab05 = Imge0001.size() - 1;
-     if(Vrab05 == Vrab02) // Easy cleanning or hard cleaning.
-     {
-      Microsoft::WRL::ComPtr < ID3D11Resource > Reso01;
-      Imge0001[Vrab02].Texture->GetResource(Reso01.GetAddressOf());
-      Reso01->Release(); Imge0001[Vrab02].Texture->Release();
-      Reso01.Reset(); Imge0001[Vrab02].Texture.Reset();
-      Imge0001.pop_back();
-     } else
-     {
-     
-     }
-    }
-
-
-    /*
-    insize Vrab02 = Imge0001.size(); statics insize Vrab04 = Sprt0001.size(), Vrab05 = Pics0001.size();
-    while((Vrab02 -= 1) != Vrab01 - 1)
-    {
-     insize Vrab06 = 0; 
-     while(Vrab06 != Vrab04){if(Sprt0001[Vrab06].Get_Target() == Vrab02) break; Vrab06 += 1;}
-     if(Vrab06 != Vrab04) continue;
-     Vrab06 = 0;
-     while(Vrab06 != Vrab05){if(Pics0001[Vrab06].Get_Target() == Vrab02) break; Vrab06 += 1;}
-     if(Vrab06 != Vrab05) continue;
-     if(Vrab02 == Imge0001.size() - 1){Microsoft::WRL::ComPtr < ID3D11Resource > Reso01; Imge0001[Vrab02].Texture.Get()->GetResource(Reso01.GetAddressOf()); Reso01->Release(); Imge0001[Vrab02].Texture->Release(); Imge0001.pop_back();} else 
-     {
-      statics insize Vrab07 = Imge0001.size() - 2;
-      for(insize Vrab08 = Vrab02; Vrab08 != Vrab07; ++Vrab08) Imge0001[Vrab02] = Imge0001[Vrab02 + 1];
-      {Microsoft::WRL::ComPtr < ID3D11Resource > Reso01; statics insize Vrab09 = Imge0001.size() - 1; Imge0001[Vrab09].Texture.Get()->GetResource(Reso01.GetAddressOf()); Reso01->Release(); Imge0001[Vrab09].Texture->Release(); Imge0001.pop_back();}
-      insize Vrab08 = 0;
-      while(Vrab08 != Vrab04){if(Sprt0001[Vrab08].Get_Target() == Vrab02 + 1) break; Vrab08 += 1;}
-      for(insize Vrab09 = Vrab08; Vrab09 != Vrab04; ++Vrab09) Sprt0001[Vrab09].Relocate_Target();
-      Vrab08 = 0;
-      while(Vrab08 != Vrab05){if(Pics0001[Vrab08].Get_Target() == Vrab02 + 1) break; Vrab08 += 1;}
-      for(insize Vrab09 = Vrab08; Vrab09 != Vrab05; ++Vrab09) Pics0001[Vrab09].Relocate_Target();
-     }
-    }*/
+   
    }
-  };
+  //-//
  //-//
-
 #endif

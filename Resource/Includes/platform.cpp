@@ -78,6 +78,7 @@
 // Platform Sector
  int1 HEPTA_DEVICE::WindowSizeChanged(uint32 Vrab01, uint32 Vrab02)
  {
+  Varb0017 = Vrab01; Varb0018 = Vrab02;
   RECT Rect01; Rect01.left = Rect01.top = 0; Varb0008 = 0; Varb0009 = 0;
   statics xint64 Vrab05 = rxint64(Vrab01) / rxint64(Varb0002);
   statics xint64 Vrab06 = rxint64(Vrab02) / rxint64(Varb0003);
@@ -109,7 +110,6 @@
    // Handle color space settings for HDR
    UpdateColorSpace(); return false;
   }
-
   m_outputSize = Rect01;
   CreateWindowSizeDependentResources();
   return true;
@@ -642,7 +642,7 @@
 
    {
     std::ifstream File01("Database\\Platform.cso");
-    if(!File01.is_open()) return rint32(WM_QUIT);
+    if(!File01.is_open()){MessageBox(NULL, L"\"Database\\Platform.cso\" was not found. Reinstalling the program may fix this problem.", L"Graphic Error", MB_OK | MB_ICONERROR); return rint32(WM_QUIT);}
     File01.close();
    }
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
@@ -850,6 +850,7 @@
   #if defined(NDEBUG)
    else
    {
+    MessageBox(NULL, L"No Direct3D hardware device found.", L"Graphic Error", MB_OK | MB_ICONERROR);
     throw std::runtime_error("No Direct3D hardware device found.");
    }
   #endif
@@ -912,6 +913,8 @@
   // Determine the render target size in pixels.
   statics UINT        backBufferWidth  = std::max < UINT > (static_cast < UINT > (m_outputSize.right - m_outputSize.left), 1u);
   statics UINT        backBufferHeight = std::max < UINT > (static_cast < UINT > (m_outputSize.bottom - m_outputSize.top), 1u);
+ // statics UINT        backBufferWidth2  = std::max < UINT > (static_cast < UINT > (Varb0017), 1u);
+ // statics UINT        backBufferHeight2 = std::max < UINT > (static_cast < UINT > (Varb0018), 1u);
   statics DXGI_FORMAT backBufferFormat = (m_options & (c_FlipPresent | c_AllowTearing | c_EnableHDR)) ? NoSRGB(m_backBufferFormat) : m_backBufferFormat;
 
   if(m_swapChain)
@@ -923,7 +926,13 @@
                                                backBufferFormat,
                                                (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u);
 
-   if(Hslt01 == DXGI_ERROR_DEVICE_REMOVED || Hslt01 == DXGI_ERROR_DEVICE_RESET)
+  /* HRESULT Hslt02 = m_swapChain2->ResizeBuffers(m_backBufferCount,
+                                               backBufferWidth2,
+                                               backBufferHeight2,
+                                               backBufferFormat,
+                                               (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u);*/
+
+   if(Hslt01 == DXGI_ERROR_DEVICE_REMOVED || Hslt01 == DXGI_ERROR_DEVICE_RESET) // || Hslt02 == DXGI_ERROR_DEVICE_REMOVED || Hslt02 == DXGI_ERROR_DEVICE_RESET)
    {
     #ifdef _DEBUG
      {
@@ -961,6 +970,7 @@
 
    // Create a SwapChain from a Win32 window.
    ThrowIfFailed(m_dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice.Get(), m_window, &Dxsc01, &Dxsf01, nullptr, m_swapChain.ReleaseAndGetAddressOf()));
+   //ThrowIfFailed(m_dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice.Get(), m_window, &Dxsc01, &Dxsf01, nullptr, m_swapChain2.ReleaseAndGetAddressOf()));
 
    // This class does not support exclusive full-screen mode and prevents DXGI from responding to the ALT+ENTER shortcut.
    ThrowIfFailed(m_dxgiFactory->MakeWindowAssociation(m_window, DXGI_MWA_NO_ALT_ENTER));
@@ -990,7 +1000,7 @@
   }
 
   // Set the 3D rendering viewport to target the entire window.
-  m_screenViewport = { 0.0f, 0.0f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 1.f };
+  m_screenViewport = {0.f, 0.f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 1.f };
  }
 
  // This method is called when the Win32 window is created (or re-created).
@@ -1009,6 +1019,7 @@
   m_renderTarget.Reset();
   m_depthStencil.Reset();
   m_swapChain.Reset();
+  //m_swapChain2.Reset();
   m_d3dContext.Reset();
   m_d3dAnnotation.Reset();
 
@@ -1032,25 +1043,26 @@
  int0 HEPTA_DEVICE::Present()
  {
   HRESULT Hslt01 = E_FAIL;
-  if(m_options & c_AllowTearing)
-  {
-   // Recommended to always use tearing if supported when using a sync interval of 0.
-   Hslt01 = m_swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
-  } else
-  {
-   // The first argument instructs DXGI to block until VSync, putting the application
-   // to sleep until the next VSync. This ensures we don't waste any cycles rendering
-   // frames that will never be displayed to the screen.
-   Hslt01 = m_swapChain->Present(1, 0);
-  }
 
-  // Discard the contents of the render target.
-  // This is a valid operation only when the existing contents will be entirely
-  // overwritten. If dirty or scroll rects are used, this call should be removed.
-  m_d3dContext->DiscardView(m_d3dRenderTargetView.Get());
+   if(m_options & c_AllowTearing)
+   {
+    // Recommended to always use tearing if supported when using a sync interval of 0.
+    Hslt01 = m_swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
+   } else
+   {
+    // The first argument instructs DXGI to block until VSync, putting the application
+    // to sleep until the next VSync. This ensures we don't waste any cycles rendering
+    // frames that will never be displayed to the screen.
+    Hslt01 = m_swapChain->Present(1, 0);
+   }
+   // Discard the contents of the render target.
+   // This is a valid operation only when the existing contents will be entirely
+   // overwritten. If dirty or scroll rects are used, this call should be removed.
+   m_d3dContext->DiscardView(m_d3dRenderTargetView.Get());
   
-  // Discard the contents of the depth stencil.
-  if(m_d3dDepthStencilView) m_d3dContext->DiscardView(m_d3dDepthStencilView.Get());
+   // Discard the contents of the depth stencil.
+   if(m_d3dDepthStencilView) m_d3dContext->DiscardView(m_d3dDepthStencilView.Get());
+ 
 
   // If the device was removed either by a disconnection or a driver upgrade, we
   // must recreate all device resources.
