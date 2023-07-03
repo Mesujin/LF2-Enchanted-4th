@@ -138,9 +138,9 @@
     
     struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO
     {
-     int64 X = 0, Y = 0; int64 H = 0; uint8 Color = 0; string Name;
+     int64 X = 0, Y = 0; uint8 Color = 0; string Name;
      xint64 HP = 0.0, DHP = 0.0, MHP = 0.0, MP = 0.0, MMP = 0.0;
-     uint8 Integrate = 0; int64 C = 0;
+     uint8 Integrate = 0; uint8 Player = 0; insize Icon1 = rinsize(-1), Icon2 = rinsize(-1);
     };
     struct HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT
     {
@@ -314,7 +314,7 @@
 
      insize Target = rinsize(-1), Clone = rinsize(-1), Held = rinsize(-1), Hold = rinsize(-1), Catch = rinsize(-1), Caught = rinsize(-1);
 
-     uint8  Player = 9;
+     uint8  Player = 0;
      insize Index = 0;
      string Name;
      xint64 MHP = 0, DHP = 0, HP = 0, SP = 0, MMP = 0, MP = 0;
@@ -731,7 +731,7 @@
           while(true)
           {
            statics insize Vrab95 = Object[Vrab97].Frame; if(Vrab95 == 1000 || Vrab95 == 9998){Vrab96 = true; break;} if(Vrab95 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab95]->Exist) break;
-           if(Object[Vrab97].Data->Frame[Vrab95]->state == 9998){Vrab96 = true; break;} if(Object[Vrab97].Held != rinsize(-1) || Object[Vrab97].Caught != rinsize(-1)) break;
+           if(Object[Vrab97].Held != rinsize(-1) || Object[Vrab97].Caught != rinsize(-1)) break;
            if(Object[Vrab97].Data->Frame[Vrab95]->state != 14){Object[Vrab97].Wait += 1; if(Object[Vrab97].Data->type == 0) Object[Vrab97].Lying = 0;} else {if(Object[Vrab97].HP > 0) Object[Vrab97].Wait += 1; Object[Vrab97].Lying += 1;}
 
            int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95]->next;
@@ -935,11 +935,15 @@
           if(Object[Vrab97].Data->type == 0)
           if(Object[Vrab97].Blink <= 0)
           {
-           if(Playtime % 12 == 0) if(Object[Vrab97].HP < Object[Vrab97].DHP) Object[Vrab97].HP += (Polish ? 0.25 : 1);
+           if(Playtime % 12 == 0)
+           {
+            if(Object[Vrab97].HP < Object[Vrab97].DHP) Object[Vrab97].HP += (Polish ? 0.25 : 1);
+            if(Object[Vrab97].HP > Object[Vrab97].DHP) Object[Vrab97].HP -= (Polish ? 0.25 : 1);
+           }
            if(Object[Vrab97].HP > 0)
            {
             xint64 Vrab96 = Polish ? 2.5 : 10;
-            if(!F6){Vrab96 = 0; if(Playtime % 3 == 0){Vrab96 = ((1 + (1 * rxint64((500i64 - L_Rounding64(Object[Vrab97].HP)) / 100i64))) / (Polish ? 4 : 1)); switch(Object[Vrab97].Data->id){case 51: case 52: if(Vrab96 < 2) Vrab96 = 2; default: break;}}}
+            if(!F6){Vrab96 = 0; if(Playtime % 3 == 0){Vrab96 = Polish ? 0.25 : 1; if(Object[Vrab97].HP < Object[Vrab97].MHP) Vrab96 = ((1 + (1 * rxint64((L_Rounding64(Object[Vrab97].MHP - Object[Vrab97].HP)) / (Object[Vrab97].MHP / 5)))) / (Polish ? 4 : 1)); switch(Object[Vrab97].Data->id){case 51: case 52: if(Vrab96 < 2) Vrab96 = 2; default: break;}}}
             if(Object[Vrab97].MP + Vrab96 < Object[Vrab97].MMP){Object[Vrab97].MP += Vrab96;} else {Object[Vrab97].MP = Object[Vrab97].MMP;}
            }
           }
@@ -959,6 +963,13 @@
          // Module (1st Event).
          {
           //Object[Vrab98].Rotation += 9;
+          while(true)
+          {
+           statics insize Vrab97 = Object[Vrab98].Frame; if(Vrab97 >= Object[Vrab98].Data->Frame.size()) break; if(!Object[Vrab98].Data->Frame[Vrab97]->Exist) break;
+           if(Object[Vrab98].Data->Frame[Vrab97]->state == 7) Object[Vrab98].HP += 1;
+           if(Object[Vrab98].Data->Frame[Vrab97]->state == 4) Object[Vrab98].DHP -= 1;
+           break;
+          }
          }
          
          // Sound Effect.
@@ -1428,7 +1439,7 @@
             {
              case 1: case 4: case 6: Vrab96 = 60; break;
              case 2: Vrab96 = 20; break;
-             case 3: Vrab97 = false; break;
+             case 3: case 5: Vrab97 = false; break;
              default: break;
             }
            }
@@ -1451,20 +1462,19 @@
              case 2:
               if(Object[Vrab98].Y_Vel > 9)
               {
-               Vrab97 = true; Vrab95 = true; Vrab94 = true; Vrab93 = true; Vrab96 = 0;
+               Vrab95 = true; Vrab94 = true; Vrab93 = true; Vrab96 = 0;
               }
              break;
              case 3:
               if(Object[Vrab98].Data->Frame[Vrab90]->hit_Fa == 7){Vrab97 = true; Vrab96 = 60;}
              break;
              case 1: case 4: case 6:
-              
               if(Vrab89 == 1002 && Vrab96 == 60) Vrab96 = 70;
               if(Vrab91 == 1) break;
               if(Vrab89 >= 1000 && Vrab89 <= 1004)
               if(Object[Vrab98].Y_Vel >= 9 || (Object[Vrab98].X_Vel > 11 || Object[Vrab98].X_Vel < -11))
               {
-               Vrab97 = true; Vrab95 = true; Vrab94 = true; Vrab96 = 0;
+               Vrab95 = true; Vrab94 = true; Vrab96 = 0;
               }
              default:
 
@@ -1475,7 +1485,7 @@
            break;
           } if(Vrab97)
           {
-           Object[Vrab98].Frame = Vrab96; Object[Vrab98].Wait = 0; Object[Vrab98].Y = 0; Object[Vrab98].Throw = 0;
+           Object[Vrab98].Frame = Vrab96; Object[Vrab98].Y = 0; Object[Vrab98].Throw = 0; if(Vrab95 || Object[Vrab98].Data->type == 0) Object[Vrab98].Wait = 0;
            if(Vrab95)
            {
             Object[Vrab98].X_Vel *= 0.7; Object[Vrab98].Z_Vel *= 0.7;
@@ -1487,7 +1497,7 @@
             } else {Object[Vrab98].Y_Vel = -3.5; if(Object[Vrab98].X_Vel > 7) Object[Vrab98].X_Vel = 7; if(Object[Vrab98].X_Vel < -7) Object[Vrab98].X_Vel = -7;}
            } else 
            {
-            Object[Vrab98].Y_Vel = 0; if(Object[Vrab98].Data->type == 0){if(Vrab94){Object[Vrab98].X_Vel = 0; Object[Vrab98].Z_Vel = 0;} else {Object[Vrab98].X_Vel /= 3.0; Object[Vrab98].Z_Vel /= 3.0;}} else {Object[Vrab98].X_Vel *= 0.7; Object[Vrab98].Z_Vel *= 0.7; Object[Vrab98].Wait = 1;}
+            Object[Vrab98].Y_Vel = 0; if(Object[Vrab98].Data->type == 0){if(Vrab94){Object[Vrab98].X_Vel = 0; Object[Vrab98].Z_Vel = 0;} else {Object[Vrab98].X_Vel /= 3.0; Object[Vrab98].Z_Vel /= 3.0;}} else {Object[Vrab98].X_Vel *= 0.7; Object[Vrab98].Z_Vel *= 0.7;}
            }
           }
          }
@@ -1502,11 +1512,8 @@
 
            switch(Vrab96)
            {
-            case 9998:
-             {
-              Remove(Vrab98); continue;
-             }
-            break;
+            case 9999: if(Object[Vrab98].Y < 0) break;
+            case 9998: Remove(Vrab98); continue;
             case 9996:
              {
               if(Object[Vrab98].Wait != 0) break;
@@ -2961,7 +2968,9 @@
       {
        std::vector < insize > Vect02; std::vector < uint8 > Vect03; std::vector < xint64 > Vect04;
 
-       // Sorting Order
+       // Sorting Order.
+       {
+        // Object.
         {
          insize Vrab99 = Object.size(); while(Vrab99 != 0)
          {
@@ -2978,6 +2987,8 @@
           {Vect02.insert(Vect02.begin() + Vrab95, Vrab99); Vect03.insert(Vect03.begin() + Vrab95, Vrab98); Vect04.insert(Vect04.begin() + Vrab95, Vrab97);}
          }
         }
+
+        // Effect.
         {
          insize Vrab99 = Effect.size(); while(Vrab99 != 0)
          {
@@ -2993,168 +3004,147 @@
           {Vect02.insert(Vect02.begin() + Vrab96, Vrab99); Vect03.insert(Vect03.begin() + Vrab96, 255ui8); Vect04.insert(Vect04.begin() + Vrab96, Vrab98);}
          }
         }
-       //-//
+       }
 
-       /*/ Shadows Testament
+       // Shadow. (Drawn before any entities.)
+       {
+        statics insize Vrab99 = Backgrounds[Background].shadow_Index;
+        statics xint64 Vrab98 = rxint64(Backgrounds[Background].shadowsize[0]), Vrab97 = rxint64(Backgrounds[Background].shadowsize[1]);
+        statics int64 Vrab96 = rint64(Vrab98 / 2), Vrab95 = rint64(Vrab97 / 2);
+        insize Vrab94 = Object.size(); insize Vrab93 = Vect01.size();
+        while(Vrab94 != 0)
         {
-         insize Vrab01 = Vect01.size();
-         statics insize Vrab02 = Vect02.size(); insize Vrab03 = 0; while(Vrab03 < Vrab02)
+         Vrab94 -= 1;
+         if(!Object[Vrab94].Exist) continue;
+         if(Object[Vrab94].Held != rinsize(-1)) continue;
+         statics insize Vrab92 = Object[Vrab94].Data->id; if(Vrab92 == 223 || Vrab92 == 224) continue;
+         statics int32 Vrab91 = Object[Vrab94].Blink; if(Vrab91 < 70){if((Vrab91 % 4 > 1 && Vrab91 > 0) || (Vrab91 % 4 < -1 && Vrab91 < 0)) continue;} else {continue;}
+         statics insize Vrab90 = Object[Vrab94].Frame; if(Vrab90 < Object[Vrab94].Data->Frame.size()) if(Object[Vrab94].Data->Frame[Vrab90]->Exist) switch(Object[Vrab94].Data->Frame[Vrab90]->state)
          {
-          if(Vect03[Vrab03] == 255ui8)
-          {
+          case 3005: case 400: case 401: continue;
+          default: break;
+         }
+         Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+         Vect01[Vrab93].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+         Vect01[Vrab93].Effect->Pic = Vrab99;
+         Vect01[Vrab93].Effect->X = L_Rounding64(Object[Vrab94].X) - Vrab96;
+         Vect01[Vrab93].Effect->Y = L_Rounding64(Object[Vrab94].Z) - Vrab95;
+         Vect01[Vrab93].Effect->W = L_Rounding64((Vrab98 * Object[Vrab94].Scale) - Vrab98);
+         Vect01[Vrab93].Effect->H = L_Rounding64((Vrab97 * Object[Vrab94].Scale) - Vrab97);
+         Vrab93 += 1;
+        }
+       }
 
-          } else
+       // Entity.
+       {
+        insize Vrab99 = Vect01.size();
+        statics insize Vrab98 = Vect02.size(); insize Vrab97 = 0; while(Vrab97 < Vrab98)
+        {
+         statics insize Vrab96 = Vrab97; Vrab97 += 1;
+         statics insize Vrab95 = Vect02[Vrab96];
+         statics insize Vrab94 = Vrab99; Vrab99 += 1;
+         Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+
+         if(Vect03[Vrab96] == 255ui8)
+         {
+          Vect01[Vrab94].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
+          Vect01[Vrab94].Effect->Pic = Effect[Vrab95].Pics[Effect[Vrab95].Pic];
+          Vect01[Vrab94].Effect->Type = Effect[Vrab95].Sprite ? 1 : 0;
+          Vect01[Vrab94].Effect->X = L_Rounding64(Effect[Vrab95].X);
+          Vect01[Vrab94].Effect->Y = L_Rounding64(Effect[Vrab95].Z) + L_Rounding64(Effect[Vrab95].Y);
+          if(Effect[Vrab95].Screen){Vect01[Vrab94].Effect->X += Vrab01; Vect01[Vrab94].Effect->Y += Vrab02;}
+         } else
+         {
+          Vect01[Vrab94].Type = true;
+          Vect01[Vrab94].Object = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > ();
+
+          statics int32 Vrab93 = Object[Vrab95].Blink;
+          if(Vrab93 < 25)
           {
-           statics insize Vrab04 = Vect02[Vrab03];
-           statics int32 Vrab05 = Object[Vrab04].Blink; statics insize Vrab06 = Object[Vrab04].Frame; insize Vrab07 = rinsize(-1), Vrab08 = Vrab07; int64 Vrab09 = 0, Vrab10 = 0;
-           if(Vrab05 < 25 && ((Vrab05 % 4 < 2 && Vrab05 > 0) || (Vrab05 % 4 > -2 && Vrab05 < 0) || Vrab05 == 0))
-           if(Vrab06 < Object[Vrab04].Data->Frame.size()) if(Object[Vrab04].Data->Frame[Vrab06].Exist)
+           if(Object[Vrab95].Data->type == 0)
            {
-            statics insize Vrab11 = Object[Vrab04].Data->Frame[Vrab06].pic; statics insize Vrab12 = Object[Vrab04].Data->file_Index.size(); insize Vrab13 = 0;
-            while(Vrab13 < Vrab12){if(Vrab11 < Object[Vrab04].Data->file_Index[Vrab13]) break; Vrab13 += 1;}
-            if(Vrab13 < Vrab12)
+            Vect01[Vrab94].Object->Character = true;
+            Vect01[Vrab94].Object->Info = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO > ();
+            Vect01[Vrab94].Object->Info->Name = Object[Vrab95].Name;
+            Vect01[Vrab94].Object->Info->Player = Object[Vrab95].Player - 1;
+            Vect01[Vrab94].Object->Info->Icon1 = Object[Vrab95].Data->small_Index;
+            if(Object[Vrab95].Return_Address.size() > 0) Vect01[Vrab94].Object->Info->Icon2 = Object[Vrab95].Return_Address[Object[Vrab95].Return_Address.size() - 1]->small_Index;
+            Vect01[Vrab94].Object->Info->X = L_Rounding64(Object[Vrab95].X);
+            Vect01[Vrab94].Object->Info->Y = L_Rounding64(Object[Vrab95].Z);
+            if(Object[Vrab95].Clone >= rinsize(-2) || Object[Vrab95].HP <= 0)
             {
-             Vrab07 = Object[Vrab04].Data->file[Vrab13].Picture_Index + Vrab11; statics insize Vrab14 = Object[Vrab04].Data->file[Vrab13].Picture_Mirror_Index; if(Vrab14 != rinsize(-1)) Vrab08 = Vrab14 + Vrab11;
-             if(Vrab13 > 0){Vrab07 -= Object[Vrab04].Data->file_Index[Vrab13 - 1]; if(Vrab14 != rinsize(-1)) Vrab08 -= Object[Vrab04].Data->file_Index[Vrab13 - 1];}
-             Vrab09 = Object[Vrab04].Data->file[Vrab13].w; Vrab10 = Object[Vrab04].Data->file[Vrab13].h;
-            }
-           }
-           if(Vrab06 != rinsize(-1))
-           {
-            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
-            Vect01[Vrab01].Type = true;
-            Vect01[Vrab01].Object = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > ();
-            Vect01[Vrab01].Object->Flip = 1;
-            Vect01[Vrab01].Object->Trans = 63;
-            Vect01[Vrab01].Object->Pic = Vrab07; Vect01[Vrab01].Object->Pic_M = Vrab08;
-            if(Object[Vrab04].Facing)
-            {
-             Vect01[Vrab01].Object->Facing = true;
-             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) - Object[Vrab04].Data->Frame[Vrab06].centerx;
+             Vect01[Vrab94].Object->Info->HP = Object[Vrab95].HP;
+             Vect01[Vrab94].Object->Info->DHP = Object[Vrab95].DHP;
+             Vect01[Vrab94].Object->Info->MHP = Object[Vrab95].MHP;
+             Vect01[Vrab94].Object->Info->MP = Object[Vrab95].MP;
+             Vect01[Vrab94].Object->Info->MMP = Object[Vrab95].MMP;
             } else
             {
-             Vect01[Vrab01].Object->Facing = false;
-             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) + Object[Vrab04].Data->Frame[Vrab06].centerx - Vrab09;
+             statics insize Vrab92 = Object[Vrab95].Clone;
+             Vect01[Vrab94].Object->Info->HP = Object[Vrab92].HP;
+             Vect01[Vrab94].Object->Info->DHP = Object[Vrab92].DHP;
+             Vect01[Vrab94].Object->Info->MHP = Object[Vrab92].MHP;
+             Vect01[Vrab94].Object->Info->MP = Object[Vrab92].MP;
+             Vect01[Vrab94].Object->Info->MMP = Object[Vrab92].MMP;
             }
-            Vect01[Vrab01].Object->Z = L_Rounding64(Object[Vrab04].Z);
-            Vect01[Vrab01].Object->Y = Vect01[Vrab01].Object->Z - L_Rounding64(Object[Vrab04].Y * 0.4) + L_Rounding64(rxint64(Object[Vrab04].Data->Frame[Vrab06].centery) * 0.4) - L_Rounding64(rxint64(Vrab10) * 0.7);
-            {statics xint64 Vrab11 = rxint64(Object[Vrab04].Data->Frame[Vrab06].centery) / 2; Vect01[Vrab01].Object->Y -= L_Rounding64((Vrab11 * Object[Vrab04].Scale) - Vrab11);}
-            Vect01[Vrab01].Object->W = L_Rounding64(rxint64(Vrab09) * Object[Vrab04].Scale) - Vrab09;
-            Vect01[Vrab01].Object->H = -L_Rounding64(rxint64(Vrab10) * 0.6);
-            Vrab01 += 1;
+            statics insize Vrab92 = Object[Vrab95].Team; if(Vrab92 < 6){Vect01[Vrab94].Object->Info->Color = ruint8(Vrab92) + 1;} else {Vect01[Vrab94].Object->Info->Color = 0;}
+           }
+           
+           if((Vrab93 % 4 < 2 && Vrab93 > 0) || (Vrab93 % 4 > -2 && Vrab93 < 0) || Vrab93 == 0)
+           {
+            while(true)
+            {
+             statics insize Vrab92 = Object[Vrab95].Frame; if(Vrab92 >= Object[Vrab95].Data->Frame.size()) break; if(!Object[Vrab95].Data->Frame[Vrab92]->Exist) break;
+
+             insize Vrab91 = rinsize(Object[Vrab95].Data->Frame[Vrab92]->pic) + Object[Vrab95].Pic_Offset;
+             insize Vrab90 = rinsize(-1), Vrab89 = rinsize(-1); int64 Vrab88 = 0, Vrab87 = 0;
+
+             statics insize Vrab86 = Object[Vrab95].Data->file_Index.size(); insize Vrab85 = 0;
+             while(Vrab85 < Vrab86)
+             {
+              if(Vrab91 < Object[Vrab95].Data->file_Index[Vrab85])
+              {
+               if(Vrab85 > 0) Vrab91 -= Object[Vrab95].Data->file_Index[Vrab85 - 1];
+               Vrab90 = Object[Vrab95].Data->file[Vrab85].Picture_Index + Vrab91;
+               Vrab88 = Object[Vrab95].Data->file[Vrab85].w; Vrab87 = Object[Vrab95].Data->file[Vrab85].h;
+               statics insize Vrab84 = Object[Vrab95].Data->file[Vrab85].Picture_Mirror_Index; if(Vrab84 != rinsize(-1)) Vrab89 = Vrab84 + Vrab91;
+               break;
+              }
+              Vrab85 += 1;
+             }
+             
+             if(Object[Vrab95].Facing)
+             {
+              Vect01[Vrab94].Object->Facing = true;
+              Vect01[Vrab94].Object->X = L_Rounding64(Object[Vrab95].X) - Object[Vrab95].Data->Frame[Vrab92]->centerx;
+             } else
+             {
+              Vect01[Vrab94].Object->Facing = false;
+              Vect01[Vrab94].Object->X = L_Rounding64(Object[Vrab95].X) + Object[Vrab95].Data->Frame[Vrab92]->centerx - Vrab88;
+             }
+             Vect01[Vrab94].Object->Z = L_Rounding64(Object[Vrab95].Z);
+             Vect01[Vrab94].Object->Y = L_Rounding64(Object[Vrab95].Y) + Vect01[Vrab94].Object->Z - rint64(Object[Vrab95].Data->Frame[Vrab92]->centery);
+
+             if(Vrab90 != rinsize(-1))
+             {
+              Vect01[Vrab94].Object->Pic = Vrab90;
+              Vect01[Vrab94].Object->Pic_M = Vrab89;
+              Vect01[Vrab94].Object->Rotate = Object[Vrab95].Rotation % 360;
+              Vect01[Vrab94].Object->W = L_Rounding64(rxint64(Vrab88) * Object[Vrab95].Scale) - Vrab88;
+              Vect01[Vrab94].Object->H = L_Rounding64(rxint64(Vrab87) * Object[Vrab95].Scale) - Vrab87;
+              {statics xint64 Vrab84 = rxint64(Object[Vrab95].Data->Frame[Vrab92]->centery) / 2; Vect01[Vrab94].Object->Y -= L_Rounding64((Vrab84 * Object[Vrab95].Scale) - Vrab84);}
+             }
+
+             break;
+            }
            }
           }
-          Vrab03 += 1;
          }
         }
-       //-/*/
+       }
 
-       // Shadows
-        {
-         statics insize Vrab99 = Backgrounds[Background].shadow_Index;
-         statics xint64 Vrab98 = rxint64(Backgrounds[Background].shadowsize[0]), Vrab97 = rxint64(Backgrounds[Background].shadowsize[1]);
-         statics int64 Vrab96 = rint64(Vrab98 / 2), Vrab95 = rint64(Vrab97 / 2);
-         insize Vrab94 = Object.size(); insize Vrab93 = Vect01.size();
-         while(Vrab94 != 0)
-         {
-          Vrab94 -= 1;
-          if(!Object[Vrab94].Exist) continue;
-          if(Object[Vrab94].Held != rinsize(-1)) continue;
-          statics insize Vrab92 = Object[Vrab94].Data->id; if(Vrab92 == 223 || Vrab92 == 224) continue;
-          statics int32 Vrab91 = Object[Vrab94].Blink; if(Vrab91 < 70){if((Vrab91 % 4 > 1 && Vrab91 > 0) || (Vrab91 % 4 < -1 && Vrab91 < 0)) continue;} else {continue;}
-          statics insize Vrab90 = Object[Vrab94].Frame; if(Vrab90 < Object[Vrab94].Data->Frame.size()) if(Object[Vrab94].Data->Frame[Vrab90]->Exist) switch(Object[Vrab94].Data->Frame[Vrab90]->state)
-          {
-           case 3005: case 400: case 401:
-           continue;
-           default: break;
-          }
-          Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
-          Vect01[Vrab93].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
-          Vect01[Vrab93].Effect->Pic = Vrab99;
-          Vect01[Vrab93].Effect->X = L_Rounding64(Object[Vrab94].X) - Vrab96;
-          Vect01[Vrab93].Effect->Y = L_Rounding64(Object[Vrab94].Z) - Vrab95;
-          Vect01[Vrab93].Effect->W = L_Rounding64((Vrab98 * Object[Vrab94].Scale) - Vrab98);
-          Vect01[Vrab93].Effect->H = L_Rounding64((Vrab97 * Object[Vrab94].Scale) - Vrab97);
-          Vrab93 += 1;
-         }
-        }
-       //-//
-
-       // Entities
-        {
-         insize Vrab99 = Vect01.size();
-         statics insize Vrab98 = Vect02.size(); insize Vrab97 = 0; while(Vrab97 < Vrab98)
-         {
-          if(Vect03[Vrab97] == 255ui8)
-          {
-           statics insize Vrab96 = Vect02[Vrab97];
-           Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
-           Vect01[Vrab99].Effect = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_EFFECT > ();
-           Vect01[Vrab99].Effect->Pic = Effect[Vrab96].Pics[Effect[Vrab96].Pic];
-           Vect01[Vrab99].Effect->Type = Effect[Vrab96].Sprite ? 1 : 0;
-           Vect01[Vrab99].Effect->X = L_Rounding64(Effect[Vrab96].X);
-           Vect01[Vrab99].Effect->Y = L_Rounding64(Effect[Vrab96].Z + Effect[Vrab96].Y);
-           if(Effect[Vrab96].Screen){Vect01[Vrab99].Effect->X += Vrab01; Vect01[Vrab99].Effect->Y += Vrab02;}
-           Vrab99 += 1;
-          } else
-          {
-           statics insize Vrab96 = Vect02[Vrab97];
-           statics int32 Vrab95 = Object[Vrab96].Blink; insize Vrab94 = Object[Vrab96].Frame; insize Vrab93 = rinsize(-1), Vrab92 = Vrab93; int64 Vrab91 = 0, Vrab90 = 0;
-           if(Vrab95 < 25 && ((Vrab95 % 4 < 2 && Vrab95 > 0) || (Vrab95 % 4 > -2 && Vrab95 < 0) || Vrab95 == 0))
-           if(Vrab94 < Object[Vrab96].Data->Frame.size()){if(Object[Vrab96].Data->Frame[Vrab94]->Exist)
-           {
-            insize Vrab89 = Object[Vrab96].Data->Frame[Vrab94]->pic + Object[Vrab96].Pic_Offset; statics insize Vrab88 = Object[Vrab96].Data->file_Index.size(); insize Vrab87 = 0;
-            while(Vrab87 < Vrab88){if(Vrab89 < Object[Vrab96].Data->file_Index[Vrab87]) break; Vrab87 += 1;}
-            if(Vrab87 < Vrab88)
-            {
-             if(Vrab87 > 0) Vrab89 -= Object[Vrab96].Data->file_Index[Vrab87 - 1];
-             Vrab93 = Object[Vrab96].Data->file[Vrab87].Picture_Index + Vrab89;
-             statics insize Vrab86 = Object[Vrab96].Data->file[Vrab87].Picture_Mirror_Index; if(Vrab86 != rinsize(-1)) Vrab92 = Vrab86 + Vrab89;
-             Vrab91 = Object[Vrab96].Data->file[Vrab87].w; Vrab90 = Object[Vrab96].Data->file[Vrab87].h;
-            }
-           } else {Vrab94 = rinsize(-1);}} else {Vrab94 = rinsize(-1);}
-           if(Vrab94 != rinsize(-1))
-           {
-            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
-            Vect01[Vrab99].Type = true;
-            Vect01[Vrab99].Object = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > ();
-            Vect01[Vrab99].Object->Pic = Vrab93; Vect01[Vrab99].Object->Pic_M = Vrab92;
-            Vect01[Vrab99].Object->Rotate = Object[Vrab96].Rotation % 360;
-            if(Object[Vrab96].Facing)
-            {
-             Vect01[Vrab99].Object->Facing = true;
-             Vect01[Vrab99].Object->X = L_Rounding64(Object[Vrab96].X) - Object[Vrab96].Data->Frame[Vrab94]->centerx;
-            } else
-            {
-             Vect01[Vrab99].Object->Facing = false;
-             Vect01[Vrab99].Object->X = L_Rounding64(Object[Vrab96].X) + Object[Vrab96].Data->Frame[Vrab94]->centerx - Vrab91;
-            }
-            Vect01[Vrab99].Object->Z = L_Rounding64(Object[Vrab96].Z);
-            Vect01[Vrab99].Object->Y = L_Rounding64(Object[Vrab96].Y) + L_Rounding64(Object[Vrab96].Z) - rint64(Object[Vrab96].Data->Frame[Vrab94]->centery);
-            {statics xint64 Vrab89 = rxint64(Object[Vrab96].Data->Frame[Vrab94]->centery) / 2; Vect01[Vrab99].Object->Y -= L_Rounding64((Vrab89 * Object[Vrab96].Scale) - Vrab89);}
-            Vect01[Vrab99].Object->W = L_Rounding64(rxint64(Vrab91) * Object[Vrab96].Scale) - Vrab91;
-            Vect01[Vrab99].Object->H = L_Rounding64(rxint64(Vrab90) * Object[Vrab96].Scale) - Vrab90;
-            if(Vrab95 < 25)
-            if(Object[Vrab96].Data->type == 0)
-            {
-             Vect01[Vrab99].Object->Character = true;
-             Vect01[Vrab99].Object->Info = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT_INFO > ();
-             Vect01[Vrab99].Object->Info->Name = Object[Vrab96].Name;
-             Vect01[Vrab99].Object->Info->X = L_Rounding64(Object[Vrab96].X); Vect01[Vrab99].Object->Info->Y = L_Rounding64(Object[Vrab96].Z); Vect01[Vrab99].Object->Info->C = Object[Vrab96].Data->Frame[Vrab94]->centery;
-             if(Object[Vrab96].Clone >= rinsize(-2) || Object[Vrab96].HP <= 0)
-             {Vect01[Vrab99].Object->Info->HP = Object[Vrab96].HP; Vect01[Vrab99].Object->Info->DHP = Object[Vrab96].DHP; Vect01[Vrab99].Object->Info->MHP = Object[Vrab96].MHP; Vect01[Vrab99].Object->Info->MP = Object[Vrab96].MP; Vect01[Vrab99].Object->Info->MMP = Object[Vrab96].MMP;} else
-             {statics insize Vrab89 = Object[Vrab96].Clone; Vect01[Vrab99].Object->Info->HP = Object[Vrab89].HP; Vect01[Vrab99].Object->Info->DHP = Object[Vrab89].DHP; Vect01[Vrab99].Object->Info->MHP = Object[Vrab89].MHP; Vect01[Vrab99].Object->Info->MP = Object[Vrab89].MP; Vect01[Vrab99].Object->Info->MMP = Object[Vrab89].MMP;}
-             statics insize Vrab89 = Object[Vrab96].Team; if(Vrab89 < 6){Vect01[Vrab99].Object->Info->Color = ruint8(Vrab89) + 1;} else {Vect01[Vrab99].Object->Info->Color = 0;}
-            }
-            Vrab99 += 1;
-           }
-          }
-          Vrab97 += 1;
-         }
-        }
-       //-//
-
-       // Hitboxes
+       // Hitbox Visualization. (Drawn last.)
+       {
         if(Hitboxes)
         {
          insize Vrab99 = Object.size(); insize Vrab98 = Vect01.size();
@@ -3223,7 +3213,61 @@
           }
          }
         }
-       //-//
+       }
+
+       /*/ Shadows Testament
+        {
+         insize Vrab01 = Vect01.size();
+         statics insize Vrab02 = Vect02.size(); insize Vrab03 = 0; while(Vrab03 < Vrab02)
+         {
+          if(Vect03[Vrab03] == 255ui8)
+          {
+
+          } else
+          {
+           statics insize Vrab04 = Vect02[Vrab03];
+           statics int32 Vrab05 = Object[Vrab04].Blink; statics insize Vrab06 = Object[Vrab04].Frame; insize Vrab07 = rinsize(-1), Vrab08 = Vrab07; int64 Vrab09 = 0, Vrab10 = 0;
+           if(Vrab05 < 25 && ((Vrab05 % 4 < 2 && Vrab05 > 0) || (Vrab05 % 4 > -2 && Vrab05 < 0) || Vrab05 == 0))
+           if(Vrab06 < Object[Vrab04].Data->Frame.size()) if(Object[Vrab04].Data->Frame[Vrab06].Exist)
+           {
+            statics insize Vrab11 = Object[Vrab04].Data->Frame[Vrab06].pic; statics insize Vrab12 = Object[Vrab04].Data->file_Index.size(); insize Vrab13 = 0;
+            while(Vrab13 < Vrab12){if(Vrab11 < Object[Vrab04].Data->file_Index[Vrab13]) break; Vrab13 += 1;}
+            if(Vrab13 < Vrab12)
+            {
+             Vrab07 = Object[Vrab04].Data->file[Vrab13].Picture_Index + Vrab11; statics insize Vrab14 = Object[Vrab04].Data->file[Vrab13].Picture_Mirror_Index; if(Vrab14 != rinsize(-1)) Vrab08 = Vrab14 + Vrab11;
+             if(Vrab13 > 0){Vrab07 -= Object[Vrab04].Data->file_Index[Vrab13 - 1]; if(Vrab14 != rinsize(-1)) Vrab08 -= Object[Vrab04].Data->file_Index[Vrab13 - 1];}
+             Vrab09 = Object[Vrab04].Data->file[Vrab13].w; Vrab10 = Object[Vrab04].Data->file[Vrab13].h;
+            }
+           }
+           if(Vrab06 != rinsize(-1))
+           {
+            Vect01.push_back(HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW());
+            Vect01[Vrab01].Type = true;
+            Vect01[Vrab01].Object = std::make_unique < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW_OBJECT > ();
+            Vect01[Vrab01].Object->Flip = 1;
+            Vect01[Vrab01].Object->Trans = 63;
+            Vect01[Vrab01].Object->Pic = Vrab07; Vect01[Vrab01].Object->Pic_M = Vrab08;
+            if(Object[Vrab04].Facing)
+            {
+             Vect01[Vrab01].Object->Facing = true;
+             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) - Object[Vrab04].Data->Frame[Vrab06].centerx;
+            } else
+            {
+             Vect01[Vrab01].Object->Facing = false;
+             Vect01[Vrab01].Object->X = L_Rounding64(Object[Vrab04].X) + Object[Vrab04].Data->Frame[Vrab06].centerx - Vrab09;
+            }
+            Vect01[Vrab01].Object->Z = L_Rounding64(Object[Vrab04].Z);
+            Vect01[Vrab01].Object->Y = Vect01[Vrab01].Object->Z - L_Rounding64(Object[Vrab04].Y * 0.4) + L_Rounding64(rxint64(Object[Vrab04].Data->Frame[Vrab06].centery) * 0.4) - L_Rounding64(rxint64(Vrab10) * 0.7);
+            {statics xint64 Vrab11 = rxint64(Object[Vrab04].Data->Frame[Vrab06].centery) / 2; Vect01[Vrab01].Object->Y -= L_Rounding64((Vrab11 * Object[Vrab04].Scale) - Vrab11);}
+            Vect01[Vrab01].Object->W = L_Rounding64(rxint64(Vrab09) * Object[Vrab04].Scale) - Vrab09;
+            Vect01[Vrab01].Object->H = -L_Rounding64(rxint64(Vrab10) * 0.6);
+            Vrab01 += 1;
+           }
+          }
+          Vrab03 += 1;
+         }
+        }
+       //-/*/
       }
 
       return Vect01;
@@ -3936,7 +3980,7 @@
        Engi04->RegisterGlobalProperty("const ENGINE Engine", Uniq01.get());
       }
      }
-     string Debug()                                                                  fastened {insize Vrab01 = Effect.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Effect[Vrab01].Exist) Vrab02 += 1;} insize Vrab03 = Object.size(); insize Vrab04 = 0; while(Vrab03 != 0){Vrab03 -= 1; if(Object[Vrab03].Exist) Vrab04 += 1;} return "Objects: " + std::to_string(Vrab04) + " Effects: " + std::to_string(Vrab02) + " " + std::to_string(Object[0].Y_Vel) + ":" + std::to_string(Object[0].Y);}
+     string Debug()                                                                  fastened {insize Vrab01 = Effect.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Effect[Vrab01].Exist) Vrab02 += 1;} insize Vrab03 = Object.size(); insize Vrab04 = 0; while(Vrab03 != 0){Vrab03 -= 1; if(Object[Vrab03].Exist) Vrab04 += 1;} return "Objects: " + std::to_string(Vrab04) + " Effects: " + std::to_string(Vrab02);}
     
      private:
       insize Vrab001 = 0;
@@ -4251,7 +4295,7 @@
       uint64 Tick = 0;                 // Playtime.
       uint64 Info_Slot = 0;            // Info current slot.
       insize Number_Of_Sound = 0;      // Max SFX.
-      insize Current_Music[2] = {rinsize(-1), rinsize(-1)}; //
+      insize Current_Music[2] = {rinsize(-1), rinsize(-1)}; // Music.
      //-//
      // Event
       int1   Focused = true;
@@ -5143,13 +5187,12 @@
   int0 P_EngineFrame(xint64 Vrab01, xint64 Vrab02, uint32 Vrab03, uint32 Vrab04, DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01)
   {
    UNREFERENCED_PARAMETER(Vrab02); UNREFERENCED_PARAMETER(Vrab03); UNREFERENCED_PARAMETER(Vrab04); if(Varb0001 == 0){Varb0015 = std::chrono::steady_clock::now().time_since_epoch().count(); Varb0025 = L_Exist("Database\\Game\\Enchanted");} Varb0001 += 1; if(Varb0001 == 0xFFFFFFFFFFFFFFFF) Varb0001 = 0xFFFFFFFFFFFEBF; remains xint64 Varb01; Varb01 += Vrab01; if(Varb0001 % ruint64(Varb0004) != 0) return; P_EngineInput(Ikey01, Ipad01, Imou01); Disp0001.clear(); remains uint64 Varb02; Varb02 += 1; remains uint64 Varb03; if(Varb01 > 1.0){while(Varb01 > 1.0) Varb01 -= 1.0; Varb03 = Varb02; Varb02 = 0;}
-
-   if(Varb0026){LF2_Enchanted(Vrab04, Varb03); return;}
-
+   
    if(!Varb0026 && Varb0025) // Go to "LF2 : Enchanted 4th"
    {
     Enchanted = std::make_unique < HEPTA_LF2_ENCHANTED > (); Varb0026 = true;
-   }
+   } if(Varb0026) LF2_Enchanted(Vrab04, Varb03);
+
    
    // Purging Offside Images.
    G_Set_Display(0, 0x0, -rint64(Varb0008), -rint64(Varb0009), 0ui8, 255ui8, Varb0008, rint64(Varb0009) + rint64(Varb0003)); G_Set_Display(0, 0x0, -rint64(Varb0008), rint64(Varb0003), 0ui8, 255ui8, rint64(Varb0008) + rint64(Varb0002), Varb0009); G_Set_Display(0, 0x0, rint64(Varb0002), 0, 0ui8, 255ui8, Varb0008, rint64(Varb0009) + rint64(Varb0003)); G_Set_Display(0, 0x0, 0, -rint64(Varb0009), 0ui8, 255ui8, rint64(Varb0008) + rint64(Varb0002), Varb0009);
@@ -5166,7 +5209,7 @@
 
 
 
- // External-Included Dependency Program - LF2 : Enchanted 4th
+ // External-Included Dependency Program(s)
   int0 LF2_Enchanted(uint32 Vrab01, uint64 Vrab02) fastened
   {
    string Temp69; // debug
@@ -5341,6 +5384,18 @@
      Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 284, 332, 1, 1));          // Index : 121 (Menu Bar Color - 4)
      Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 284, 334, 1, 1));          // Index : 122 (Menu Bar Color - 5)
      Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU2" + Temp03, 0, 0, 665, 900));          // Index : 123 (General Setting - Scrolling Display)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1506, 438, 200, 50));      // Index : 124 (Player Info - 1)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1707, 438, 200, 50));      // Index : 125 (Player Info - 2)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1908, 438, 200, 50));      // Index : 126 (Player Info - 3)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 2109, 438, 200, 50));      // Index : 127 (Player Info - 4)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1506, 489, 200, 50));      // Index : 128 (Player Info - 5)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1707, 489, 200, 50));      // Index : 129 (Player Info - 6)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1908, 489, 200, 50));      // Index : 130 (Player Info - 7)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 2109, 489, 200, 50));      // Index : 131 (Player Info - 8)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1506, 540, 200, 50));      // Index : 132 (Player Info - 9)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1707, 540, 200, 50));      // Index : 133 (Player Info - 10)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 1908, 540, 200, 50));      // Index : 134 (Player Info - 11)
+     Enchanted->Pic_Index_Interface.push_back(G_Load_Pic(Temp02 + "MENU1" + Temp03, 2109, 540, 200, 50));      // Index : 135 (Player Info - 12)
     }
 
     // Interface's sound load.
@@ -6919,100 +6974,100 @@
             {Vrab10 -= 1; if(Vect01[Vrab10].Sound == 0){Vrab08 += Vect01[Vrab10].X; Vrab09 += Vect01[Vrab10].Z + Vect01[Vrab10].Y;}}
             Vrab08 /= rxint64(Vrab07); Vrab09 /= rxint64(Vrab07);
            }
+          }
 
-           // Actual Position.
+          // Actual Position.
+          {
+           int1 Vrab10 = Enchanted->Runtime1 == 0; if(Vrab10){Enchanted->CameraY_Post = 0; Enchanted->CameraY_Acceleration = 0.0;}
+           switch(Enchanted->Memory[0].Engine)
            {
-            int1 Vrab10 = Enchanted->Runtime1 == 0; if(Vrab10){Enchanted->CameraY_Post = 0; Enchanted->CameraY_Acceleration = 0.0;}
-            switch(Enchanted->Memory[0].Engine)
-            {
-             case 1: break;
-             default: if(Enchanted->Engine1->Reset()) Vrab10 = true; break;
-            }
+            case 1: break;
+            default: if(Enchanted->Engine1->Reset()) Vrab10 = true; break;
+           }
 
-            if(Vrab10){Enchanted->CameraX_Acceleration = 0.0;} else
+           if(Vrab10){Enchanted->CameraX_Acceleration = 0.0;} else
+           {
+            // X-Camera Acceleration.
             {
-             // X-Camera Acceleration.
-             {
-              xint64 Vrab11 = (((Vrab08 - Enchanted->CameraX_Post) / 23.0) / 16.0) * rxint64(Varb0004), Vrab12 = ((Vrab11 / 3.0) / 16.0) * rxint64(Varb0004), Vrab13 = ((Vrab11 / 16.0) / 16.0) * rxint64(Varb0004);
-
-              if(Vrab11 != 0)
-              if(Vrab11 < 0)
-              {
-               if(Vrab11 > -0.05) Vrab11 = -0.05;
-               if(Enchanted->CameraX_Acceleration < Vrab11)
-               {if(Enchanted->CameraX_Acceleration - Vrab13 < Vrab11){Enchanted->CameraX_Acceleration -= Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab11;}} else
-               {if(Enchanted->CameraX_Acceleration + Vrab12 > Vrab11){Enchanted->CameraX_Acceleration += Vrab12;} else {Enchanted->CameraX_Acceleration = Vrab11;}}
-               if(Vrab11 == -0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration < Vrab08){Enchanted->CameraX_Post = Vrab08; Enchanted->CameraX_Acceleration = 0;}
-              } else
-              {
-               if(Vrab11 < 0.05) Vrab11 = 0.05;
-               if(Enchanted->CameraX_Acceleration > Vrab11)
-               {if(Enchanted->CameraX_Acceleration - Vrab13 > Vrab11){Enchanted->CameraX_Acceleration -= Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab11;}} else
-               {if(Enchanted->CameraX_Acceleration + Vrab12 < Vrab11){Enchanted->CameraX_Acceleration += Vrab12;} else {Enchanted->CameraX_Acceleration = Vrab11;}}
-               if(Vrab11 == 0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration > Vrab08){Enchanted->CameraX_Post = Vrab08; Enchanted->CameraX_Acceleration = 0;}
-              }
-             }
-
-             Vrab08 = Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration;
-            }
-            
-            // Y-Camera Acceleration.
-            {
-             xint64 Vrab11 = (((Vrab09 - Enchanted->CameraY_Post) / 9.0) / 16.0) * rxint64(Varb0004), Vrab12 = ((Vrab11 / 3.0) / 16.0) * rxint64(Varb0004), Vrab13 = ((Vrab11 / 16.0) / 16.0) * rxint64(Varb0004);
-             
+             xint64 Vrab11 = (((Vrab08 - Enchanted->CameraX_Post) / 23.0) / 16.0) * rxint64(Varb0004), Vrab12 = ((Vrab11 / 3.0) / 16.0) * rxint64(Varb0004), Vrab13 = ((Vrab11 / 16.0) / 16.0) * rxint64(Varb0004);
+ 
              if(Vrab11 != 0)
              if(Vrab11 < 0)
              {
               if(Vrab11 > -0.05) Vrab11 = -0.05;
-              if(Enchanted->CameraY_Acceleration < Vrab11)
-              {if(Enchanted->CameraY_Acceleration - Vrab13 < Vrab11){Enchanted->CameraY_Acceleration -= Vrab13;} else {Enchanted->CameraY_Acceleration = Vrab11;}} else
-              {if(Enchanted->CameraY_Acceleration + Vrab12 > Vrab11){Enchanted->CameraY_Acceleration += Vrab12;} else {Enchanted->CameraY_Acceleration = Vrab11;}}
-              if(Vrab11 == -0.05) if(Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration < Vrab09){Enchanted->CameraY_Post = Vrab09; Enchanted->CameraY_Acceleration = 0;}
+              if(Enchanted->CameraX_Acceleration < Vrab11)
+              {if(Enchanted->CameraX_Acceleration - Vrab13 < Vrab11){Enchanted->CameraX_Acceleration -= Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab11;}} else
+              {if(Enchanted->CameraX_Acceleration + Vrab12 > Vrab11){Enchanted->CameraX_Acceleration += Vrab12;} else {Enchanted->CameraX_Acceleration = Vrab11;}}
+              if(Vrab11 == -0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration < Vrab08){Enchanted->CameraX_Post = Vrab08; Enchanted->CameraX_Acceleration = 0;}
              } else
              {
               if(Vrab11 < 0.05) Vrab11 = 0.05;
-              if(Enchanted->CameraY_Acceleration > Vrab11)
-              {if(Enchanted->CameraY_Acceleration - Vrab13 > Vrab11){Enchanted->CameraY_Acceleration -= Vrab13;} else {Enchanted->CameraY_Acceleration = Vrab11;}} else
-              {if(Enchanted->CameraY_Acceleration + Vrab12 < Vrab11){Enchanted->CameraY_Acceleration += Vrab12;} else {Enchanted->CameraY_Acceleration = Vrab11;}}
-              if(Vrab11 == 0.05) if(Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration > Vrab09){Enchanted->CameraY_Post = Vrab09; Enchanted->CameraY_Acceleration = 0;}
+              if(Enchanted->CameraX_Acceleration > Vrab11)
+              {if(Enchanted->CameraX_Acceleration - Vrab13 > Vrab11){Enchanted->CameraX_Acceleration -= Vrab13;} else {Enchanted->CameraX_Acceleration = Vrab11;}} else
+              {if(Enchanted->CameraX_Acceleration + Vrab12 < Vrab11){Enchanted->CameraX_Acceleration += Vrab12;} else {Enchanted->CameraX_Acceleration = Vrab11;}}
+              if(Vrab11 == 0.05) if(Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration > Vrab08){Enchanted->CameraX_Post = Vrab08; Enchanted->CameraX_Acceleration = 0;}
              }
             }
 
-            Vrab09 = Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration;
+            Vrab08 = Enchanted->CameraX_Post + Enchanted->CameraX_Acceleration;
            }
-          
-           // Position Cap.
+            
+           // Y-Camera Acceleration.
            {
-            int64 Vrab10 = 0, Vrab11 = 0, Vrab12 = rint64(Varb0003 >= 550 ? 0 : 125), Vrab13 = Vrab12;
-            switch(Enchanted->Memory[0].Engine)
+            xint64 Vrab11 = (((Vrab09 - Enchanted->CameraY_Post) / 9.0) / 16.0) * rxint64(Varb0004), Vrab12 = ((Vrab11 / 3.0) / 16.0) * rxint64(Varb0004), Vrab13 = ((Vrab11 / 16.0) / 16.0) * rxint64(Varb0004);
+             
+            if(Vrab11 != 0)
+            if(Vrab11 < 0)
             {
-             case 1: break;
-             default: Vrab11 = Enchanted->Engine1->Area(); break;
+             if(Vrab11 > -0.05) Vrab11 = -0.05;
+             if(Enchanted->CameraY_Acceleration < Vrab11)
+             {if(Enchanted->CameraY_Acceleration - Vrab13 < Vrab11){Enchanted->CameraY_Acceleration -= Vrab13;} else {Enchanted->CameraY_Acceleration = Vrab11;}} else
+             {if(Enchanted->CameraY_Acceleration + Vrab12 > Vrab11){Enchanted->CameraY_Acceleration += Vrab12;} else {Enchanted->CameraY_Acceleration = Vrab11;}}
+             if(Vrab11 == -0.05) if(Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration < Vrab09){Enchanted->CameraY_Post = Vrab09; Enchanted->CameraY_Acceleration = 0;}
+            } else
+            {
+             if(Vrab11 < 0.05) Vrab11 = 0.05;
+             if(Enchanted->CameraY_Acceleration > Vrab11)
+             {if(Enchanted->CameraY_Acceleration - Vrab13 > Vrab11){Enchanted->CameraY_Acceleration -= Vrab13;} else {Enchanted->CameraY_Acceleration = Vrab11;}} else
+             {if(Enchanted->CameraY_Acceleration + Vrab12 < Vrab11){Enchanted->CameraY_Acceleration += Vrab12;} else {Enchanted->CameraY_Acceleration = Vrab11;}}
+             if(Vrab11 == 0.05) if(Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration > Vrab09){Enchanted->CameraY_Post = Vrab09; Enchanted->CameraY_Acceleration = 0;}
             }
-            Vrab08 -= 400; statics int64 Vrab14 = (Varb0002 < 800) ? (800 - Varb0002) : 0;
-            if(Vrab08 > rxint64(Vrab11 - 800 + Vrab14)) Vrab08 = rxint64(Vrab11 - 800 + Vrab14);
-            if(Vrab08 < 0) Vrab08 = 0;
-            Vrab09 -= 200; statics int64 Vrab15 = (Varb0003 < 400) ? (400 - Varb0003) : 0;
-            if(Vrab09 > rxint64(Vrab13 - 400 + Vrab15)) Vrab09 = rxint64(Vrab13 - 400 + Vrab15);
-            if(Vrab09 < rxint64(Vrab12)) Vrab09 = rxint64(Vrab12);
-            Enchanted->CameraX_Post = Vrab08 + 400; Enchanted->CameraY_Post = Vrab09 + 200;
            }
 
-           // Position Result & Initialization
+           Vrab09 = Enchanted->CameraY_Post + Enchanted->CameraY_Acceleration;
+          }
+          
+          // Position Cap.
+          {
+           int64 Vrab10 = 0, Vrab11 = 0, Vrab12 = rint64(Varb0003 >= 550 ? 0 : 125), Vrab13 = Vrab12;
+           switch(Enchanted->Memory[0].Engine)
            {
-            int64 Vrab10 = 0; int64 Vrab11 = 0;
-            if(Varb0002 > 800) Vrab10 = (Varb0002 - 800) / 2;
-            if(Varb0003 > 400 && Varb0003 < 550) Vrab11 = (Varb0003 - 400) / 2;
-            if(Varb0003 >= 550) Vrab11 = (Varb0003 - 550) / 2;
-            Enchanted->CameraX = L_Rounding64(Vrab08) - Vrab10; Enchanted->CameraY = L_Rounding64(Vrab09) - Vrab11;
+            case 1: break;
+            default: Vrab11 = Enchanted->Engine1->Area(); break;
+           }
+           Vrab08 -= 400; statics int64 Vrab14 = (Varb0002 < 800) ? (800 - Varb0002) : 0;
+           if(Vrab08 > rxint64(Vrab11 - 800 + Vrab14)) Vrab08 = rxint64(Vrab11 - 800 + Vrab14);
+           if(Vrab08 < 0) Vrab08 = 0;
+           Vrab09 -= 200; statics int64 Vrab15 = (Varb0003 < 400) ? (400 - Varb0003) : 0;
+           if(Vrab09 > rxint64(Vrab13 - 400 + Vrab15)) Vrab09 = rxint64(Vrab13 - 400 + Vrab15);
+           if(Vrab09 < rxint64(Vrab12)) Vrab09 = rxint64(Vrab12);
+           Enchanted->CameraX_Post = Vrab08 + 400; Enchanted->CameraY_Post = Vrab09 + 200;
+          }
+
+          // Position Result & Initialization
+          {
+           int64 Vrab10 = 0; int64 Vrab11 = 0;
+           if(Varb0002 > 800) Vrab10 = (Varb0002 - 800) / 2;
+           if(Varb0003 > 400 && Varb0003 < 550) Vrab11 = (Varb0003 - 400) / 2;
+           if(Varb0003 >= 550) Vrab11 = (Varb0003 - 550) / 2;
+           Enchanted->CameraX = L_Rounding64(Vrab08) - Vrab10; Enchanted->CameraY = L_Rounding64(Vrab09) - Vrab11;
             
-            switch(Enchanted->Memory[0].Engine)
-            {
-             case 1: break;
-             default:
-              Vect02 = Enchanted->Engine1->Rear(Enchanted->CameraX + Vrab10, Enchanted->CameraY + Vrab11); Vect03 = Enchanted->Engine1->Draw(Enchanted->CameraX, Enchanted->CameraY);
-             break;
-            }
+           switch(Enchanted->Memory[0].Engine)
+           {
+            case 1: break;
+            default:
+             Vect02 = Enchanted->Engine1->Rear(Enchanted->CameraX + Vrab10, Enchanted->CameraY + Vrab11); Vect03 = Enchanted->Engine1->Draw(Enchanted->CameraX + Vrab10, Enchanted->CameraY + Vrab11);
+            break;
            }
           }
          }
@@ -7067,6 +7122,10 @@
           }
          }
 
+         // Player Info.
+         struct Srct01 {uint8 Vrab001 = 0; uint8 Vrab002 = 0; xint64 Vrab003 = 0; xint64 Vrab004 = 0; xint64 Vrab005 = 0; xint64 Vrab006 = 0; xint64 Vrab007 = 0; insize Vrab008 = rinsize(-1); insize Vrab009 = rinsize(-1);};
+         std::vector < Srct01 > Vect04;
+
          // Drawing Entities.
          {
           statics insize Vrab11 = Vect03.size(); insize Vrab12 = 0;
@@ -7076,6 +7135,7 @@
            {
             auto Auto01 = Vect03[Vrab12].Object.release();
             statics insize Vrab13 = Auto01->Pic_M; statics int64 Vrab14 = Auto01->X - Enchanted->CameraX, Vrab15 = Auto01->Y - Enchanted->CameraY;
+
             if(Auto01->Facing)
             {
              G_Set_Display(4, Auto01->Pic, Vrab14, Vrab15, (Auto01->Flip * 2), Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
@@ -7089,6 +7149,7 @@
               G_Set_Display(4, Auto01->Pic, Vrab14, Vrab15, 1ui8 + (Auto01->Flip * 2), Auto01->Trans, Auto01->W, Auto01->H, Auto01->Rotate);
              }
             }
+
             if(Auto01->Character)
             {
              statics int64 Vrab16 = rint64(Auto01->Info->Name.size()) * 9; statics int64 Vrab17 = Auto01->Info->X - Enchanted->CameraX - L_Rounding64(rxint64(Vrab16) / 2.0);
@@ -7096,7 +7157,28 @@
              if(Vrab18 > Vrab08 - Vrab16 - 1) Vrab18 = Vrab08 - Vrab16 - 1;
              if(Vrab18 < Vrab07 + 2) Vrab18 = Vrab07 + 2;
              {int64 Vrab19 = Auto01->Info->Y - Enchanted->CameraY + 2; if(Vrab19 > Vrab10 - 16) Vrab19 = Vrab10 - 16; if(Vrab19 < Vrab09) Vrab19 = Vrab09; Enchanted->Print_Text(Vrab18, Vrab19, Auto01->Info->Color, Auto01->Info->Name);}
-             {
+
+             insize Vrab19 = 73, Vrab20 = 71, Vrab21 = 76, Vrab22 = 74;
+             switch(Vect04[Vrab11].Vrab001)
+             { 
+              case 1: break;
+              default: break;
+             }
+             xint64 Vrab23 = Auto01->Info->MHP; {statics xint64 Vrab24 = Auto01->Info->DHP; if(Vrab24 > Vrab23) Vrab23 = Vrab24;}
+             int64 Vrab24 = L_Rounding64((Auto01->Info->HP / Vrab23) * 60.0);
+             int64 Vrab25 = L_Rounding64((Auto01->Info->DHP / Vrab23) * 60.0);
+             int64 Vrab26 = L_Rounding64((Auto01->Info->MP / Auto01->Info->MMP) * 60.0);
+             if(Vrab24 > Vrab25){auto Vrab27 = Vrab24; Vrab24 = Vrab25; Vrab25 = Vrab27; if(Vrab20 == 71 || Vrab20 == 72) Vrab19 = 80;}
+             int64 Vrab27 = 0;
+             if(Vrab25 > 60){Vrab27 = Vrab25 - 60; Vrab25 = 60; if(Vrab27 > 60) Vrab27 = 60;}
+             if(Vrab26 > 60) Vrab26 = 60;
+             if(Vrab25 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab19], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 13, 0ui8, 255ui8, Vrab25, 3);
+             if(Vrab24 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab20], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 13, 0ui8, 255ui8, Vrab24, 3);
+             if(Vrab27 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab19], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 13, 0ui8, 255ui8, Vrab27, 3);
+             if(Vrab24 > 0 || Vrab25 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab21], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 10, 0ui8, 255ui8, 60, 3);
+             if(Vrab26 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab22], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 10, 0ui8, 255ui8, Vrab26, 3);
+
+             /*
               uint8 Vrab19 = 0, Vrab20 = 0, Vrab21 = 0, Vrab22 = 0;
               switch(Auto01->Info->Integrate)
               {
@@ -7107,7 +7189,9 @@
               G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab19], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 13, 0ui8, 255ui8, L_Rounding64((Auto01->Info->HP / Auto01->Info->MHP) * rxint64(60)), 3);
               G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab22], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 10, 0ui8, 255ui8, 60, 3);
               G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab21], Auto01->Info->X - Enchanted->CameraX - 30, Auto01->Y - Enchanted->CameraY - 10, 0ui8, 255ui8, L_Rounding64((Auto01->Info->MP / Auto01->Info->MMP) * rxint64(60)), 3);
-             }
+              */
+              
+             if(Auto01->Info->Player < 16) Vect04.push_back({ruint8(Auto01->Info->Player % 8ui8), Auto01->Info->Integrate, Auto01->Info->HP, Auto01->Info->DHP, Auto01->Info->MHP, Auto01->Info->MP, Auto01->Info->MMP, Auto01->Info->Icon1, Auto01->Info->Icon2});
              Auto01->Info.reset();
             }
            } else
@@ -7129,10 +7213,58 @@
           G_Set_Display(0, 0x0, 0, Vrab10, 0ui8, 255ui8, Vrab05, Vrab06 - Vrab10);
          }
 
+         // Player Info.
+         {
+          for(insize Vrab11 = 0; Vrab11 < 8; Vrab11 += 1)
+          G_Set_Display(2, Enchanted->Pic_Index_Interface[124], Vrab07 + (200 * (rint64(Vrab11) % 4)), Vrab09 - 125 + (50 * (rint64(Vrab11) / 4)));
+          insize Vrab11 = Vect04.size();
+          while(Vrab11 != 0)
+          {
+           Vrab11 -= 1; statics int64 Vrab12 = Vrab07 + (200 * (rint64(Vect04[Vrab11].Vrab001) % 4)), Vrab13 = Vrab09 - 125 + (50 * (rint64(Vect04[Vrab11].Vrab001) / 4));
+           G_Set_Display(3, Vect04[Vrab11].Vrab008, Vrab12 + 5, Vrab13 + 5, 0ui8, 255ui8, 190, 40);
+           G_Set_Display(2, Vect04[Vrab11].Vrab009, Vrab12 + 15, Vrab13 + 15, 0ui8, 155ui8, -20, -20);
+           insize Vrab14 = 127, Vrab15 = 125, Vrab16 = 131, Vrab17 = 129;
+           switch(Vect04[Vrab11].Vrab001)
+           {
+            case 1: break;
+            default: break;
+           }
+           xint64 Vrab18 = Vect04[Vrab11].Vrab005; {statics xint64 Vrab19 = Vect04[Vrab11].Vrab004; if(Vrab19 > Vrab18) Vrab18 = Vrab19;}
+           int64 Vrab19 = L_Rounding64((Vect04[Vrab11].Vrab003 / Vrab18) * 140.0);
+           int64 Vrab20 = L_Rounding64((Vect04[Vrab11].Vrab004 / Vrab18) * 140.0);
+           int64 Vrab21 = L_Rounding64((Vect04[Vrab11].Vrab006 / Vect04[Vrab11].Vrab007) * 140.0);
+           if(Vrab19 > Vrab20){auto Vrab22 = Vrab19; Vrab19 = Vrab20; Vrab20 = Vrab22; if(Vrab15 == 125 || Vrab15 == 126) Vrab14 = 132;}
+           int64 Vrab22 = 0;
+           if(Vrab20 > 140){Vrab22 = Vrab20 - 140; Vrab20 = 140; if(Vrab22 > 140) Vrab22 = 140;}
+           if(Vrab21 > 60) Vrab21 = 140;
+           if(Vrab20 > 0) G_Set_Display(3, Enchanted->Pic_Index_Interface[Vrab14], Vrab12, Vrab13, 0ui8, 255ui8, 53 + Vrab20, 50);
+           if(Vrab19 > 0) G_Set_Display(3, Enchanted->Pic_Index_Interface[Vrab15], Vrab12, Vrab13, 0ui8, 255ui8, 53 + Vrab19, 50);
+           if(Vrab22 > 0) G_Set_Display(3, Enchanted->Pic_Index_Interface[Vrab14], Vrab12, Vrab13, 0ui8, 255ui8, 53 + Vrab22, 50);
+           if(Vrab19 > 0 || Vrab20 > 0) G_Set_Display(2, Enchanted->Pic_Index_Interface[Vrab16], Vrab12, Vrab13);
+           if(Vrab21 > 0) G_Set_Display(3, Enchanted->Pic_Index_Interface[Vrab17], Vrab12, Vrab13, 0ui8, 255ui8, 53 + Vrab21, 50);
+
+           G_Set_Display(2, Enchanted->Pic_Index_Interface[128], Vrab12, Vrab13);
+           string Temp01 = "0"; if(Vect04[Vrab11].Vrab003 > 0) if(Vect04[Vrab11].Vrab003 > Vect04[Vrab11].Vrab004)
+           {
+            xint64 Vrab23 = Vect04[Vrab11].Vrab004; if(Vrab23 < 0) Vrab23 = 0.0;
+            xint64 Vrab24 = Vect04[Vrab11].Vrab003 - Vrab23;
+            if(Vrab23 > 999999.0) Vrab23 = 999999.0;
+            if(Vrab24 > 999999.0) Vrab24 = 999999.0;
+            Temp01 = "(" + std::to_string(L_Rounding64(Vrab24)) + ")" + std::to_string(L_Rounding64(Vrab23));
+           } else 
+           {
+            if(Vect04[Vrab11].Vrab003 > 999999.0){Temp01 = "999999";} else {Temp01 = std::to_string(L_Rounding64(Vect04[Vrab11].Vrab003));}
+           }
+           Enchanted->Print_Text(Vrab12 + 193 - (rint64(Temp01.size()) * 9), Vrab13 + 5, 0ui8, Temp01);
+           if(Vect04[Vrab11].Vrab006 > 999999.0){Temp01 = "999999";} else {Temp01 = std::to_string(L_Rounding64(Vect04[Vrab11].Vrab006));}
+           Enchanted->Print_Text(Vrab12 + 193 - (rint64(Temp01.size()) * 9), Vrab13 + 28, 0ui8, Temp01);
+          }
+         }
+
          // Texts.
          {
           struct Srct01 {string Temp001; uint8 Vrab001 = 0; uint8 Vrab002 = 0;};
-          std::vector < Srct01 > Vect04;
+          std::vector < Srct01 > Vect05;
           {
            uint8 Vrab11 = 0; string Temp01;
            while(Vrab11 != 255)
@@ -7154,21 +7286,21 @@
              if(Vrab14 != '|'){Temp03.push_back(Vrab14);} else {break;}
             }
             if(Vrab12 == Vrab13) break;
-            Vect04.push_back(Srct01());
-            Vect04[rinsize(Vrab11)].Temp001 = string(Temp01, Vrab13, Vrab12 - Vrab13);
-            Vect04[rinsize(Vrab11)].Vrab001 = ruint8(L_Numbering(Temp02));
-            Vect04[rinsize(Vrab11)].Vrab002 = ruint8(L_Numbering(Temp03));
+            Vect05.push_back(Srct01());
+            Vect05[rinsize(Vrab11)].Temp001 = string(Temp01, Vrab13, Vrab12 - Vrab13);
+            Vect05[rinsize(Vrab11)].Vrab001 = ruint8(L_Numbering(Temp02));
+            Vect05[rinsize(Vrab11)].Vrab002 = ruint8(L_Numbering(Temp03));
             Vrab11 += 1;
            }
           }
 
-          insize Vrab11 = Vect04.size();
+          insize Vrab11 = Vect05.size();
           while(Vrab11 != 0)
           {
            Vrab11 -= 1; int64 Vrab12 = 0, Vrab13 = 0;
-           statics int64 Vrab14 = rint64(Vect04[Vrab11].Temp001.size()) * 9;
-           switch(Vect04[Vrab11].Vrab001){case 0: case 3: Vrab12 = Vrab07 + 2; break; case 1: case 4: Vrab12 = ((Vrab07 + Vrab08) / 2) - L_Rounding64(rxint64(Vrab14) / 2.0); break; default: Vrab12 = Vrab08; break;}
-           switch(Vect04[Vrab11].Vrab001){case 0: case 1: case 2: Vrab13 = Vrab09 - 21; break; default: Vrab13 = Vrab10 + 5; break;}
+           statics int64 Vrab14 = rint64(Vect05[Vrab11].Temp001.size()) * 9;
+           switch(Vect05[Vrab11].Vrab001){case 0: case 3: Vrab12 = Vrab07 + 2; break; case 1: case 4: Vrab12 = ((Vrab07 + Vrab08) / 2) - L_Rounding64(rxint64(Vrab14) / 2.0); break; default: Vrab12 = Vrab08; break;}
+           switch(Vect05[Vrab11].Vrab001){case 0: case 1: case 2: Vrab13 = Vrab09 - 21; break; default: Vrab13 = Vrab10 + 5; break;}
            if(Vrab12 == Vrab08)
            {
             if(Vrab12 < Vrab07 + 2) Vrab12 = Vrab07 + 2;
@@ -7180,9 +7312,9 @@
            }
            if(Vrab13 > Vrab06 - 21) Vrab13 = Vrab06 - 21;
            if(Vrab13 < 5) Vrab13 = 5;
-           Enchanted->Print_Text(Vrab12 + 1, Vrab13, Vect04[Vrab11].Vrab002, Vect04[Vrab11].Temp001);
-           Enchanted->Print_Text(Vrab12, Vrab13 + 1, Vect04[Vrab11].Vrab002, Vect04[Vrab11].Temp001);
-           Enchanted->Print_Text(Vrab12, Vrab13, Vect04[Vrab11].Vrab002, Vect04[Vrab11].Temp001);
+           Enchanted->Print_Text(Vrab12 + 1, Vrab13, Vect05[Vrab11].Vrab002, Vect05[Vrab11].Temp001);
+           Enchanted->Print_Text(Vrab12, Vrab13 + 1, Vect05[Vrab11].Vrab002, Vect05[Vrab11].Temp001);
+           Enchanted->Print_Text(Vrab12, Vrab13, Vect05[Vrab11].Vrab002, Vect05[Vrab11].Temp001);
           }
          }
         }
