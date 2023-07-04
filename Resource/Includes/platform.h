@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
-// "platform.h"                                                                           //
+// "platform.h", based on DirectXTK's template.                                           //
 //                                                                                        //
-// Generals' declarator for the platform.                                                 //
+// Header of the platform.                                                                //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -105,10 +105,6 @@
   #define stacked inline
   #define fastened noexcept
  //-//
-  
- // Earlier Function Declaration
-  int0 G_ToggleFullscreen() fastened;
- //-//
 
  // Stuctures / Classes
   // DirectX
@@ -195,7 +191,7 @@
      HEPTA_DEVICENOTIFY*   m_deviceNotify;       // The IDeviceNotify can be held directly as it owns the DeviceResources.
    };
   //-//
-  
+
   struct HEPTA_TIMING // Helper class for animation and simulation timing.
   {
    HEPTA_TIMING() fastened (false) : m_elapsedTicks(0), m_totalTicks(0), m_leftOverTicks(0), m_frameCount(0), m_framesPerSecond(0), m_framesThisSecond(0), m_qpcSecondCounter(0), m_isFixedTimeStep(false), m_targetElapsedTicks(TicksPerSecond / 60)
@@ -316,6 +312,15 @@
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
+  struct HEPTA_EXCEPTION : public std::exception
+  {
+   HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
+   statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
+
+   private:
+    HRESULT Vrab001;
+  };
+
   struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
   {
    HEPTA_GAME() fastened (false);
@@ -343,9 +348,6 @@
    int0 OnWindowMoved();
    int0 OnDisplayChange();
    int0 OnWindowSizeChanged(uint32, uint32);
-
-   // Properties
-   int0 GetDefaultSize(uint32&, uint32&) statics fastened;
 
    // Device resources.
    std::unique_ptr < HEPTA_DEVICE > m_deviceResources;
@@ -378,6 +380,7 @@
     // Audio Output.
     unique < DirectX::AudioEngine > Aeng001;
   };
+
   struct HEPTA_IMAGE
   {
    HEPTA_IMAGE(statics string&, ID3D11Device*) fastened;
@@ -496,14 +499,6 @@
    unique < DirectX::SoundEffectInstance > Instance;
    uint8 Active = 0ui8;
   };
-  struct HEPTA_EXCEPTION : public std::exception
-  {
-   HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
-   statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
-
-   private:
-    HRESULT Vrab001;
-  };
  //-//
   
  // Memory / Variables
@@ -519,6 +514,7 @@
  //-//
 
  // Global Function
+  int0 G_ToggleFullscreen() fastened;
   int0 ThrowIfFailed(HRESULT Hres01){if(FAILED(Hres01)) throw HEPTA_EXCEPTION(Hres01);}
   std::vector < uint8_t > CSO_Read(_In_z_ statics wchar_t* Temp01)
   {
@@ -643,6 +639,7 @@
    {
     if(Vrab01 >= Audi0001.size()) return;
     Audi0001.erase(Audi0001.begin() + Vrab01, Audi0001.end());
+    Isnd0001.clear();
    }
    int0   G_Unload_Image() fastened
    {
