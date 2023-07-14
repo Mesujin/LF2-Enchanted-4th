@@ -35,7 +35,8 @@
   if(File01.is_open())
   {
    File01.close();
-   if(DirectX::CreateWICTextureFromFile(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), nullptr, Texture.ReleaseAndGetAddressOf()) == S_OK)
+   if(DirectX::CreateWICTextureFromFileEx(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), 0U, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0U, 0U, DirectX::DX11::WIC_LOADER_DEFAULT, &Data, &Texture) == S_OK)
+   //if(DirectX::CreateWICTextureFromFile(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), &Data, &Texture) == S_OK)
    {Success = true; Address = Temp01; return;}
   }
   Success = false;
@@ -214,6 +215,7 @@
   {
    if(Varb0007) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
+   if(Varb0027){PostQuitMessage(0); return;}
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
@@ -321,7 +323,7 @@
         }
         auto Effc01 = DirectX::SpriteEffects_None;
         switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
        }
       break;
       case 3: case 7: // Specific Image Draw
@@ -362,7 +364,7 @@
          Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
          Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
-        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Vrab05)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Vrab05)), Flts01, Effc01);
        }
       break;
       case 4: case 5: case 8: case 9: // Sprite Image Draw
@@ -387,7 +389,7 @@
         }
         auto Effc01 = DirectX::SpriteEffects_None;
         switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
        }
       break;
       /*case 5: case 9: // Mirrored Sprite Image Draw
@@ -913,7 +915,6 @@
   remains int1 Vrab02 = false, // in sizemove.
   Vrab03 = false,              // in suspend.
   Vrab04 = false;              // minimized.
-  // TODO: Set Vrab05 to true if defaulting to fullscreen.
 
   auto Game01 = reinterpret_cast < HEPTA_GAME* > (GetWindowLongPtr(Hwnd01, GWLP_USERDATA));
   
@@ -994,7 +995,7 @@
   }
   return DefWindowProc(Hwnd01, Vrab01, Wpar01, Lpar01);
  }
- int WINAPI wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
+ int32 WINAPI wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
  {
   UNREFERENCED_PARAMETER(Hins02); UNREFERENCED_PARAMETER(Lpws01);
 

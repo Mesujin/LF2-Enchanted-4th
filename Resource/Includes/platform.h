@@ -77,7 +77,7 @@
   using xint64 = double;             // -
   using string = std::string;        // -
   using stream = std::stringstream;  // -
-  using insize = uint32;             // Vector maximum size.
+  using insize = size_t;             // Vector's maximum size.
 
   #define unique std::unique_ptr
 
@@ -384,11 +384,11 @@
   struct HEPTA_IMAGE
   {
    HEPTA_IMAGE(statics string&, ID3D11Device*) fastened;
-   ~HEPTA_IMAGE(){Texture.Reset();}
    
    int1 Success = false;
    string Address;
-   Microsoft::WRL::ComPtr < ID3D11ShaderResourceView > Texture;
+   ID3D11Resource *Data;
+   ID3D11ShaderResourceView *Texture;
   };
   struct HEPTA_PICTURE
   {
@@ -548,27 +548,33 @@
   // Engine's Contact
    insize G_Load_Pic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) fastened
    {
-    insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size(); while(Vrab05 != Vrab06){if(Imge0001[Vrab05].Address == Temp01 || Imge0001[Vrab05].Address == "") break; Vrab05 += 1;}
-    if(Vrab05 == Vrab06){Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));} else {if(!Imge0001[Vrab05].Success) Imge0001[Vrab05] = HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice());}
-    if(Imge0001[Vrab05].Success)
-    {
-     statics insize Vrab07 = Pics0001.size();
-     Pics0001.push_back(HEPTA_PICTURE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04));
-     return Vrab07;
-    } else {if(Vrab05 == Vrab06) Imge0001.pop_back(); return rinsize(-1);}
+    insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size();
+
+    while(Vrab05 != Vrab06){if(Imge0001[Vrab05].Address == Temp01) break; Vrab05 += 1;}
+    if(Vrab05 != Vrab06)
+    {if(!Imge0001[Vrab05].Success) Imge0001[Vrab05] = HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice());} else
+    {Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));}
+    if(!Imge0001[Vrab05].Success){if(Vrab05 == Vrab06) Imge0001.pop_back(); return rinsize(-1);}
+    
+    statics insize Vrab07 = Pics0001.size();
+    Pics0001.push_back(HEPTA_PICTURE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04));
+    return Vrab07;
    }
    insize G_Load_Sprite(statics string Temp01, statics uint32 Vrab01, statics uint32 Vrab02, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 1) fastened
    {
     if(Vrab03 == 0 || Vrab04 == 0) return rinsize(-1);
-    insize Vrab05 = 0; statics insize Vrab10 = Imge0001.size(); while(Vrab05 != Vrab10){if(Imge0001[Vrab05].Address == Temp01) break; Vrab05 += 1;}
-    if(Vrab05 == Vrab10) Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));
-    if(Imge0001[Vrab05].Success)
-    {
-     statics insize Vrab06 = Sprt0001.size(); statics insize Vrab07 = Spic0001.size(); statics insize Vrab08 = (Vrab01 * Vrab02) + Vrab07; Spic0001.resize(Vrab08);
-     Sprt0001.push_back(HEPTA_SPRITE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04, Vrab07));
-     for(insize Vrab09 = Vrab07; Vrab09 < Vrab08; ++Vrab09) Spic0001[Vrab09] = Vrab06;
-     return Vrab07;
-    } else {Imge0001.pop_back(); return rinsize(-1);}
+    insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size();
+
+    while(Vrab05 != Vrab06){if(Imge0001[Vrab05].Address == Temp01) break; Vrab05 += 1;}
+    if(Vrab05 != Vrab06)
+    {if(!Imge0001[Vrab05].Success) Imge0001[Vrab05] = HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice());} else
+    {Imge0001.push_back(HEPTA_IMAGE(Temp01, Game0001->m_deviceResources->GetD3DDevice()));}
+    if(!Imge0001[Vrab05].Success){if(Vrab05 == Vrab06) Imge0001.pop_back(); return rinsize(-1);}
+
+    statics insize Vrab07 = Sprt0001.size(); statics insize Vrab08 = Spic0001.size(); statics insize Vrab09 = (Vrab01 * Vrab02) + Vrab08; Spic0001.resize(Vrab09);
+    Sprt0001.push_back(HEPTA_SPRITE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04, Vrab08));
+    for(insize Vrab10 = Vrab08; Vrab10 < Vrab09; ++Vrab10) Spic0001[Vrab10] = Vrab07;
+    return Vrab08;
    }
    insize G_Load_Sound(statics string Temp01) fastened
    {
@@ -643,7 +649,52 @@
    }
    int0   G_Unload_Image() fastened
    {
-   
+    Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
+    Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
+
+    insize Vrab01 = Imge0001.size(); statics insize Vrab02 = Sprt0001.size(), Vrab03 = Pics0001.size();
+    while(Vrab01 != 0)
+    {
+     Vrab01 -= 1;
+     {insize Vrab04 = 0; while(Vrab04 != Vrab02){if(Sprt0001[Vrab04].Get_Target() == Vrab01) break; Vrab04 += 1;} if(Vrab04 != Vrab02) continue;} // Check whenever it's referenced or not.
+     {insize Vrab04 = 0; while(Vrab04 != Vrab03){if(Pics0001[Vrab04].Get_Target() == Vrab01) break; Vrab04 += 1;} if(Vrab04 != Vrab03) continue;} // Check whenever it's referenced or not.
+     
+     // Is unreferenced.
+     {
+      continue;
+
+      ID3D11Resource *Reso01;
+      ID3D11Texture2D *Texd01;
+      Imge0001[Vrab01].Texture->GetResource(&Reso01);
+      Reso01->QueryInterface < ID3D11Texture2D > (&Texd01);
+      Texd01->Release();
+      Game0001->m_deviceResources->GetD3DDeviceContext()->DiscardResource(Reso01);
+      Reso01->Release();
+      Imge0001[Vrab01].Texture->Release();
+
+      Game0001->m_deviceResources->GetD3DDeviceContext()->DiscardResource(Imge0001[Vrab01].Data);
+      Imge0001[Vrab01].Data->Release();
+     /* Imge0001[Vrab01].Data->QueryInterface < ID3D11Texture2D > (&Texd01);
+      Texd01->Release();
+      Imge0001[Vrab01].Data->Release();*/
+
+      insize Vrab04 = Imge0001.size();
+      if(Vrab01 == Vrab04 - 1)
+      {Imge0001.pop_back();} else
+      {
+       while(Vrab04 != Vrab01 + 1)
+       {
+        Vrab04 -= 1;
+        insize Vrab05 = Vrab02; while(Vrab05 != 0){Vrab05 -= 1; if(Sprt0001[Vrab05].Get_Target() == Vrab04) Sprt0001[Vrab05].Relocate_Target();}
+        insize Vrab06 = Vrab03; while(Vrab06 != 0){Vrab06 -= 1; if(Pics0001[Vrab06].Get_Target() == Vrab04) Pics0001[Vrab06].Relocate_Target();}
+       }
+       Imge0001.erase(Imge0001.begin() + Vrab01);
+      }
+     }
+    }
+
+    Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
+    Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
    }
   //-//
  //-//
