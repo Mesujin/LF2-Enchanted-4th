@@ -10,6 +10,7 @@
  
  // Commands
   // General
+#define _DEBUG
    #include <winsdkver.h>
    #ifndef _WIN32_WINNT
     #define _WIN32_WINNT 0x0601
@@ -312,14 +313,14 @@
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
-  struct HEPTA_EXCEPTION : public std::exception
+  /*struct HEPTA_EXCEPTION : public std::exception
   {
    HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
    statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
 
    private:
     HRESULT Vrab001;
-  };
+  };*/
 
   struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
   {
@@ -515,7 +516,22 @@
 
  // Global Function
   int0 G_ToggleFullscreen() fastened;
-  int0 ThrowIfFailed(HRESULT Hres01){if(FAILED(Hres01)) throw HEPTA_EXCEPTION(Hres01);}
+  int0 ThrowIfFailed(HRESULT Hres01, statics string Temp01 = "")
+  {
+   if(SUCCEEDED(Hres01)) return;
+   if(FACILITY_WINDOWS == HRESULT_FACILITY(Hres01)) Hres01 = HRESULT_CODE(Hres01);
+   
+   string Temp02 = "Exception Occur, Error Code : 0x" + std::format("{:X}", ruint32(Hres01)); if(Temp01 != "") Temp02 += " (" + Temp01 + ")";
+   statics std::wstring Temp03 = L"\n\nWould be helpful if you would inform the developer (Mesujin).";
+
+   TCHAR* Temp04; std::wstring Temp05;
+   if(FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, Hres01, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&Temp04, 0, NULL) != 0) 
+   {Temp05 = std::wstring(Temp04); Temp05.pop_back(); Temp05.pop_back(); Temp05 = std::wstring(Temp02.begin(), Temp02.end()) + L"\n\"" + Temp05 + L".\"" + Temp03;} else 
+   {Temp05 = std::wstring(Temp02.begin(), Temp02.end()) + Temp03;}
+   
+   MessageBox(NULL, Temp05.c_str(), L"Platform Error", MB_OK | MB_ICONERROR);
+   exit(0); /*throw HEPTA_EXCEPTION(Hres01);*/
+  }
   std::vector < uint8_t > CSO_Read(_In_z_ statics wchar_t* Temp01)
   {
    std::ifstream File01(Temp01, std::ios::in | std::ios::binary | std::ios::ate);
@@ -661,22 +677,10 @@
      
      // Is unreferenced.
      {
-      continue;
-
-      ID3D11Resource *Reso01;
       ID3D11Texture2D *Texd01;
-      Imge0001[Vrab01].Texture->GetResource(&Reso01);
-      Reso01->QueryInterface < ID3D11Texture2D > (&Texd01);
-      Texd01->Release();
-      Game0001->m_deviceResources->GetD3DDeviceContext()->DiscardResource(Reso01);
-      Reso01->Release();
-      Imge0001[Vrab01].Texture->Release();
-
-      Game0001->m_deviceResources->GetD3DDeviceContext()->DiscardResource(Imge0001[Vrab01].Data);
-      Imge0001[Vrab01].Data->Release();
-     /* Imge0001[Vrab01].Data->QueryInterface < ID3D11Texture2D > (&Texd01);
-      Texd01->Release();
-      Imge0001[Vrab01].Data->Release();*/
+      Imge0001[Vrab01].Data->QueryInterface < ID3D11Texture2D > (&Texd01);
+      Imge0001[Vrab01].Texture->Release(); Imge0001[Vrab01].Data->Release();
+      while(true) if(Texd01->Release() == 0) break;
 
       insize Vrab04 = Imge0001.size();
       if(Vrab01 == Vrab04 - 1)

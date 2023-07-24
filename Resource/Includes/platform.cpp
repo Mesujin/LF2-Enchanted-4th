@@ -215,7 +215,7 @@
   {
    if(Varb0007) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
-   if(Varb0027){PostQuitMessage(0); return;}
+   if(Varb0027){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
@@ -481,7 +481,7 @@
   
   int0 HEPTA_DEVICE::CreateDeviceResources()
   {
-   uint32 creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT; CreateFactory();
+   uint32 Vrab01 = D3D11_CREATE_DEVICE_BGRA_SUPPORT; CreateFactory();
 
    // Determines whether tearing support is available for fullscreen borderless windows.
    if(m_options & c_AllowTearing)
@@ -541,7 +541,7 @@
      Hslt01 = D3D11CreateDevice(Dxia01.Get(),
                                 D3D_DRIVER_TYPE_UNKNOWN,
                                 nullptr,
-                                creationFlags,
+                                Vrab01,
                                 s_featureLevels,
                                 featLevelCount,
                                 D3D11_SDK_VERSION,
@@ -565,7 +565,7 @@
      Hslt01 = D3D11CreateDevice(nullptr,
                                 D3D_DRIVER_TYPE_WARP, // Create a WARP device instead of a hardware device.
                                 nullptr,
-                                creationFlags,
+                                Vrab01,
                                 s_featureLevels,
                                 featLevelCount,
                                 D3D11_SDK_VERSION,
@@ -756,7 +756,7 @@
             
      #ifdef _DEBUG
       wchar_t Vect01[256] = {};
-      swprintf_s(buff, L"Direct3D Dxad02 (%u): VID:%04X, PID:%04X - %ls\n", Vrab01, desc.VendorId, desc.DeviceId, desc.Description);
+      swprintf_s(Vect01, L"Direct3D Dxad02 (%u): VID:%04X, PID:%04X - %ls\n", Vrab01, desc.VendorId, desc.DeviceId, desc.Description);
       OutputDebugStringW(Vect01);
      #endif
 
@@ -866,7 +866,7 @@
     if(!Vrab01)
    #endif
 
-   ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
+   ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())), "CreateDXGIFactory1");
   }
   int1 HEPTA_DEVICE::WindowSizeChanged(uint32 Vrab01, uint32 Vrab02)
   {
@@ -910,7 +910,7 @@
 //-//
 
 // Windows' Window
- LRESULT CALLBACK Platform_Call(HWND Hwnd01, UINT Vrab01, WPARAM Wpar01, LPARAM Lpar01)
+ LRESULT CALLBACK wWinCall(HWND Hwnd01, UINT Vrab01, WPARAM Wpar01, LPARAM Lpar01)
  {
   remains int1 Vrab02 = false, // in sizemove.
   Vrab03 = false,              // in suspend.
@@ -995,7 +995,7 @@
   }
   return DefWindowProc(Hwnd01, Vrab01, Wpar01, Lpar01);
  }
- int32 WINAPI wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
+ int32   WINAPI   wWinMain(_In_ HINSTANCE Hins01, _In_opt_ HINSTANCE Hins02, _In_ LPWSTR Lpws01, _In_ int32 Vrab01)
  {
   UNREFERENCED_PARAMETER(Hins02); UNREFERENCED_PARAMETER(Lpws01);
 
@@ -1009,7 +1009,7 @@
    WNDCLASSEXW Wind01 = {};
    Wind01.cbSize = sizeof(WNDCLASSEXW);
    Wind01.style = CS_HREDRAW | CS_VREDRAW;
-   Wind01.lpfnWndProc = Platform_Call;
+   Wind01.lpfnWndProc = wWinCall;
    Wind01.hInstance = Hins01;
    Wind01.hIcon = LoadIconW(Hins01, L"IDI_ICON");
    Wind01.hCursor = LoadCursorW(nullptr, IDC_ARROW);
@@ -1049,7 +1049,7 @@
    Desc01.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
    Microsoft::WRL::ComPtr < ID3D11Texture2D > Text01;
-   ThrowIfFailed(Game0001->m_deviceResources->GetD3DDevice()->CreateTexture2D(&Desc01, &Sdat01, &Text01));
+   ThrowIfFailed(Game0001->m_deviceResources->GetD3DDevice()->CreateTexture2D(&Desc01, &Sdat01, &Text01), "CreateTexture2D");
 
    D3D11_SHADER_RESOURCE_VIEW_DESC Vdec01;
    memset(&Vdec01, 0, sizeof(Vdec01));
