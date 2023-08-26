@@ -251,7 +251,7 @@
         statics xint32 Vrab06 = rxint32((Disp0001[Vrab02].Target >> 8) & 0xFF) / 255.0f;
         statics xint32 Vrab07 = rxint32((Disp0001[Vrab02].Target >> 16) & 0xFF) / 255.0f;
         statics xint32 Vrab08 = rxint32(Disp0001[Vrab02].Trans) / 255.0f;
-        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
       case 1: // Un-filled Rectangle
@@ -295,15 +295,15 @@
         statics xint32 Vrab07 = rxint32((Disp0001[Vrab02].Target >> 16) & 0xFF) / 255.0f;
         statics xint32 Vrab08 = rxint32(Disp0001[Vrab02].Trans) / 255.0f;
 
-        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, Vrab04));//, DirectX::XMFLOAT2(0.5f, 0));
-        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(Vrab03, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab04 + 1));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08 + 2.0f}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(-Vrab03 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, Vrab04));//, DirectX::XMFLOAT2(0.5f, 0));
+        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(Vrab03, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab04 + 1));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(-Vrab03 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
       case 2: case 6: // Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 6) Vrab04 = 4.0f;
+        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 6) Vrab04 = 2.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
@@ -328,7 +328,7 @@
       break;
       case 3: case 7: // Specific Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 7) Vrab04 = 4.0f;
+        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 7) Vrab04 = 2.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
@@ -369,7 +369,7 @@
       break;
       case 4: case 5: case 8: case 9: // Sprite Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 8 || Disp0001[Vrab02].Type == 9) Vrab04 = 4.0f;
+        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 8 || Disp0001[Vrab02].Type == 9) Vrab04 = 2.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
@@ -394,7 +394,7 @@
       break;
       /*case 5: case 9: // Mirrored Sprite Image Draw
        {
-        xint32 Vrab04 = 0; if(Disp0001[Vrab02].Type == 9) Vrab04 = 4.0f;
+        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 9) Vrab04 = 2.0f;
         RECT Rect01;
         Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
         Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;

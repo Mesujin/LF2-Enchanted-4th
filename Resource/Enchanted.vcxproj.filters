@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{4ae571ad-8d85-4728-9fe2-174268f3ca59}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Internals">
       <UniqueIdentifier>{3d7cd0a1-449a-45e1-a4f2-5b8a8fabd15a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{06806e32-cfd8-4c37-8659-4ad954691f87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Header">
-      <UniqueIdentifier>{b942c56d-a755-4191-a24d-3ce3b83c74ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Header">
       <UniqueIdentifier>{d2073bb9-a74d-4af4-8ca8-374885024254}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Main">
-      <UniqueIdentifier>{f546b724-3efe-49f5-bb7a-1c232a659218}</UniqueIdentifier>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{4ae571ad-8d85-4728-9fe2-174268f3ca59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Header">
+      <UniqueIdentifier>{b942c56d-a755-4191-a24d-3ce3b83c74ae}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\Main">
       <UniqueIdentifier>{882c138c-1017-4a8d-b5da-b2e38a46fc45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Main">
+      <UniqueIdentifier>{f546b724-3efe-49f5-bb7a-1c232a659218}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

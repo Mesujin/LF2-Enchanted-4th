@@ -5,7 +5,7 @@
 // Dunno what to text here, but this is my usual style for a header text...               //
 //                                                                                        //
 // Under GNU General Public License v3.0.                                                 //
-// Last modify - 2023 01 17 4:39 PM                                                       //
+// Last modify - 2023 08 06 9:15 AM                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -217,6 +217,12 @@
      insize shadow_Index = 0;
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER > Layer;
     };
+    struct HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT
+    {
+     xint64 X = 0.0, Y = 0.0, Z = 0.0; int1 Exist = true;
+     insize Pic = 0; int1 Sprite = false; int1 Loop = false; int1 Screen = false;
+     std::vector < insize > Pics;
+    };
     struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_BPOINT
     {
      int32 x, y;
@@ -304,7 +310,7 @@
     struct HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT
     {
      int1 Exist = true; int1 Lock = false; int1 Facing = false; int1 Landing = false; int1 Heavy_Hold = false;
-     insize Frame = 0, Frame2 = 0, Frame3 = 0, Frame4 = 0, Team = 0, Owner = rinsize(-1), Pic_Offset = 0;
+     insize Frame = 0, Frame2 = 0, Frame3 = 0, Frame4 = 0, Team = 0, Pic_Offset = 0;
      xint64 X = 0, Y = 0, Z = 0; insize D = rinsize(-1);
      xint64 X_Vel = 0, Y_Vel = 0, Z_Vel = 0; int8 Vel = 0;
      xint64 X_Accel = 0, Y_Accel = 0, Z_Accel = 0; int8 Shake = 0;
@@ -332,7 +338,15 @@
      uint16 Catch_Time = 0;
      insize Attacking = 0;
      
+     insize Last_Hit = rinsize(-1);
+     uint16 Damage_Taken = 1000;
+     uint16 Damage_Dealt = 1000;
 
+     std::vector < insize > Owners;
+     xint64 Summary_Damage_Dealt = 0;
+     xint64 Summary_Damage_Taken = 0;
+     xint64 Summary_HP_Heal = 0;
+     uint64 Summary_HP_Heal_Percent = 0;
      uint64 Summary_Pick = 0;
      
      
@@ -343,12 +357,12 @@
      HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT *Data;
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT* > Trans_Address; uint8 Trans = 0;
      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT* > Return_Address; uint8 Return = 0;
-    };
-    struct HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT
-    {
-     xint64 X = 0.0, Y = 0.0, Z = 0.0; int1 Exist = true;
-     insize Pic = 0; int1 Sprite = false; int1 Loop = false; int1 Screen = false;
-     std::vector < insize > Pics;
+
+					int1 Stamp = false;
+					uint64 Stamp_Time = 0;
+					std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > Stamp_Data;
+					std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT > Stamp_Effect;
+					std::vector < std::vector < uint32 > > Stamp_Animation;
     };
     struct HEPTA_LF2_ENCHANTED_ENGINE1
     {
@@ -587,7 +601,7 @@
       Background = Vrab02; if(Background >= Backgrounds.size()) Background = 0;
       Difficult = Vrab03;
       Max = Vrab04; Effect.clear(); Object.clear();
-      Playtime = 0; Move = false;
+      Gametime = 0; Move = false;
       Pause = false; Frame_Pause = false; Speed = 2; F6 = false; Hitboxes = false; Fill_Hitboxes = false;
       Animation[Background].clear();
      }
@@ -680,7 +694,7 @@
        }
       } else
       {
-       std::vector < insize > Vect02; Playtime += 1;
+       std::vector < insize > Vect02; Gametime += 1; Playtime += 1;
 
        #pragma region Phase 0 : Arranging Main Values, Random Falling Weapons.
        {
@@ -689,7 +703,7 @@
          {insize Vrab99 = Effect.size(); while(Vrab99 != 0){Vrab99 -= 1; statics insize Vrab98 = Effect[Vrab99].Pics.size(); if(Vrab98 != Effect[Vrab99].Pic + 1){Effect[Vrab99].Pic += 1;} else {if(Effect[Vrab99].Loop && Vrab98 != 0){Effect[Vrab99].Pic = 0;} else {Effect[Vrab99].Exist = false;}}}}
          {insize Vrab99 = Object.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Object[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Object[Vrab99].Exist) Vrab99 -= 1; Object.resize(Vrab99 + 1);}}
          {insize Vrab99 = Effect.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Effect[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Effect[Vrab99].Exist) Vrab99 -= 1; Effect.resize(Vrab99 + 1);}}
-         {insize Vrab99 = Object.size(); while(Vrab99 != 0){Vrab99 -= 1; if(Object[Vrab99].Owner == rinsize(-1)) Object[Vrab99].Owner = Vrab99; insize Vrab98 = Object[Vrab99].Vrest.size(); if(Vrab98 != 0){while(Vrab98 != 0){Vrab98 -= 1; if(Object[Vrab99].Vrest[Vrab98] != 0) break;} if(Vrab98 == 0) if(Object[Vrab99].Vrest[Vrab98] == 0) Vrab98 -= 1; Object[Vrab99].Vrest.resize(Vrab98 + 1);}}}
+         {insize Vrab99 = Object.size(); while(Vrab99 != 0){Vrab99 -= 1; insize Vrab98 = Object[Vrab99].Vrest.size(); if(Vrab98 != 0){while(Vrab98 != 0){Vrab98 -= 1; if(Object[Vrab99].Vrest[Vrab98] != 0) break;} if(Vrab98 == 0) if(Object[Vrab99].Vrest[Vrab98] == 0) Vrab98 -= 1; Object[Vrab99].Vrest.resize(Vrab98 + 1);}}}
          {statics insize Vrab99 = Object.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Object[Vrab98].Exist) Vect02.push_back(Vrab98);}
          {insize Vrab99 = (Varb0002 < 800) ? (800 - Varb0002) : 0; if(Background >= Backgrounds.size()) Background = 0; if(Backgrounds[Background].width < 800 - Vrab99){Backgrounds[Background].Shift = L_Rounding(rxint64(800 - Backgrounds[Background].width - Vrab99) / 2.0);} else {Backgrounds[Background].Shift = 0;}}
         }
@@ -703,7 +717,7 @@
           Vrab98 -= 1; if(Objects[Vrab98].id < 100 || Objects[Vrab98].id > 199) continue; if(L_Random(549) != 0) continue; Vrab99 += 1;
           statics insize Vrab97 = Add(Objects[Vrab98].id);
           if(Vrab97 == rinsize(-1)) continue;
-          Object[Vrab97].Y = -500; Object[Vrab97].Facing = L_Random(1) == 0; Object[Vrab97].Frame = 0; Object[Vrab97].Owner = Vrab97; Object[Vrab97].Team = rinsize(-2);
+          Object[Vrab97].Y = -500; Object[Vrab97].Facing = L_Random(1) == 0; Object[Vrab97].Frame = 0; Object[Vrab97].Team = rinsize(-2);
           int1 Vrab96 = L_Random(14) == 0;
           if(Vrab96)
           {
@@ -737,7 +751,7 @@
 
          // Values Control
          {
-          if(!Polish || Playtime % 4 == 0)
+          if(!Polish || Gametime % 4 == 0)
           {
            if(Object[Vrab97].Blink > 0) Object[Vrab97].Blink -= 1;
            if(Object[Vrab97].Blink < 0) Object[Vrab97].Blink += 1;
@@ -877,7 +891,7 @@
              if(Vrab89 == rinsize(-1)) break; Vect02.push_back(Vrab89); Vrab99 += 1;
 
              Object[Vrab89].Facing = L_Random(1) == 0;
-             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owner = Object[Vrab97].Owner; Object[Vrab89].Scale = Object[Vrab97].Scale;
+             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owners = Object[Vrab97].Owners; Object[Vrab89].Owners.push_back(Vrab97); Object[Vrab89].Scale = Object[Vrab97].Scale;
              Object[Vrab89].Frame = L_Random(3); if(Object[Vrab97].Blink > 0) Object[Vrab89].Blink = Object[Vrab97].Blink;
  
              if(Object[Vrab89].Data->type == 0)
@@ -934,7 +948,7 @@
              
              if(Vrab93 == 2){Object[Vrab89].Held = Vrab97; Object[Vrab97].Hold = Vrab89;}
              Object[Vrab89].Frame = rinsize(Object[Vrab97].Data->Frame[Vrab96]->opoint[Vrab94].action); if(Object[Vrab89].Data->type == 0) if(Object[Vrab97].Blink > 0) Object[Vrab89].Blink = Object[Vrab97].Blink;
-             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owner = Object[Vrab97].Owner; Object[Vrab89].Scale = Object[Vrab97].Scale;
+             Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owners = Object[Vrab97].Owners; Object[Vrab89].Owners.push_back(Vrab97); Object[Vrab89].Scale = Object[Vrab97].Scale;
              Object[Vrab89].Facing = (Vrab92 == 10 || Vrab92 % 10 == 2) ? true : (Vrab92 % 10 == 3 ? false : (Vrab92 % 10 == 1 ? !Object[Vrab97].Facing : Object[Vrab97].Facing));
              
              if(Object[Vrab89].Data->type == 0)
@@ -1043,7 +1057,7 @@
             // Natural MP Regen.
             {
              xint64 Vrab96 = Polish ? 2.5 : 10;
-             if(!F6){Vrab96 = 0; if(Playtime % 3 == 0){Vrab96 = Polish ? 0.25 : 1; if(Object[Vrab97].HP < Object[Vrab97].MHP) Vrab96 = ((1 + (1 * rxint64((L_Rounding64(Object[Vrab97].MHP - Object[Vrab97].HP)) / (Object[Vrab97].MHP / 5)))) / (Polish ? 4 : 1)); switch(Object[Vrab97].Data->id){case 51: case 52: if(Vrab96 < 2) Vrab96 = 2; default: break;}}}
+             if(!F6){Vrab96 = 0; if(Gametime % 3 == 0){Vrab96 = Polish ? 0.25 : 1; if(Object[Vrab97].HP < Object[Vrab97].MHP) Vrab96 = ((1 + (1 * rxint64((L_Rounding64(Object[Vrab97].MHP - Object[Vrab97].HP)) / (Object[Vrab97].MHP / 5)))) / (Polish ? 4 : 1)); switch(Object[Vrab97].Data->id){case 51: case 52: if(Vrab96 < 2) Vrab96 = 2; default: break;}}}
              if(Object[Vrab97].MP + Vrab96 < Object[Vrab97].MMP){Object[Vrab97].MP += Vrab96;} else {Object[Vrab97].MP = Object[Vrab97].MMP;}
             }
            }
@@ -1535,7 +1549,7 @@
                if(Vrab93 != rinsize(-1))
                {
                 Object[Vrab93].Facing = Vrab94 > 2;
-                Object[Vrab93].Team = Object[Vrab98].Team; Object[Vrab93].Name = Object[Vrab98].Name; Object[Vrab93].Owner = Object[Vrab98].Owner; Object[Vrab93].Scale = Object[Vrab98].Scale;
+                Object[Vrab93].Team = Object[Vrab98].Team; Object[Vrab93].Name = Object[Vrab98].Name; Object[Vrab93].Owners = Object[Vrab98].Owners; Object[Vrab93].Owners.push_back(Vrab98); Object[Vrab93].Scale = Object[Vrab98].Scale;
                 Object[Vrab93].Frame = 100; if(Object[Vrab98].Blink > 0) Object[Vrab93].Blink = Object[Vrab98].Blink;
  
                 if(Object[Vrab93].Data->type == 0)
@@ -1559,7 +1573,7 @@
                if(Vrab92 != rinsize(-1))
                {
                 Object[Vrab92].Facing = (Vrab93 < 4 ? (Vrab93 >= 2) : (Vrab93 != 4)); if(Vrab94) Object[Vrab92].Facing = !Object[Vrab92].Facing;
-                Object[Vrab92].Team = Object[Vrab98].Team; Object[Vrab92].Name = Object[Vrab98].Name; Object[Vrab92].Owner = Object[Vrab98].Owner; Object[Vrab92].Scale = Object[Vrab98].Scale;
+                Object[Vrab92].Team = Object[Vrab98].Team; Object[Vrab92].Name = Object[Vrab98].Name; Object[Vrab92].Owners = Object[Vrab98].Owners; Object[Vrab92].Owners.push_back(Vrab98); Object[Vrab92].Scale = Object[Vrab98].Scale;
                 Object[Vrab92].Frame = 50; if(Object[Vrab98].Blink > 0) Object[Vrab92].Blink = Object[Vrab98].Blink;
  
                 if(Object[Vrab92].Data->type == 0)
@@ -1578,7 +1592,7 @@
               if(Vrab93 != rinsize(-1))
               {
                Object[Vrab93].Facing = Object[Vrab98].Facing;
-               Object[Vrab93].Team = Object[Vrab98].Team; Object[Vrab93].Name = Object[Vrab98].Name; Object[Vrab93].Owner = Object[Vrab98].Owner; Object[Vrab93].Scale = Object[Vrab98].Scale;
+               Object[Vrab93].Team = Object[Vrab98].Team; Object[Vrab93].Name = Object[Vrab98].Name; Object[Vrab93].Owners = Object[Vrab98].Owners; Object[Vrab93].Owners.push_back(Vrab98); Object[Vrab93].Scale = Object[Vrab98].Scale;
                Object[Vrab93].Frame = 109; if(Object[Vrab98].Blink > 0) Object[Vrab93].Blink = Object[Vrab98].Blink;
  
                if(Object[Vrab93].Data->type == 0)
@@ -1593,7 +1607,7 @@
               if(Vrab92 != rinsize(-1))
               {
                Object[Vrab92].Facing = Object[Vrab92].Facing;
-               Object[Vrab92].Team = Object[Vrab98].Team; Object[Vrab92].Name = Object[Vrab98].Name; Object[Vrab92].Owner = Object[Vrab98].Owner; Object[Vrab92].Scale = Object[Vrab98].Scale;
+               Object[Vrab92].Team = Object[Vrab98].Team; Object[Vrab92].Name = Object[Vrab98].Name; Object[Vrab92].Owners = Object[Vrab98].Owners; Object[Vrab92].Owners.push_back(Vrab98); Object[Vrab92].Scale = Object[Vrab98].Scale;
                Object[Vrab92].Frame = 81; if(Object[Vrab98].Blink > 0) Object[Vrab92].Blink = Object[Vrab98].Blink;
  
                if(Object[Vrab92].Data->type == 0)
@@ -1649,7 +1663,7 @@
                 if(Vrab90 != rinsize(-1))
                 {
                  Object[Vrab90].Facing = Object[Vrab90].Facing;
-                 Object[Vrab90].Team = Object[Vrab98].Team; Object[Vrab90].Name = Object[Vrab98].Name; Object[Vrab90].Owner = Object[Vrab98].Owner; Object[Vrab90].Scale = Object[Vrab98].Scale;
+                 Object[Vrab90].Team = Object[Vrab98].Team; Object[Vrab90].Name = Object[Vrab98].Name; Object[Vrab90].Owners = Object[Vrab98].Owners; Object[Vrab90].Owners.push_back(Vrab98); Object[Vrab90].Scale = Object[Vrab98].Scale;
                  Object[Vrab90].Frame = 0; if(Object[Vrab98].Blink > 0) Object[Vrab90].Blink = Object[Vrab98].Blink;
  
                  if(Object[Vrab90].Data->type == 0)
@@ -1680,7 +1694,7 @@
               if(Vrab94 != rinsize(-1))
               {
                Object[Vrab94].Facing = Object[Vrab98].Facing;
-               Object[Vrab94].Team = Object[Vrab98].Team; Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owner = Object[Vrab98].Owner; Object[Vrab94].Scale = Object[Vrab98].Scale;
+               Object[Vrab94].Team = Object[Vrab98].Team; Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owners = Object[Vrab98].Owners; Object[Vrab94].Owners.push_back(Vrab98); Object[Vrab94].Scale = Object[Vrab98].Scale;
                Object[Vrab94].Frame = 40; if(Object[Vrab98].Blink > 0) Object[Vrab94].Blink = Object[Vrab98].Blink;
                
                if(Object[Vrab94].Data->type == 0)
@@ -2022,7 +2036,7 @@
                Vrab95 -= 1;
                statics insize Vrab94 = Add(Vrab95 == 0 ? 218 : 217);
                if(Vrab94 == rinsize(-1)) continue;
-               Object[Vrab94].Team = rinsize(-2); Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owner = Object[Vrab98].Owner; Object[Vrab94].Scale = Object[Vrab98].Scale;
+               Object[Vrab94].Team = rinsize(-2); Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owners = Object[Vrab98].Owners; Object[Vrab94].Owners.push_back(Vrab98); Object[Vrab94].Scale = Object[Vrab98].Scale;
                Object[Vrab94].Frame = L_Random(5); if(Object[Vrab98].Blink > 0) Object[Vrab94].Blink = Object[Vrab98].Blink;
 
                if(Object[Vrab98].Data->id == 52 || Object[Vrab98].Data->id == 5)
@@ -2135,7 +2149,7 @@
                if(Vrab95 != rinsize(-1))
                {
                 Object[Vrab95].Facing = Object[Vrab98].Facing;
-                Object[Vrab95].Team = Object[Vrab98].Team; Object[Vrab95].Name = Object[Vrab98].Name; Object[Vrab95].Owner = Object[Vrab98].Owner; Object[Vrab95].Scale = Object[Vrab98].Scale;
+                Object[Vrab95].Team = Object[Vrab98].Team; Object[Vrab95].Name = Object[Vrab98].Name; Object[Vrab95].Owners = Object[Vrab98].Owners; Object[Vrab95].Owners.push_back(Vrab98); Object[Vrab95].Scale = Object[Vrab98].Scale;
                 Object[Vrab95].Frame = 140; if(Object[Vrab98].Blink > 0) Object[Vrab95].Blink = Object[Vrab98].Blink;
  
                 if(Object[Vrab95].Data->type == 0)
@@ -2234,6 +2248,54 @@
         }
         
         Vect02.clear(); Vrab99 = Object.size(); while(Vrab99 != 0){Vrab99 -= 1; if(Object[Vrab99].Exist) Vect02.push_back(Vrab99);}
+
+        // False Future.
+        {
+         std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > Vect06;
+	        struct Srct01 
+		       {
+		        uint64 Time = 0;
+          std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > *Stamp_Object;
+          std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT > *Stamp_Effect;
+										std::vector < std::vector < uint32 > > *Stamp_Animation;
+		       }; std::vector < Srct01 > Vect07;
+         int1 Vrab98 = false;
+
+									{
+										insize Vrab97 = Vect02.size();
+										while(Vrab97 != 0)
+										{
+											Vrab97 -= 1; statics insize Vrab96 = Vect02[Vrab97]; statics insize Vrab95 = Object[Vrab96].Frame;
+											if(Vrab95 >= Object[Vrab96].Data->Frame.size()) continue; if(!Object[Vrab96].Data->Frame[Vrab95]->Exist) continue;
+											if(Object[Vrab96].Data->Frame[Vrab95]->state == 6900) Vrab98 = true;
+											if(Object[Vrab96].Data->Frame[Vrab95]->state == 6910) if(Object[Vrab96].Stamp) Vect07.push_back({Object[Vrab96].Stamp_Time, &Object[Vrab96].Stamp_Data, &Object[Vrab96].Stamp_Effect, &Object[Vrab96].Stamp_Animation});
+										}
+										
+										Vrab97 = Vect07.size();
+          if(Vrab97 > 0)
+          {
+           uint64 Vrab96 = ruint64(-1);
+           std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > *Vect08;
+           std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT > *Vect09;
+										 std::vector < std::vector < uint32 > > *Vect10;
+											while(Vrab97 != 0){Vrab97 -= 1; if(Vect07[Vrab97].Time < Vrab96){Vrab96 = Vect07[Vrab97].Time; Vect08 = Vect07[Vrab97].Stamp_Object; Vect09 = Vect07[Vrab97].Stamp_Effect; Vect10 = Vect07[Vrab97].Stamp_Animation;}}
+											std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > Vect11 = *Vect08;
+											Effect = *Vect09; Object = Vect11; Gametime = Vrab96; Animation = *Vect10; Move = true;
+          }
+									}
+
+									if(Vrab98)
+         {
+          Vect06 = Object;
+          insize Vrab97 = Vect02.size(); 
+										while(Vrab97 != 0)
+          {
+           Vrab97 -= 1; statics insize Vrab96 = Vect02[Vrab97]; statics insize Vrab95 = Object[Vrab96].Frame;
+											if(Vrab95 >= Object[Vrab96].Data->Frame.size()) continue; if(!Object[Vrab96].Data->Frame[Vrab95]->Exist) continue;
+											if(Object[Vrab96].Data->Frame[Vrab95]->state == 6900){Object[Vrab96].Stamp_Data = Vect06; Object[Vrab96].Stamp_Animation = Animation; Object[Vrab96].Stamp_Effect = Effect; Object[Vrab96].Stamp_Time = Gametime; Object[Vrab96].Stamp = true;}
+          }
+         }
+        }
        }
        #pragma endregion
 
@@ -2430,7 +2492,7 @@
          struct Srct01 {insize Vrab001 = rinsize(-1); insize Vrab002 = 0;};
          std::vector < std::vector < std::vector < Srct01 > > > Vect10(Vrab99);                 // Collision Result.
 
-         // 0th Phase : Collision Check.
+         #pragma region 0th Phase : Collision Check.
          {
           std::vector < std::vector < int1 > > Vect11(Vrab99, std::vector < int1 >(Vrab99));     // Result.
           std::vector < xint64 > Vect12(Vrab99);                                                 // Itr X.
@@ -2561,7 +2623,7 @@
 
                 switch(Vrab89)
                 {
-                 case 4: case 5: case 6: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
+                 case 6: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
                   Vrab92 = false;
                  break;
                  case 2:
@@ -2584,13 +2646,16 @@
                   if(Vrab84 != 0) Vrab92 = false;
                   if(Vrab87 == 12) if(Vrab82 < 40) Vrab92 = false;
                  break;
-                 default: // kind:0
+                 case 4: if(Object[Vrab97].Throw == 0){Vrab92 = false; break;}
+                 case 5: if(Vrab89 != 4 && Object[Vrab97].Attacking == 0){Vrab92 = false; break;}
+                 default: // kind: 0, 4, 5, 9.
                   {
+                   if(Vrab81) Vrab92 = false;
                    if(Vrab85 == 0) if(Vrab87 == 1004) Vrab92 = false;
-                   if(Vrab84 == 3) if(Vrab86) if(Vect08[Vrab98] == Vect08[Vrab96]) Vrab92 = false;
+                   if(Vrab84 == 3) if(Vrab86 && Vrab89 != 4) if(Vect08[Vrab98] == Vect08[Vrab96]) Vrab92 = false;
                    if(Vrab84 == 0)
                    {
-                    if(Vrab83 == 4 || Vrab86) Vrab92 = false;
+                    if(Vrab83 == 4 || (Vrab86 && Vrab89 != 4)) Vrab92 = false;
                     if(Vrab87 == 12) if(Vrab82 <= 40) Vrab92 = false;
                    }
                   }
@@ -2626,8 +2691,9 @@
            }
           }
          }
+         #pragma endregion
 
-         // 1st Phase : Arest Management.
+         #pragma region 1st Phase : Arest Management.
          {
           for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
           {
@@ -2718,8 +2784,9 @@
            }
           }
          }
+         #pragma endregion
 
-         // 2nd Phase : Bullet Reflect Interacts. (An object that being reflected will have his entire ITR disabled in this Frame. Criminal's release included here.)
+         // 2nd Phase : Early Interacts. (An object that being reflected will have his entire ITR disabled in this Frame. Criminal's release included here.)
          {
           std::vector < uint8 > Vect11(Vrab99, 0); std::vector < std::vector < insize > > Vect12(Vrab99);
 
@@ -2787,135 +2854,6 @@
           }*/
 
           for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Vect11[Vrab98]){Vect10[Vrab98].clear(); }
-         }
-
-         // 3rd Phase : Early Interacts. (An ITR which cause the interactor to change it's frame or cause the interactor to respond by the interact, in this case ; Ik1, Ik2, Ik3, ik7, Ik8, ik13. Which randomization is required for consistency.)
-         {
-          struct Srct02 {insize Vrab001 = 0; xint64 Vrab002 = 0; xint64 Vrab003 = 0; xint64 Vrab004 = 0; uint8 Vrab005 = 0; insize Vrab006 = rinsize(-1);};
-          std::vector < std::vector < Srct02 > > Vect11(Vrab99);
-
-          //
-          {
-           insize Vrab98 = Vrab99;
-           while(Vrab98 != 0)
-           {
-            Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98]; int1 Vrab96[2] = {false, false};
-            statics insize Vrab95 = Vect10[Vrab98].size(); insize Vrab94 = 0;
-            while(Vrab94 < Vrab95)
-            {
-             statics insize Vrab93 = Vrab94; Vrab94 += 1;
-             statics int32 Vrab92 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].kind;
-             switch(Vrab92)
-             {
-              case 1: case 2: case 3: case 7: case 8: case 13: break;
-              default: continue;
-             }
-
-             // Picking Target.
-             {
-              if(Vrab92 == 2 || Vrab92 == 7) if(Vrab96[0]) continue;
-              if(Vrab92 == 1 || Vrab92 == 3) if(Vrab96[1]) continue;
-              
-              std::vector < insize > Vect12;
-              xint64 Vrab91 = rxint64(0xFFFFFFFFF); insize Vrab90 = Vect10[Vrab98][Vrab93].size();
-              while(Vrab90 != 0)
-              {
-               Vrab90 -= 1; statics insize Vrab89 = Vect10[Vrab98][Vrab93][Vrab90].Vrab001; statics xint64 Vrab88 = L_Distance(Vect04[Vrab98], Vect06[Vrab98], Vect04[Vrab89], Vect06[Vrab89]);
-               if(Vrab88 <= Vrab91){if(Vrab88 < Vrab91){Vrab91 = Vrab88; Vect12.clear();} Vect12.push_back(Vrab90);}
-              }
-              statics insize Vrab89 = Vect12.size();
-              if(Vrab89 > 0)
-              {
-               statics insize Vrab88 = Vect12[rinsize(L_Random(Vrab89 - 1))]; statics insize Vrab87 = Vect10[Vrab98][Vrab93][Vrab88].Vrab001; statics insize Vrab86 = Vect02[Vrab87];
-               switch(Vrab92)
-               {
-                case 1: case 3:
-                 {
-                  Object[Vrab97].Facing = (Vect04[Vrab98] - Vect04[Vrab87] == 0) ? Vect08[Vrab98] : (Vect04[Vrab98] - Vect04[Vrab87] < 0);
-                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].catchingact[0]; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Object[Vrab97].Facing;}
-                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0; Object[Vrab97].Catch = Vrab86; Vrab96[1] = true;
-                 }
-                break;
-                case 2:
-                 {
-                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].respond; if(Object[Vrab86].Data->type == 2){Object[Vrab97].Heavy_Hold = true; if(Vrab85 == 0) Vrab85 = 116;} else {if(Vrab85 == 0) Vrab85 = 115;} 
-                  if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
-                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0;
-                 }
-                case 7:
-                 Object[Vrab97].Hold = Vrab86; Vrab96[0] = true;
-                break;
-                case 8:
-                 {
-                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvx; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
-                  if(rinsize(Vrab85) != Object[Vrab97].Frame) Object[Vrab97].Wait = 0; Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].X = Vect04[Vrab87]; Object[Vrab97].Z = Vect06[Vrab87] + 1;
-                 }
-                break;
-                default:
-                 {
-                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].respond; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
-                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0;
-                 }
-                break;
-               }
-              }
-             }
-
-             // Applying Effect.
-             {
-              int1 Vrab91 = false; 
-              insize Vrab90; {statics int32 Vrab89 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].caughtact[0]; if(Vrab89 < 0){Vrab91 = true; Vrab90 = rinsize(-Vrab89);} else {Vrab90 = rinsize(Vrab89);}} 
-              int1 Vrab89 = false;
-              insize Vrab88; {statics int32 Vrab87 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvx; if(Vrab87 < 0){Vrab89 = true; Vrab88 = rinsize(-Vrab87);} else {Vrab88 = rinsize(Vrab87);}}
-
-              insize Vrab87 = Vect10[Vrab98][Vrab93].size();
-              while(Vrab87 != 0)
-              {
-               Vrab87 -= 1; statics insize Vrab86 = Vect10[Vrab98][Vrab93][Vrab87].Vrab001; statics insize Vrab85 = Vect02[Vrab86]; uint8 Vrab84 = 2ui8;
-               switch(Vrab92)
-               {
-                case 2: case 7: if(Object[Vrab97].Hold != Vrab85) break;
-                 Vrab84 += 4ui8;
-                case 13: Vrab84 -= 2ui8;
-                 Vrab91 = Vrab91 ? !Vect08[Vrab86] : Vect08[Vrab86];
-                 Vect11[Vrab86].push_back({Vrab90, Vect04[Vrab86], Vect05[Vrab86], Vect06[Vrab86], ruint8(Vrab84 + (Vrab91 ? 0ui8 : 1ui8)), Vrab97});
-                break;
-                case 1: case 3:
-                 Vrab91 = Vrab91 ? Vect08[Vrab86] : !Vect08[Vrab86];
-                 if(((Vect04[Vrab98] - Vect04[Vrab86]) < 0 && !Vect08[Vrab86]) || ((Vect04[Vrab98] - Vect04[Vrab86]) > 0 && Vect08[Vrab86])) Vrab91 = !Vrab91;
-                 Vect11[Vrab86].push_back({Vrab90, (Vect04[Vrab98] + Vect04[Vrab86]) / 2, (Vect05[Vrab98] + Vect05[Vrab86]) / 2, (Vect06[Vrab98] + Vect06[Vrab86]) / 2, (Vrab91 ? 3ui8 : 2ui8), Vrab97});
-                break;
-                case 8:
-                 {
-                  int32 Vrab83 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].injury;
-                  if(Vrab83 < -1000) Vrab83 = -1000;
-                  if(Vrab83 < 0)
-                  {if(Object[Vrab85].Heal_Ratio > -Vrab83){Object[Vrab85].Heal_Ratio -= ruint16(Vrab83);} else {Object[Vrab85].Heal_Ratio = 0;}} else
-                  {if(Polish) Vrab83 *= 4; Vrab83 = L_Rounding(rxint64(Vrab83) * 0.75); if(Object[Vrab85].Heal + Vrab83 < 0x7FFFFFFE){Object[Vrab85].Heal += Vrab83;} else {Object[Vrab85].Heal = 0x7FFFFFFE;}}
-                 }
-                break;
-                default: break;
-               }
-              }
-             }
-            }
-           }
-          }
-
-          for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
-          {
-           insize Vrab97 = Vect11[Vrab98].size(); if(Vrab97 == 0) continue; Vrab97 = rinsize(L_Random(Vrab97 - 1));
-           statics insize Vrab96 = Vect02[Vrab98]; statics uint8 Vrab95 = Vect11[Vrab98][Vrab97].Vrab005; statics insize Vrab94 = Vect11[Vrab98][Vrab97].Vrab006;
-           Object[Vrab96].Frame = Vect11[Vrab98][Vrab97].Vrab001; Object[Vrab96].Wait = 0;
-           Object[Vrab96].X = Vect11[Vrab98][Vrab97].Vrab002; Object[Vrab96].Y = Vect11[Vrab98][Vrab97].Vrab003; Object[Vrab96].Z = Vect11[Vrab98][Vrab97].Vrab004;
-           Object[Vrab96].Facing = Vrab95 % 2 == 0;
-           switch(Vrab95)
-           {
-            case 3: case 2: Object[Vrab96].Caught = Vrab94; break;
-            case 5: case 4: if(Object[Vrab96].Held == rinsize(-1) && Object[Vrab94].Hold == Vrab96) Object[Vrab94].Summary_Pick += 1; Object[Vrab96].Held = Vrab94; break;
-            default: break;
-           }
-          }
          }
 
          /*/ 4th Phase : Main Interacts.
@@ -3022,6 +2960,459 @@
 
          }*/
 
+         #pragma region 3rd Phase : Side Interacts. (An ITR that interact by applying specified effect.)
+         {
+          struct Srct02
+          {
+           std::vector < uint16 > Heal_Ratio;
+           std::vector < uint16 > Damage_Taken;
+           std::vector < uint16 > Damage_Dealt;
+          }; std::vector < Srct02 > Vect11(Vrab99);
+
+          //
+          {
+           insize Vrab98 = Vrab99;
+           while(Vrab98 != 0)
+           {
+            Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98]; int1 Vrab96[2] = {false, false};
+            statics insize Vrab95 = Vect10[Vrab98].size(); insize Vrab94 = 0;
+            while(Vrab94 < Vrab95)
+            {
+             statics insize Vrab93 = Vrab94; Vrab94 += 1;
+             statics int32 Vrab92 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].kind;
+             switch(Vrab92)
+             {
+              case 1: case 2: case 3: case 7: case 8: case 13: break;
+              default: continue;
+             }
+
+             // Applying Effect.
+             {
+              insize Vrab87 = Vect10[Vrab98][Vrab93].size();
+              while(Vrab87 != 0)
+              {
+               Vrab87 -= 1; statics insize Vrab86 = Vect10[Vrab98][Vrab93][Vrab87].Vrab001; statics insize Vrab85 = Vect02[Vrab86]; uint8 Vrab84 = 2ui8;
+               switch(Vrab92)
+               {
+                case 8:
+                 {
+                  int32 Vrab83 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].injury;
+                  if(Vrab83 < -1000) Vrab83 = -1000;
+                  if(Vrab83 < 0) Vect11[Vrab86].Heal_Ratio.push_back(ruint16(-Vrab83));
+                 }
+                break;
+                default:  break;
+               }
+              }
+             }
+            }
+           }
+          }
+
+          for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+          {
+           statics insize Vrab97 = Vect02[Vrab98];
+           xint64 Vrab96 = 1, Vrab95 = 1, Vrab94 = 1;
+
+           insize Vrab93 = Vect11[Vrab98].Heal_Ratio.size();
+           while(Vrab93 != 0){Vrab93 -= 1; Vrab96 *= rxint64(Vect11[Vrab98].Heal_Ratio[Vrab93]) / 1000.0;}
+           Vrab93 = Vect11[Vrab98].Damage_Dealt.size();
+           while(Vrab93 != 0){Vrab93 -= 1; Vrab96 *= rxint64(Vect11[Vrab98].Damage_Dealt[Vrab93]) / 1000.0;}
+           Vrab93 = Vect11[Vrab98].Damage_Taken.size();
+           while(Vrab93 != 0){Vrab93 -= 1; Vrab96 *= rxint64(Vect11[Vrab98].Damage_Taken[Vrab93]) / 1000.0;}
+
+           Object[Vrab97].Heal_Ratio = ruint16(L_Rounding(Vrab96 * 1000) % 60000);
+           Object[Vrab97].Damage_Dealt = ruint16(L_Rounding(Vrab95 * 1000) % 60000);
+           Object[Vrab97].Damage_Taken = ruint16(L_Rounding(Vrab94 * 1000) % 60000);
+          }
+         }
+         #pragma endregion
+         
+         #pragma region 4th Phase : Main Interacts. (An ITR that interact with Type0.)
+         {
+          struct Srct02
+          {
+           xint64 Damage = 0;
+           insize Dealer = rinsize(-1);
+           int32  Fall;
+           int32  BDefend;
+           int1   Facing;
+           int32  Arest;
+           int32  Vrest;
+           int32  DVX;
+           int32  DVY;
+          };
+          struct Srct03
+          {
+           xint64 Healing = 0.0;
+           std::vector < int32 > Fall;
+
+           uint8 Hit_Effect = 0;
+           std::vector < Srct02 > Ice_Conditional;
+           std::vector < Srct02 > Fire_Conditional;
+
+           std::vector < insize > Hit;
+          }; std::vector < Srct03 > Vect11(Vrab99);
+
+          //
+          {
+           insize Vrab98 = Vrab99;
+           while(Vrab98 != 0)
+           {
+            Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98]; 
+            statics insize Vrab95 = Vect10[Vrab98].size(); insize Vrab94 = 0;
+            while(Vrab94 < Vrab95)
+            {
+             statics insize Vrab93 = Vrab94; Vrab94 += 1;
+             statics int32 Vrab92 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].kind;
+             switch(Vrab92)
+             {
+              case 1: case 2: case 3: case 7: case 8: case 12: case 13: continue;
+              default: break;
+             }
+
+             int32 Vrab91 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvx;
+             int32 Vrab90 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvy;
+             int32 Vrab89 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].fall;
+             int32 Vrab88 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].bdefend;
+             int32 Vrab87 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].effect;
+             int32 Vrab86 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].arest;
+             int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].vrest;
+             int32 Vrab84 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].injury;
+
+             if(Vrab92 == 5) while(true)
+             {
+              statics insize Vrab83 = Object[Vrab97].Attacking - 1;
+              if(Vrab83 >= Object[Vrab97].Data->Strength.size()) break;
+
+              Vrab91 = Object[Vrab97].Data->Strength[Vrab83].dvx;
+              Vrab90 = Object[Vrab97].Data->Strength[Vrab83].dvy;
+              Vrab89 = Object[Vrab97].Data->Strength[Vrab83].fall;
+              Vrab88 = Object[Vrab97].Data->Strength[Vrab83].bdefend;
+              Vrab87 = Object[Vrab97].Data->Strength[Vrab83].effect;
+              Vrab86 = Object[Vrab97].Data->Strength[Vrab83].arest;
+              Vrab85 = Object[Vrab97].Data->Strength[Vrab83].vrest;
+              Vrab84 = Object[Vrab97].Data->Strength[Vrab83].injury;
+
+              break;
+             }
+             
+             insize Vrab83 = Vect10[Vrab98][Vrab93].size();
+             while(Vrab83 != 0)
+             {
+              Vrab83 -= 1; statics insize Vrab82 = Vect10[Vrab98][Vrab93][Vrab83].Vrab001; statics insize Vrab81 = Vect02[Vrab82];
+              int1 Vrab80 = false;
+
+              switch(Vrab92)
+              {
+			   case 1: case 2: case 3: case 6: case 7: case 8: case 10: case 11: case 12: case 13: case 14: case 15: case 16: break;
+               default: // kind: 0, 4, 5, 9.
+                if(Object[Vrab81].Data->type != 0 || Vrab87 == 4) continue;
+                if(Vrab86 != 0 || (Vrab86 == 0 && Vrab85 == 0)) if(Object[Vrab97].Arest > 0) continue;
+                if(Vrab85 != 0) if(Object[Vrab81].Vrest.size() > Vrab97) if(Object[Vrab81].Vrest[Vrab97] > 0) continue;
+                Vrab80 = Vrab87 != 5;
+
+                // Attacker's Respond.
+                {
+                 if(Object[Vrab97].Shake <= 0){Object[Vrab97].Shake = -4;} else {Object[Vrab97].Shake = 4;}
+                 if(Object[Vrab97].Data->Frame[Vect03[Vrab98]]->state == 3000){Object[Vrab97].Frame = 10; Object[Vrab97].Wait = 0; Object[Vrab97].X_Vel = 0; Object[Vrab97].Y_Vel = 0; Object[Vrab97].Z_Vel = 0;}
+                 if(Vrab92 == 9 || Object[Vrab97].Data->id == 214) Object[Vrab97].Counter = 0;
+                 switch(Object[Vrab97].Data->type){case 1: case 4: case 6: Object[Vrab97].Frame = 0; Object[Vrab97].Wait = 0; Object[Vrab97].X_Vel = Object[Vrab97].Facing ? -4 : 4; Object[Vrab97].Y_Vel = -2; break; default: break;}
+                }
+
+                // Victim's Respond.
+                {
+                 Object[Vrab81].Shake = 4; Vect11[Vrab82].Hit.push_back(Vrab97);
+                 statics xint64 Vrab79 = rxint64(Vrab84) * (rxint64(Object[Vrab97].Damage_Dealt) / 1000.0) * (rxint64(Object[Vrab81].Damage_Taken) / 1000.0) * (Object[Vrab81].Fall < 0 ? 0.5 : 1.0);
+               
+				 switch (Vrab87)
+				 {
+				  case 20: case 21: case 30: break;
+                  /* Vect11[Vrab82].Fire_Conditional.push_back({Vrab79, Vrab97, Vrab89, Vrab88});
+                   if(Vect11[Vrab82].Fire_Conditional_Facing != 3)
+                   Vect11[Vrab82].Fire_Conditional_Facing = Vect08[Vrab98] ? (Vect11[Vrab82].Fire_Conditional_Facing == 2 ? 3 : 1) : (Vect11[Vrab82].Fire_Conditional_Facing == 1 ? 3 : 2);
+                  break;
+                  case 30:
+                   Vect11[Vrab82].Ice_Conditional.push_back({Vrab79, Vrab97, Vrab89, Vrab88});
+                   if(Vect11[Vrab82].Ice_Conditional_Facing != 3)
+                   Vect11[Vrab82].Ice_Conditional_Facing = Vect08[Vrab98] ? (Vect11[Vrab82].Ice_Conditional_Facing == 2 ? 3 : 1) : (Vect11[Vrab82].Ice_Conditional_Facing == 1 ? 3 : 2);
+                  break;*/
+                  default:
+                   if(Vrab84 < 0)
+                   {Object[Vrab81].DHP -= (rxint64(Vrab84) / 4.0) * (rxint64(Object[Vrab81].Heal_Ratio) / 1000.0); Vect11[Vrab82].Healing += rxint64(Vrab84); Object[Vrab97].Summary_HP_Heal += rxint64(Vrab84);} else
+                   {Object[Vrab81].HP -= Vrab79; Object[Vrab81].DHP -= Vrab79 / 4.0; Object[Vrab81].Summary_Damage_Taken += Vrab79; Object[Vrab97].Summary_Damage_Dealt += Vrab79;}
+                  break;  
+                 }
+                }
+
+                if(Vrab86 != 0 || (Vrab86 == 0 && Vrab85 == 0)) if(Vrab86 >= 0){if(Vrab86 == 0){Object[Vrab97].Arest = 4;} else {Object[Vrab97].Arest = Vrab86 % 65535;}} else {Object[Vrab97].Arest = 0;}
+                if(Vrab85 != 0){if(Object[Vrab81].Vrest.size() <= Vrab97) Object[Vrab81].Vrest.resize(Vrab97 + 1); if(Vrab85 > 0){Object[Vrab81].Vrest[Vrab97] = Vrab85 % 65535;} else {Object[Vrab81].Vrest[Vrab97] = 0;}}
+               break;
+              }
+
+              if(Vrab80)
+              {
+               statics insize Vrab79 = Vect10[Vrab98][Vrab93][Vrab83].Vrab002;
+               statics xint64 Vrab78 = Vect06[Vrab98] > Vect06[Vrab82] ? Vect06[Vrab98] : Vect06[Vrab82];
+               xint64 Vrab77; if(Vect09[Vrab98][0][Vrab93][0] - Vect09[Vrab82][1][Vrab79][0] < 0){Vrab77 = Vect09[Vrab82][1][Vrab79][0];} else {Vrab77 = Vect09[Vrab98][0][Vrab93][0];}
+               xint64 Vrab76; if(Vect09[Vrab98][0][Vrab93][1] - Vect09[Vrab82][1][Vrab79][1] > 0){Vrab76 = Vect09[Vrab82][1][Vrab79][1];} else {Vrab76 = Vect09[Vrab98][0][Vrab93][1];}
+               xint64 Vrab75; if(Vect09[Vrab98][0][Vrab93][2] - Vect09[Vrab82][1][Vrab79][2] < 0){Vrab75 = Vect09[Vrab82][1][Vrab79][2];} else {Vrab75 = Vect09[Vrab98][0][Vrab93][2];}
+               xint64 Vrab74; if(Vect09[Vrab98][0][Vrab93][3] - Vect09[Vrab82][1][Vrab79][3] > 0){Vrab74 = Vect09[Vrab82][1][Vrab79][3];} else {Vrab74 = Vect09[Vrab98][0][Vrab93][3];}
+               Spark((Vrab87 == 1 ? 2 : 0) + (Vrab89 >= 70 ? 1 : 0), ((Vrab77 + Vrab76) / 2) - 10 + L_Random(20), ((Vrab75 + Vrab74) / 2) - 10 + L_Random(20) - (Vrab78 - Vect06[Vrab82]), Vrab78);
+              }
+             }
+            }
+           }
+          }
+
+          for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+          {
+           if(Vect11[Vrab98].Hit.size() == 0) continue;
+           statics insize Vrab97 = Vect02[Vrab98];
+
+           Object[Vrab97].Last_Hit = Vect11[Vrab98].Hit[L_Random(Vect11[Vrab98].Hit.size() - 1)];
+
+           // Ice-conditional Damage.
+           {
+            insize Vrab96 = Vect11[Vrab98].Ice_Conditional.size();
+            if(Vrab96 > 0)
+            {
+             Vrab96 -= 1;
+             xint64 Vrab95 = Vect11[Vrab98].Ice_Conditional[0].Damage; xint64 Vrab94 = Vrab95;
+             int32  Vrab93 = Vect11[Vrab98].Ice_Conditional[0].Fall;
+             int32  Vrab92 = Vect11[Vrab98].Ice_Conditional[0].BDefend;
+             while(Vrab96 != 0)
+             {
+              Vrab96 -= 1;
+              statics xint64 Vrab91 = Vect11[Vrab98].Ice_Conditional[Vrab96].Damage;  if(Vrab91 > Vrab95) Vrab95 = Vrab91; Vrab94 += Vrab91;
+              statics int32  Vrab90 = Vect11[Vrab98].Ice_Conditional[Vrab96].Fall;    if(Vrab90 > Vrab93) Vrab93 = Vrab90;
+              statics int32  Vrab89 = Vect11[Vrab98].Ice_Conditional[Vrab96].BDefend; if(Vrab89 > Vrab92) Vrab92 = Vrab89;
+             }
+
+             Vect11[Vrab98].Fall.push_back(Vrab93);
+             //if((Object[Vrab97].Data->Frame[Vect03[Vrab98]]->state == 7 && (Vect08[Vrab98] ? (Vect11[Vrab98].Ice_Conditional_Facing == 2) : (Vect11[Vrab98].Ice_Conditional_Facing == 1))) || Object[Vrab97].Data->Frame[Vect03[Vrab98]]->state == 69)
+             if(Vrab92 < 80){Vrab95 *= 0.1; Vect11[Vrab98].Fall.pop_back();}
+
+             Object[Vrab97].Summary_Damage_Taken += Vrab95;
+
+             Vrab96 = Vect11[Vrab98].Ice_Conditional.size();
+             while(Vrab96 != 0)
+             {
+              Vrab96 -= 1; statics insize Vrab91 = Vect11[Vrab98].Ice_Conditional[Vrab96].Dealer;
+              Object[Vrab91].Summary_Damage_Dealt += Vrab95 * (Vrab94 / Vect11[Vrab98].Ice_Conditional[Vrab96].Damage);
+
+              insize Vrab90 = Object[Vrab91].Owners.size();
+              while(Vrab90 != 0)
+              {
+               Vrab90 -= 1; statics insize Vrab89 = Object[Vrab91].Owners[Vrab90]; if(Vrab89 >= Object.size()) continue; if(!Object[Vrab89].Exist) continue;
+               Object[Vrab89].Summary_Damage_Dealt += Vrab95 * (Vrab94 / Vect11[Vrab98].Ice_Conditional[Vrab96].Damage);
+              }
+             }
+            }
+           }
+
+           // Fire-conditional Damage.
+
+           // Healing.
+           {
+            statics xint64 Vrab96 = Vect11[Vrab98].Healing * (rxint64(Object[Vrab97].Heal_Ratio) / 1000.0);
+            if(Object[Vrab97].HP >= Object[Vrab97].DHP){Object[Vrab97].HP += Vrab96 / 4.0;} else
+            {
+             if(Object[Vrab97].HP + Vrab96 > Object[Vrab97].DHP){Object[Vrab97].HP += ((Vrab96 + Object[Vrab97].HP - Object[Vrab97].DHP) / 4.0) + (Object[Vrab97].DHP - Object[Vrab97].HP);} else
+             {Object[Vrab97].HP += Vrab96;}
+            }
+           }
+
+           switch(Vect11[Vrab98].Hit_Effect)
+           {
+            case 1: // Front Hit.
+
+            break;
+            case 2: // Back Hit.
+
+            break;
+            case 3: // Front & Back Hit.
+
+            break;
+            case 4: // Fire Hit.
+
+            break;
+            case 5: // Ice Hit.
+
+            break;
+            case 6: // Fire & Ice Hit.
+
+            break;
+            default: break;
+           }
+
+          }
+         }
+         #pragma endregion
+
+         #pragma region 5th Phase : Misc Interacts. (An ITR that cause frame change.)
+         {
+          struct Srct02 {insize Vrab001 = 0; xint64 Vrab002 = 0; xint64 Vrab003 = 0; xint64 Vrab004 = 0; uint8 Vrab005 = 0; insize Vrab006 = rinsize(-1);};
+          std::vector < std::vector < Srct02 > > Vect11(Vrab99);
+
+          //
+          {
+           insize Vrab98 = Vrab99;
+           while(Vrab98 != 0)
+           {
+            Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98]; int1 Vrab96[2] = {false, false};
+            statics insize Vrab95 = Vect10[Vrab98].size(); insize Vrab94 = 0;
+            while(Vrab94 < Vrab95)
+            {
+             statics insize Vrab93 = Vrab94; Vrab94 += 1;
+             statics int32 Vrab92 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].kind;
+             switch(Vrab92)
+             {
+              case 1: case 2: case 3: case 7: case 8: case 13: break;
+              default: continue;
+             }
+
+             // Picking Target.
+             {
+              if(Vrab92 == 2 || Vrab92 == 7) if(Vrab96[0]) continue;
+              if(Vrab92 == 1 || Vrab92 == 3) if(Vrab96[1]) continue;
+              
+              std::vector < insize > Vect12;
+              xint64 Vrab91 = rxint64(0xFFFFFFFFF); insize Vrab90 = Vect10[Vrab98][Vrab93].size();
+              while(Vrab90 != 0)
+              {
+               Vrab90 -= 1; statics insize Vrab89 = Vect10[Vrab98][Vrab93][Vrab90].Vrab001; statics xint64 Vrab88 = L_Distance(Vect04[Vrab98], Vect06[Vrab98], Vect04[Vrab89], Vect06[Vrab89]);
+               if(Vrab88 <= Vrab91){if(Vrab88 < Vrab91){Vrab91 = Vrab88; Vect12.clear();} Vect12.push_back(Vrab90);}
+              }
+              statics insize Vrab89 = Vect12.size();
+              if(Vrab89 > 0)
+              {
+               statics insize Vrab88 = Vect12[rinsize(L_Random(Vrab89 - 1))]; statics insize Vrab87 = Vect10[Vrab98][Vrab93][Vrab88].Vrab001; statics insize Vrab86 = Vect02[Vrab87];
+               switch(Vrab92)
+               {
+                case 1: case 3:
+                 {
+                  if(Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].effect == 0)
+                  {
+                   Object[Vrab97].Facing = (Vect04[Vrab98] - Vect04[Vrab87] == 0) ? Vect08[Vrab98] : (Vect04[Vrab98] - Vect04[Vrab87] < 0);
+                  }
+                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].catchingact[0]; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Object[Vrab97].Facing;}
+                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0; Object[Vrab97].Catch = Vrab86; Vrab96[1] = true;
+                 }
+                break;
+                case 2:
+                 {
+                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].respond; if(Object[Vrab86].Data->type == 2){Object[Vrab97].Heavy_Hold = true; if(Vrab85 == 0) Vrab85 = 116;} else {if(Vrab85 == 0) Vrab85 = 115;} 
+                  if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
+                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0;
+                 }
+                case 7:
+                 Object[Vrab97].Hold = Vrab86; Vrab96[0] = true;
+                break;
+                case 8:
+                 {
+                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvx; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
+                  if(rinsize(Vrab85) != Object[Vrab97].Frame) Object[Vrab97].Wait = 0; Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].X = Vect04[Vrab87]; Object[Vrab97].Z = Vect06[Vrab87] + 1;
+                 }
+                break;
+                default:
+                 {
+                  int32 Vrab85 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].respond; if(Vrab85 < 0){Vrab85 = -Vrab85; Object[Vrab97].Facing = !Vect08[Vrab98];} else {Object[Vrab97].Facing = Vect08[Vrab98];}
+                  Object[Vrab97].Frame = rinsize(Vrab85); Object[Vrab97].Wait = 0;
+                  switch(Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].effect % 10)
+                  {
+                   case 1: Object[Vrab97].X = Vect04[Vrab87]; break;
+                   case 2: Object[Vrab97].Y = Vect05[Vrab87]; break;
+                   case 3: Object[Vrab97].Z = Vect06[Vrab87]; break;
+                   case 4: Object[Vrab97].X = Vect04[Vrab87]; Object[Vrab97].Y = Vect05[Vrab87]; break;
+                   case 5: Object[Vrab97].X = Vect04[Vrab87]; Object[Vrab97].Z = Vect06[Vrab87]; break;
+                   case 6: Object[Vrab97].Y = Vect05[Vrab87]; Object[Vrab97].Z = Vect06[Vrab87]; break;
+                   case 7: Object[Vrab97].X = Vect04[Vrab87]; Object[Vrab97].Y = Vect05[Vrab87]; Object[Vrab97].Z = Vect06[Vrab87]; break;
+                   default: break;
+                  }
+                 }
+                break;
+               }
+              }
+             }
+
+             // Applying Effect.
+             {
+              int1 Vrab91 = false; 
+              insize Vrab90; {statics int32 Vrab89 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].caughtact[0]; if(Vrab89 < 0){Vrab91 = true; Vrab90 = rinsize(-Vrab89);} else {Vrab90 = rinsize(Vrab89);}} 
+              int1 Vrab89 = false;
+              insize Vrab88; {statics int32 Vrab87 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].dvx; if(Vrab87 < 0){Vrab89 = true; Vrab88 = rinsize(-Vrab87);} else {Vrab88 = rinsize(Vrab87);}}
+
+              insize Vrab87 = Vect10[Vrab98][Vrab93].size();
+              while(Vrab87 != 0)
+              {
+               Vrab87 -= 1; statics insize Vrab86 = Vect10[Vrab98][Vrab93][Vrab87].Vrab001; statics insize Vrab85 = Vect02[Vrab86]; uint8 Vrab84 = 2ui8;
+               switch(Vrab92)
+               {
+                case 2: case 7: if(Object[Vrab97].Hold != Vrab85) break;
+                 Vrab84 += 2ui8;
+                 Vrab91 = Vrab91 ? !Vect08[Vrab86] : Vect08[Vrab86];
+                 Vect11[Vrab86].push_back({Vrab90, Vect04[Vrab86], Vect05[Vrab86], Vect06[Vrab86], ruint8(Vrab84 + (Vrab91 ? 0ui8 : 1ui8)), Vrab97});
+                break;
+                case 1: case 3:
+                 Vrab91 = Vrab91 ? Vect08[Vrab86] : !Vect08[Vrab86];
+                 if(((Vect04[Vrab98] - Vect04[Vrab86]) < 0 && !Vect08[Vrab86]) || ((Vect04[Vrab98] - Vect04[Vrab86]) > 0 && Vect08[Vrab86])) Vrab91 = !Vrab91;
+                 Vect11[Vrab86].push_back({Vrab90, (Vect04[Vrab98] + Vect04[Vrab86]) / 2, (Vect05[Vrab98] + Vect05[Vrab86]) / 2, (Vect06[Vrab98] + Vect06[Vrab86]) / 2, (Vrab91 ? 3ui8 : 2ui8), Vrab97});
+                break;
+                case 8:
+                 {
+                  int32 Vrab83 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].injury;
+                  if(Vrab83 <= 0) break;
+                  if(Polish) Vrab83 *= 4; Vrab83 = L_Rounding(rxint64(Vrab83) * 0.75); if(Object[Vrab85].Heal + Vrab83 < 0x7FFFFFFE){Object[Vrab85].Heal += Vrab83;} else {Object[Vrab85].Heal = 0x7FFFFFFE;}
+                 }
+                break;
+                default:
+                 {
+                  int32 Vrab83 = Object[Vrab97].Data->Frame[Vect03[Vrab98]]->itr[Vrab93].effect; Vrab83 = (Vrab83 % 100) - (Vrab83 % 10);
+                  xint64 Vrab82 = Vect04[Vrab86];
+                  xint64 Vrab81 = Vect05[Vrab86];
+                  xint64 Vrab80 = Vect06[Vrab86];
+
+                  switch(Vrab83)
+                  {
+                   case 10: Vrab82 = Vect04[Vrab98]; break;
+                   case 20: Vrab81 = Vect05[Vrab98]; break;
+                   case 30: Vrab80 = Vect06[Vrab98]; break;
+                   case 40: Vrab82 = Vect04[Vrab98]; Vrab81 = Vect05[Vrab98]; break;
+                   case 50: Vrab82 = Vect04[Vrab98]; Vrab80 = Vect06[Vrab98]; break;
+                   case 60: Vrab81 = Vect05[Vrab98]; Vrab80 = Vect06[Vrab98]; break;
+                   case 70: Vrab82 = Vect04[Vrab98]; Vrab81 = Vect05[Vrab98]; Vrab80 = Vect06[Vrab98]; break;
+                   case 80: Vrab82 = (Vrab82 + Vect04[Vrab98]) / 2.0; Vrab80 = (Vrab80 + Vect06[Vrab98]) / 2.0; break;
+                   case 90: Vrab82 = (Vrab82 + Vect04[Vrab98]) / 2.0; Vrab81 = (Vrab81 + Vect05[Vrab98]) / 2.0; Vrab80 = (Vrab80 + Vect06[Vrab98]) / 2.0; break;
+                   default: break;
+                  }
+                  
+                  Vect11[Vrab86].push_back({Vrab90, Vrab82, Vrab81, Vrab80, (Vrab89 ? 0ui8 : 1ui8), rinsize(-1)});
+                 }
+                break;
+               }
+              }
+             }
+            }
+           }
+          }
+
+          for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98)
+          {
+           insize Vrab97 = Vect11[Vrab98].size(); if(Vrab97 == 0) continue; Vrab97 = rinsize(L_Random(Vrab97 - 1));
+           statics insize Vrab96 = Vect02[Vrab98]; statics uint8 Vrab95 = Vect11[Vrab98][Vrab97].Vrab005; statics insize Vrab94 = Vect11[Vrab98][Vrab97].Vrab006;
+           Object[Vrab96].Frame = Vect11[Vrab98][Vrab97].Vrab001; Object[Vrab96].Wait = 0;
+           Object[Vrab96].X = Vect11[Vrab98][Vrab97].Vrab002; Object[Vrab96].Y = Vect11[Vrab98][Vrab97].Vrab003; Object[Vrab96].Z = Vect11[Vrab98][Vrab97].Vrab004;
+           Object[Vrab96].Facing = Vrab95 % 2 == 0;
+           switch(Vrab95)
+           {
+            case 3: case 2: Object[Vrab96].Caught = Vrab94; break;
+            case 5: case 4: if(Object[Vrab96].Held == rinsize(-1) && Object[Vrab94].Hold == Vrab96) Object[Vrab94].Summary_Pick += 1; Object[Vrab96].Held = Vrab94; break;
+            default: break;
+           }
+          }
+         }
+         #pragma endregion
         }
        }
        #pragma endregion
@@ -3038,7 +3429,6 @@
           statics insize Vrab97 = Vect02[Vrab98]; Vrab98 += 1;
           if(Object[Vrab97].Held == rinsize(-1) && Object[Vrab97].Caught == rinsize(-1) && Object[Vrab97].Shake == 0)
           {
-           if(Object[Vrab97].Float) if(Object[Vrab97].Y_Vel > -8) Object[Vrab97].Y_Vel += -3;
            switch(Object[Vrab97].Data->type)
            {
             case 3: if(Object[Vrab97].Y < 0) break;
@@ -3071,6 +3461,8 @@
              }
             break;
            }
+           
+           if(Object[Vrab97].Float) if(Object[Vrab97].Y_Vel >= -6) Object[Vrab97].Y_Vel -= 3;
           }
           Object[Vrab97].Float = false;
          }
@@ -3311,7 +3703,7 @@
        #pragma endregion
       }
 
-      // Draw Phase : Camera.
+      // Camera.
       {
        insize Vrab99 = Object.size();
        while(Vrab99 != 0)
@@ -3477,7 +3869,7 @@
             if(Object[Vrab95].Return_Address.size() > 0) Vect01[Vrab94].Object->Info->Icon2 = Object[Vrab95].Return_Address[Object[Vrab95].Return_Address.size() - 1]->small_Index;
             Vect01[Vrab94].Object->Info->X = L_Rounding64(Object[Vrab95].X);
             Vect01[Vrab94].Object->Info->Y = L_Rounding64(Object[Vrab95].Z);
-            if(Object[Vrab95].Heal > 0 && (Playtime % 4) <= 1) Vect01[Vrab94].Object->Info->Integrate = 1;
+            if(Object[Vrab95].Heal > 0 && (Gametime % 4) <= 1) Vect01[Vrab94].Object->Info->Integrate = 1;
             if(Object[Vrab95].Clone >= rinsize(-2) || Object[Vrab95].HP <= 0)
             {
              Vect01[Vrab94].Object->Info->HP = Object[Vrab95].HP;
@@ -3508,7 +3900,7 @@
            }
            Vect01[Vrab94].Object->Z = L_Rounding64(Object[Vrab95].Z);
            Vect01[Vrab94].Object->Y = L_Rounding64(Object[Vrab95].Y) + Vect01[Vrab94].Object->Z;
-           if(Object[Vrab95].Shake > 0) if(Playtime % 2 == 0){if(Object[Vrab95].Facing){Vect01[Vrab94].Object->X -= 1;} else {Vect01[Vrab94].Object->X += 1;}} else {if(Object[Vrab95].Facing){Vect01[Vrab94].Object->X += 1;} else {Vect01[Vrab94].Object->X -= 1;}}
+           if(Object[Vrab95].Shake > 0) if(Gametime % 2 == 0){if(Object[Vrab95].Facing){Vect01[Vrab94].Object->X -= 1;} else {Vect01[Vrab94].Object->X += 1;}} else {if(Object[Vrab95].Facing){Vect01[Vrab94].Object->X += 1;} else {Vect01[Vrab94].Object->X -= 1;}}
            
            
            while(true)
@@ -4188,8 +4580,8 @@
        }
       }
       {
-       string Temp02 = Temp01 + "data\\stage.dat"; if(!L_Exist(Temp02)) Temp02 = Temp01 + "data\\stage.txt";
-       {std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){if(L_Exist(Temp02)){File01 << "[] INFO - Processing \"" + Temp02 + "\" into the system.\n";} else {File01 << "[] INFO - Cannot find \"" + Temp01 + "data\\stage.dat\" nor \"" + Temp02 + "\", resuming without Stage.\n";} File01.close();}}
+       string Temp02 = Temp01 + "data\\stagez.dat"; if(!L_Exist(Temp02)) Temp02 = Temp01 + "data\\stage.txt";
+       {std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){if(L_Exist(Temp02)){File01 << "[] INFO - Processing \"" + Temp02 + "\" into the system.\n";} else {File01 << "[] INFO - Cannot find \"" + Temp01 + "data\\stagez.dat\" nor \"" + Temp02 + "\", resuming without Stage.\n";} File01.close();}}
        switch(Decode(Temp02))
        {
         case 1: Stages = std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_STAGE > (); return "F";
@@ -4264,7 +4656,7 @@
      string Info()                                                                   fastened {return "Origin Version : v2.1b.";}
      uint8  Frame()                                                                  fastened {if(Polish){switch(Speed){case 0: return 1ui8; case 1: return 2ui8; case 3: return 8ui8; case 4: return 16ui8; default: return 4ui8;}} else {switch(Speed){case 0: return 4ui8; case 1: return 8ui8; case 3: return 32ui8; case 4: return 64ui8; default: break;}} return 16ui8;}
      int64  Area()                                                                   fastened {return Backgrounds[Background].width;} 
-     string Text(statics uint8 Vrab01)                                               fastened {string Temp01 = ""; switch(Vrab01){case 0: Temp01 = "5|0|Versus (" + string((Difficult > 0) ? (Difficult > 1 ? (Difficult > 2 ? "CRAZY!" : "Hard") : "Normal") : "Easy") + ")"; break; case 1: {string Temp02 = "", Temp03 = "", Temp04 = "", Temp05 = ""; Temp02 = std::to_string((Playtime / 3) % 10); statics uint64 Vrab02 = (Playtime / 30) % 60; if(Vrab02 < 10) Temp03 = "0"; Temp03 += std::to_string(Vrab02); statics uint64 Vrab03 = (Playtime / 1800) % 60; if(Vrab03 < 10) Temp04 = "0"; Temp04 += std::to_string(Vrab03); statics uint64 Vrab04 = (Playtime / 108000); if(Vrab04 > 0){Temp05 = std::to_string(Vrab04);} Temp01 = "4|0|" + (Temp05 != "" ? (Temp05 + ":") : "") + Temp04 + ":" + Temp03 + "." + Temp02 + (Playtime % 3 == 0 ? "00" : (Playtime % 3 == 1 ? "33" : "67"));} break; case 2: Temp01 = "3|0|" + L_Revoke(Backgrounds[Background].name, '_', ' '); break; default: break;} return Temp01;}
+     string Text(statics uint8 Vrab01)                                               fastened {string Temp01 = ""; switch(Vrab01){case 0: Temp01 = "5|0|Versus (" + string((Difficult > 0) ? (Difficult > 1 ? (Difficult > 2 ? "CRAZY!" : "Hard") : "Normal") : "Easy") + ")"; break; case 1: {string Temp02 = "", Temp03 = "", Temp04 = "", Temp05 = ""; Temp02 = std::to_string((Gametime / 3) % 10); statics uint64 Vrab02 = (Gametime / 30) % 60; if(Vrab02 < 10) Temp03 = "0"; Temp03 += std::to_string(Vrab02); statics uint64 Vrab03 = (Gametime / 1800) % 60; if(Vrab03 < 10) Temp04 = "0"; Temp04 += std::to_string(Vrab03); statics uint64 Vrab04 = (Gametime / 108000); if(Vrab04 > 0){Temp05 = std::to_string(Vrab04);} Temp01 = "4|0|" + (Temp05 != "" ? (Temp05 + ":") : "") + Temp04 + ":" + Temp03 + "." + Temp02 + (Gametime % 3 == 0 ? "00" : (Gametime % 3 == 1 ? "33" : "67"));} break; case 2: Temp01 = "3|0|" + L_Revoke(Backgrounds[Background].name, '_', ' '); break; default: break;} return Temp01;}
      int0   Angel(asIScriptEngine *Engi01, asIScriptEngine *Engi02, asIScriptEngine *Engi03, unique < HEPTA_LF2_ENCHANTED_ENGINE1 > Uniq01) fastened
      {
       Engi03->Release();
@@ -4417,6 +4809,7 @@
       int1   Move = false;
       uint8  Mode = 0;
       uint8  Difficult = 0;
+      uint64 Gametime = 0;
       uint64 Playtime = 0;
       insize Background = 0;
       insize Independent_Team = 0;
@@ -4480,8 +4873,9 @@
         Vrab02 -= 1; if(!Object[Vrab02].Exist) continue;
         if(Object[Vrab02].Target == Vrab01) Object[Vrab02].Target = rinsize(-1);
         if(Object[Vrab02].Clone == Vrab01) Object[Vrab02].Clone = rinsize(-2);
-        if(Object[Vrab02].Owner == Vrab01) Object[Vrab02].Owner = rinsize(-1);
         if(Vrab01 < Object[Vrab02].Vrest.size()) Object[Vrab02].Vrest[Vrab01] = 0;
+        insize Vrab03 = Object[Vrab02].Owners.size();
+        while(Vrab03 != 0){Vrab03 -= 1; if(Object[Vrab02].Owners[Vrab03] == Vrab01) Object[Vrab02].Owners[Vrab03] = rinsize(-1);}
        }
 
        if(Vrab01 == rinsize(-1)) return;
@@ -4525,6 +4919,7 @@
       }
       int0   Spark(statics uint8 Vrab01, statics xint64 Vrab02, statics xint64 Vrab03, statics xint64 Vrab04) fastened
       {
+       if(Pics[2] == rinsize(-1)) return;
        statics insize Vrab05 = Effect.size(); insize Vrab06 = 0;
        while(Vrab06 < Vrab05){if(!Effect[Vrab06].Exist) break; Vrab06 += 1;}
        if(Vrab06 == Vrab05){Effect.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT());} else {Effect[Vrab06] = HEPTA_LF2_ENCHANTED_ENGINE1_EFFECT();}
@@ -4725,7 +5120,7 @@
       int64  Display_CenX = 0, Display_CenY = 0, Display_W = 0, Display_H = 0; // For compatible positioning.
       int32  Mouse_X = 0, Mouse_Y = 0; // Last frame position.
       uint8  Mouse_Standby = 0;        // Stay countup.
-      uint64 Tick = 0;                 // Playtime.
+      uint64 Tick = 0;                 // Gametime.
       uint64 Info_Slot = 0;            // Info current slot.
       insize Number_Of_Sound = 0;      // Max SFX.
       insize Current_Music[2] = {rinsize(-1), rinsize(-1)}; // Music.
@@ -6121,7 +6516,7 @@
             {
              case 1: break;
              default:
-              Temp01 = Enchanted->Memory[0].Address + "data\\stage.dat"; if(!L_Exist(Temp01)){Enchanted->String[0] = Enchanted->Memory[0].Address + "data\\stage.txt";} else {Enchanted->String[0] = Enchanted->Memory[0].Address + "data\\stage.dat";}
+              Temp01 = Enchanted->Memory[0].Address + "data\\stagez.dat"; if(!L_Exist(Temp01)){Enchanted->String[0] = Enchanted->Memory[0].Address + "data\\stage.txt";} else {Enchanted->String[0] = Enchanted->Memory[0].Address + "data\\stages.dat";}
               Temp01 = Enchanted->Engine1->Finalizer(Enchanted->Memory[0].Address);
              break;
             }
@@ -6325,7 +6720,12 @@
             break;
             case 3: Enchanted->Post_Info("Sorry, \"Championship\" is currently unavailable."); break;
             case 4: Enchanted->Post_Info("Sorry, \"Battle\" is currently unavailable."); break;
-            case 5: Enchanted->Post_Info("Sorry, \"Playback Recording\" is currently unavailable."); break;
+            case 5:
+             Enchanted->Post_Info("Sorry, \"Playback Recording\" is currently unavailable.");
+             {
+
+             }
+            break;
             case 6:
              {
               //Enchanted->Post_Info("\"Return\" might allows you to reload stuff without having to quit/close the game, but sadly, the assets/sprites won't get updated, so in order to update the assets/sprites, re-opening the game is a must.");
