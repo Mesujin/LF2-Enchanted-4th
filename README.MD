@@ -61,7 +61,7 @@ Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 
 > About DirectXTK : http://go.microsoft.com/fwlink/?LinkId=248929 <br/>
 
-> About MsVS2019 : https://visualstudio.microsoft.com <br/>
+> About MsVS2022 : https://visualstudio.microsoft.com <br/>
 
 > About LF-Empire : https://lf-empire.de/lfe-v10/lf-empire <br/>
 
