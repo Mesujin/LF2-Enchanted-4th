@@ -9,68 +9,63 @@
  #define _HEPTA_PRAGMA_PLATFORM_H
  
  // Commands
-  // General
-#define _DEBUG
-   #include <winsdkver.h>
-   #ifndef _WIN32_WINNT
-    #define _WIN32_WINNT 0x0601
-   #endif
-   #include <sdkddkver.h>
+  #include <winsdkver.h>
+  #ifndef _WIN32_WINNT
+   #define _WIN32_WINNT 0x0601
+  #endif
+  #include <sdkddkver.h>
 
-   #define NOMINMAX   // Use the C++ standard templated min/max.
-   #define NODRAWTEXT // DirectX apps don't need GDI.
-   #define NOGDI      // DirectX apps don't need GDI.
-   #define NOBITMAP   // DirectX apps don't need GDI.
-   #define NOMCX      // Include <mcx.h> if you need this.
-   #define NOSERVICE  // Include <winsvc.h> if you need this.
-   #define NOHELP     // WinHelp is deprecated.
+  #define NOMINMAX   // Use the C++ standard templated min/max.
+  #define NODRAWTEXT // DirectX apps don't need GDI.
+  #define NOGDI      // DirectX apps don't need GDI.
+  #define NOBITMAP   // DirectX apps don't need GDI.
+  #define NOMCX      // Include <mcx.h> if you need this.
+  #define NOSERVICE  // Include <winsvc.h> if you need this.
+  #define NOHELP     // WinHelp is deprecated.
 
-   #define WIN32_LEAN_AND_MEAN
+  #define WIN32_LEAN_AND_MEAN
 
-   #include <Windows.h>
-   #include <combaseapi.h>
-   #include <wrl/client.h>
-   #include <shellapi.h>
+  #include <Windows.h>
+  #include <combaseapi.h>
+  #include <wrl/client.h>
+  #include <shellapi.h>
 
+  #pragma warning (push, 0)
+   #include <d3d11_1.h>
+   #include <dxgi1_6.h>
+  #pragma warning (pop)
+
+  #include <fstream>
+  #include <sstream>
+  #include <memory>
+  #include <stdexcept>
+  #include <exception>
+   
+  //DirectX Tool Kit
    #pragma warning (push, 0)
-    #include <d3d11_1.h>
-    #include <dxgi1_6.h>
+    #include <SpriteBatch.h>
+    #include <WICTextureLoader.h>
+    #include <CommonStates.h>
+
+    #include <Keyboard.h>
+    #include <GamePad.h>
+    #include <Mouse.h>
+
+    #include <Audio.h>
    #pragma warning (pop)
 
-   #include <fstream>
-   #include <sstream>
-   #include <memory>
-   #include <stdexcept>
-   #include <exception>
-   
-   //DirectX Tool Kit
-    #pragma warning (push, 0)
-     #include <SpriteBatch.h>
-     #include <WICTextureLoader.h>
-     #include <CommonStates.h>
-
-     #include <Keyboard.h>
-     #include <GamePad.h>
-     #include <Mouse.h>
-
-     #include <Audio.h>
-    #pragma warning (pop)
-   //-//
-   
-  //-//
-
-  using int0 = void;                 // -
-  using int1 = bool;                 // I know, it's not 1 byte.
-  using int8 = char;                 // -
-  using int16 = short;               // -
-  using int32 = int;                 // -
-  using int64 = long long;           // -
-  using sint8 = signed char;         // -
+  using int0   = void;               // -
+  using int1   = bool;               // I know, it's not 1 byte.
+  using int8   = char;               // -
+  using int16  = short;              // -
+  using int32  = int;                // -
+  using int64  = long long;          // -
+  using sint8  = signed char;        // -
   using sint16 = signed short;       // -
   using sint32 = signed int;         // -
   using sint64 = signed long long;   // -
   using lint32 = long;               // -
-  using uint8 = unsigned char;       // -
+  using uint8  = unsigned char;      // -
   using uint16 = unsigned short;     // -
   using uint32 = unsigned int;       // -
   using uint64 = unsigned long long; // -
@@ -82,16 +77,16 @@
 
   #define unique std::unique_ptr
 
-  #define rint1 static_cast < int1 >
-  #define rint8 static_cast < int8 >
-  #define rint16 static_cast < int16 >
-  #define rint32 static_cast < int32 >
-  #define rint64 static_cast < int64 >
-  #define rsint8 static_cast < sint8 >
+  #define rint1   static_cast < int1 >
+  #define rint8   static_cast < int8 >
+  #define rint16  static_cast < int16 >
+  #define rint32  static_cast < int32 >
+  #define rint64  static_cast < int64 >
+  #define rsint8  static_cast < sint8 >
   #define rsint16 static_cast < sint16 >
   #define rsint32 static_cast < sint32 >
   #define rsint64 static_cast < sint64 >
-  #define ruint8 static_cast < uint8 >
+  #define ruint8  static_cast < uint8 >
   #define ruint16 static_cast < uint16 >
   #define ruint32 static_cast < uint32 >
   #define ruint64 static_cast < uint64 >
@@ -105,7 +100,6 @@
   #define univers virtual
   #define stacked inline
   #define fastened noexcept
- //-//
 
  // Stuctures / Classes
   // DirectX
@@ -191,7 +185,6 @@
      DXGI_COLOR_SPACE_TYPE m_colorSpace;         // HDR Support.
      HEPTA_DEVICENOTIFY*   m_deviceNotify;       // The IDeviceNotify can be held directly as it owns the DeviceResources.
    };
-  //-//
 
   struct HEPTA_TIMING // Helper class for animation and simulation timing.
   {
@@ -313,83 +306,14 @@
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
-  /*struct HEPTA_EXCEPTION : public std::exception
-  {
-   HEPTA_EXCEPTION(HRESULT Hres01) fastened : Vrab001(Hres01){}
-   statics int8* what() statics fastened override {remains int8 Vrab01[64] = {}; sprintf_s(Vrab01, "Failure with HRESULT of %08X", ruint32(Vrab001)); return Vrab01;}
-
-   private:
-    HRESULT Vrab001;
-  };*/
-
-  struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
-  {
-   HEPTA_GAME() fastened (false);
-   ~HEPTA_GAME();
-   HEPTA_GAME(HEPTA_GAME&&) = default;
-   HEPTA_GAME& operator= (HEPTA_GAME&&) = default;
-   HEPTA_GAME(HEPTA_GAME statics&) = delete;
-   HEPTA_GAME& operator= (HEPTA_GAME statics&) = delete;
-
-   // Initialization and management
-   int0 Initialize(HWND, uint32, uint32);
-
-   // Basic game loop
-   int0 Tick();
-
-   // IDeviceNotify
-   int0 OnDeviceLost() override;
-   int0 OnDeviceRestored() override;
-
-   // Messages
-   int0 OnActivated();
-   int0 OnDeactivated();
-   int0 OnSuspending();
-   int0 OnResuming();
-   int0 OnWindowMoved();
-   int0 OnDisplayChange();
-   int0 OnWindowSizeChanged(uint32, uint32);
-
-   // Device resources.
-   std::unique_ptr < HEPTA_DEVICE > m_deviceResources;
-
-   DirectX::AudioEngine *GetAudio(){return Aeng001.get();}
-   ID3D11ShaderResourceView **GetRect(){return Trec001.ReleaseAndGetAddressOf();}
-
-   private:
-    int0 Update(HEPTA_TIMING statics &);
-    int0 Render();
-    int0 Clear();
-    int0 CreateDeviceDependentResources();
-    int0 CreateWindowSizeDependentResources();
-
-    // Rendering loop timer.
-    HEPTA_TIMING m_timer;
- 
-    // Physical Inputs.
-    std::unique_ptr < DirectX::Keyboard > m_keyboard;
-    std::unique_ptr < DirectX::Mouse > m_mouse;
-    std::unique_ptr < DirectX::GamePad > m_gamepad;
- 
-    // Visual Output.
-    unique < DirectX::SpriteBatch > Pics001;
-    unique < DirectX::CommonStates > Stat001;
-    Microsoft::WRL::ComPtr < ID3D11PixelShader > Grap001;
-    Microsoft::WRL::ComPtr < ID3D11ShaderResourceView > Trec001;
-    Microsoft::WRL::ComPtr < ID3D11SamplerState > Samp001;
- 
-    // Audio Output.
-    unique < DirectX::AudioEngine > Aeng001;
-  };
-
   struct HEPTA_IMAGE
   {
    HEPTA_IMAGE(statics string&, ID3D11Device*) fastened;
    
    int1 Success = false;
    string Address;
-   ID3D11Resource *Data;
-   ID3D11ShaderResourceView *Texture;
+   ID3D11Resource *Data = nullptr;
+   ID3D11ShaderResourceView *Texture = nullptr;
   };
   struct HEPTA_PICTURE
   {
@@ -500,7 +424,66 @@
    unique < DirectX::SoundEffectInstance > Instance;
    uint8 Active = 0ui8;
   };
- //-//
+
+  struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
+  {
+   HEPTA_GAME() fastened (false);
+   ~HEPTA_GAME();
+   HEPTA_GAME(HEPTA_GAME&&) = default;
+   HEPTA_GAME& operator= (HEPTA_GAME&&) = default;
+   HEPTA_GAME(HEPTA_GAME statics&) = delete;
+   HEPTA_GAME& operator= (HEPTA_GAME statics&) = delete;
+
+   // Initialization and management
+   int0 Initialize(HWND, uint32, uint32);
+
+   // Basic game loop
+   int0 Tick();
+
+   // IDeviceNotify
+   int0 OnDeviceLost() override;
+   int0 OnDeviceRestored() override;
+
+   // Messages
+   int0 OnActivated();
+   int0 OnDeactivated();
+   int0 OnSuspending();
+   int0 OnResuming();
+   int0 OnWindowMoved();
+   int0 OnDisplayChange();
+   int0 OnWindowSizeChanged(uint32, uint32);
+
+   // Device resources.
+   std::unique_ptr < HEPTA_DEVICE > m_deviceResources;
+
+   DirectX::AudioEngine *GetAudio(){return Aeng001.get();}
+   ID3D11ShaderResourceView **GetRect(){return Trec001.ReleaseAndGetAddressOf();}
+
+   private:
+    int0 Update(HEPTA_TIMING statics &);
+    int0 Render();
+    int0 Clear();
+    int0 CreateDeviceDependentResources();
+    int0 CreateWindowSizeDependentResources();
+
+    // Rendering loop timer.
+    HEPTA_TIMING m_timer;
+ 
+    // Physical Inputs.
+    std::unique_ptr < DirectX::Keyboard > m_keyboard;
+    std::unique_ptr < DirectX::Mouse > m_mouse;
+    std::unique_ptr < DirectX::GamePad > m_gamepad;
+ 
+    // Visual Output.
+    unique < DirectX::SpriteBatch > Pics001;
+    unique < DirectX::CommonStates > Stat001;
+    Microsoft::WRL::ComPtr < ID3D11PixelShader > Grap001;
+    Microsoft::WRL::ComPtr < ID3D11ShaderResourceView > Trec001;
+    Microsoft::WRL::ComPtr < ID3D11SamplerState > Samp001;
+ 
+    // Audio Output.
+    unique < DirectX::AudioEngine > Aeng001;
+  };
   
  // Memory / Variables
   unique < HEPTA_GAME > Game0001;
@@ -512,7 +495,6 @@
   std::vector < HEPTA_SOUNDPLAY > Sond0001;
   std::vector < unique < HEPTA_AUDINGS > > Audi0001;
   std::vector < unique < HEPTA_MUSIC > > Isnd0001;
- //-//
 
  // Global Function
   int0 G_ToggleFullscreen() fastened;

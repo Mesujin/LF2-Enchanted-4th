@@ -6,17 +6,16 @@
 
 // Commands
  #include "engine.h"
-//-//
 
 // Declarations
  int0 G_ToggleFullscreen() fastened
  {
   auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
-  if(Varb0014)
+  if(Vrab0009)
   {
    SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_OVERLAPPEDWINDOW);
    SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, 0);
-   uint32 Vrab06 = Varb0002, Vrab07 = Varb0003;
+   uint32 Vrab06 = Vrab0005, Vrab07 = Vrab0006;
    ShowWindow(Hwnd01, SW_SHOWNORMAL);
    SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab06 + 16), static_cast < LONG > (Vrab07 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
   } else
@@ -26,7 +25,7 @@
    SetWindowPos(Hwnd01, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
    ShowWindow(Hwnd01, SW_SHOWMAXIMIZED);
   }
-  Varb0014 = !Varb0014;
+  Vrab0009 = !Vrab0009;
  }
 
  HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) fastened
@@ -36,7 +35,7 @@
   {
    File01.close();
    if(DirectX::CreateWICTextureFromFileEx(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), 0U, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0U, 0U, DirectX::DX11::WIC_LOADER_DEFAULT, &Data, &Texture) == S_OK)
-   //if(DirectX::CreateWICTextureFromFile(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), &Data, &Texture) == S_OK)
+ //if(DirectX::CreateWICTextureFromFile(Dvis01, std::wstring(Temp01.begin(), Temp01.end()).c_str(), &Data, &Texture) == S_OK)
    {Success = true; Address = Temp01; return;}
   }
   Success = false;
@@ -128,7 +127,7 @@
    m_deviceResources->CreateWindowSizeDependentResources(); CreateWindowSizeDependentResources();
 
    m_timer.SetFixedTimeStep(true);
-   m_timer.SetTargetElapsedSeconds(1.f / 480.f);
+   m_timer.SetTargetElapsedSeconds(1.f / 960.f);
     
    m_keyboard = std::make_unique < DirectX::Keyboard > ();
    m_gamepad = std::make_unique < DirectX::GamePad > ();
@@ -179,7 +178,7 @@
 
   int0 HEPTA_GAME::OnActivated()   // Game is becoming active window.
   {
-   Varb0007 = false;
+   Vrab0004 = false;
   }
   int0 HEPTA_GAME::OnDeactivated() // Game is becoming background window.
   {
@@ -187,11 +186,11 @@
   }
   int0 HEPTA_GAME::OnSuspending()  // Game is being power-suspended (or minimized).
   {
-   Varb0007 = true;
+   Vrab0004 = true;
   }
   int0 HEPTA_GAME::OnResuming()    // Game is being power-resumed (or returning from minimize).
   {
-   Varb0007 = false; m_timer.ResetElapsedTime();
+   Vrab0004 = false; m_timer.ResetElapsedTime();
   }
   int0 HEPTA_GAME::OnWindowMoved()
   {
@@ -209,13 +208,13 @@
 
   int0 HEPTA_GAME::Update(HEPTA_TIMING statics &Time01)
   {
-   P_EngineFrame(Time01.GetElapsedSeconds(), Time01.GetTotalSeconds(), Time01.GetFrameCount(), Time01.GetFramesPerSecond(), m_keyboard.get(), m_gamepad.get(), m_mouse.get());
+   M_EngineFrame(Time01.GetElapsedSeconds(), Time01.GetTotalSeconds(), Time01.GetFrameCount(), Time01.GetFramesPerSecond(), m_keyboard.get(), m_gamepad.get(), m_mouse.get());
   }
   int0 HEPTA_GAME::Render()
   {
-   if(Varb0007) Disp0001.clear();
+   if(Vrab0004) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
-   if(Varb0027){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
+   if(Vrab0030){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
@@ -228,44 +227,44 @@
      }, Matx01
     );
     
-    statics insize Vrab01 = Disp0001.size();
-    for(insize Vrab02 = 0; Vrab02 < Vrab01; ++Vrab02)
+    statics insize Vrab01 = Disp0001.size(); xint32 Vrab02 = 0.0f; uint32 Vrab03 = 0;
+    for(insize Vrab04 = 0; Vrab04 < Vrab01; ++Vrab04)
     {
-     switch(Disp0001[Vrab02].Type)
+     switch(Disp0001[Vrab04].Type)
      {
       case 0: // Filled Rectangle.
        {
         RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
+        Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
+        Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
 
-        Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2; if(Rect01.right < Rect01.left) Rect01.right = 0;
-        Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2; if(Rect01.bottom < Rect01.top) Rect01.bottom = 0;
+        Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2; if(Rect01.right < Rect01.left) Rect01.right = 0;
+        Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y2; if(Rect01.bottom < Rect01.top) Rect01.bottom = 0;
 
-        statics uint32 Vrab03 = L_Rounding(rxint64(rint64(Rect01.right) - rint64(Rect01.left)) / 2);
-        statics uint32 Vrab04 = L_Rounding(rxint64(rint64(Rect01.bottom) - rint64(Rect01.top)) / 2);
-        Rect01.left += Vrab03; Rect01.right += Vrab03;
-        Rect01.top += Vrab04; Rect01.bottom += Vrab04;
+        statics uint32 Vrab05 = L_Rounding(rxint64(rint64(Rect01.right) - rint64(Rect01.left)) / 2);
+        statics uint32 Vrab06 = L_Rounding(rxint64(rint64(Rect01.bottom) - rint64(Rect01.top)) / 2);
+        Rect01.left += Vrab05; Rect01.right += Vrab05;
+        Rect01.top += Vrab06; Rect01.bottom += Vrab06;
 
-        statics xint32 Vrab05 = rxint32((Disp0001[Vrab02].Target) & 0xFF) / 255.0f;
-        statics xint32 Vrab06 = rxint32((Disp0001[Vrab02].Target >> 8) & 0xFF) / 255.0f;
-        statics xint32 Vrab07 = rxint32((Disp0001[Vrab02].Target >> 16) & 0xFF) / 255.0f;
-        statics xint32 Vrab08 = rxint32(Disp0001[Vrab02].Trans) / 255.0f;
-        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, 0.5f));
+        statics xint32 Vrab07 = rxint32((Disp0001[Vrab04].Target) & 0xFF) / 255.0f;
+        statics xint32 Vrab08 = rxint32((Disp0001[Vrab04].Target >> 8) & 0xFF) / 255.0f;
+        statics xint32 Vrab09 = rxint32((Disp0001[Vrab04].Target >> 16) & 0xFF) / 255.0f;
+        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02;
+        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
       case 1: // Un-filled Rectangle
        {
         RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
-        Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2; if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+        Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
+        Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
+        Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2; if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
         Rect01.bottom = Rect01.top + 1;
         RECT Rect02;
         Rect02.left = Rect01.left;
         Rect02.top = Rect01.top;
         Rect02.right = Rect02.left + 1;
-        Rect02.bottom = Rect02.top + (LONG)Disp0001[Vrab02].Post_Y2; if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+        Rect02.bottom = Rect02.top + (LONG)Disp0001[Vrab04].Post_Y2; if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         RECT Rect03;
         Rect03.left = Rect01.left;
         Rect03.top = Rect02.bottom - 1;
@@ -277,146 +276,132 @@
         Rect04.right = Rect04.left + 1;
         Rect04.bottom = Rect02.bottom;
 
-        statics xint32 Vrab03 = rxint32(L_Rounding(rxint64(Disp0001[Vrab02].Post_X2) / 2));
-        statics xint32 Vrab04 = rxint32(L_Rounding(rxint64(Disp0001[Vrab02].Post_Y2) / 2));
+        statics xint32 Vrab05 = rxint32(L_Rounding(rxint64(Disp0001[Vrab04].Post_X2) / 2));
+        statics xint32 Vrab06 = rxint32(L_Rounding(rxint64(Disp0001[Vrab04].Post_Y2) / 2));
 
-        Rect01.left += rint32(Vrab03); Rect01.right += rint32(Vrab03);
-        Rect01.top += rint32(Vrab04); Rect01.bottom += rint32(Vrab04);
-        Rect02.left += rint32(Vrab03); Rect02.right += rint32(Vrab03);
-        Rect02.top += rint32(Vrab04); Rect02.bottom += rint32(Vrab04);
+        Rect01.left += rint32(Vrab05); Rect01.right += rint32(Vrab05);
+        Rect01.top += rint32(Vrab06); Rect01.bottom += rint32(Vrab06);
+        Rect02.left += rint32(Vrab05); Rect02.right += rint32(Vrab05);
+        Rect02.top += rint32(Vrab06); Rect02.bottom += rint32(Vrab06);
 
-        Rect03.left += rint32(Vrab03); Rect03.right += rint32(Vrab03);
-        Rect03.top -= rint32(Vrab04) - 1; Rect03.bottom -= rint32(Vrab04) - 1;
-        Rect04.left -= rint32(Vrab03) - 1; Rect04.right -= rint32(Vrab03) - 1;
-        Rect04.top += rint32(Vrab04); Rect04.bottom += rint32(Vrab04);
+        Rect03.left += rint32(Vrab05); Rect03.right += rint32(Vrab05);
+        Rect03.top -= rint32(Vrab06) - 1; Rect03.bottom -= rint32(Vrab06) - 1;
+        Rect04.left -= rint32(Vrab05) - 1; Rect04.right -= rint32(Vrab05) - 1;
+        Rect04.top += rint32(Vrab06); Rect04.bottom += rint32(Vrab06);
 
-        statics xint32 Vrab05 = rxint32((Disp0001[Vrab02].Target) & 0xFF) / 255.0f;
-        statics xint32 Vrab06 = rxint32((Disp0001[Vrab02].Target >> 8) & 0xFF) / 255.0f;
-        statics xint32 Vrab07 = rxint32((Disp0001[Vrab02].Target >> 16) & 0xFF) / 255.0f;
-        statics xint32 Vrab08 = rxint32(Disp0001[Vrab02].Trans) / 255.0f;
+        statics xint32 Vrab07 = rxint32((Disp0001[Vrab04].Target) & 0xFF) / 255.0f;
+        statics xint32 Vrab08 = rxint32((Disp0001[Vrab04].Target >> 8) & 0xFF) / 255.0f;
+        statics xint32 Vrab09 = rxint32((Disp0001[Vrab04].Target >> 16) & 0xFF) / 255.0f;
+        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02;
 
-        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, Vrab04));//, DirectX::XMFLOAT2(0.5f, 0));
-        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(Vrab03, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab04 + 1));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab07, Vrab06, Vrab05, Vrab08}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Effect)), DirectX::XMFLOAT2(-Vrab03 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, Vrab06));//, DirectX::XMFLOAT2(0.5f, 0));
+        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(Vrab05, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab06 + 1));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(-Vrab05 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
       case 2: case 6: // Image Draw
        {
-        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 6) Vrab04 = 2.0f;
+        xint32 Vrab06 = 4.0f; if(Disp0001[Vrab04].Type == 6) Vrab06 = 2.0f;
         RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
-        statics insize Vrab03 = Disp0001[Vrab02].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        if(Disp0001[Vrab02].Post_X3 % 90 == 0)
+        Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
+        Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
+        statics insize Vrab05 = Disp0001[Vrab04].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
+        if(Disp0001[Vrab04].Post_X3 % 90 == 0)
         {
-         Rect02 = Pics0001[Vrab03].Get_Image(); Flts01 = Pics0001[Vrab03].Get_Center();
+         Rect02 = Pics0001[Vrab05].Get_Image(); Flts01 = Pics0001[Vrab05].Get_Center();
          Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         } else
         {
-         Rect02 = Pics0001[Vrab03].Get_Specified(); Flts01 = Pics0001[Vrab03].Get_Mid();
+         Rect02 = Pics0001[Vrab05].Get_Specified(); Flts01 = Pics0001[Vrab05].Get_Mid();
          Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
         auto Effc01 = DirectX::SpriteEffects_None;
-        switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+        switch(Disp0001[Vrab04].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
+        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
       case 3: case 7: // Specific Image Draw
        {
-        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 7) Vrab04 = 2.0f;
+        xint32 Vrab06 = 4.0f; if(Disp0001[Vrab04].Type == 7) Vrab06 = 2.0f;
         RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
-        statics insize Vrab03 = Disp0001[Vrab02].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        auto Effc01 = DirectX::SpriteEffects_None; uint8 Vrab05 = 0;
-        switch(Disp0001[Vrab02].Effect){case 0: break; case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: Vrab05 = (Disp0001[Vrab02].Effect - 4) * 2;break;}
-        if(Vrab05 % 90 == 0)
+        Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
+        Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
+        statics insize Vrab05 = Disp0001[Vrab04].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
+        auto Effc01 = DirectX::SpriteEffects_None; uint8 Vrab07 = 0;
+        switch(Disp0001[Vrab04].Effect){case 0: break; case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: Vrab07 = (Disp0001[Vrab04].Effect - 4) * 2;break;}
+        if(Vrab07 % 90 == 0)
         {
-         statics RECT Rect03 = Pics0001[Vrab03].Get_Image();
-         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab02].Post_X3));
-         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab02].Post_Y3));
-         if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2))){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2));}
-         if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2))){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2));}
+         statics RECT Rect03 = Pics0001[Vrab05].Get_Image();
+         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab04].Post_X3));
+         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab04].Post_Y3));
+         if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab04].Post_X2))){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab04].Post_X2));}
+         if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab04].Post_Y2))){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab04].Post_Y2));}
          if(Rect02.right < Rect02.left) Rect02.right = Rect02.left;
          if(Rect02.bottom < Rect02.top) Rect02.bottom = Rect02.top;
 
          Flts01 = DirectX::XMFLOAT2(rxint32(rint32(rxint32(Rect02.right - Rect02.left) / 2)), rxint32(rint32(rxint32(Rect02.bottom - Rect02.top) / 2)));
          Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         } else
         {
-         statics RECT Rect03 = Pics0001[Vrab03].Get_Specified();
-         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab02].Post_X3));
-         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab02].Post_Y3));
-         if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2)) - 1){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab02].Post_X2)) - 1;}
-         if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2)) - 1){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab02].Post_Y2)) - 1;}
+         statics RECT Rect03 = Pics0001[Vrab05].Get_Specified();
+         Rect02.left = Rect03.left + rint32(ruint64(Disp0001[Vrab04].Post_X3));
+         Rect02.top = Rect03.top + rint32(ruint64(Disp0001[Vrab04].Post_Y3));
+         if(Rect03.right < Rect02.left + rint32(ruint64(Disp0001[Vrab04].Post_X2)) - 1){Rect02.right = Rect03.right;} else {Rect02.right = Rect02.left + rint32(ruint64(Disp0001[Vrab04].Post_X2)) - 1;}
+         if(Rect03.bottom < Rect02.top + rint32(ruint64(Disp0001[Vrab04].Post_Y2)) - 1){Rect02.bottom = Rect03.bottom;} else {Rect02.bottom = Rect02.top + rint32(ruint64(Disp0001[Vrab04].Post_Y2)) - 1;}
          if(Rect02.right < Rect02.left) Rect02.right = Rect02.left;
          if(Rect02.bottom < Rect02.top) Rect02.bottom = Rect02.top;
          
          Flts01 = DirectX::XMFLOAT2(rxint32(rint32(rxint32(Rect02.right - Rect02.left - 2) / 2)), rxint32(rint32(rxint32(Rect02.bottom - Rect02.top - 2) / 2)));
          Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
-        Pics001->Draw(Imge0001[Pics0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Vrab05)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Vrab07)), Flts01, Effc01);
        }
       break;
       case 4: case 5: case 8: case 9: // Sprite Image Draw
        {
-        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 8 || Disp0001[Vrab02].Type == 9) Vrab04 = 2.0f;
+        xint32 Vrab06 = 4.0f; if(Disp0001[Vrab04].Type == 8 || Disp0001[Vrab04].Type == 9) Vrab06 = 2.0f;
         RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
-        statics insize Vrab03 = Spic0001[Disp0001[Vrab02].Target]; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        if(Disp0001[Vrab02].Post_X3 % 90 == 0)
+        Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
+        Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
+        statics insize Vrab05 = Spic0001[Disp0001[Vrab04].Target]; DirectX::XMFLOAT2 Flts01; RECT Rect02;
+        if(Disp0001[Vrab04].Post_X3 % 90 == 0)
         {
-         Rect02 = Sprt0001[Vrab03].Get_Image(Disp0001[Vrab02].Target, (Disp0001[Vrab02].Type == 5 || Disp0001[Vrab02].Type == 9)); Flts01 = Sprt0001[Vrab03].Get_Center();
+         Rect02 = Sprt0001[Vrab05].Get_Image(Disp0001[Vrab04].Target, (Disp0001[Vrab04].Type == 5 || Disp0001[Vrab04].Type == 9)); Flts01 = Sprt0001[Vrab05].Get_Center();
          Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         } else
         {
-         Rect02 = Sprt0001[Vrab03].Get_Specified(Disp0001[Vrab02].Target, (Disp0001[Vrab02].Type == 5 || Disp0001[Vrab02].Type == 9)); Flts01 = Sprt0001[Vrab03].Get_Mid();
+         Rect02 = Sprt0001[Vrab05].Get_Specified(Disp0001[Vrab04].Target, (Disp0001[Vrab04].Type == 5 || Disp0001[Vrab04].Type == 9)); Flts01 = Sprt0001[Vrab05].Get_Mid();
          Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
+         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
+         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
         auto Effc01 = DirectX::SpriteEffects_None;
-        switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+        switch(Disp0001[Vrab04].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
+        Pics001->Draw(Imge0001[Sprt0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
-      /*case 5: case 9: // Mirrored Sprite Image Draw
+	  case 10: // Color Control
+	  {
+       switch(ruint8(Disp0001[Vrab04].Post_X1))
        {
-        xint32 Vrab04 = 4.0f; if(Disp0001[Vrab02].Type == 9) Vrab04 = 2.0f;
-        RECT Rect01;
-        Rect01.left = (LONG)Disp0001[Vrab02].Post_X1 + Varb0008;
-        Rect01.top = (LONG)Disp0001[Vrab02].Post_Y1 + Varb0009;
-        statics insize Vrab03 = Spic0001[Disp0001[Vrab02].Target]; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        if(Disp0001[Vrab02].Post_X3 % 90 == 0)
-        {
-         Rect02 = Sprt0001[Vrab03].Get_Image(Disp0001[Vrab02].Target); Rect02.left += 1; Rect02.right += 1; Flts01 = Sprt0001[Vrab03].Get_Center();
-         Rect01.left += rint32(Flts01.x); Rect01.top += rint32(Flts01.y);
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
-        } else
-        {
-         Rect02 = Sprt0001[Vrab03].Get_Specified(Disp0001[Vrab02].Target); Rect02.left += 1; Rect02.right += 1; Flts01 = Sprt0001[Vrab03].Get_Mid();
-         Rect01.left += rint32(Flts01.x) + 1; Rect01.top += rint32(Flts01.y) + 1;
-         Rect01.right = Rect01.left + (LONG)Disp0001[Vrab02].Post_X2 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
-         Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab02].Post_Y2 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
-        }
-        auto Effc01 = DirectX::SpriteEffects_None;
-        switch(Disp0001[Vrab02].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Sprt0001[Vrab03].Get_Target()].Texture.Get(), Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab02].Trans) / 255) + Vrab04}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab02].Post_X3)), Flts01, Effc01);
+        case 0: Vrab02 = 0.0f; Vrab03 = 0; break;
+        case 1: Vrab02 = 6.0f; break;
+        case 2: Vrab02 = 12.0f; break;
+        default: break;
        }
-      break;*/
+      }
+      break;
       default: break;
      }
     }
@@ -458,7 +443,7 @@
    Desc01.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.MipLODBias = 0.0f;
-   Desc01.MaxAnisotropy = 1;
+   Desc01.MaxAnisotropy = 0;
    Desc01.ComparisonFunc = D3D11_COMPARISON_NEVER;
    Desc01.BorderColor[0] = 1.0f;
    Desc01.BorderColor[1] = 1.0f;
@@ -466,16 +451,16 @@
    Desc01.BorderColor[3] = 1.0f;
    Desc01.MinLOD = -FLT_MAX;
    Desc01.MaxLOD = FLT_MAX;
-   ThrowIfFailed(Dvis01->CreateSamplerState(&Desc01, Samp001.ReleaseAndGetAddressOf()));
+   ThrowIfFailed(Dvis01->CreateSamplerState(&Desc01, Samp001.ReleaseAndGetAddressOf()), "CreateSamplerState");
 
    auto Hlsl01 = CSO_Read(L"Database\\Platform.cso");
-   ThrowIfFailed(Dvis01->CreatePixelShader(Hlsl01.data(), Hlsl01.size(), nullptr, Grap001.ReleaseAndGetAddressOf()));
+   ThrowIfFailed(Dvis01->CreatePixelShader(Hlsl01.data(), Hlsl01.size(), nullptr, Grap001.ReleaseAndGetAddressOf()), "CreatePixelShader");
   }
   int0 HEPTA_GAME::CreateWindowSizeDependentResources()
   {
 
   }
- //-//
+
  // HEPTA_DEVICE::
   HEPTA_DEVICE::HEPTA_DEVICE(DXGI_FORMAT Dxfm01 = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT Dxfm02 = DXGI_FORMAT_D32_FLOAT, uint32 Vrab01 = 2, D3D_FEATURE_LEVEL Dxfl01 = D3D_FEATURE_LEVEL_9_1, uint32 Vrab02 = c_FlipPresent) fastened : m_screenViewport{}, m_backBufferFormat(Dxfm01), m_depthBufferFormat(Dxfm02), m_backBufferCount(Vrab01), m_d3dMinFeatureLevel(Dxfl01), m_window(nullptr), m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1), m_outputSize{0, 0, 1, 1}, m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709), m_options(Vrab02 | c_FlipPresent), m_deviceNotify(nullptr) {}
   
@@ -595,9 +580,9 @@
      }
     #endif
 
-    ThrowIfFailed(Dvis01.As(&m_d3dDevice));
-    ThrowIfFailed(Cont01.As(&m_d3dContext));
-    ThrowIfFailed(Cont01.As(&m_d3dAnnotation));
+    ThrowIfFailed(Dvis01.As(&m_d3dDevice), "D3DDevice");
+    ThrowIfFailed(Cont01.As(&m_d3dContext), "D3DContext");
+    ThrowIfFailed(Cont01.As(&m_d3dAnnotation), "D3DAnnotation");
    }
   }
   int0 HEPTA_DEVICE::CreateWindowSizeDependentResources()
@@ -644,7 +629,7 @@
 
      // Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method and correctly set up the new device.
      return;
-    } else {ThrowIfFailed(Hslt01);}
+    } else {ThrowIfFailed(Hslt01, "ResizeBuffer");}
    } else
    {
     DXGI_SWAP_CHAIN_DESC1 Dxsc01 = {};
@@ -663,20 +648,20 @@
     DXGI_SWAP_CHAIN_FULLSCREEN_DESC Dxsf01 = {};
     Dxsf01.Windowed = TRUE;
 
-    ThrowIfFailed(m_dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice.Get(), m_window, &Dxsc01, &Dxsf01, nullptr, m_swapChain.ReleaseAndGetAddressOf()));
+    ThrowIfFailed(m_dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice.Get(), m_window, &Dxsc01, &Dxsf01, nullptr, m_swapChain.ReleaseAndGetAddressOf()), "CreateSwapChainForHwnd");
 
     // This class does not support exclusive full-screen mode and prevents DXGI from responding to the ALT+ENTER shortcut.
-    ThrowIfFailed(m_dxgiFactory->MakeWindowAssociation(m_window, DXGI_MWA_NO_ALT_ENTER));
+    ThrowIfFailed(m_dxgiFactory->MakeWindowAssociation(m_window, DXGI_MWA_NO_ALT_ENTER), "MakeWindowAssociation");
    }
 
    // Handle color space settings for HDR.
    UpdateColorSpace();
 
    // Create a render target view of the swap chain back buffer.
-   ThrowIfFailed(m_swapChain->GetBuffer(0, IID_PPV_ARGS(m_renderTarget.ReleaseAndGetAddressOf())));
+   ThrowIfFailed(m_swapChain->GetBuffer(0, IID_PPV_ARGS(m_renderTarget.ReleaseAndGetAddressOf())), "GetBuffer");
 
    CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, m_backBufferFormat);
-   ThrowIfFailed(m_d3dDevice->CreateRenderTargetView(m_renderTarget.Get(), &renderTargetViewDesc, m_d3dRenderTargetView.ReleaseAndGetAddressOf()));
+   ThrowIfFailed(m_d3dDevice->CreateRenderTargetView(m_renderTarget.Get(), &renderTargetViewDesc, m_d3dRenderTargetView.ReleaseAndGetAddressOf()), "CreateRenderTargetView");
 
    if(m_depthBufferFormat != DXGI_FORMAT_UNKNOWN)
    {
@@ -688,8 +673,8 @@
                                           1, // Use a single mipmap level.
                                           D3D11_BIND_DEPTH_STENCIL);
 
-    ThrowIfFailed(m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencil.ReleaseAndGetAddressOf()));
-    ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(m_depthStencil.Get(), nullptr, m_d3dDepthStencilView.ReleaseAndGetAddressOf()));
+    ThrowIfFailed(m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencil.ReleaseAndGetAddressOf()), "CreateTexture2D");
+    ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(m_depthStencil.Get(), nullptr, m_d3dDepthStencilView.ReleaseAndGetAddressOf()), "CreateDepthStencilView");
    }
 
    m_screenViewport = {0.f, 0.f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 0.f };
@@ -729,7 +714,7 @@
     for(uint32 Vrab01 = 0; SUCCEEDED(Dxfc01->EnumAdapterByGpuPreference(Vrab01, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(Dxad02.ReleaseAndGetAddressOf()))); Vrab01++)
     {
      DXGI_ADAPTER_DESC1 desc;
-     ThrowIfFailed(Dxad02->GetDesc1(&desc));
+     ThrowIfFailed(Dxad02->GetDesc1(&desc), "GetDesc1");
     
      // Don't select the Basic Render Driver adapter.
      if(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
@@ -749,7 +734,7 @@
     for(uint32 Vrab01 = 0; SUCCEEDED(m_dxgiFactory->EnumAdapters1(Vrab01, Dxad02.ReleaseAndGetAddressOf())); Vrab01++)
     {
      DXGI_ADAPTER_DESC1 desc;
-     ThrowIfFailed(Dxad02->GetDesc1(&desc));
+     ThrowIfFailed(Dxad02->GetDesc1(&desc), "GetDesc1");
     
      // Don't select the Basic Render Driver adapter.
      if(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
@@ -780,7 +765,7 @@
 
    if(Hslt01 == DXGI_ERROR_DEVICE_REMOVED || Hslt01 == DXGI_ERROR_DEVICE_RESET)
    {HandleDeviceLost();} else
-   {ThrowIfFailed(Hslt01); if(!m_dxgiFactory->IsCurrent()) UpdateColorSpace();}
+   {ThrowIfFailed(Hslt01, "Present"); if(!m_dxgiFactory->IsCurrent()) UpdateColorSpace();}
   }
   int0 HEPTA_DEVICE::UpdateColorSpace()
   {
@@ -800,7 +785,7 @@
      for(uint32 Vrab08 = 0; SUCCEEDED(Dxad02->EnumOutputs(Vrab08, Dxou02.ReleaseAndGetAddressOf())); ++Vrab08)
      {
       // Get the rectangle bounds of current output.
-      DXGI_OUTPUT_DESC Dxod01; ThrowIfFailed(Dxou02->GetDesc(&Dxod01));
+      DXGI_OUTPUT_DESC Dxod01; ThrowIfFailed(Dxou02->GetDesc(&Dxod01), "GetDesc");
       statics auto& Rect02 = Dxod01.DesktopCoordinates;
  
       // Compute the intersection.
@@ -814,7 +799,7 @@
      Microsoft::WRL::ComPtr<IDXGIOutput6> Dxou02;
      if(SUCCEEDED(Dxou01.As(&Dxou02)))
      {
-      DXGI_OUTPUT_DESC1 Dxod01; ThrowIfFailed(Dxou02->GetDesc1(&Dxod01));
+      DXGI_OUTPUT_DESC1 Dxod01; ThrowIfFailed(Dxou02->GetDesc1(&Dxod01), "GetDesc1");
      
       // Check if Display output is HDR10.
       if(Dxod01.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020) Vrab01 = true;
@@ -838,7 +823,7 @@
 
    Microsoft::WRL::ComPtr < IDXGISwapChain3 > Dxch01;
    if(m_swapChain && SUCCEEDED(m_swapChain.As(&Dxch01)))
-   {uint32 Vrab02 = 0; if(SUCCEEDED(Dxch01->CheckColorSpaceSupport(Dxcs01, &Vrab02)) && (Vrab02 & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT)) ThrowIfFailed(Dxch01->SetColorSpace1(Dxcs01));}
+   {uint32 Vrab02 = 0; if(SUCCEEDED(Dxch01->CheckColorSpaceSupport(Dxcs01, &Vrab02)) && (Vrab02 & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT)) ThrowIfFailed(Dxch01->SetColorSpace1(Dxcs01), "SetColorSpace1");}
   }
   int0 HEPTA_DEVICE::CreateFactory()
   {
@@ -870,31 +855,31 @@
   }
   int1 HEPTA_DEVICE::WindowSizeChanged(uint32 Vrab01, uint32 Vrab02)
   {
-   Varb0017 = Vrab01; Varb0018 = Vrab02;
-   RECT Rect01; Rect01.left = Rect01.top = 0; Varb0008 = 0; Varb0009 = 0;
-   statics xint64 Vrab05 = rxint64(Vrab01) / rxint64(Varb0002);
-   statics xint64 Vrab06 = rxint64(Vrab02) / rxint64(Varb0003);
-   if(Varb0005)
+   Vrab0028 = Vrab01; Vrab0029 = Vrab02;
+   RECT Rect01; Rect01.left = Rect01.top = 0; Vrab0007 = 0; Vrab0008 = 0;
+   statics xint64 Vrab05 = rxint64(Vrab01) / rxint64(Vrab0005);
+   statics xint64 Vrab06 = rxint64(Vrab02) / rxint64(Vrab0006);
+   if(Vrab0010)
    {
     if(Vrab05 != Vrab06)
     {
      if(Vrab05 > Vrab06)
      {
-      Rect01.right = L_Rounding(rxint64(Varb0002) / (Vrab06 * (rxint64(Varb0002) / rxint64(Vrab01)))); Rect01.bottom = Varb0003; Varb0008 = L_Rounding(rxint64(ruint64(Rect01.right) - Varb0002) / 2);
+      Rect01.right = L_Rounding(rxint64(Vrab0005) / (Vrab06 * (rxint64(Vrab0005) / rxint64(Vrab01)))); Rect01.bottom = Vrab0006; Vrab0007 = L_Rounding(rxint64(ruint64(Rect01.right) - Vrab0005) / 2);
      } else
      {
-      Rect01.bottom = L_Rounding(rxint64(Varb0003) / (Vrab05 * (rxint64(Varb0003) / rxint64(Vrab02)))); Rect01.right = Varb0002; Varb0009 = L_Rounding(rxint64(ruint64(Rect01.bottom) - Varb0003) / 2);
+      Rect01.bottom = L_Rounding(rxint64(Vrab0006) / (Vrab05 * (rxint64(Vrab0006) / rxint64(Vrab02)))); Rect01.right = Vrab0005; Vrab0008 = L_Rounding(rxint64(ruint64(Rect01.bottom) - Vrab0006) / 2);
      }
     } else
     {
-     Rect01.right = Varb0002; Rect01.bottom = Varb0003;
+     Rect01.right = Vrab0005; Rect01.bottom = Vrab0006;
     }
     if(Vrab05 < Vrab06)
-    {Varb0010 = Varb0011 = Vrab05;} else {Varb0010 = Varb0011 = Vrab06;}
+    {Vrab0014 = Vrab0015 = Vrab05;} else {Vrab0014 = Vrab0015 = Vrab06;}
    } else
    {
-    Rect01.right = Varb0002; Rect01.bottom = Varb0003;
-    Varb0010 = Vrab05; Varb0011 = Vrab06;
+    Rect01.right = Vrab0005; Rect01.bottom = Vrab0006;
+    Vrab0014 = Vrab05; Vrab0015 = Vrab06;
    }
 
    if(m_outputSize == Rect01)
@@ -906,10 +891,8 @@
    CreateWindowSizeDependentResources();
    return true;
   }
- //-//
-//-//
 
-// Windows' Window
+// Windows' Function
  LRESULT CALLBACK wWinCall(HWND Hwnd01, UINT Vrab01, WPARAM Wpar01, LPARAM Lpar01)
  {
   remains int1 Vrab02 = false, // in sizemove.
@@ -1018,7 +1001,7 @@
    Wind01.hIconSm = LoadIconW(Hins01, L"IDI_ICON");
    if(!RegisterClassExW(&Wind01)) return 1;
 
-   uint32 Vrab02 = Varb0002, Vrab03 = Varb0003;
+   uint32 Vrab02 = Vrab0005, Vrab03 = Vrab0006;
    RECT Rect01 = {0, 0, static_cast < LONG > (Vrab02), static_cast < LONG > (Vrab03)};
    
    AdjustWindowRect(&Rect01, WS_OVERLAPPEDWINDOW, FALSE);
@@ -1057,7 +1040,7 @@
    Vdec01.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
    Vdec01.Texture2D.MipLevels = 1;
 
-   ThrowIfFailed(Game0001->m_deviceResources->GetD3DDevice()->CreateShaderResourceView(Text01.Get(), &Vdec01, Game0001->GetRect()));
+   ThrowIfFailed(Game0001->m_deviceResources->GetD3DDevice()->CreateShaderResourceView(Text01.Get(), &Vdec01, Game0001->GetRect()), "CreateShaderResourceView");
   }
 
   // Main message loop.
@@ -1078,4 +1061,3 @@
    return rint32(Mssg01.wParam);
   }
  }
-//-//

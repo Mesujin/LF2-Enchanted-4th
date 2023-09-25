@@ -12,7 +12,7 @@ This is the source of `LF2 Enchanted 4th (LF2EF)`'s Platform and Engine.
 Feel free to modify or anything since this is an open-sourced project, as long as you kept my name, Marti's name, and Starsky's name, then there's should be no conflict between us.
 > About LF2EF : https://lf-empire.de/forum/showthread.php?tid=11058 <br/>
 
-> LF2EF's Discord Server : https://discord.gg/Wnz3bJuegK
+> LF2EF's Discord Server : _Under preparation_
 
 <br>
 <br>
@@ -20,7 +20,7 @@ Feel free to modify or anything since this is an open-sourced project, as long a
 
 
 ## Modify & Build
-To modify, generally you'll need [Microsoft Visual Studio](https://visualstudio.microsoft.com/), 2019 or higher. <br/>
+To modify, generally you'll need [Microsoft Visual Studio](https://visualstudio.microsoft.com/), 2022 or higher. <br/>
 If you're not familiar with GitHub, here's the link to download this source. <br/>
 > Download Source : https://github.com/Mesujin/LF2-Enchanted-4th/archive/refs/heads/Official_Release.zip
 
@@ -37,7 +37,7 @@ To run this source after you build it, you'll need to copy the data from the gam
 <br>
 
 
-<b>Note that i won't explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project.</b>
+<b>Note that i have the right to not explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project.</b>
 
 
 <br>
@@ -52,7 +52,7 @@ Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 
 
 ## Credits
-- Powered by DirectXTK and Microsoft Visual Studio 2019 (Professional). <br/>
+- Powered by DirectXTK and Microsoft Visual Studio 2022 (Professional). <br/>
 - Supported by LF-Empire Community.
 
 - Resources from Little Fighter 2, by Marti Wong & Starsky Wong.
