@@ -14,6 +14,7 @@ Feel free to modify or anything since this is an open-sourced project, as long a
 
 > LF2EF's Discord Server : _Under preparation_
 
+A program that based on DirecXTK, written in a very basic C++ programming, but could work fair enough to create a simple nice game.
 <br>
 <br>
 

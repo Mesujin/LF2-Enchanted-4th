@@ -3,9 +3,15 @@
 //                                                                                        //
 // Main source of "Hepta: Enchanted".                                                     //
 // Dunno what to text here, but this is my usual style for a header text...               //
+// Everything that's about the "mechanic" of the game were written here, the other part   //
+// of the game, such as drawing, playing the sound, etc weren't written here.             //
+//                                                                                        //
+// There weren't many note about "what was it?", "what this line of code do?", etc,       //
+// since most of the code were written with basic programming, i thought it might not     //
+// that necessary to have a note. "A note won't help much here anyway..".                 //
 //                                                                                        //
 // Under GNU General Public License v3.0.                                                 //
-// Last modify (small modify doesn't count) - 2023 09 25 17:10                            //
+// Written by Mesujin.                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -136,6 +142,14 @@
     std::vector < insize > Vect005; // Interface Index - Sound.
 
    // Structures
+    struct HEPTA_LF2_ENCHANTED_SETTING_PLAYER_MACRO
+    {
+     int1   Latency = false;
+     int1   Loop_Cancel = true;
+     uint8  Key = 0;
+     uint16 Loop = 0;
+     std::vector < std::vector < uint8 > > Input;
+    };
     struct HEPTA_LF2_ENCHANTED_SETTING_PLAYER
     {
      string Name;
@@ -156,6 +170,7 @@
      uint8  P_Defend  = 0;
      uint8  P_Jump    = 0;
      uint8  P_Command = 0;
+     std::vector < HEPTA_LF2_ENCHANTED_SETTING_PLAYER_MACRO > Macro;
     };
     struct HEPTA_LF2_ENCHANTED_SETTING
     {
@@ -173,9 +188,11 @@
      int1   Show_FPS = true;
      uint8  Engine = 0;
      string Engine_Setting;
-     string Address = "Database\\Game\\Enchanted\\Origin\\";
+     string Address = "Database\\MiniGame_Enchanted\\";
+     string Address_Game = "GameData_Default\\";
      string Address_Data = "data\\data.txt";
-     string Address_Interface = "Database\\Interface\\Enchanted\\";
+     string Address_Interface = "Interface\\";
+     string Address_Recording = "Recordings\\";
 
      uint8  Health_Bar = 0;
      uint8  Camera_Speed = 100;
@@ -199,7 +216,6 @@
 
      int1   Recording = true;
      int1   True_Recording = false;
-     string Record_Address = "Database\\Game\\Enchanted\\Recordings\\";
      string User  = "<none>";
      string Email = "<none>";
      string Note  = "<none>";
@@ -672,7 +688,7 @@
     
     }
 
-   G_Set_Display(
+   G_Set_Display();
   }
 #endif
 
