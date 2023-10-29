@@ -498,6 +498,7 @@
 
  // Global Function
   int0 G_ToggleFullscreen() fastened;
+  int0 G_Adjust_Window(statics uint32 = 1920, statics uint32 = 1080, statics int1 = true, statics string = "Hepta : Enchanted") fastened;
   int0 ThrowIfFailed(HRESULT Hres01, statics string Temp01 = "")
   {
    if(SUCCEEDED(Hres01)) return;
@@ -682,6 +683,8 @@
     Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
     Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
    }
+
+
   //-//
  //-//
 #endif

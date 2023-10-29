@@ -15,9 +15,8 @@
   {
    SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_OVERLAPPEDWINDOW);
    SetWindowLongPtr(Hwnd01, GWL_EXSTYLE, 0);
-   uint32 Vrab06 = Vrab0005, Vrab07 = Vrab0006;
    ShowWindow(Hwnd01, SW_SHOWNORMAL);
-   SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab06 + 16), static_cast < LONG > (Vrab07 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+   SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab0005 + 16), static_cast < LONG > (Vrab0006 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
   } else
   {
    SetWindowLongPtr(Hwnd01, GWL_STYLE, WS_POPUP);
@@ -26,6 +25,15 @@
    ShowWindow(Hwnd01, SW_SHOWMAXIMIZED);
   }
   Vrab0009 = !Vrab0009;
+ }
+ int0 G_Adjust_Window(statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) fastened
+ {
+  Vrab0005 = Vrab01; Vrab0006 = Vrab02;
+  Game0001->OnWindowSizeChanged(Vrab01, Vrab02);
+  auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
+  if(!Vrab0009) SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab01 + 16), static_cast < LONG > (Vrab02 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+  if(Vrab03 != Vrab0009) G_ToggleFullscreen();
+  SetWindowTextA(Hwnd01, Temp01.c_str());
  }
 
  HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) fastened
@@ -214,7 +222,7 @@
   {
    if(Vrab0004) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
-   if(Vrab0030){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
+   if(Vrab0030 == 2){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
@@ -945,7 +953,7 @@
       return TRUE;
     }
    break;
-   case WM_DESTROY: PostQuitMessage(0); break;
+   case WM_DESTROY: Vrab0030 = 1; break;
    case WM_ACTIVATE:
    case WM_INPUT:
    case WM_MOUSEMOVE:
@@ -967,7 +975,7 @@
     DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);
    break;
    case WM_SYSKEYDOWN:
-    if(Wpar01 == VK_F4 && (Lpar01 & 0x60000000) == 0x20000000){PostQuitMessage(0); break;}
+    if(Wpar01 == VK_F4 && (Lpar01 & 0x60000000) == 0x20000000){Vrab0030 = 1; break;}
     if(Wpar01 == VK_RETURN && (Lpar01 & 0x60000000) == 0x20000000) // Implements the classic ALT+ENTER fullscreen toggle.
     {G_ToggleFullscreen();} else {DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);}
    return 0;
@@ -1001,7 +1009,7 @@
    Wind01.hIconSm = LoadIconW(Hins01, L"IDI_ICON");
    if(!RegisterClassExW(&Wind01)) return 1;
 
-   uint32 Vrab02 = Vrab0005, Vrab03 = Vrab0006;
+   uint32 Vrab02 = Vrab0028, Vrab03 = Vrab0029;
    RECT Rect01 = {0, 0, static_cast < LONG > (Vrab02), static_cast < LONG > (Vrab03)};
    
    AdjustWindowRect(&Rect01, WS_OVERLAPPEDWINDOW, FALSE);

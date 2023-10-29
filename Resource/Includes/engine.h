@@ -31,7 +31,7 @@
    #include "AngelScript/scriptmathcomplex.h"
    #include "AngelScript/scriptstdstring.h"
 
- // Early Declaration (In order to access Global Variables.)
+ // Early Declaration (In order to accessed by Global Variables.)
   int1   L_Exist(statics string&) fastened;
   int32  L_Rounding(statics xint64) fastened;
   int64  L_Rounding64(statics xint64) fastened;
@@ -41,6 +41,7 @@
 
  // Global Variables
   string Temp0001 = "";     // App Working Directory.
+  string Temp0002 = "";     // App Encryption-Decryption Key.
   uint64 Vrab0001 = 0;      // App Runtime.
   uint64 Vrab0002 = 0;      // App Looptime.
   uint8  Vrab0003 = 8;      // App FPS Ratio. (1 = 960, 2 = 480, 4 = 240, 8 = 120, 16 = 60, 32 = 30, 64 = 15, 128 = 7.5)
@@ -50,7 +51,7 @@
   uint32 Vrab0007 = 0;      // Display X Offset.
   uint32 Vrab0008 = 0;      // Display Y Offset.
   int1   Vrab0009 = false;  // Display Fullscreen?
-  int1   Vrab0010 = true;   // Display Keep Aspect Ratio?
+  int1   Vrab0010 = false;  // Display Keep Aspect Ratio?
   int1   Vrab0011 = false;  // Display Force Pixel Resolution?
   xint32 Vrab0012 = 0.1f;   // Audio Volume.
   xint32 Vrab0013 = 0.0f;   // Audio Pan.
@@ -69,8 +70,8 @@
   uint8  Vrab0026 = 0;      // Input Pad Default DOWN.
   uint8  Vrab0027 = 0;      // Input Pad Default RIGHT.
   uint32 Vrab0028 = 800;    // Window Width.
-  uint32 Vrab0029 = 450;    // Window Height.
-  int1   Vrab0030 = false;  // Window Exit?
+  uint32 Vrab0029 = 400;    // Window Height.
+  uint8  Vrab0030 = 0;      // Window Exit?
   uint64 Vrab0031 = 0;      // Random Seed.
   int1   Vrab0032 = true;   // Random Reset.
 
@@ -128,7 +129,6 @@
 
    int1  PADS_ON;
   };
-
   struct HEPTA_LF2_ENCHANTED
   {
    // Variables
@@ -174,8 +174,8 @@
     };
     struct HEPTA_LF2_ENCHANTED_SETTING
     {
-     int64  Width  = 800;
-     int64  Height = 450;
+     uint32 Width  = 800;
+     uint32 Height = 450;
      int1   Fullscreen = true;
      int1   Aspect_Ratio = true;
      uint8  UI_FPS = 8;
@@ -240,10 +240,39 @@
   unique < HEPTA_INPUT > Input;
   unique < HEPTA_LF2_ENCHANTED > Enchanted;
 
+ // Encryption & Decryption Functions
+  int0   S_Control()                               fastened {if(Temp0002.size() <= 94) Temp0002.resize(95);}
+  int8   S_Decryption94(const int8 Vrab01)         fastened {if(Vrab01 == Temp0002[0]) return 0; if(Vrab01 == Temp0002[1]) return 1; if(Vrab01 == Temp0002[2]) return 2; if(Vrab01 == Temp0002[3]) return 3; if(Vrab01 == Temp0002[4]) return 4; if(Vrab01 == Temp0002[5]) return 5; if(Vrab01 == Temp0002[6]) return 6; if(Vrab01 == Temp0002[7]) return 7; if(Vrab01 == Temp0002[8]) return 8; if(Vrab01 == Temp0002[9]) return 9; if(Vrab01 == Temp0002[10]) return 10; if(Vrab01 == Temp0002[11]) return 11; if(Vrab01 == Temp0002[12]) return 12; if(Vrab01 == Temp0002[13]) return 13; if(Vrab01 == Temp0002[14]) return 14; if(Vrab01 == Temp0002[15]) return 15; if(Vrab01 == Temp0002[16]) return 16; if(Vrab01 == Temp0002[17]) return 17; if(Vrab01 == Temp0002[18]) return 18; if(Vrab01 == Temp0002[19]) return 19; if(Vrab01 == Temp0002[20]) return 20; if(Vrab01 == Temp0002[21]) return 21; if(Vrab01 == Temp0002[22]) return 22; if(Vrab01 == Temp0002[23]) return 23; if(Vrab01 == Temp0002[24]) return 24; if(Vrab01 == Temp0002[25]) return 25; if(Vrab01 == Temp0002[26]) return 26; if(Vrab01 == Temp0002[27]) return 27; if(Vrab01 == Temp0002[28]) return 28; if(Vrab01 == Temp0002[29]) return 29; if(Vrab01 == Temp0002[30]) return 30; if(Vrab01 == Temp0002[31]) return 31; if(Vrab01 == Temp0002[32]) return 32; if(Vrab01 == Temp0002[33]) return 33; if(Vrab01 == Temp0002[34]) return 34; if(Vrab01 == Temp0002[35]) return 35; if(Vrab01 == Temp0002[36]) return 36; if(Vrab01 == Temp0002[37]) return 37; if(Vrab01 == Temp0002[38]) return 38; if(Vrab01 == Temp0002[39]) return 39; if(Vrab01 == Temp0002[40]) return 40; if(Vrab01 == Temp0002[41]) return 41; if(Vrab01 == Temp0002[42]) return 42; if(Vrab01 == Temp0002[43]) return 43; if(Vrab01 == Temp0002[44]) return 44; if(Vrab01 == Temp0002[45]) return 45; if(Vrab01 == Temp0002[46]) return 46; if(Vrab01 == Temp0002[47]) return 47; if(Vrab01 == Temp0002[48]) return 48; if(Vrab01 == Temp0002[49]) return 49; if(Vrab01 == Temp0002[50]) return 50; if(Vrab01 == Temp0002[51]) return 51; if(Vrab01 == Temp0002[52]) return 52; if(Vrab01 == Temp0002[53]) return 53; if(Vrab01 == Temp0002[54]) return 54; if(Vrab01 == Temp0002[55]) return 55; if(Vrab01 == Temp0002[56]) return 56; if(Vrab01 == Temp0002[57]) return 57; if(Vrab01 == Temp0002[58]) return 58; if(Vrab01 == Temp0002[59]) return 59; if(Vrab01 == Temp0002[60]) return 60; if(Vrab01 == Temp0002[61]) return 61; if(Vrab01 == Temp0002[62]) return 62; if(Vrab01 == Temp0002[63]) return 63; if(Vrab01 == Temp0002[64]) return 64; if(Vrab01 == Temp0002[65]) return 65; if(Vrab01 == Temp0002[66]) return 66; if(Vrab01 == Temp0002[67]) return 67; if(Vrab01 == Temp0002[68]) return 68; if(Vrab01 == Temp0002[69]) return 69; if(Vrab01 == Temp0002[70]) return 70; if(Vrab01 == Temp0002[71]) return 71; if(Vrab01 == Temp0002[72]) return 72; if(Vrab01 == Temp0002[73]) return 73; if(Vrab01 == Temp0002[74]) return 74; if(Vrab01 == Temp0002[75]) return 75; if(Vrab01 == Temp0002[76]) return 76; if(Vrab01 == Temp0002[77]) return 77; if(Vrab01 == Temp0002[78]) return 78; if(Vrab01 == Temp0002[79]) return 79; if(Vrab01 == Temp0002[80]) return 80; if(Vrab01 == Temp0002[81]) return 81; if(Vrab01 == Temp0002[82]) return 82; if(Vrab01 == Temp0002[83]) return 83; if(Vrab01 == Temp0002[84]) return 84; if(Vrab01 == Temp0002[85]) return 85; if(Vrab01 == Temp0002[86]) return 86; if(Vrab01 == Temp0002[87]) return 87; if(Vrab01 == Temp0002[88]) return 88; if(Vrab01 == Temp0002[89]) return 89; if(Vrab01 == Temp0002[90]) return 90; if(Vrab01 == Temp0002[91]) return 91; if(Vrab01 == Temp0002[92]) return 92; if(Vrab01 == Temp0002[93]) return 93; return 0;}
+  int8   S_DecryptionINT8(const int8 Vrab01[2])    fastened {S_Control(); return (int8)(ruint8(S_Decryption94(Vrab01[1])) + ruint8(S_Decryption94(Vrab01[0])) * 94);}
+  int16  S_DecryptionINT16(const int8 Vrab01[3])   fastened {S_Control(); return (int16)(ruint16(S_Decryption94(Vrab01[2])) + ruint16(S_Decryption94(Vrab01[1])) * 94 + ruint16(S_Decryption94(Vrab01[0])) * 8836);}
+  int32  S_DecryptionINT32(const int8 Vrab01[5])   fastened {S_Control(); return (int32)(ruint32(S_Decryption94(Vrab01[4])) + ruint32(S_Decryption94(Vrab01[3])) * 94 + ruint32(S_Decryption94(Vrab01[2])) * 8836 + ruint32(S_Decryption94(Vrab01[1])) * 830584 + ruint32(S_Decryption94(Vrab01[0])) * 78074896);}
+  int64  S_DecryptionINT64(const int8 Vrab01[10])  fastened {S_Control(); return (int64)(ruint64(S_Decryption94(Vrab01[9])) + ruint64(S_Decryption94(Vrab01[8])) * 94 + ruint64(S_Decryption94(Vrab01[7])) * 8836 + ruint64(S_Decryption94(Vrab01[6])) * 830584 + ruint64(S_Decryption94(Vrab01[5])) * 78074896 + ruint64(S_Decryption94(Vrab01[4])) * 7339040224 + ruint64(S_Decryption94(Vrab01[3])) * 689869781056 + ruint64(S_Decryption94(Vrab01[2])) * 64847759419264 + ruint64(S_Decryption94(Vrab01[1])) * 6095689385410816 + ruint64(S_Decryption94(Vrab01[0])) * 572994802228616704);}
+  uint32 S_DecryptionUINT4(const int8 Vrab01[1])   fastened {S_Control(); return S_Decryption94(Vrab01[0]);}
+  uint8  S_DecryptionUINT8(const int8 Vrab01[2])   fastened {S_Control(); return S_Decryption94(Vrab01[1]) + (S_Decryption94(Vrab01[0]) * 94);}
+  uint32 S_DecryptionUINT10(const int8 Vrab01[2])  fastened {S_Control(); return S_Decryption94(Vrab01[1]) + (S_Decryption94(Vrab01[0]) * 94);}
+  uint16 S_DecryptionUINT16(const int8 Vrab01[3])  fastened {S_Control(); return ruint16(S_Decryption94(Vrab01[2])) + ruint16(S_Decryption94(Vrab01[1])) * 94 + ruint16(S_Decryption94(Vrab01[0])) * 8836;}
+  uint32 S_DecryptionUINT18(const int8 Vrab01[3])  fastened {S_Control(); return ruint16(S_Decryption94(Vrab01[2])) + ruint16(S_Decryption94(Vrab01[1])) * 94 + ruint16(S_Decryption94(Vrab01[0])) * 8836;}
+  uint32 S_DecryptionUINT24(const int8 Vrab01[4])  fastened {S_Control(); return ruint32(S_Decryption94(Vrab01[3])) + ruint32(S_Decryption94(Vrab01[2])) * 94 + ruint32(S_Decryption94(Vrab01[1])) * 8836 + ruint32(S_Decryption94(Vrab01[0])) * 830584;}
+  uint32 S_DecryptionUINT32(const int8 Vrab01[5])  fastened {S_Control(); return ruint32(S_Decryption94(Vrab01[4])) + ruint32(S_Decryption94(Vrab01[3])) * 94 + ruint32(S_Decryption94(Vrab01[2])) * 8836 + ruint32(S_Decryption94(Vrab01[1])) * 830584 + ruint32(S_Decryption94(Vrab01[0])) * 78074896;}
+  uint64 S_DecryptionUINT64(const int8 Vrab01[10]) fastened {S_Control(); return ruint64(S_Decryption94(Vrab01[9])) + ruint64(S_Decryption94(Vrab01[8])) * 94 + ruint64(S_Decryption94(Vrab01[7])) * 8836 + ruint64(S_Decryption94(Vrab01[6])) * 830584 + ruint64(S_Decryption94(Vrab01[5])) * 78074896 + ruint64(S_Decryption94(Vrab01[4])) * 7339040224 + ruint64(S_Decryption94(Vrab01[3])) * 689869781056 + ruint64(S_Decryption94(Vrab01[2])) * 64847759419264 + ruint64(S_Decryption94(Vrab01[1])) * 6095689385410816 + ruint64(S_Decryption94(Vrab01[0])) * 572994802228616704;}
+  xint64 S_DecryptionXINT64(const int8 Vrab01[11]) fastened {S_Control(); return rxint64(S_Decryption94(Vrab01[0])) * 8836 + rxint64(S_Decryption94(Vrab01[1])) * 94 + rxint64(S_Decryption94(Vrab01[2])) - 400000 + rxint64(S_Decryption94(Vrab01[3])) * 0.064847759419264 + rxint64(S_Decryption94(Vrab01[4])) * 0.000689869781056 + rxint64(S_Decryption94(Vrab01[5])) * 0.000007339040224 + rxint64(S_Decryption94(Vrab01[6])) * 0.000000078074896 +  rxint64(S_Decryption94(Vrab01[7])) * 0.000000000830584 + rxint64(S_Decryption94(Vrab01[8])) * 0.000000000008836 + rxint64(S_Decryption94(Vrab01[9])) * 0.000000000000094 + rxint64(S_Decryption94(Vrab01[10])) * 0.000000000000001;}
+  string S_DecryptionSTRING(string Temp01)         fastened {int8 Vrab01 = 0; const uint32 Vrab02 = Temp01.size(); uint32 Vrab03 = 0;  while(Vrab03 != Vrab02){Vrab01 = Temp01.at(Vrab03); if(Vrab01 >= '!' && Vrab01 <= '~') Temp01.at(Vrab03) = ((S_Decryption94(Vrab01) + 94 - (Vrab03 % 94)) % 94) + 33; Vrab03 += 1;} return Temp01;}
+  string S_Encryption94(const uint64 Vrab01)       fastened {S_Control(); return {Temp0002[(Vrab01 % 94)]};}
+  string S_EncryptionUINT4(const uint32 Vrab01)    fastened {S_Control(); return S_Encryption94(Vrab01);}
+  string S_EncryptionUINT8(const uint8 Vrab01)     fastened {S_Control(); return S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT10(const uint32 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT16(const uint16 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 8836) + S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT18(const uint32 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 8836) + S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT24(const uint32 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 830584) + S_Encryption94(Vrab01 / 8836) + S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT32(const uint32 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 78074896) + S_Encryption94(Vrab01 / 830584) + S_Encryption94(Vrab01 / 8836) + S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionUINT64(const uint64 Vrab01)   fastened {S_Control(); return S_Encryption94(Vrab01 / 572994802228616704) + S_Encryption94(Vrab01 / 6095689385410816) + S_Encryption94(Vrab01 / 64847759419264) + S_Encryption94(Vrab01 / 689869781056) + S_Encryption94(Vrab01 / 7339040224) + S_Encryption94(Vrab01 / 78074896) + S_Encryption94(Vrab01 / 830584) + S_Encryption94(Vrab01 / 8836) + S_Encryption94(Vrab01 / 94) + S_Encryption94(Vrab01);}
+  string S_EncryptionXINT64(const xint64 Vrab01)   fastened {S_Control(); xint64 Vrab02 = Vrab01 + 400000; if(Vrab02 < 0){Vrab02 = 0;} else {if(Vrab02 > 800000) Vrab02 = 800000;} const int64 Vrab03 = rint64(Vrab02); const int64 Vrab04 = Vrab03 / 94; const xint64 Vrab05 = (Vrab02 - rxint64(rint64(Vrab02))) * 100000; const xint64 Vrab06 = (Vrab05 - rxint64(rint64(Vrab05))) * 100000; const xint64 Vrab07 = (Vrab06 - rxint64(rint64(Vrab06))) * 100000; const int64 Vrab08 = rint64(Vrab05) * 10000000000 + rint64(Vrab06) * 100000 + rint64(Vrab07); const int64 Vrab09 = Vrab08 / 94; const int64 Vrab10 = Vrab09 / 94; const int64 Vrab11 = Vrab10 / 94; const int64 Vrab12 = Vrab11 / 94; const int64 Vrab13 = Vrab12 / 94; const int64 Vrab14 = Vrab13 / 94; return S_Encryption94(Vrab04 / 94) + S_Encryption94(Vrab04) + S_Encryption94(Vrab03) + S_Encryption94(Vrab14 / 94) + S_Encryption94(Vrab14) + S_Encryption94(Vrab13) + S_Encryption94(Vrab12) + S_Encryption94(Vrab11) + S_Encryption94(Vrab10) + S_Encryption94(Vrab09) + S_Encryption94(Vrab08);}
+  string S_EncryptionSTRING(string Temp01)         fastened {S_Control(); int8 Vrab01 = 0; const uint32 Vrab02 = Temp01.size(); uint32 Vrab03 = 0; while(Vrab03 != Vrab02){Vrab01 = Temp01.at(Vrab03); if(Vrab01 >= '!' && Vrab01 <= '~') Temp01.at(Vrab03) = (S_Encryption94(rint64(Vrab01) + rint64(Vrab03) - 33)).at(0); Vrab03 += 1;} return Temp01;}
+
  // Light Functions
-  int1   L_Any()                             fastened {return Input->RESH_ANY;}
-  int1   L_Exist(statics string &Temp01)     fastened {struct stat Vrab01; return (stat(Temp01.c_str(), &Vrab01) == 0);} // Check if the certain directory is exist or not.
-  uint8  L_Input(uint8 Vrab01)               fastened
+  int1   L_Any()                                                    fastened {return Input->RESH_ANY;}
+  int1   L_Exist(statics string &Temp01)                            fastened {struct stat Stat01; return (stat(Temp01.c_str(), &Stat01) == 0);} // Check if the certain directory is exist or not.
+  uint8  L_Input(uint8 Vrab01)                                      fastened
   {
    switch(Vrab01)
    {
@@ -344,7 +373,7 @@
     default: return 0;
    }
   }
-  uint8  L_Press()                           fastened 
+  uint8  L_Press()                                                  fastened 
   {
    if(L_Input(Vrab0016) == 1 || L_Input(Vrab0017) == 1) return 0ui8;
    if(Input->MAIN_1 == 1) return 1ui8;
@@ -442,11 +471,127 @@
    if(Input->MAIN_SPACE == 1) return 94ui8;
    return 255ui8;
   }
-  int32  L_Rounding(statics xint64 Vrab01)   fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint32(Vrab01); return rint32(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int32.
-  int64  L_Rounding64(statics xint64 Vrab01) fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint64(Vrab01); return rint64(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int64.
-  uint64 L_Random(uint64 Vrab01)             fastened {remains std::mt19937 Varb01; if(Vrab0032){Varb01 = std::mt19937(ruint32(Vrab0031)); Vrab0032 = false;} Vrab0031 += 1; uint64 Vrab02 = ruint64(Varb01()); Vrab02 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Vrab02) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));}
-  string L_Directory(statics string Temp01)  fastened {return Temp0001 + Temp01;}
-  string L_Lowercase(string Temp01)          fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
+  int32  L_Numbering(string Temp01)                                 fastened {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
+  int32  L_Rounding(statics xint64 Vrab01)                          fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint32(Vrab01); return rint32(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int32.
+  int64  L_Rounding64(statics xint64 Vrab01)                        fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint64(Vrab01); return rint64(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int64.
+  uint64 L_Random(uint64 Vrab01)                                    fastened {remains std::mt19937 Varb01; if(Vrab0032){Varb01 = std::mt19937(ruint32(Vrab0031)); Vrab0032 = false;} Vrab0031 += 1; uint64 Vrab02 = ruint64(Varb01()); Vrab02 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Vrab02) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));}
+  string L_Cut(string Temp01, insize Vrab01 = 2, insize Vrab02 = 0) fastened {statics insize Vrab03 = Temp01.size(); if(Vrab01 > Vrab03) Vrab01 = Vrab03; if(Vrab02 == 0) Vrab02 = Vrab03 - Vrab01; return string(Temp01, Vrab01, Vrab02);}
+  string L_Directory(statics string Temp01)                         fastened {return Temp0001 + Temp01;}
+  string L_Execute(statics string Temp01)                           fastened {string Temp02 = Temp01; uint32 Vrab01 = Temp02.size() - 1; while(Vrab01 != 0 && Temp02.at(Vrab01) != '\\') Vrab01 -= 1; if(Vrab01 > 0) Temp02.erase(Vrab01, Temp02.size() - Vrab01); std::filesystem::create_directories(Temp02); return Temp01;}
+  string L_Lowercase(string Temp01)                                 fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
+  string L_Load(uint8 Vrab01, uint8 Vrab02 = 0)                     fastened
+  {
+   statics string Temp01 = L_Directory("SaveData_" + (Vrab02 == 0 ? "Autosave" : std::to_string(ruint32(Vrab02))) + ".esd");
+   std::ifstream File01(Temp01); if(!File01.is_open()) return "F|Either no save file detected or unable to access the file.";
+   std::time_t Time01 = 0; struct stat Stat01; if(stat(Temp01.c_str(), &Stat01) == 0) Time01 = Stat01.st_mtime;
+
+   int1 Vrab03 = false; string Temp02 = "";
+   while(true)
+   {
+    int8 Vrab04 = 0; string Temp03; insize Vrab05 = 0; uint8 Vrab06 = 0;
+
+    Vrab05 = 10; Temp03 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp03.push_back(Vrab04);} if(Vrab03) break;
+    if(ruint64(Time01) > S_DecryptionUINT64(Temp03.c_str())) return "F|The data was modified!";
+
+    Vrab05 = 2; Temp03 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp03.push_back(Vrab04);} if(Vrab03) break;
+    Vrab06 = S_DecryptionUINT8(Temp03.c_str()); if(Vrab06 < Vrab01) return "F|No data detected.";
+
+    uint8 Vrab07 = 0;
+    while(Vrab06 != ruint8(-1))
+    {
+     Vrab06 -= 1;
+
+     Vrab05 = 5; Temp03 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp03.push_back(Vrab04);} if(Vrab03) break;
+     Vrab05 = rinsize(S_DecryptionUINT32(Temp03.c_str()));
+
+     Temp03 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp03.push_back(Vrab04);} if(Vrab03) break;
+     if(Vrab07 == Vrab01) Temp02 = Temp03; Vrab07 += 1;
+    } if(Vrab03) break;
+
+    Vrab05 = 10; Temp03 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp03.push_back(Vrab04);} if(Vrab03) break;
+    if(ruint64(Time01) > S_DecryptionUINT64(Temp03.c_str())) return "F|The data was modified!";
+
+    break;
+   }
+   File01.close(); if(Vrab03) return "F|Unexpected end of data."; return "T|" + S_DecryptionSTRING(Temp02);
+  }
+  string L_Save(uint8 Vrab01, string Temp01 = "", uint8 Vrab02 = 0) fastened
+  {
+   statics string Temp02 = L_Directory("SaveData_" + (Vrab02 == 0 ? "Autosave" : std::to_string(ruint32(Vrab02))) + ".esd");
+   string Temp03 = "", Temp04 = "";
+   
+   std::ifstream File01(Temp02); if(File01.is_open())
+   {
+    std::time_t Time01 = 0; struct stat Stat01; if(stat(Temp02.c_str(), &Stat01) == 0) Time01 = Stat01.st_mtime; int1 Vrab03 = false;
+
+    while(true)
+    {
+     int8 Vrab04 = 0; string Temp05; insize Vrab05 = 0; uint8 Vrab06 = 0;
+
+     Vrab05 = 10; Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+     if(ruint64(Time01) > S_DecryptionUINT64(Temp05.c_str())){Vrab03 = true; break;}
+
+     Vrab05 = 2; Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+     Vrab06 = S_DecryptionUINT8(Temp05.c_str());
+     if(Vrab06 < Vrab01){Temp03 += S_EncryptionUINT8(Vrab01);} else {Temp03 += Temp05;}
+
+     uint8 Vrab07 = Vrab06 + 1; uint8 Vrab08 = ruint8(-1); int1 Vrab09 = true;
+     while(Vrab07 != 0)
+     {
+      Vrab07 -= 1; Vrab08 += 1;
+      
+      if(Vrab08 == Vrab01)
+      {
+       Vrab05 = 5; Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+       Vrab05 = rinsize(S_DecryptionUINT32(Temp05.c_str()));
+       Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+       
+       Vrab09 = false; continue;
+      }
+
+      Vrab05 = 5; Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+      Vrab05 = rinsize(S_DecryptionUINT32(Temp05.c_str()));
+      if(Vrab09){Temp03 += Temp05;} else {Temp04 += Temp05;}
+
+      Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+      if(Vrab09){Temp03 += Temp05;} else {Temp04 += Temp05;}
+     }
+
+     if(Vrab06 + 1 < Vrab01){Vrab07 = Vrab01 - Vrab06 - 1;} else {Vrab07 = 0;}
+     while(Vrab07 != 0)
+     {
+      Vrab07 -= 1;
+      Temp03 += S_EncryptionUINT32(0);
+     }
+
+     Vrab05 = 10; Temp05 = ""; while(Vrab05 != 0){Vrab05 -= 1; if(!File01){Vrab03 = true; break;} File01.read(&Vrab04, 1); Temp05.push_back(Vrab04);} if(Vrab03) break;
+     if(ruint64(Time01) > S_DecryptionUINT64(Temp05.c_str())){Vrab03 = true; break;}
+
+     break;
+    } if(Vrab03){Temp03 = ""; Temp04 = "";}
+    File01.close();
+   }
+
+   if(Temp03 == "")
+   {
+    Temp03 += S_EncryptionUINT8(Vrab01);
+    uint8 Vrab03 = Vrab01;
+    while(Vrab03 != 0)
+    {
+     Vrab03 -= 1; Temp03 += S_EncryptionUINT32(0);
+    }
+   }
+
+   std::ofstream File02(L_Execute(Temp02)); if(!File02.is_open()) return "F|Unable to create a save file.";
+   File02 << S_EncryptionUINT64(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count());
+   File02 << Temp03;
+
+   File02 << S_EncryptionUINT32(ruint32(Temp01.size())) + S_EncryptionSTRING(Temp01);
+
+   File02 << Temp04;
+   File02 << S_EncryptionUINT64(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count());
+   return "T|Successfully save the data.";
+  }
 
  // Main Functions
   int0 M_EngineInput(DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01) fastened
@@ -573,11 +718,24 @@
    UNREFERENCED_PARAMETER(Vrab02); UNREFERENCED_PARAMETER(Vrab03);
    if(Vrab0002 == 0)
    {
-    G_ToggleFullscreen();
 	Input = std::make_unique < HEPTA_INPUT > ();
-	Temp0001 = std::filesystem::current_path().string() + "\\";
+	Temp0001 = std::filesystem::current_path().string() + "\\"; Temp0002 = "!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	Vrab0032 = std::chrono::steady_clock::now().time_since_epoch().count();
-	Vrab0033 = L_Exist(L_Directory("Database\\Game\\Enchanted")) ? 1 : 0;
+	Vrab0033 = L_Exist(L_Directory("Database\\MiniGame_Enchanted")) ? 1 : 0;
+
+    string Temp01 = L_Load(0); if(Temp01.at(0) == 'T'){Temp01 = L_Cut(Temp01);} else {Temp01 = "TTF4192041080";} L_Save(0, Temp01);
+    Vrab0010 = (Temp01.at(1) != 'F');
+    Vrab0011 = (Temp01.at(2) != 'F');
+    statics insize Vrab05 = rinsize(L_Numbering(L_Cut(Temp01, 3, 1)));
+    Vrab0005 = L_Numbering(L_Cut(Temp01, 4, Vrab05));
+    statics insize Vrab06 = rinsize(L_Numbering(L_Cut(Temp01, 4 + Vrab05, 1)));
+    Vrab0006 = L_Numbering(L_Cut(Temp01, 5 + Vrab05, Vrab06));
+    G_Adjust_Window(Vrab0005, Vrab0006, (Temp01.at(0) == 'T'));
+   } if(Vrab0030 == 1)
+   {
+    statics string Temp01 = std::to_string(Vrab0005);
+    statics string Temp02 = std::to_string(Vrab0006);
+    L_Save(0, string(string(Vrab0009 ? "T" : "F") + string(Vrab0010 ? "T" : "F") + string(Vrab0011 ? "T" : "F") + std::to_string(Temp01.size()) + Temp01 + std::to_string(Temp02.size()) + Temp02));
    }
 
    Vrab0002 += 1; if(Vrab0002 == 0xFFFFFFFFFFFFFFFF) Vrab0002 = 0xFFFFFFFFFFFEBF;
@@ -594,8 +752,7 @@
      {
       G_Set_Display(2, G_Load_Pic(L_Directory("Database\\Interface\\READ.PNG")), -L_Rounding64(rxint64(Vrab05) / 2.0), -L_Rounding64(rxint64(Vrab06) / 2.0), 0ui8, 255ui8, -Vrab05, -Vrab06);
       if(Vrab0001 < 680){G_Set_Display(0, 0xFFFFFF, 0, 0, 0ui8, ruint8(255.0 * (rxint64(480 - (Vrab0001 - 200)) / 480.0)), Vrab0005, Vrab0006);} else {G_Load_Pic(L_Directory("Database\\Interface\\TITLE1.PNG")); G_Load_Pic(L_Directory("Database\\Interface\\TITLE2.PNG"));}
-      if(Vrab0001 >= 3560){G_Set_Display(0, 0x0, 0, 0, 0ui8, ruint8(255.0 * (rxint64(Vrab0001 - 3560) / 480.0)), Vrab0005, Vrab0006);} else {if(L_Any()) Vrab0001 = 3560;}
-      
+      if(Vrab0001 >= 3560){G_Set_Display(0, 0x0, 0, 0, 0ui8, ruint8(255.0 * (rxint64(Vrab0001 - 3560) / 480.0)), Vrab0005, Vrab0006);} else {if(L_Any()) Vrab0001 = 3560;} 
      }
      if(Vrab0001 >= 4040 && Vrab0001 < 8600)
      {
@@ -624,6 +781,9 @@
     G_Set_Display(0, 0x0, -rint64(Vrab0007), rint64(Vrab0006), 0ui8, 255ui8, rint64(Vrab0007) + rint64(Vrab0005), Vrab0008);
 	G_Set_Display(0, 0x0, rint64(Vrab0005), 0, 0ui8, 255ui8, Vrab0007, rint64(Vrab0008) + rint64(Vrab0006));
     G_Set_Display(0, 0x0, 0, -rint64(Vrab0008), 0ui8, 255ui8, rint64(Vrab0007) + rint64(Vrab0005), Vrab0008);
+
+   // Exit.
+    if(Vrab0030 == 1) Vrab0030 = 2;
   }
 
  // External-Included Dependencies Program's Main Functions
@@ -645,6 +805,7 @@
      Enchanted->Setting[0].Player[0].Jump   = 43;      Enchanted->Setting[0].Player[0].Jump   = 28;
      Enchanted->Setting[0].Player[0].Command = 21;     Enchanted->Setting[0].Player[0].Command = 33;
      Enchanted->Setting_Load(); Enchanted->Setting_Save();
+     G_Adjust_Window(Enchanted->Setting[0].Width, Enchanted->Setting[0].Height, Vrab0009, "Little Fighter 2 : Enchanted");
 
      // Background(s) Load.
      {
@@ -688,7 +849,7 @@
     
     }
 
-   G_Set_Display();
+   G_Set_Display(0, 0xFFFFFF, 0, 0, 0ui8, 255ui8, Vrab0005, Vrab0006);
   }
 #endif
 
