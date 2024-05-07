@@ -95,11 +95,11 @@
   #define rinsize static_cast < insize >
 
   #define remains static
-  #define absolut constexpr
+  #define written constexpr
   #define statics const
   #define univers virtual
   #define stacked inline
-  #define fastened noexcept
+  #define perfect noexcept
 
  // Stuctures / Classes
   // DirectX
@@ -112,11 +112,11 @@
    };
    struct HEPTA_DEVICE
    {
-    remains absolut uint32 c_FlipPresent  = 0x1;
-    remains absolut uint32 c_AllowTearing = 0x2;
-    remains absolut uint32 c_EnableHDR    = 0x4;
+    remains written uint32 c_FlipPresent  = 0x1;
+    remains written uint32 c_AllowTearing = 0x2;
+    remains written uint32 c_EnableHDR    = 0x4;
     
-    HEPTA_DEVICE(DXGI_FORMAT, DXGI_FORMAT, uint32, D3D_FEATURE_LEVEL, uint32) fastened;
+    HEPTA_DEVICE(DXGI_FORMAT, DXGI_FORMAT, uint32, D3D_FEATURE_LEVEL, uint32) perfect;
     ~HEPTA_DEVICE() = default;
     HEPTA_DEVICE(HEPTA_DEVICE&&) = default;
     HEPTA_DEVICE& operator= (HEPTA_DEVICE&&) = default;
@@ -125,30 +125,30 @@
     
     int0 CreateDeviceResources();
     int0 CreateWindowSizeDependentResources();
-    int0 SetWindow(HWND, uint32, uint32) fastened;
+    int0 SetWindow(HWND, uint32, uint32) perfect;
     int0 HandleDeviceLost();
-    int0 RegisterDeviceNotify(HEPTA_DEVICENOTIFY* deviceNotify) fastened {m_deviceNotify = deviceNotify;}
+    int0 RegisterDeviceNotify(HEPTA_DEVICENOTIFY* deviceNotify) perfect {m_deviceNotify = deviceNotify;}
     int0 Present();
     int0 UpdateColorSpace();
     int1 WindowSizeChanged(uint32, uint32);
     
-    RECT                    GetOutputSize()         statics fastened {return m_outputSize;}                // Device accessor.
-    auto                    GetD3DDevice()          statics fastened {return m_d3dDevice.Get();}           // Direct3D Accessors.
-    auto                    GetD3DDeviceContext()   statics fastened {return m_d3dContext.Get();}          // Direct3D Accessors.
-    auto                    GetSwapChain()          statics fastened {return m_swapChain.Get();}           // Direct3D Accessors.
-    auto                    GetDXGIFactory()        statics fastened {return m_dxgiFactory.Get();}         // Direct3D Accessors.
-    HWND                    GetWindow()             statics fastened {return m_window;}                    // Direct3D Accessors.
-    D3D_FEATURE_LEVEL       GetDeviceFeatureLevel() statics fastened {return m_d3dFeatureLevel;}           // Direct3D Accessors.
-    ID3D11Texture2D*        GetRenderTarget()       statics fastened {return m_renderTarget.Get();}        // Direct3D Accessors.
-    ID3D11Texture2D*        GetDepthStencil()       statics fastened {return m_depthStencil.Get();}        // Direct3D Accessors.
-    ID3D11RenderTargetView* GetRenderTargetView()   statics fastened {return m_d3dRenderTargetView.Get();} // Direct3D Accessors.
-    ID3D11DepthStencilView* GetDepthStencilView()   statics fastened {return m_d3dDepthStencilView.Get();} // Direct3D Accessors.
-    DXGI_FORMAT             GetBackBufferFormat()   statics fastened {return m_backBufferFormat;}          // Direct3D Accessors.
-    DXGI_FORMAT             GetDepthBufferFormat()  statics fastened {return m_depthBufferFormat;}         // Direct3D Accessors.
-    D3D11_VIEWPORT          GetScreenViewport()     statics fastened {return m_screenViewport;}            // Direct3D Accessors.
-    UINT                    GetBackBufferCount()    statics fastened {return m_backBufferCount;}           // Direct3D Accessors.
-    DXGI_COLOR_SPACE_TYPE   GetColorSpace()         statics fastened {return m_colorSpace;}                // Direct3D Accessors.
-    uint32                  GetDeviceOptions()      statics fastened {return m_options;}                   // Direct3D Accessors.
+    RECT                    GetOutputSize()         statics perfect {return m_outputSize;}                // Device accessor.
+    auto                    GetD3DDevice()          statics perfect {return m_d3dDevice.Get();}           // Direct3D Accessors.
+    auto                    GetD3DDeviceContext()   statics perfect {return m_d3dContext.Get();}          // Direct3D Accessors.
+    auto                    GetSwapChain()          statics perfect {return m_swapChain.Get();}           // Direct3D Accessors.
+    auto                    GetDXGIFactory()        statics perfect {return m_dxgiFactory.Get();}         // Direct3D Accessors.
+    HWND                    GetWindow()             statics perfect {return m_window;}                    // Direct3D Accessors.
+    D3D_FEATURE_LEVEL       GetDeviceFeatureLevel() statics perfect {return m_d3dFeatureLevel;}           // Direct3D Accessors.
+    ID3D11Texture2D*        GetRenderTarget()       statics perfect {return m_renderTarget.Get();}        // Direct3D Accessors.
+    ID3D11Texture2D*        GetDepthStencil()       statics perfect {return m_depthStencil.Get();}        // Direct3D Accessors.
+    ID3D11RenderTargetView* GetRenderTargetView()   statics perfect {return m_d3dRenderTargetView.Get();} // Direct3D Accessors.
+    ID3D11DepthStencilView* GetDepthStencilView()   statics perfect {return m_d3dDepthStencilView.Get();} // Direct3D Accessors.
+    DXGI_FORMAT             GetBackBufferFormat()   statics perfect {return m_backBufferFormat;}          // Direct3D Accessors.
+    DXGI_FORMAT             GetDepthBufferFormat()  statics perfect {return m_depthBufferFormat;}         // Direct3D Accessors.
+    D3D11_VIEWPORT          GetScreenViewport()     statics perfect {return m_screenViewport;}            // Direct3D Accessors.
+    UINT                    GetBackBufferCount()    statics perfect {return m_backBufferCount;}           // Direct3D Accessors.
+    DXGI_COLOR_SPACE_TYPE   GetColorSpace()         statics perfect {return m_colorSpace;}                // Direct3D Accessors.
+    uint32                  GetDeviceOptions()      statics perfect {return m_options;}                   // Direct3D Accessors.
     
     int0 PIXBeginEvent(_In_z_ statics wchar_t* name){m_d3dAnnotation->BeginEvent(name);} // Performance event.
     int0 PIXEndEvent()                              {m_d3dAnnotation->EndEvent();}       // Performance event.
@@ -188,7 +188,7 @@
 
   struct HEPTA_TIMING // Helper class for animation and simulation timing.
   {
-   HEPTA_TIMING() fastened (false) : m_elapsedTicks(0), m_totalTicks(0), m_leftOverTicks(0), m_frameCount(0), m_framesPerSecond(0), m_framesThisSecond(0), m_qpcSecondCounter(0), m_isFixedTimeStep(false), m_targetElapsedTicks(TicksPerSecond / 60)
+   HEPTA_TIMING() perfect (false) : m_elapsedTicks(0), m_totalTicks(0), m_leftOverTicks(0), m_frameCount(0), m_framesPerSecond(0), m_framesThisSecond(0), m_qpcSecondCounter(0), m_isFixedTimeStep(false), m_targetElapsedTicks(TicksPerSecond / 60)
    {
     if(!QueryPerformanceFrequency(&m_qpcFrequency)) throw std::exception();
     if(!QueryPerformanceCounter(&m_qpcLastTime)) throw std::exception();
@@ -197,30 +197,30 @@
    }
     
    // Get elapsed time since the previous Update call.
-   uint64 GetElapsedTicks() statics fastened {return m_elapsedTicks;}
-   xint64 GetElapsedSeconds() statics fastened {return TicksToSeconds(m_elapsedTicks);}
+   uint64 GetElapsedTicks() statics perfect {return m_elapsedTicks;}
+   xint64 GetElapsedSeconds() statics perfect {return TicksToSeconds(m_elapsedTicks);}
     
    // Get total time since the start of the program.
-   uint64 GetTotalTicks() statics fastened {return m_totalTicks;}
-   xint64 GetTotalSeconds() statics fastened {return TicksToSeconds(m_totalTicks);}
+   uint64 GetTotalTicks() statics perfect {return m_totalTicks;}
+   xint64 GetTotalSeconds() statics perfect {return TicksToSeconds(m_totalTicks);}
     
    // Get total number of updates since start of the program.
-   uint32 GetFrameCount() statics fastened {return m_frameCount;}
+   uint32 GetFrameCount() statics perfect {return m_frameCount;}
     
    // Get the current framerate.
-   uint32_t GetFramesPerSecond() statics fastened {return m_framesPerSecond;}
+   uint32_t GetFramesPerSecond() statics perfect {return m_framesPerSecond;}
     
    // Set whether to use fixed or variable timestep mode.
-   int0 SetFixedTimeStep(int1 isFixedTimestep) fastened {m_isFixedTimeStep = isFixedTimestep;}
+   int0 SetFixedTimeStep(int1 isFixedTimestep) perfect {m_isFixedTimeStep = isFixedTimestep;}
     
    // Set how often to call Update when in fixed timestep mode.
-   int0 SetTargetElapsedTicks(uint64 targetElapsed) fastened {m_targetElapsedTicks = targetElapsed;}
-   int0 SetTargetElapsedSeconds(xint64 targetElapsed) fastened {m_targetElapsedTicks = SecondsToTicks(targetElapsed);}
+   int0 SetTargetElapsedTicks(uint64 targetElapsed) perfect {m_targetElapsedTicks = targetElapsed;}
+   int0 SetTargetElapsedSeconds(xint64 targetElapsed) perfect {m_targetElapsedTicks = SecondsToTicks(targetElapsed);}
     
    // Integer format represents time using 10,000,000 ticks per second.
-   remains absolut uint64 TicksPerSecond = 10000000;
-   remains absolut xint64 TicksToSeconds(uint64_t ticks) fastened {return static_cast < xint64 > (ticks) / TicksPerSecond;}
-   remains absolut uint64 SecondsToTicks(xint64 seconds) fastened {return static_cast < uint64 > (seconds * TicksPerSecond);}
+   remains written uint64 TicksPerSecond = 10000000;
+   remains written xint64 TicksToSeconds(uint64_t ticks) perfect {return static_cast < xint64 > (ticks) / TicksPerSecond;}
+   remains written uint64 SecondsToTicks(xint64 seconds) perfect {return static_cast < uint64 > (seconds * TicksPerSecond);}
 
    // After an intentional timing discontinuity (for instance a blocking IO operation)
    // call this to avoid having the fixed timestep logic attempt a set of catch-up
@@ -308,7 +308,7 @@
   };
   struct HEPTA_IMAGE
   {
-   HEPTA_IMAGE(statics string&, ID3D11Device*) fastened;
+   HEPTA_IMAGE(statics string&, ID3D11Device*) perfect;
    
    int1 Success = false;
    string Address;
@@ -319,11 +319,11 @@
   {
    HEPTA_PICTURE(insize, uint32, uint32, uint32, uint32);
    
-   int0   Relocate_Target() fastened {Vrab001 -= 1;}
-   uint32 Get_Width()       fastened {return Vrab004;}
-   uint32 Get_Height()      fastened {return Vrab005;}
-   insize Get_Target()      fastened {return Vrab001;}
-   RECT Get_Image()         fastened 
+   int0   Relocate_Target() perfect {Vrab001 -= 1;}
+   uint32 Get_Width()       perfect {return Vrab004;}
+   uint32 Get_Height()      perfect {return Vrab005;}
+   insize Get_Target()      perfect {return Vrab001;}
+   RECT Get_Image()         perfect 
    {
     RECT Rect01;
     Rect01.left = Vrab002; Rect01.top = Vrab003; Rect01.right = Vrab002 + Vrab004; Rect01.bottom = Vrab003 + Vrab005;
@@ -333,7 +333,7 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   RECT Get_Specified()     fastened
+   RECT Get_Specified()     perfect
    {
     RECT Rect01;
     Rect01.left = Vrab002; Rect01.right = Vrab002 + Vrab004; if(Vrab004 > 2){Rect01.left += 1; Rect01.right -= 1;}
@@ -344,8 +344,8 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   DirectX::XMFLOAT2 Get_Center() fastened {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid()    fastened {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   DirectX::XMFLOAT2 Get_Center() perfect {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid()    perfect {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
    
    private:
     insize Vrab001;
@@ -360,11 +360,11 @@
   {
    HEPTA_SPRITE(insize, uint32, uint32, uint32, uint32, insize);
 
-   int0 Relocate_Target() fastened {Vrab001 -= 1;}
-   uint32 Get_Width()     fastened {return Vrab004;}
-   insize Get_Offset()    fastened {return Vrab006;}
-   insize Get_Target()    fastened {return Vrab001;}
-   RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)     fastened
+   int0 Relocate_Target() perfect {Vrab001 -= 1;}
+   uint32 Get_Width()     perfect {return Vrab004;}
+   insize Get_Offset()    perfect {return Vrab006;}
+   insize Get_Target()    perfect {return Vrab001;}
+   RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)     perfect
    {
     statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
     statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
@@ -379,7 +379,7 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   RECT Get_Specified(statics insize Vrab01, statics int1 Vrab02 = false) fastened
+   RECT Get_Specified(statics insize Vrab01, statics int1 Vrab02 = false) perfect
    {
     statics uint32 Vrab03 = ruint32(Vrab01 - Vrab006);
     statics LONG Vrab04 = (LONG)((Vrab004 + 1) * (Vrab03 % Vrab002) * (Vrab02 ? -1 : 1)) + (LONG)(Vrab02 ? Vrab007 : 0);
@@ -395,8 +395,8 @@
     if(Rect01.bottom < Rect01.bottom) Rect01.bottom = Rect01.top;
     return Rect01;
    }
-   DirectX::XMFLOAT2 Get_Center() fastened {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
-   DirectX::XMFLOAT2 Get_Mid()    fastened {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
+   DirectX::XMFLOAT2 Get_Center() perfect {return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab004) / 2)), rxint32(rint32(rxint32(Vrab005) / 2)));}
+   DirectX::XMFLOAT2 Get_Mid()    perfect {uint32 Vrab01 = Vrab004; if(Vrab01 > 2) Vrab01 -= 2; uint32 Vrab02 = Vrab005; if(Vrab02 > 2) Vrab02 -= 2; return DirectX::XMFLOAT2(rxint32(rint32(rxint32(Vrab01) / 2)), rxint32(rint32(rxint32(Vrab02) / 2)));}
    
    private:
     insize Vrab001;
@@ -408,7 +408,7 @@
     uint32 Vrab007;
     uint32 Vrab008;
   };
-  struct HEPTA_DISPLAY {uint8 Type = 0; insize Target = 0; int64 Post_X1 = 0; int64 Post_Y1 = 0; uint8 Effect = 0; uint8 Trans = 0; int64 Post_X2 = 0; int64 Post_Y2 = 0; int64 Post_X3 = 0; int64 Post_Y3 = 0; int64 Post_X4 = 0; int64 Post_Y4 = 0;};
+  struct HEPTA_DISPLAY {uint8 Type = 0; insize Target = 0; int64 Post_X1 = 0; int64 Post_Y1 = 0; int16 Effect = 0; uint8 Trans = 0; int64 Post_X2 = 0; int64 Post_Y2 = 0; int64 Post_X3 = 0; int64 Post_Y3 = 0; int64 Post_X4 = 0; int64 Post_Y4 = 0;};
   struct HEPTA_AUDINGS
   {
    HEPTA_AUDINGS(statics string, DirectX::AudioEngine*);
@@ -427,7 +427,7 @@
 
   struct HEPTA_GAME final : public HEPTA_DEVICENOTIFY
   {
-   HEPTA_GAME() fastened (false);
+   HEPTA_GAME() perfect (false);
    ~HEPTA_GAME();
    HEPTA_GAME(HEPTA_GAME&&) = default;
    HEPTA_GAME& operator= (HEPTA_GAME&&) = default;
@@ -497,8 +497,8 @@
   std::vector < unique < HEPTA_MUSIC > > Isnd0001;
 
  // Global Function
-  int0 G_ToggleFullscreen() fastened;
-  int0 G_Adjust_Window(statics uint32 = 1920, statics uint32 = 1080, statics int1 = true, statics string = "Hepta : Enchanted") fastened;
+  int0 G_ToggleFullscreen() perfect;
+  int0 G_Adjust_Window(statics uint32 = 1920, statics uint32 = 1080, statics int1 = true, statics string = "Hepta : Enchanted") perfect;
   int0 ThrowIfFailed(HRESULT Hres01, statics string Temp01 = "")
   {
    if(SUCCEEDED(Hres01)) return;
@@ -544,8 +544,8 @@
    File01.close(); return Temp02;
   }
 
-  // Engine's Contact
-   insize G_Load_Pic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) fastened
+  // Platform's Action
+   insize P_Load_Pic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) perfect
    {
     insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size();
 
@@ -559,7 +559,7 @@
     Pics0001.push_back(HEPTA_PICTURE(Vrab05, Vrab01, Vrab02, Vrab03, Vrab04));
     return Vrab07;
    }
-   insize G_Load_Sprite(statics string Temp01, statics uint32 Vrab01, statics uint32 Vrab02, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 1) fastened
+   insize P_Load_Sprite(statics string Temp01, statics uint32 Vrab01, statics uint32 Vrab02, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 1) perfect
    {
     if(Vrab03 == 0 || Vrab04 == 0) return rinsize(-1);
     insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size();
@@ -575,7 +575,7 @@
     for(insize Vrab10 = Vrab08; Vrab10 < Vrab09; ++Vrab10) Spic0001[Vrab10] = Vrab07;
     return Vrab08;
    }
-   insize G_Load_Sound(statics string Temp01) fastened
+   insize P_Load_Sound(statics string Temp01) perfect
    {
     insize Vrab01 = Temp01.size();
     string Temp02 = Temp01; while(Vrab01 != 0){Vrab01 -= 1; if(Temp02.at(Vrab01) >= 'A' && Temp02.at(Vrab01) <= 'Z') Temp02.at(Vrab01) += 32;}
@@ -588,10 +588,10 @@
     if(Audi0001[Vrab03]->Success){return Vrab03;} else {Audi0001.pop_back(); return rinsize(-1);}
    }
 
-   int1   G_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) fastened
+   int1   P_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) perfect
    {
-    if(Vrab01 == 2 || Vrab01 == 6) if(Vrab02 >= Pics0001.size()) return false;
-    if(Vrab01 == 4 || Vrab01 == 8) if(Vrab02 >= Spic0001.size()) return false;
+    if(Vrab01 == 2 || Vrab01 == 3 || Vrab01 == 6 || Vrab01 == 7) if(Vrab02 >= Pics0001.size()) return false;
+    if(Vrab01 == 4 || Vrab01 == 5 || Vrab01 == 8 || Vrab01 == 9) if(Vrab02 >= Spic0001.size()) return false;
     statics insize Vrab13 = Disp0001.size(); if(Vrab13 >= rinsize(0xFFFFFFF)) return false; Disp0001.push_back(HEPTA_DISPLAY());
     Disp0001[Vrab13].Type = Vrab01;
     Disp0001[Vrab13].Target = Vrab02;
@@ -607,13 +607,13 @@
     Disp0001[Vrab13].Post_Y4 = Vrab12;
     return true;
    }
-   int1   G_Set_Sound(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) fastened
+   int1   P_Set_Sound(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return false;
     Sond0001.push_back({Vrab01, Vrab03, Vrab02});
     return true;
    }
-   insize G_Set_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) fastened
+   insize P_Set_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return rinsize(-1);
     statics insize Vrab04 = Isnd0001.size();
@@ -622,31 +622,31 @@
     return Vrab04;
    }
 
-   int1   G_Control_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0, statics int1 Vrab04 = false) fastened
+   int1   P_Control_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0, statics int1 Vrab04 = false) perfect
    {
     if(Vrab01 >= Isnd0001.size()) return false; if(Vrab04){Isnd0001[Vrab01]->Active = 2; return true;}
     Isnd0001[Vrab01]->Instance->SetVolume(Vrab02); Isnd0001[Vrab01]->Instance->SetPan(Vrab03); 
     return true;
    }
    
-   int0   G_Unload_Pic(statics insize Vrab01 = 0) fastened
+   int0   P_Unload_Pic(statics insize Vrab01 = 0) perfect
    {
     if(Vrab01 >= Pics0001.size()) return;
     Pics0001.erase(Pics0001.begin() + Vrab01, Pics0001.end());
    }
-   int0   G_Unload_Sprite(statics insize Vrab01 = 0) fastened
+   int0   P_Unload_Sprite(statics insize Vrab01 = 0) perfect
    {
     if(Vrab01 >= Sprt0001.size()) return; statics insize Vrab02 = Sprt0001[Vrab01].Get_Offset();
     Spic0001.erase(Spic0001.begin() + Vrab02, Spic0001.end());
     Sprt0001.erase(Sprt0001.begin() + Vrab01, Sprt0001.end());
    }
-   int0   G_Unload_Sound(statics insize Vrab01 = 0) fastened
+   int0   P_Unload_Sound(statics insize Vrab01 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return;
     Audi0001.erase(Audi0001.begin() + Vrab01, Audi0001.end());
     Isnd0001.clear();
    }
-   int0   G_Unload_Image() fastened
+   int0   P_Unload_Image() perfect
    {
     Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
     Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();

@@ -27,26 +27,26 @@
   //-//
  //-//
  // Earlier Function Declaration
-  int0   LF2_Enchanted(uint32, uint64) fastened;
-  int0   L_Robust(string&) fastened;
-  int1   L_Exist(statics string&) fastened;
-  uint8  L_Input(uint8) fastened;
-  int32  L_Numbering(string) fastened;
-  int32  L_Positive(int32) fastened;
-  int32  L_Rounding(xint64) fastened;
-  int64  L_Rounding64(xint64) fastened;
-  uint64 L_Random(uint64) fastened;
-  uint64 L_Interprocessing(statics string&) fastened;
-  xint64 L_Positive64(xint64) fastened;
-  xint64 L_Doubling(string) fastened;
-  xint64 L_Distance(xint64, xint64, xint64, xint64) fastened;
-  string L_Number(insize) fastened;
-  string L_Lowercase(string) fastened;
-  string L_Spacemaker(string) fastened;
-  string L_Execute(statics string) fastened;
-  string L_Rename(string, string) fastened;
-  string L_Focus(statics string) fastened;
-  string L_Revoke(string, uint8, uint8) fastened;
+  int0   LF2_Enchanted(uint32, uint64) perfect;
+  int0   L_Robust(string&) perfect;
+  int1   L_Exist(statics string&) perfect;
+  uint8  L_Input(uint8) perfect;
+  int32  L_Numbering(string) perfect;
+  int32  L_Positive(int32) perfect;
+  int32  L_Rounding(xint64) perfect;
+  int64  L_Rounding64(xint64) perfect;
+  uint64 L_Random(uint64) perfect;
+  uint64 L_Interprocessing(statics string&) perfect;
+  xint64 L_Positive64(xint64) perfect;
+  xint64 L_Doubling(string) perfect;
+  xint64 L_Distance(xint64, xint64, xint64, xint64) perfect;
+  string L_Number(insize) perfect;
+  string L_Lowercase(string) perfect;
+  string L_Spacemaker(string) perfect;
+  string L_Execute(statics string) perfect;
+  string L_Rename(string, string) perfect;
+  string L_Focus(statics string) perfect;
+  string L_Revoke(string, uint8, uint8) perfect;
  //-//
  // Memory / Variables
   // Basic
@@ -396,53 +396,53 @@
      int32  Phase_Count = 0;
      int32  User = -1;
 
-     int1   L_Gets_int1(uint64 Vrab01) fastened {return *(int1*)Vrab01;}
-     int8   L_Gets_int8(uint64 Vrab01) fastened {return *(int8*)Vrab01;}
-     int16  L_Gets_int16(uint64 Vrab01) fastened {return *(int16*)Vrab01;}
-     int32  L_Gets_int32(uint64 Vrab01) fastened {return *(int32*)Vrab01;}
-     int64  L_Gets_int64(uint64 Vrab01) fastened {return *(int64*)Vrab01;}
-     uint8  L_Gets_uint8(uint64 Vrab01) fastened {return *(uint8*)Vrab01;}
-     uint16 L_Gets_uint16(uint64 Vrab01) fastened {return *(uint16*)Vrab01;}
-     uint32 L_Gets_uint32(uint64 Vrab01) fastened {return *(uint32*)Vrab01;}
-     uint64 L_Gets_uint64(uint64 Vrab01) fastened {return *(uint64*)Vrab01;}
-     xint32 L_Gets_xint32(uint64 Vrab01) fastened {return *(xint32*)Vrab01;}
-     xint64 L_Gets_xint64(uint64 Vrab01) fastened {return *(xint64*)Vrab01;}
-     int1   L_Gets_int1S(const string &Temp01) fastened {return L_Gets_int1(L_Interprocessing(Temp01));}
-     int8   L_Gets_int8S(const string &Temp01) fastened {return L_Gets_int8(L_Interprocessing(Temp01));}
-     int16  L_Gets_int16S(const string &Temp01) fastened {return L_Gets_int16(L_Interprocessing(Temp01));}
-     int32  L_Gets_int32S(const string &Temp01) fastened {return L_Gets_int32(L_Interprocessing(Temp01));}
-     int64  L_Gets_int64S(const string &Temp01) fastened {return L_Gets_int64(L_Interprocessing(Temp01));}
-     uint8  L_Gets_uint8S(const string &Temp01) fastened {return L_Gets_uint8(L_Interprocessing(Temp01));}
-     uint16 L_Gets_uint16S(const string &Temp01) fastened {return L_Gets_uint16(L_Interprocessing(Temp01));}
-     uint32 L_Gets_uint32S(const string &Temp01) fastened {return L_Gets_uint32(L_Interprocessing(Temp01));}
-     uint64 L_Gets_uint64S(const string &Temp01) fastened {return L_Gets_uint64(L_Interprocessing(Temp01));}
-     xint32 L_Gets_xint32S(const string &Temp01) fastened {return L_Gets_xint32(L_Interprocessing(Temp01));}
-     xint64 L_Gets_xint64S(const string &Temp01) fastened {return L_Gets_xint64(L_Interprocessing(Temp01));}
+     int1   L_Gets_int1(uint64 Vrab01) perfect {return *(int1*)Vrab01;}
+     int8   L_Gets_int8(uint64 Vrab01) perfect {return *(int8*)Vrab01;}
+     int16  L_Gets_int16(uint64 Vrab01) perfect {return *(int16*)Vrab01;}
+     int32  L_Gets_int32(uint64 Vrab01) perfect {return *(int32*)Vrab01;}
+     int64  L_Gets_int64(uint64 Vrab01) perfect {return *(int64*)Vrab01;}
+     uint8  L_Gets_uint8(uint64 Vrab01) perfect {return *(uint8*)Vrab01;}
+     uint16 L_Gets_uint16(uint64 Vrab01) perfect {return *(uint16*)Vrab01;}
+     uint32 L_Gets_uint32(uint64 Vrab01) perfect {return *(uint32*)Vrab01;}
+     uint64 L_Gets_uint64(uint64 Vrab01) perfect {return *(uint64*)Vrab01;}
+     xint32 L_Gets_xint32(uint64 Vrab01) perfect {return *(xint32*)Vrab01;}
+     xint64 L_Gets_xint64(uint64 Vrab01) perfect {return *(xint64*)Vrab01;}
+     int1   L_Gets_int1S(const string &Temp01) perfect {return L_Gets_int1(L_Interprocessing(Temp01));}
+     int8   L_Gets_int8S(const string &Temp01) perfect {return L_Gets_int8(L_Interprocessing(Temp01));}
+     int16  L_Gets_int16S(const string &Temp01) perfect {return L_Gets_int16(L_Interprocessing(Temp01));}
+     int32  L_Gets_int32S(const string &Temp01) perfect {return L_Gets_int32(L_Interprocessing(Temp01));}
+     int64  L_Gets_int64S(const string &Temp01) perfect {return L_Gets_int64(L_Interprocessing(Temp01));}
+     uint8  L_Gets_uint8S(const string &Temp01) perfect {return L_Gets_uint8(L_Interprocessing(Temp01));}
+     uint16 L_Gets_uint16S(const string &Temp01) perfect {return L_Gets_uint16(L_Interprocessing(Temp01));}
+     uint32 L_Gets_uint32S(const string &Temp01) perfect {return L_Gets_uint32(L_Interprocessing(Temp01));}
+     uint64 L_Gets_uint64S(const string &Temp01) perfect {return L_Gets_uint64(L_Interprocessing(Temp01));}
+     xint32 L_Gets_xint32S(const string &Temp01) perfect {return L_Gets_xint32(L_Interprocessing(Temp01));}
+     xint64 L_Gets_xint64S(const string &Temp01) perfect {return L_Gets_xint64(L_Interprocessing(Temp01));}
 
-     int0   L_Sets_int1(const uint64 Vrab01, int1 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int1 &Vrab03 = *((int1*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_int8(const uint64 Vrab01, int8 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int8 &Vrab03 = *((int8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_int16(const uint64 Vrab01, int16 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int16 &Vrab03 = *((int16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_int32(const uint64 Vrab01, int32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int32 &Vrab03 = *((int32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_int64(const uint64 Vrab01, int64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int64 &Vrab03 = *((int64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_uint8(const uint64 Vrab01, uint8 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint8 &Vrab03 = *((uint8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_uint16(const uint64 Vrab01, uint16 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint16 &Vrab03 = *((uint16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_uint32(const uint64 Vrab01, uint32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint32 &Vrab03 = *((uint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_uint64(const uint64 Vrab01, uint64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint64 &Vrab03 = *((uint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_xint32(const uint64 Vrab01, xint32 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint32 &Vrab03 = *((xint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_xint64(const uint64 Vrab01, xint64 Vrab02) fastened {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint64 &Vrab03 = *((xint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
-     int0   L_Sets_int1S(const string &Temp01, int1 Vrab01) fastened {L_Sets_int1(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_int8S(const string &Temp01, int8 Vrab01) fastened {L_Sets_int8(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_int16S(const string &Temp01, int16 Vrab01) fastened {L_Sets_int16(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_int32S(const string &Temp01, int32 Vrab01) fastened {L_Sets_int32(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_int64S(const string &Temp01, int64 Vrab01) fastened {L_Sets_int64(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_uint8S(const string &Temp01, uint8 Vrab01) fastened {L_Sets_uint8(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_uint16S(const string &Temp01, uint16 Vrab01) fastened {L_Sets_uint16(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_uint32S(const string &Temp01, uint32 Vrab01) fastened {L_Sets_uint32(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_uint64S(const string &Temp01, uint64 Vrab01) fastened {L_Sets_uint64(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_xint32S(const string &Temp01, xint32 Vrab01) fastened {L_Sets_xint32(L_Interprocessing(Temp01), Vrab01);}
-     int0   L_Sets_xint64S(const string &Temp01, xint64 Vrab01) fastened {L_Sets_xint64(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int1(const uint64 Vrab01, int1 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int1 &Vrab03 = *((int1*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int8(const uint64 Vrab01, int8 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int8 &Vrab03 = *((int8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int16(const uint64 Vrab01, int16 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int16 &Vrab03 = *((int16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int32(const uint64 Vrab01, int32 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int32 &Vrab03 = *((int32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int64(const uint64 Vrab01, int64 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){int64 &Vrab03 = *((int64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint8(const uint64 Vrab01, uint8 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint8 &Vrab03 = *((uint8*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 1, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint16(const uint64 Vrab01, uint16 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint16 &Vrab03 = *((uint16*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 2, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint32(const uint64 Vrab01, uint32 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint32 &Vrab03 = *((uint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_uint64(const uint64 Vrab01, uint64 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){uint64 &Vrab03 = *((uint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_xint32(const uint64 Vrab01, xint32 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint32 &Vrab03 = *((xint32*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 4, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_xint64(const uint64 Vrab01, xint64 Vrab02) perfect {DWORD Dwrd01; if(VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, PAGE_EXECUTE_READWRITE, &Dwrd01) != 0){xint64 &Vrab03 = *((xint64*)Vrab01); Vrab03 = Vrab02; VirtualProtect(static_cast < LPVOID > ((uint64*)Vrab01), 8, Dwrd01, &Dwrd01);}}
+     int0   L_Sets_int1S(const string &Temp01, int1 Vrab01) perfect {L_Sets_int1(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int8S(const string &Temp01, int8 Vrab01) perfect {L_Sets_int8(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int16S(const string &Temp01, int16 Vrab01) perfect {L_Sets_int16(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int32S(const string &Temp01, int32 Vrab01) perfect {L_Sets_int32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_int64S(const string &Temp01, int64 Vrab01) perfect {L_Sets_int64(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint8S(const string &Temp01, uint8 Vrab01) perfect {L_Sets_uint8(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint16S(const string &Temp01, uint16 Vrab01) perfect {L_Sets_uint16(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint32S(const string &Temp01, uint32 Vrab01) perfect {L_Sets_uint32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_uint64S(const string &Temp01, uint64 Vrab01) perfect {L_Sets_uint64(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_xint32S(const string &Temp01, xint32 Vrab01) perfect {L_Sets_xint32(L_Interprocessing(Temp01), Vrab01);}
+     int0   L_Sets_xint64S(const string &Temp01, xint64 Vrab01) perfect {L_Sets_xint64(L_Interprocessing(Temp01), Vrab01);}
 
-     int0   L_Sets(uint64 Vrab01, const string &Temp01) fastened 
+     int0   L_Sets(uint64 Vrab01, const string &Temp01) perfect 
    {
     const string Temp02 = L_Lowercase(Temp01);
     const uint32 Vrab02 = Temp02.size(); uint32 Vrab03 = 0; int1 Vrab04 = true;
@@ -516,18 +516,18 @@
      break;
     }
    }
-     int0   L_SetsS(const string &Temp01, const string &Temp02) fastened {L_Sets(L_Interprocessing(Temp01), Temp02);}
+     int0   L_SetsS(const string &Temp01, const string &Temp02) perfect {L_Sets(L_Interprocessing(Temp01), Temp02);}
   
      int0   L_Draw(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04, uint8 Vrab05, uint8 Vrab06, uint8 Vrab07)
      {
       G_Set_Display(0, (Vrab07 + (Vrab06 << 8) + (Vrab05 << 16)), rint64(Vrab01), rint64(Vrab02), 0ui8, 255ui8, rint64(Vrab03), rint64(Vrab04));
      }
 
-     int1   L_Copy(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03) fastened {if(Vrab01 >= Objects.size()) return false; if(Vrab02 >= MaximumFrame || Vrab02 < 0 || Vrab03 >= MaximumFrame || Vrab03 < 0) return false; Objects[Vrab01].Frame[Vrab03] = Objects[Vrab01].Frame[Vrab02]; return true;}
-     int1   L_Copys(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04) fastened {statics insize Vrab05 = Objects.size(); if(Vrab01 >= Vrab05 || Vrab02 >= Vrab05) return false; if(Vrab03 >= MaximumFrame || Vrab03 < 0 || Vrab04 >= MaximumFrame || Vrab04 < 0) return false;  Objects[Vrab02].Frame[Vrab04] = Objects[Vrab01].Frame[Vrab03]; return true;}
-     uint32 L_Address(int32 Vrab01) fastened {insize Vrab02 = Objects.size(); while(Vrab02 != 0){Vrab02 -= 1; if(Objects[Vrab02].id == rinsize(Vrab01)) return Vrab02;} return rinsize(-1);}
-     int32  L_Random(int32 Vrab01)  fastened {return rint32(::L_Random(ruint64(Vrab01)));}
-     insize L_Generate(int32 Vrab01, int32 Vrab02, int32 Vrab03, xint64 Vrab04, xint64 Vrab05, xint64 Vrab06, uint8 Vrab07) fastened
+     int1   L_Copy(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03) perfect {if(Vrab01 >= Objects.size()) return false; if(Vrab02 >= MaximumFrame || Vrab02 < 0 || Vrab03 >= MaximumFrame || Vrab03 < 0) return false; Objects[Vrab01].Frame[Vrab03] = Objects[Vrab01].Frame[Vrab02]; return true;}
+     int1   L_Copys(uint32 Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04) perfect {statics insize Vrab05 = Objects.size(); if(Vrab01 >= Vrab05 || Vrab02 >= Vrab05) return false; if(Vrab03 >= MaximumFrame || Vrab03 < 0 || Vrab04 >= MaximumFrame || Vrab04 < 0) return false;  Objects[Vrab02].Frame[Vrab04] = Objects[Vrab01].Frame[Vrab03]; return true;}
+     uint32 L_Address(int32 Vrab01) perfect {insize Vrab02 = Objects.size(); while(Vrab02 != 0){Vrab02 -= 1; if(Objects[Vrab02].id == rinsize(Vrab01)) return Vrab02;} return rinsize(-1);}
+     int32  L_Random(int32 Vrab01)  perfect {return rint32(::L_Random(ruint64(Vrab01)));}
+     insize L_Generate(int32 Vrab01, int32 Vrab02, int32 Vrab03, xint64 Vrab04, xint64 Vrab05, xint64 Vrab06, uint8 Vrab07) perfect
      {
       if(Vrab01 < 0 || Vrab01 >= rint32(MaximumObject)) return rinsize(-1);
       if(Object[Vrab01].Exist) return rinsize(-1);
@@ -543,35 +543,35 @@
       Object[Vrab01].Z = Vrab06;
       Object[Vrab01].Facing = Vrab07 != 0;
      }
-     int32  L_Aggring(int32 Vrab01) fastened {if(User == -1) return -1; if(Vrab01 < 0 || Vrab01 >= rint32(MaximumObject)) return -1; if(!Object[Vrab01].Exist) return -1; return (Object[Vrab01].Target = Vrab01);}
-     int0   L_InputClear()          fastened {if(User == -1) return; Object[User].In_A = false; Object[User].In_D = false; Object[User].In_J = false; Object[User].In_C = false; Object[User].In_Up = false; Object[User].In_Left = false; Object[User].In_Down = false; Object[User].In_Right = false;}
-     int0   L_InputUP()             fastened {if(User == -1) return; Object[User].In_Up = Object[User].Input_Up == 0;}
-     int0   L_InputLEFT()           fastened {if(User == -1) return; Object[User].In_Left = Object[User].Input_Left == 0;}
-     int0   L_InputDOWN()           fastened {if(User == -1) return; Object[User].In_Down = Object[User].Input_Down == 0;}
-     int0   L_InputRIGHT()          fastened {if(User == -1) return; Object[User].In_Right = Object[User].Input_Right == 0;}
-     int0   L_InputATTACK()         fastened {if(User == -1) return; Object[User].In_A = Object[User].Input_A == 0;}
-     int0   L_InputDEFEND()         fastened {if(User == -1) return; Object[User].In_D = Object[User].Input_D == 0;}
-     int0   L_InputJUMP()           fastened {if(User == -1) return; Object[User].In_J = Object[User].Input_J == 0;}
-     int0   L_InputCOMMAND()        fastened {if(User == -1) return; Object[User].In_C = Object[User].Input_C == 0;}
-     int0   L_InputUPH()            fastened {if(User == -1) return; Object[User].In_Up = true;}
-     int0   L_InputLEFTH()          fastened {if(User == -1) return; Object[User].In_Left = true;}
-     int0   L_InputDOWNH()          fastened {if(User == -1) return; Object[User].In_Down = true;}
-     int0   L_InputRIGHTH()         fastened {if(User == -1) return; Object[User].In_Right = true;}
-     int0   L_InputATTACKH()        fastened {if(User == -1) return; Object[User].In_A = true;}
-     int0   L_InputDEFENDH()        fastened {if(User == -1) return; Object[User].In_D = true;}
-     int0   L_InputJUMPH()          fastened {if(User == -1) return; Object[User].In_J = true;}
-     int0   L_InputCOMMANDH()       fastened {if(User == -1) return; Object[User].In_C = true;}
-     int0   L_InputDRA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_A == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputATTACK();} else {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_A = false;}}
-     int0   L_InputDLA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_A = false;}}
-     int0   L_InputDUA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_A == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputATTACK();} else    {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_A = false;}}
-     int0   L_InputDDA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_A = false;}}
-     int0   L_InputDRJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_J == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputJUMP();} else   {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_J = false;}}
-     int0   L_InputDLJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_J = false;}}
-     int0   L_InputDUJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_J == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputJUMP();} else      {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_J = false;}}
-     int0   L_InputDDJ()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_J = false;}}
-     int0   L_InputDJA()            fastened {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_J == 0 && Object[User].Input_A == 0)    {L_InputClear(); L_InputDEFEND(); L_InputJUMP(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_J = false; Object[User].In_A = false;}}
+     int32  L_Aggring(int32 Vrab01) perfect {if(User == -1) return -1; if(Vrab01 < 0 || Vrab01 >= rint32(MaximumObject)) return -1; if(!Object[Vrab01].Exist) return -1; return (Object[Vrab01].Target = Vrab01);}
+     int0   L_InputClear()          perfect {if(User == -1) return; Object[User].In_A = false; Object[User].In_D = false; Object[User].In_J = false; Object[User].In_C = false; Object[User].In_Up = false; Object[User].In_Left = false; Object[User].In_Down = false; Object[User].In_Right = false;}
+     int0   L_InputUP()             perfect {if(User == -1) return; Object[User].In_Up = Object[User].Input_Up == 0;}
+     int0   L_InputLEFT()           perfect {if(User == -1) return; Object[User].In_Left = Object[User].Input_Left == 0;}
+     int0   L_InputDOWN()           perfect {if(User == -1) return; Object[User].In_Down = Object[User].Input_Down == 0;}
+     int0   L_InputRIGHT()          perfect {if(User == -1) return; Object[User].In_Right = Object[User].Input_Right == 0;}
+     int0   L_InputATTACK()         perfect {if(User == -1) return; Object[User].In_A = Object[User].Input_A == 0;}
+     int0   L_InputDEFEND()         perfect {if(User == -1) return; Object[User].In_D = Object[User].Input_D == 0;}
+     int0   L_InputJUMP()           perfect {if(User == -1) return; Object[User].In_J = Object[User].Input_J == 0;}
+     int0   L_InputCOMMAND()        perfect {if(User == -1) return; Object[User].In_C = Object[User].Input_C == 0;}
+     int0   L_InputUPH()            perfect {if(User == -1) return; Object[User].In_Up = true;}
+     int0   L_InputLEFTH()          perfect {if(User == -1) return; Object[User].In_Left = true;}
+     int0   L_InputDOWNH()          perfect {if(User == -1) return; Object[User].In_Down = true;}
+     int0   L_InputRIGHTH()         perfect {if(User == -1) return; Object[User].In_Right = true;}
+     int0   L_InputATTACKH()        perfect {if(User == -1) return; Object[User].In_A = true;}
+     int0   L_InputDEFENDH()        perfect {if(User == -1) return; Object[User].In_D = true;}
+     int0   L_InputJUMPH()          perfect {if(User == -1) return; Object[User].In_J = true;}
+     int0   L_InputCOMMANDH()       perfect {if(User == -1) return; Object[User].In_C = true;}
+     int0   L_InputDRA()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_A == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputATTACK();} else {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_A = false;}}
+     int0   L_InputDLA()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_A = false;}}
+     int0   L_InputDUA()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_A == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputATTACK();} else    {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_A = false;}}
+     int0   L_InputDDA()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_A == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_A = false;}}
+     int0   L_InputDRJ()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Right == 0 && Object[User].Input_J == 0){L_InputClear(); L_InputDEFEND(); L_InputRIGHT(); L_InputJUMP();} else   {Object[User].In_D = false; Object[User].In_Right = false; Object[User].In_J = false;}}
+     int0   L_InputDLJ()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Left == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputLEFT(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Left = false; Object[User].In_J = false;}}
+     int0   L_InputDUJ()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Up == 0 && Object[User].Input_J == 0)   {L_InputClear(); L_InputDEFEND(); L_InputUP(); L_InputJUMP();} else      {Object[User].In_D = false; Object[User].In_Up = false; Object[User].In_J = false;}}
+     int0   L_InputDDJ()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_Down == 0 && Object[User].Input_J == 0) {L_InputClear(); L_InputDEFEND(); L_InputDOWN(); L_InputJUMP();} else    {Object[User].In_D = false; Object[User].In_Down = false; Object[User].In_J = false;}}
+     int0   L_InputDJA()            perfect {if(User == -1) return; if(Object[User].Input_D == 0 && Object[User].Input_J == 0 && Object[User].Input_A == 0)    {L_InputClear(); L_InputDEFEND(); L_InputJUMP(); L_InputATTACK();} else  {Object[User].In_D = false; Object[User].In_J = false; Object[User].In_A = false;}}
 
-     int0   C_Clear() fastened
+     int0   C_Clear() perfect
      {
       HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
       if(Hand01 == INVALID_HANDLE_VALUE) return;
@@ -583,19 +583,19 @@
       if(!FillConsoleOutputCharacterA(Hand01, ' ', Dwrd02, Cord01, &Dwrd01)){return;}
       SetConsoleCursorPosition(Hand01, Cord01);
      }
-     int0   C_PrintAddr(const int0 *Vrab01)    fastened {printf("%p", Vrab01);}
-     int0   C_Print(const int1 Vrab01)         fastened {if(Vrab01){printf("true");} else {printf("false");}}
-     int0   C_Print(const int8 Vrab01)         fastened {printf("%i", Vrab01);}
-     int0   C_Print(const int16 Vrab01)        fastened {printf("%i", Vrab01);}
-     int0   C_Print(const int32 Vrab01)        fastened {printf("%i", Vrab01);}
-     int0   C_Print(const int64 Vrab01)        fastened {printf("%lli", Vrab01);}
-     int0   C_Print(const uint8 Vrab01)        fastened {printf("%u", Vrab01);}
-     int0   C_Print(const uint16 Vrab01)       fastened {printf("%u", Vrab01);}
-     int0   C_Print(const uint32 Vrab01)       fastened {printf("%u", Vrab01);}
-     int0   C_Print(const uint64 Vrab01)       fastened {printf("%llu", Vrab01);}
-     int0   C_Print(const xint32 Vrab01)       fastened {printf("%f", Vrab01);}
-     int0   C_Print(const xint64 Vrab01)       fastened {printf("%Lf", Vrab01);}
-     int0   C_Print(const string &Temp01)      fastened {printf("%s", Temp01.c_str());}
+     int0   C_PrintAddr(const int0 *Vrab01)    perfect {printf("%p", Vrab01);}
+     int0   C_Print(const int1 Vrab01)         perfect {if(Vrab01){printf("true");} else {printf("false");}}
+     int0   C_Print(const int8 Vrab01)         perfect {printf("%i", Vrab01);}
+     int0   C_Print(const int16 Vrab01)        perfect {printf("%i", Vrab01);}
+     int0   C_Print(const int32 Vrab01)        perfect {printf("%i", Vrab01);}
+     int0   C_Print(const int64 Vrab01)        perfect {printf("%lli", Vrab01);}
+     int0   C_Print(const uint8 Vrab01)        perfect {printf("%u", Vrab01);}
+     int0   C_Print(const uint16 Vrab01)       perfect {printf("%u", Vrab01);}
+     int0   C_Print(const uint32 Vrab01)       perfect {printf("%u", Vrab01);}
+     int0   C_Print(const uint64 Vrab01)       perfect {printf("%llu", Vrab01);}
+     int0   C_Print(const xint32 Vrab01)       perfect {printf("%f", Vrab01);}
+     int0   C_Print(const xint64 Vrab01)       perfect {printf("%Lf", Vrab01);}
+     int0   C_Print(const string &Temp01)      perfect {printf("%s", Temp01.c_str());}
 
      //-//
 
@@ -625,7 +625,7 @@
        Object[Vrab04].Z = rxint64(L_Random(rint32(Vrab06))) + rxint64(Backgrounds[Background].zboundary[0]) + (Vrab06 / 2.0);
       }
      }
-     int0   Input(statics uint8 Vrab01, statics int1 Vrab02, statics int1 Vrab03, statics int1 Vrab04, statics int1 Vrab05, statics int1 Vrab06, statics int1 Vrab07, statics int1 Vrab08, statics int1 Vrab09) fastened
+     int0   Input(statics uint8 Vrab01, statics int1 Vrab02, statics int1 Vrab03, statics int1 Vrab04, statics int1 Vrab05, statics int1 Vrab06, statics int1 Vrab07, statics int1 Vrab08, statics int1 Vrab09) perfect
      {
       statics insize Vrab10 = Object.size(); insize Vrab11 = 0;
       while(Vrab11 < Vrab10){if(Object[Vrab11].Player == Vrab01 + 1) break; Vrab11 += 1;}
@@ -639,7 +639,7 @@
       Object[Vrab11].In_D = Vrab08;
       Object[Vrab11].In_C = Vrab09;
      }
-     std::vector < HEPTA_LF2_ENCHANTED_PROSPECTIVE_DRAW > Run(statics int1 Vrab01 = false, statics int1 Vrab02 = false, statics int1 Vrab03 = false, statics int1 Vrab04 = false, statics int1 Vrab05 = false, statics int1 Vrab06 = false, statics int1 Vrab07 = false, statics int1 Vrab08 = false, statics int1 Vrab09 = false) fastened
+     std::vector < HEPTA_LF2_ENCHANTED_PROSPECTIVE_DRAW > Run(statics int1 Vrab01 = false, statics int1 Vrab02 = false, statics int1 Vrab03 = false, statics int1 Vrab04 = false, statics int1 Vrab05 = false, statics int1 Vrab06 = false, statics int1 Vrab07 = false, statics int1 Vrab08 = false, statics int1 Vrab09 = false) perfect
      {
       std::vector < HEPTA_LF2_ENCHANTED_PROSPECTIVE_DRAW > Vect01;
 
@@ -3731,7 +3731,7 @@
 
       return Vect01;
      }
-     std::vector < HEPTA_LF2_ENCHANTED_PERSPECTIVE_DRAW > Rear(statics int64 Vrab01, statics int64 Vrab02) fastened
+     std::vector < HEPTA_LF2_ENCHANTED_PERSPECTIVE_DRAW > Rear(statics int64 Vrab01, statics int64 Vrab02) perfect
      {
       UNREFERENCED_PARAMETER(Vrab02);
       std::vector < HEPTA_LF2_ENCHANTED_PERSPECTIVE_DRAW > Vect01;
@@ -3767,7 +3767,7 @@
       }
       return Vect01;
      }
-     std::vector < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW > Draw(statics int64 Vrab01, statics int64 Vrab02) fastened
+     std::vector < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW > Draw(statics int64 Vrab01, statics int64 Vrab02) perfect
      {
       std::vector < HEPTA_LF2_ENCHANTED_INTERACTIVE_DRAW > Vect01;
 
@@ -4134,8 +4134,8 @@
 
       return Vect01;
      }
-     int1   Warning()                                                                fastened {return Vrab003;}
-     int1   Select(statics insize Vrab01, statics uint8 Vrab02)                      fastened
+     int1   Warning()                                                                perfect {return Vrab003;}
+     int1   Select(statics insize Vrab01, statics uint8 Vrab02)                      perfect
      {
       if(Vrab02 == 0)
       {
@@ -4144,8 +4144,8 @@
       } else {All_Char.push_back(false); Selectable_Char.push_back(false);}
       return false;
      }
-     int1   Random(statics insize Vrab01)                                            fastened {statics insize Vrab02 = Objects[Vrab01].id; if(!All_Char[Vrab01] || Vrab02 == 0 || (Vrab02 >= 30 && Vrab02 <= 99)) return false; return true;}
-     uint8  Pick(statics insize Vrab01, statics int1 Vrab02 = true)                  fastened
+     int1   Random(statics insize Vrab01)                                            perfect {statics insize Vrab02 = Objects[Vrab01].id; if(!All_Char[Vrab01] || Vrab02 == 0 || (Vrab02 >= 30 && Vrab02 <= 99)) return false; return true;}
+     uint8  Pick(statics insize Vrab01, statics int1 Vrab02 = true)                  perfect
      {
       if(Vrab02)
       {
@@ -4157,12 +4157,12 @@
        if(All_Char[Vrab01]) return 1; return 0;
       }
      }
-     insize Face(statics insize Vrab01)                                              fastened {return Objects[Vrab01].head_Index;}
-     insize Range(statics int1 Vrab01 = true)                                        fastened {if(Vrab01) return Selectable_Char.size(); return All_Char.size();}
-     insize Limit()                                                                  fastened {return Backgrounds.size();}
-     string Name(statics insize Vrab01)                                              fastened {return Objects[Vrab01].name;}
-     string Place(statics insize Vrab01)                                             fastened {return Backgrounds[Vrab01].name;}
-     uint8  New(statics insize Vrab01, statics uint8 Vrab02, statics string &Temp01) fastened
+     insize Face(statics insize Vrab01)                                              perfect {return Objects[Vrab01].head_Index;}
+     insize Range(statics int1 Vrab01 = true)                                        perfect {if(Vrab01) return Selectable_Char.size(); return All_Char.size();}
+     insize Limit()                                                                  perfect {return Backgrounds.size();}
+     string Name(statics insize Vrab01)                                              perfect {return Objects[Vrab01].name;}
+     string Place(statics insize Vrab01)                                             perfect {return Backgrounds[Vrab01].name;}
+     uint8  New(statics insize Vrab01, statics uint8 Vrab02, statics string &Temp01) perfect
      {
       statics uint8 Vrab03 = Decode(Temp01); if(Vrab03 < 4) return Vrab03;
       Vrab001 = Objects.size(); Vrab002 = 0; Vrab004 = 0; Objects.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT());
@@ -4171,7 +4171,7 @@
       if(File01.is_open()){File01 << "[] INFO - Processing \"" + Temp01 + "\" object into the system.\n"; insize Vrab04 = Objects.size() - 1; while(Vrab04 != 0){Vrab04 -= 1; if(Objects[Vrab04].id == Vrab01){Vrab003 = true; File01 << ")( WARNING - ID used by this object, \"id: " + std::to_string(Vrab01) + "\", already used by another object(s) above, this object might not be used in the game.\n"; break;}}}
       return 0;
      }
-     uint8  Create(statics insize Vrab01, statics string &Temp01)                    fastened
+     uint8  Create(statics insize Vrab01, statics string &Temp01)                    perfect
      {
       statics uint8 Vrab02 = Decode(Temp01); if(Vrab02 < 4) return Vrab02;
       Vrab001 = Backgrounds.size(); Vrab002 = 0; Vrab004 = 0; Backgrounds.resize(Vrab001 + 1);
@@ -4179,7 +4179,7 @@
       std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){File01 << "[] INFO - Processing \"" + Temp01 + "\" background into the system.\n";}
       return 0;
      }
-     string Load(statics string Temp01, statics int1 Vrab01)                         fastened
+     string Load(statics string Temp01, statics int1 Vrab01)                         perfect
      {
       int1 Vrab02 = false; string Temp02, Temp03 = "E"; insize Vrab03 = 0, Vrab04 = 0;
       while(File001)
@@ -4500,7 +4500,7 @@
        }
       }
      }
-     string Manage(statics string Temp01)                                            fastened
+     string Manage(statics string Temp01)                                            perfect
      {
       int1 Vrab01 = false; string Temp02, Temp03 = "E"; insize Vrab02 = 0;
       while(File001)
@@ -4580,7 +4580,7 @@
        }
       }
      }
-     string Finalizer(statics string Temp01)                                                 fastened 
+     string Finalizer(statics string Temp01)                                                 perfect 
      {
       {
        {std::ofstream File01("Database\\Log.log", std::ios::binary | std::ios::out | std::ios::app); if(File01.is_open()){File01 << "[] INFO - Processing hardcoded datas into the system.\n"; File01.close();}}
@@ -4730,13 +4730,13 @@
        }
       }
      }
-     int1   Staging()                                                                fastened {return Stages->Stage.size() != 0;}
-     int1   Reset()                                                                  fastened {statics int1 Vrab01 = Move; Move = false; return Vrab01;}
-     string Info()                                                                   fastened {return "Origin Version : v2.1b.";}
-     uint8  Frame()                                                                  fastened {if(Polish){switch(Speed){case 0: return 1ui8; case 1: return 2ui8; case 3: return 8ui8; case 4: return 16ui8; default: return 4ui8;}} else {switch(Speed){case 0: return 4ui8; case 1: return 8ui8; case 3: return 32ui8; case 4: return 64ui8; default: break;}} return 16ui8;}
-     int64  Area()                                                                   fastened {return Backgrounds[Background].width;} 
-     string Text(statics uint8 Vrab01)                                               fastened {string Temp01 = ""; switch(Vrab01){case 0: Temp01 = "5|0|Versus (" + string((Difficult > 0) ? (Difficult > 1 ? (Difficult > 2 ? "CRAZY!" : "Hard") : "Normal") : "Easy") + ")"; break; case 1: {string Temp02 = "", Temp03 = "", Temp04 = "", Temp05 = ""; Temp02 = std::to_string((Gametime / 3) % 10); statics uint64 Vrab02 = (Gametime / 30) % 60; if(Vrab02 < 10) Temp03 = "0"; Temp03 += std::to_string(Vrab02); statics uint64 Vrab03 = (Gametime / 1800) % 60; if(Vrab03 < 10) Temp04 = "0"; Temp04 += std::to_string(Vrab03); statics uint64 Vrab04 = (Gametime / 108000); if(Vrab04 > 0){Temp05 = std::to_string(Vrab04);} Temp01 = "4|0|" + (Temp05 != "" ? (Temp05 + ":") : "") + Temp04 + ":" + Temp03 + "." + Temp02 + (Gametime % 3 == 0 ? "00" : (Gametime % 3 == 1 ? "33" : "67"));} break; case 2: Temp01 = "3|0|" + L_Revoke(Backgrounds[Background].name, '_', ' '); break; default: break;} return Temp01;}
-     int0   Angel(asIScriptEngine *Engi01, asIScriptEngine *Engi02, asIScriptEngine *Engi03, unique < HEPTA_LF2_ENCHANTED_ENGINE1 > Uniq01) fastened
+     int1   Staging()                                                                perfect {return Stages->Stage.size() != 0;}
+     int1   Reset()                                                                  perfect {statics int1 Vrab01 = Move; Move = false; return Vrab01;}
+     string Info()                                                                   perfect {return "Origin Version : v2.1b.";}
+     uint8  Frame()                                                                  perfect {if(Polish){switch(Speed){case 0: return 1ui8; case 1: return 2ui8; case 3: return 8ui8; case 4: return 16ui8; default: return 4ui8;}} else {switch(Speed){case 0: return 4ui8; case 1: return 8ui8; case 3: return 32ui8; case 4: return 64ui8; default: break;}} return 16ui8;}
+     int64  Area()                                                                   perfect {return Backgrounds[Background].width;} 
+     string Text(statics uint8 Vrab01)                                               perfect {string Temp01 = ""; switch(Vrab01){case 0: Temp01 = "5|0|Versus (" + string((Difficult > 0) ? (Difficult > 1 ? (Difficult > 2 ? "CRAZY!" : "Hard") : "Normal") : "Easy") + ")"; break; case 1: {string Temp02 = "", Temp03 = "", Temp04 = "", Temp05 = ""; Temp02 = std::to_string((Gametime / 3) % 10); statics uint64 Vrab02 = (Gametime / 30) % 60; if(Vrab02 < 10) Temp03 = "0"; Temp03 += std::to_string(Vrab02); statics uint64 Vrab03 = (Gametime / 1800) % 60; if(Vrab03 < 10) Temp04 = "0"; Temp04 += std::to_string(Vrab03); statics uint64 Vrab04 = (Gametime / 108000); if(Vrab04 > 0){Temp05 = std::to_string(Vrab04);} Temp01 = "4|0|" + (Temp05 != "" ? (Temp05 + ":") : "") + Temp04 + ":" + Temp03 + "." + Temp02 + (Gametime % 3 == 0 ? "00" : (Gametime % 3 == 1 ? "33" : "67"));} break; case 2: Temp01 = "3|0|" + L_Revoke(Backgrounds[Background].name, '_', ' '); break; default: break;} return Temp01;}
+     int0   Angel(asIScriptEngine *Engi01, asIScriptEngine *Engi02, asIScriptEngine *Engi03, unique < HEPTA_LF2_ENCHANTED_ENGINE1 > Uniq01) perfect
      {
       Engi03->Release();
       uint8 Vrab01 = 0;
@@ -4871,9 +4871,9 @@
        Engi04->RegisterGlobalProperty("const ENGINE Engine", Uniq01.get());
       }
      }
-     string Debug()                                                                  fastened {insize Vrab01 = Effect.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Effect[Vrab01].Exist) Vrab02 += 1;} insize Vrab03 = Object.size(); insize Vrab04 = 0; while(Vrab03 != 0){Vrab03 -= 1; if(Object[Vrab03].Exist) Vrab04 += 1;} return "Objects: " + std::to_string(Vrab04) + " Effects: " + std::to_string(Vrab02);}
-					uint64 Colour()                                                                 fastened {return (ruint64(Coloring) << 32ull) + ruint64(Color);}
-					int0   Cleanup()                                                                fastened
+     string Debug()                                                                  perfect {insize Vrab01 = Effect.size(); insize Vrab02 = 0; while(Vrab01 != 0){Vrab01 -= 1; if(Effect[Vrab01].Exist) Vrab02 += 1;} insize Vrab03 = Object.size(); insize Vrab04 = 0; while(Vrab03 != 0){Vrab03 -= 1; if(Object[Vrab03].Exist) Vrab04 += 1;} return "Objects: " + std::to_string(Vrab04) + " Effects: " + std::to_string(Vrab02);}
+					uint64 Colour()                                                                 perfect {return (ruint64(Coloring) << 32ull) + ruint64(Color);}
+					int0   Cleanup()                                                                perfect
      {
       Object.clear(); Effect.clear(); Animation.clear();
      }
@@ -4919,7 +4919,7 @@
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT > Objects;                 // Objects' Database.
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND > Backgrounds;         // Backgrounds' Database.
 
-      uint8  Decode(statics string Temp01) fastened
+      uint8  Decode(statics string Temp01) perfect
       {
        if(File001.is_open()) File001.close(); File001.open(Temp01, std::ios::binary | std::ios::in); if(!File001.is_open()) return 1;
        statics string Temp02 = L_Lowercase(string(Temp01, Temp01.size() - 4, 4)); if(Temp02 != ".dat" && Temp02 != ".txt") return 2;
@@ -4940,7 +4940,7 @@
        if(!File001.is_open()) return 3;
        return 4;
       }
-      int0   Remove(statics insize Vrab01)  fastened
+      int0   Remove(statics insize Vrab01)  perfect
       {
        if(Vrab01 >= Object.size()) return;
 
@@ -4967,7 +4967,7 @@
         Vrab02 -= 1; if(!Object[Vrab02].Exist) continue; if(Object[Vrab02].D == Vrab01) Remove(Vrab02);
        }
       }
-      insize Add(statics insize Vrab01)   fastened
+      insize Add(statics insize Vrab01)   perfect
       {
        int1 Vrab02 = false; insize Vrab03 = 0;
        {
@@ -4999,7 +4999,7 @@
        }
        return rinsize(-1);
       }
-      int0   Spark(statics uint8 Vrab01, statics xint64 Vrab02, statics xint64 Vrab03, statics xint64 Vrab04) fastened
+      int0   Spark(statics uint8 Vrab01, statics xint64 Vrab02, statics xint64 Vrab03, statics xint64 Vrab04) perfect
       {
        if(Pics[2] == rinsize(-1)) return;
        statics insize Vrab05 = Effect.size(); insize Vrab06 = 0;
@@ -5019,7 +5019,7 @@
     
     struct HEPTA_LF2_ENCHANTED_ANGELSCRIPT
     {
-     int0   Start()     fastened
+     int0   Start()     perfect
      {
       Vrab004 = true;
       int32 Vrab01 = 0; if(Vrab003 > 127){Vrab01 = 0;} else {Vrab01 = 255;}
@@ -5042,10 +5042,10 @@
       SetConsoleScreenBufferSize(Hand01, {Vrab03, (int16)((Vrab03 / 2) - 2 + Vrab02)});
       SetConsoleTitleA("AngelScript's Console");
      }
-     int0   End()       fastened {ShowWindow(GetConsoleWindow(), 0); FreeConsole(); Vrab004 = false;}
-     int0   Switch()    fastened {if(Vrab004){End();} else {Start();}}
-     int0   Print(statics string Temp01) fastened {Temp001 << Temp01;}
-     int0   Message(statics asSMessageInfo *Mesg01, int0*) fastened
+     int0   End()       perfect {ShowWindow(GetConsoleWindow(), 0); FreeConsole(); Vrab004 = false;}
+     int0   Switch()    perfect {if(Vrab004){End();} else {Start();}}
+     int0   Print(statics string Temp01) perfect {Temp001 << Temp01;}
+     int0   Message(statics asSMessageInfo *Mesg01, int0*) perfect
      {
 	  if(Mesg01->section[0] == '\0')
 	  {
@@ -5058,7 +5058,7 @@
 	   printf("%s { %s [%d, %d] } - %s\n", Mesg01->type == asMSGTYPE_ERROR ? ">< ERROR" : Mesg01->type == asMSGTYPE_WARNING ? ")( WARNING" : "() INFO", L_Focus(Mesg01->section).c_str(), Mesg01->row, Mesg01->col, Mesg01->message);
 	  }
 	 }
-     int0   Set()       fastened
+     int0   Set()       perfect
      {
       if(Vrab005) Reset();
       int8 Vrab01 = 0;
@@ -5086,7 +5086,7 @@
       }
       Vrab005 = true;
      }
-     int0   Reset()     fastened
+     int0   Reset()     perfect
      {
       Modu001 = NULL;
       Engi001->ShutDownAndRelease(); Engi002->ShutDownAndRelease(); Engi003->ShutDownAndRelease();
@@ -5094,8 +5094,8 @@
       if(Vrab004) End();
       Vrab005 = false;
      }
-     int1   Available() fastened {return Vrab005;}
-     string Version()   fastened {return ANGELSCRIPT_VERSION_STRING;}
+     int1   Available() perfect {return Vrab005;}
+     string Version()   perfect {return ANGELSCRIPT_VERSION_STRING;}
      private:
       int1   Vrab001 = false;
       int16  Vrab002 = 60;
@@ -5241,9 +5241,9 @@
       std::vector < HEPTA_LF2_ENCHANTED_INFO > Info;             // System's info notification.
      //-//
      // Light Functions
-      int0   Not_Found() fastened {String[2] = "\"" + String[1] + "\""; String[3] = "Either can't be found or inaccessible.";}
-      int0   Reset(statics uint8 Vrab01 = 0, statics uint64 Vrab02 = 0, statics uint64 Vrab03 = 0, statics uint8 Vrab04 = 0) fastened {Menu = Vrab01; Runtime1 = Vrab02; Runtime2 = Vrab03; Runtime3 = Vrab04;}
-      int0   Print_Text(statics int64 Vrab01, statics int64 Vrab02, uint8 Vrab03, statics string &Temp01, statics int64 Vrab04 = 0, statics int64 Vrab05 = 0) fastened
+      int0   Not_Found() perfect {String[2] = "\"" + String[1] + "\""; String[3] = "Either can't be found or inaccessible.";}
+      int0   Reset(statics uint8 Vrab01 = 0, statics uint64 Vrab02 = 0, statics uint64 Vrab03 = 0, statics uint8 Vrab04 = 0) perfect {Menu = Vrab01; Runtime1 = Vrab02; Runtime2 = Vrab03; Runtime3 = Vrab04;}
+      int0   Print_Text(statics int64 Vrab01, statics int64 Vrab02, uint8 Vrab03, statics string &Temp01, statics int64 Vrab04 = 0, statics int64 Vrab05 = 0) perfect
       {
        statics string Temp02 = Temp01;
        statics insize Vrab06 = Temp02.size(); insize Vrab07 = 0; int64 Vrab08 = rint64(Vrab01); Vrab03 %= 6;
@@ -5285,7 +5285,7 @@
         }
        }
       }
-      int0   Print_Bar(int64 Vrab01, int64 Vrab02, uint64 Vrab03, uint64 Vrab04) fastened
+      int0   Print_Bar(int64 Vrab01, int64 Vrab02, uint64 Vrab03, uint64 Vrab04) perfect
       {
        if(Vrab03 % 2 == 1) Vrab03 += 1; if(Vrab04 % 2 == 1) Vrab04 += 1;
        G_Set_Display(2, Pic_Index_Interface[6], Vrab01 - 12, Vrab02 - 12);
@@ -5332,17 +5332,17 @@
        G_Set_Display(2, Pic_Index_Interface[115], Vrab01 + Vrab03, Vrab02, 0ui8, 255ui8, 0, Vrab04);
        G_Set_Display(2, Pic_Index_Interface[116], Vrab01, Vrab02, 0ui8, 255ui8, Vrab03, Vrab04);
       }
-      int0   Play_Sound(statics insize Vrab01, statics xint32 Vrab02 = 0.0, statics uint32 Vrab03 = 100) fastened
+      int0   Play_Sound(statics insize Vrab01, statics xint32 Vrab02 = 0.0, statics uint32 Vrab03 = 100) perfect
       {
        if(Number_Of_Sound == Memory[0].Max_SFX) return;
        Number_Of_Sound += 1;
        G_Set_Sound(Vrab01, rxint32((rxint64(Vrab03) / 100) * rxint64(Varb0012)), rxint32(Varb0013 + Vrab02));
       }
-      int0   Stop_Music() fastened
+      int0   Stop_Music() perfect
       {
        G_Control_Music(Current_Music[1], 0.f, 0.f, true);
       }
-      int0   Play_Music(statics insize Vrab01, statics xint32 Vrab02 = 0.0, statics uint32 Vrab03 = 100) fastened
+      int0   Play_Music(statics insize Vrab01, statics xint32 Vrab02 = 0.0, statics uint32 Vrab03 = 100) perfect
       {
        if(Vrab01 == Current_Music[0])
        {
@@ -5352,7 +5352,7 @@
         Stop_Music(); Current_Music[0] = Vrab01; Current_Music[1] = G_Set_Music(Vrab01, rxint32((rxint64(Vrab03) / 100) * rxint64(Varb0012)), rxint32(Varb0013 + Vrab02));
        }
       }
-      int0   Post_Info(statics string Temp01, statics int1 Vrab01 = false, statics int1 Vrab02 = false) fastened
+      int0   Post_Info(statics string Temp01, statics int1 Vrab01 = false, statics int1 Vrab02 = false) perfect
       {
        statics insize Vrab03 = Info.size(); Info.resize(Vrab03 + 1);
 
@@ -5375,7 +5375,7 @@
        if(Vrab01){Info[Vrab03].Volume = true;} else {Info[Vrab03].String = Temp01;}
        Info[Vrab03].Question = Vrab02;
       }
-      string Input_Name(uint8 Vrab01) fastened
+      string Input_Name(uint8 Vrab01) perfect
       {
        switch(Vrab01)
        {
@@ -5405,11 +5405,11 @@
         default: return "<none>";
        }
       }
-      string Difficult(statics uint8 Vrab01) fastened {switch(Vrab01){case 0: return "Easy"; case 1: return "Normal"; case 2: return "Hard"; default: return "CRAZY!";}}
-      string Version() fastened {return "0.8.230826";}
+      string Difficult(statics uint8 Vrab01) perfect {switch(Vrab01){case 0: return "Easy"; case 1: return "Normal"; case 2: return "Hard"; default: return "CRAZY!";}}
+      string Version() perfect {return "0.8.230826";}
      //-//
      // Core Functions
-      int0   Update_Window(uint32 Vrab01, uint32 Vrab02, int1 Vrab03, string Temp01 = "Little Fighter 2 Enchanted 4th") fastened
+      int0   Update_Window(uint32 Vrab01, uint32 Vrab02, int1 Vrab03, string Temp01 = "Little Fighter 2 Enchanted 4th") perfect
       {
        Varb0002 = Vrab01; Varb0003 = Vrab02;
        Game0001->OnWindowSizeChanged(Varb0002, Varb0003);
@@ -5420,7 +5420,7 @@
        Display_CenX = L_Rounding64(rxint64(Vrab01) / 2); Display_CenY = L_Rounding64(rxint64(Vrab02) / 2);
        Display_W = rint64(rint32(Vrab01)); Display_H = rint64(rint32(Vrab02));
       }
-      int1   Save_Memory() fastened
+      int1   Save_Memory() perfect
       {
        statics string Temp01 = "Database\\Game\\Enchanted\\config.ini";
        std::ofstream File01(L_Execute(Temp01));
@@ -5490,7 +5490,7 @@
 
        File01.close(); return true;
       }
-      int0   Load_Memory() fastened
+      int0   Load_Memory() perfect
       {
        statics string Temp01 = "Database\\Game\\Enchanted\\config.ini";
        std::ifstream File01(Temp01); 
@@ -5568,7 +5568,7 @@
   //-//
  //-//
  // Light Functions
-  int0   L_Typing(string &Temp01) fastened
+  int0   L_Typing(string &Temp01) perfect
   {
    statics uint8 Vrab01 = ruint8(L_Rounding(256.0 / rxint64(Varb0004)) - 1) - 1, Vrab02 = Vrab01 - ruint8(L_Rounding(64.0 / rxint64(Varb0004)));
    if(Input.RESH_CAPS || Input.CONS_LSHIFT > 0 || Input.CONS_RSHIFT > 0)
@@ -5688,18 +5688,18 @@
    {statics uint8 &Vrab03 = Input.MAIN_SPACE; if(Vrab03 == Vrab02) Input.MAIN_SPACE = Vrab01; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back(' ');}
    {statics uint8 &Vrab03 = Input.CONS_BACK;  if(Vrab03 == Vrab02) Input.CONS_BACK = Vrab01;  if(Vrab03 == 1 || Vrab03 == Vrab01) if(Temp01.size() > 0) Temp01.pop_back();}
   }
-  int0   L_Robust(string &Temp01) fastened {string Temp02; insize Vrab01 = 0; statics insize Vrab02 = Temp01.size(); while(Vrab01 != Vrab02){statics uint8 Vrab03 = Temp01.at(Vrab01); switch(Vrab03){case '/': case ':': case '*': case '?': case '\"': case '<': case '>': case '|': Vrab01 += 1; continue; default: break;} Temp02 += Vrab03; Vrab01 += 1;} Temp01 = Temp02;}
-  int1   L_Within(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04, statics uint64 Vrab05, statics uint64 Vrab06) fastened {if(Vrab01 >= Vrab03 && Vrab01 <= rint64(Vrab03 + Vrab05)) if(Vrab02 >= Vrab04 && Vrab02 <= rint64(Vrab04 + Vrab06)) return true; return false;}
-  int1   L_In(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04) fastened
+  int0   L_Robust(string &Temp01) perfect {string Temp02; insize Vrab01 = 0; statics insize Vrab02 = Temp01.size(); while(Vrab01 != Vrab02){statics uint8 Vrab03 = Temp01.at(Vrab01); switch(Vrab03){case '/': case ':': case '*': case '?': case '\"': case '<': case '>': case '|': Vrab01 += 1; continue; default: break;} Temp02 += Vrab03; Vrab01 += 1;} Temp01 = Temp02;}
+  int1   L_Within(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04, statics uint64 Vrab05, statics uint64 Vrab06) perfect {if(Vrab01 >= Vrab03 && Vrab01 <= rint64(Vrab03 + Vrab05)) if(Vrab02 >= Vrab04 && Vrab02 <= rint64(Vrab04 + Vrab06)) return true; return false;}
+  int1   L_In(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04) perfect
   {
    return L_Within(Input.MOUS_X_Left, Input.MOUS_Y_Left, Vrab01, Vrab02, Vrab03, Vrab04);
   }
-  int1   L_On(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04) fastened
+  int1   L_On(statics int64 Vrab01, statics int64 Vrab02, statics int64 Vrab03, statics int64 Vrab04) perfect
   {
    return L_Within(Input.MOUS_X, Input.MOUS_Y, Vrab01, Vrab02, Vrab03, Vrab04) && (Input.MOUS_Left_Release == 1);
   }
-  int1   L_Exist(statics string &Temp01)  fastened {struct stat Vrab01; return (stat(Temp01.c_str(), &Vrab01) == 0);}
-  uint8  L_Press() fastened 
+  int1   L_Exist(statics string &Temp01)  perfect {struct stat Vrab01; return (stat(Temp01.c_str(), &Vrab01) == 0);}
+  uint8  L_Press() perfect 
   {
    if(L_Input(Varb0019) == 1 || L_Input(Varb0020)) return 0ui8;
    if(Input.MAIN_1 == 1) return 1ui8;
@@ -5797,7 +5797,7 @@
    if(Input.MAIN_SPACE == 1) return 94ui8;
    return 255ui8;
   }
-  uint8  L_Input(uint8 Vrab01) fastened
+  uint8  L_Input(uint8 Vrab01) perfect
   {
    switch(Vrab01)
    {
@@ -5898,11 +5898,11 @@
     default: return 0;
    }
   }
-  int32  L_Numbering(string Temp01)       fastened {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
-  int32  L_Positive(int32 Vrab01)         fastened {if(Vrab01 < 0) return -Vrab01; return Vrab01;}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-  int32  L_Rounding(xint64 Vrab01)        fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint32(Vrab01); return rint32(Vrab01) + (Vrab02 ? -1 : 1);}
-  int64  L_Rounding64(xint64 Vrab01)      fastened {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint64(Vrab01); return rint64(Vrab01) + (Vrab02 ? -1 : 1);}
-  uint64 L_Interprocessing(statics string &Temp01) fastened 
+  int32  L_Numbering(string Temp01)       perfect {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
+  int32  L_Positive(int32 Vrab01)         perfect {if(Vrab01 < 0) return -Vrab01; return Vrab01;}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  int32  L_Rounding(xint64 Vrab01)        perfect {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint32(Vrab01); return rint32(Vrab01) + (Vrab02 ? -1 : 1);}
+  int64  L_Rounding64(xint64 Vrab01)      perfect {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint64(Vrab01); return rint64(Vrab01) + (Vrab02 ? -1 : 1);}
+  uint64 L_Interprocessing(statics string &Temp01) perfect 
   {
    insize Vrab01 = Temp01.size(); uint64 Vrab02 = 0; uint64 Vrab03 = 0;
    while(Vrab01 != 0)
@@ -5933,9 +5933,9 @@
    }
    return Vrab03;
   }
-  uint64 L_Random(uint64 Vrab01)          fastened {remains std::mt19937 Vrab02; if(!Varb0016){Vrab02 = std::mt19937(ruint32(Varb0015)); Varb0016 = true;} Varb0015 += 1; remains statics std::uniform_int_distribution < uint32 > Vrab03(0, ruint32(-1)); uint64 Vrab04 = Vrab03(Vrab02); Vrab04 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Vrab04) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));}
-  xint64 L_Positive64(xint64 Vrab01)      fastened {if(Vrab01 < 0) return -Vrab01; return Vrab01;} 
-  xint64 L_Doubling(string Temp01)        fastened 
+  uint64 L_Random(uint64 Vrab01)          perfect {remains std::mt19937 Vrab02; if(!Varb0016){Vrab02 = std::mt19937(ruint32(Varb0015)); Varb0016 = true;} Varb0015 += 1; remains statics std::uniform_int_distribution < uint32 > Vrab03(0, ruint32(-1)); uint64 Vrab04 = Vrab03(Vrab02); Vrab04 %= ruint64(0xFFFFFFFF) + 1; return ruint64(L_Rounding64((rxint64(Vrab04) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));}
+  xint64 L_Positive64(xint64 Vrab01)      perfect {if(Vrab01 < 0) return -Vrab01; return Vrab01;} 
+  xint64 L_Doubling(string Temp01)        perfect 
   {
    statics insize Vrab01 = Temp01.size(); insize Vrab02 = Vrab01; while(Vrab02 != 0){Vrab02 -= 1; if(Temp01.at(Vrab02) == '.') break;}
    xint64 Vrab03 = 0.0;
@@ -6000,23 +6000,23 @@
    }
    return Vrab03;
   }
-  xint64 L_Distance(xint64 Vrab01, xint64 Vrab02, xint64 Vrab03, xint64 Vrab04) fastened
+  xint64 L_Distance(xint64 Vrab01, xint64 Vrab02, xint64 Vrab03, xint64 Vrab04) perfect
   {
    return sqrt(pow(Vrab03 - Vrab01, 2) + pow(Vrab04 - Vrab02, 2));
   }
-  string L_Number(insize Vrab01)          fastened {statics string Temp01 = std::to_string(Vrab01); Vrab01 %= 100; if(Vrab01 <= 10 || Vrab01 >= 20){switch(ruint8(Vrab01 % 10)){case 1: return Temp01 + "st"; case 2: return Temp01 + "nd"; case 3: return Temp01 + "rd"; default: return Temp01 + "th";}} else {return Temp01 + "th";}}
-  string L_Lowercase(string Temp01)       fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
-  string L_Spacemaker(string Temp01)      fastened {insize Vrab01 = Temp01.size(); if(Vrab01 == 0) return "\376"; while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) == ' ') Temp01.at(Vrab01) = '\377';} return Temp01;}
-  string L_Execute(statics string Temp01) fastened {string Temp02 = Temp01; uint32 Vrab01 = Temp02.size() - 1; while(Vrab01 != 0 && Temp02.at(Vrab01) != '\\') Vrab01 -= 1; if(Vrab01 > 0) Temp02.erase(Vrab01, Temp02.size() - Vrab01); std::filesystem::create_directories(Temp02); return Temp01;}
-  string L_Rename(string Temp01, string Temp02) fastened 
+  string L_Number(insize Vrab01)          perfect {statics string Temp01 = std::to_string(Vrab01); Vrab01 %= 100; if(Vrab01 <= 10 || Vrab01 >= 20){switch(ruint8(Vrab01 % 10)){case 1: return Temp01 + "st"; case 2: return Temp01 + "nd"; case 3: return Temp01 + "rd"; default: return Temp01 + "th";}} else {return Temp01 + "th";}}
+  string L_Lowercase(string Temp01)       perfect {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) >= 'A' && Temp01.at(Vrab01) <= 'Z') Temp01.at(Vrab01) += 32;} return Temp01;}
+  string L_Spacemaker(string Temp01)      perfect {insize Vrab01 = Temp01.size(); if(Vrab01 == 0) return "\376"; while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) == ' ') Temp01.at(Vrab01) = '\377';} return Temp01;}
+  string L_Execute(statics string Temp01) perfect {string Temp02 = Temp01; uint32 Vrab01 = Temp02.size() - 1; while(Vrab01 != 0 && Temp02.at(Vrab01) != '\\') Vrab01 -= 1; if(Vrab01 > 0) Temp02.erase(Vrab01, Temp02.size() - Vrab01); std::filesystem::create_directories(Temp02); return Temp01;}
+  string L_Rename(string Temp01, string Temp02) perfect 
   {
    insize Vrab01 = Temp01.size();
    while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) == '.') break;}
    if(Vrab01 != 0){Temp01.insert(Vrab01, Temp02);} else {Temp01 += Temp02;}
    return Temp01;
   }
-  string L_Focus(statics string Temp01)   fastened {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; statics int8 Vrab02 = Temp01.at(Vrab01); if(Vrab02 == '\\' || Vrab02 == '/'){Vrab01 += 1; return string(Temp01, Vrab01, Temp01.size() - Vrab01);}} return Temp01;}
-  string L_Revoke(string Temp01, uint8 Vrab01, uint8 Vrab02) fastened {insize Vrab03 = Temp01.size(); while(Vrab03 != 0){Vrab03 -= 1; if(Temp01.at(Vrab03) == Vrab01) Temp01.at(Vrab03) = Vrab02;} return Temp01;}
+  string L_Focus(statics string Temp01)   perfect {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; statics int8 Vrab02 = Temp01.at(Vrab01); if(Vrab02 == '\\' || Vrab02 == '/'){Vrab01 += 1; return string(Temp01, Vrab01, Temp01.size() - Vrab01);}} return Temp01;}
+  string L_Revoke(string Temp01, uint8 Vrab01, uint8 Vrab02) perfect {insize Vrab03 = Temp01.size(); while(Vrab03 != 0){Vrab03 -= 1; if(Temp01.at(Vrab03) == Vrab01) Temp01.at(Vrab03) = Vrab02;} return Temp01;}
  //-//
  // Prime Functions
   int0 P_EngineInput(DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01)
@@ -6153,7 +6153,7 @@
 
 
  // External-Included Dependency Program(s)
-  int0 LF2_Enchanted(uint32 Vrab01, uint64 Vrab02) fastened
+  int0 LF2_Enchanted(uint32 Vrab01, uint64 Vrab02) perfect
   {
    string Temp69; // debug
 

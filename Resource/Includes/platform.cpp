@@ -8,7 +8,7 @@
  #include "engine.h"
 
 // Declarations
- int0 G_ToggleFullscreen() fastened
+ int0 G_ToggleFullscreen() perfect
  {
   auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
   if(Vrab0009)
@@ -26,17 +26,21 @@
   }
   Vrab0009 = !Vrab0009;
  }
- int0 G_Adjust_Window(statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) fastened
+ int0 G_Adjust_Window(statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) perfect
  {
-  Vrab0005 = Vrab01; Vrab0006 = Vrab02;
-  Game0001->OnWindowSizeChanged(Vrab01, Vrab02);
   auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
-  if(!Vrab0009) SetWindowPos(Hwnd01, HWND_TOP, CW_USEDEFAULT, CW_USEDEFAULT, static_cast < LONG > (Vrab01 + 16), static_cast < LONG > (Vrab02 + 39), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+  if(Vrab03 == Vrab0009 && Vrab0009 && (Vrab0005 != Vrab01 || Vrab0006 != Vrab02))
+  {
+   Vrab0005 = Vrab01; Vrab0006 = Vrab02;
+   G_ToggleFullscreen(); G_ToggleFullscreen();
+  }
+  Vrab0005 = Vrab01; Vrab0006 = Vrab02;
+  if(Vrab03 == Vrab0009 && !Vrab0009) Game0001->OnWindowSizeChanged(Vrab01, Vrab02);
   if(Vrab03 != Vrab0009) G_ToggleFullscreen();
   SetWindowTextA(Hwnd01, Temp01.c_str());
  }
 
- HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) fastened
+ HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) perfect
  {
   std::ifstream File01(Temp01);
   if(File01.is_open())
@@ -87,7 +91,7 @@
  {
   #if defined(_DEBUG)
    // Check for SDK Layer support.
-   stacked int1 SdkLayersAvailable() fastened {HRESULT hr = D3D11CreateDevice(nullptr,
+   stacked int1 SdkLayersAvailable() perfect {HRESULT hr = D3D11CreateDevice(nullptr,
                                                                              D3D_DRIVER_TYPE_NULL,       // There is no need to create a real hardware device.
                                                                              nullptr,
                                                                              D3D11_CREATE_DEVICE_DEBUG,  // Check for the SDK layers.
@@ -100,7 +104,7 @@
                                                                             ); return SUCCEEDED(hr);}
   #endif
 
-  stacked DXGI_FORMAT NoSRGB(DXGI_FORMAT Dxfm01) fastened
+  stacked DXGI_FORMAT NoSRGB(DXGI_FORMAT Dxfm01) perfect
   {
    switch(Dxfm01)
    {
@@ -110,14 +114,14 @@
     default:                              return Dxfm01;
    }
   }
-  stacked lint32 ComputeIntersectionArea(lint32 Vrab01, lint32 Vrab02, lint32 Vrab03, lint32 Vrab04, lint32 Vrab05, lint32 Vrab06, lint32 Vrab07, lint32 Vrab08) fastened
+  stacked lint32 ComputeIntersectionArea(lint32 Vrab01, lint32 Vrab02, lint32 Vrab03, lint32 Vrab04, lint32 Vrab05, lint32 Vrab06, lint32 Vrab07, lint32 Vrab08) perfect
   {
    return std::max(0l, std::min(Vrab03, Vrab07) - std::max(Vrab01, Vrab05)) * std::max(0l, std::min(Vrab04, Vrab08) - std::max(Vrab02, Vrab06));
   }
  }
 
  // HEPTA_GAME::
-  HEPTA_GAME::HEPTA_GAME() fastened (false)
+  HEPTA_GAME::HEPTA_GAME() perfect (false)
   {
    m_deviceResources = std::make_unique < HEPTA_DEVICE > ();
    m_deviceResources->RegisterDeviceNotify(this);
@@ -135,7 +139,7 @@
    m_deviceResources->CreateWindowSizeDependentResources(); CreateWindowSizeDependentResources();
 
    m_timer.SetFixedTimeStep(true);
-   m_timer.SetTargetElapsedSeconds(1.f / 960.f);
+   m_timer.SetTargetElapsedSeconds(1.f / rxint32(HEPTA_BASE_FRAME_PER_SECOND));
     
    m_keyboard = std::make_unique < DirectX::Keyboard > ();
    m_gamepad = std::make_unique < DirectX::GamePad > ();
@@ -222,7 +226,7 @@
   {
    if(Vrab0004) Disp0001.clear();
    if(m_timer.GetFrameCount() == 0) return; Clear();
-   if(Vrab0030 == 2){Disp0001.clear(); Audi0001.clear(); G_Unload_Pic(); G_Unload_Sprite(); G_Unload_Sound(); G_Unload_Image(); PostQuitMessage(0); return;}
+   if(Vrab0030 == 2){Disp0001.clear(); Audi0001.clear(); P_Unload_Pic(); P_Unload_Sprite(); P_Unload_Sound(); P_Unload_Image(); PostQuitMessage(0); return;}
 
    m_deviceResources->PIXBeginEvent(L"Render");
    {
@@ -340,8 +344,8 @@
         Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
         Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
         statics insize Vrab05 = Disp0001[Vrab04].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        auto Effc01 = DirectX::SpriteEffects_None; uint8 Vrab07 = 0;
-        switch(Disp0001[Vrab04].Effect){case 0: break; case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: Vrab07 = (Disp0001[Vrab04].Effect - 4) * 2;break;}
+        auto Effc01 = DirectX::SpriteEffects_None; statics uint8 Vrab07 = Disp0001[Vrab04].Effect / 10;
+        switch((Disp0001[Vrab04].Effect % 10)){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
         if(Vrab07 % 90 == 0)
         {
          statics RECT Rect03 = Pics0001[Vrab05].Get_Image();
@@ -441,12 +445,12 @@
   {
    auto statics Dvis01 = m_deviceResources->GetD3DDevice(); auto statics Cont01 = m_deviceResources->GetD3DDeviceContext();
    
-   Stat001 = std::make_unique < DirectX::CommonStates > (Dvis01); Stat001->DepthNone();
-   Aeng001 = std::make_unique < DirectX::AudioEngine > (DirectX::AudioEngine_Default);
    Pics001 = std::make_unique < DirectX::SpriteBatch > (Cont01);
+   Aeng001 = std::make_unique < DirectX::AudioEngine > (DirectX::AudioEngine_Default);
+   Stat001 = std::make_unique < DirectX::CommonStates > (Dvis01); Stat001->DepthNone();
    
    D3D11_SAMPLER_DESC Desc01;
-   Desc01.Filter = D3D11_FILTER_MINIMUM_MIN_MAG_MIP_POINT;
+   Desc01.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
    Desc01.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -470,7 +474,7 @@
   }
 
  // HEPTA_DEVICE::
-  HEPTA_DEVICE::HEPTA_DEVICE(DXGI_FORMAT Dxfm01 = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT Dxfm02 = DXGI_FORMAT_D32_FLOAT, uint32 Vrab01 = 2, D3D_FEATURE_LEVEL Dxfl01 = D3D_FEATURE_LEVEL_9_1, uint32 Vrab02 = c_FlipPresent) fastened : m_screenViewport{}, m_backBufferFormat(Dxfm01), m_depthBufferFormat(Dxfm02), m_backBufferCount(Vrab01), m_d3dMinFeatureLevel(Dxfl01), m_window(nullptr), m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1), m_outputSize{0, 0, 1, 1}, m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709), m_options(Vrab02 | c_FlipPresent), m_deviceNotify(nullptr) {}
+  HEPTA_DEVICE::HEPTA_DEVICE(DXGI_FORMAT Dxfm01 = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT Dxfm02 = DXGI_FORMAT_D32_FLOAT, uint32 Vrab01 = 2, D3D_FEATURE_LEVEL Dxfl01 = D3D_FEATURE_LEVEL_9_1, uint32 Vrab02 = c_FlipPresent) perfect : m_screenViewport{}, m_backBufferFormat(Dxfm01), m_depthBufferFormat(Dxfm02), m_backBufferCount(Vrab01), m_d3dMinFeatureLevel(Dxfl01), m_window(nullptr), m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1), m_outputSize{0, 0, 1, 1}, m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709), m_options(Vrab02 | c_FlipPresent), m_deviceNotify(nullptr) {}
   
   int0 HEPTA_DEVICE::CreateDeviceResources()
   {
@@ -517,9 +521,9 @@
     // Determine DirectX hardware feature levels this app will support.
     remains statics D3D_FEATURE_LEVEL s_featureLevels[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1};
     UINT featLevelCount = 0;
-    while(featLevelCount < static_cast < UINT > (std::size(s_featureLevels)))
+    for(; featLevelCount < static_cast < UINT > (std::size(s_featureLevels)); ++featLevelCount)
     {
-     if(s_featureLevels[featLevelCount] < m_d3dMinFeatureLevel) break; ++featLevelCount;
+     if(s_featureLevels[featLevelCount] < m_d3dMinFeatureLevel) break;
     }
     if(!featLevelCount) throw std::out_of_range("minFeatureLevel too high");
    
@@ -688,7 +692,7 @@
    m_screenViewport = {0.f, 0.f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 0.f };
   }
 
-  int0 HEPTA_DEVICE::SetWindow(HWND Hwnd01, uint32 Vrab01, uint32 Vrab02) fastened
+  int0 HEPTA_DEVICE::SetWindow(HWND Hwnd01, uint32 Vrab01, uint32 Vrab02) perfect
   {
    m_window = Hwnd01; m_outputSize.left = m_outputSize.top = 0; m_outputSize.right = Vrab01; m_outputSize.bottom = Vrab02;
   }
