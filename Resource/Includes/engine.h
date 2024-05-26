@@ -107,10 +107,10 @@
   uint8  Vrab0021 = 51;     // Input Keyboard Default RIGHT.
   uint8  Vrab0022 = 0;      // Input Pad Default OK.
   uint8  Vrab0023 = 0;      // Input Pad Default CANCEL.
-  uint8  Vrab0024 = 0;      // Input Pad Default UP.
-  uint8  Vrab0025 = 0;      // Input Pad Default LEFT.
-  uint8  Vrab0026 = 0;      // Input Pad Default DOWN.
-  uint8  Vrab0027 = 0;      // Input Pad Default RIGHT.
+  uint8  Vrab0024 = 95;     // Input Pad Default UP.
+  uint8  Vrab0025 = 96;     // Input Pad Default LEFT.
+  uint8  Vrab0026 = 97;     // Input Pad Default DOWN.
+  uint8  Vrab0027 = 98;     // Input Pad Default RIGHT.
   uint32 Vrab0028 = 800;    // Window Width.
   uint32 Vrab0029 = 450;    // Window Height.
   uint8  Vrab0030 = 0;      // Window Exit?
@@ -125,8 +125,8 @@
   {
    uint8 RESH_ANY;
 
-   uint8 MAIN_1; uint8 MAIN_2; uint8 MAIN_3; uint8 MAIN_4; uint8 MAIN_5; uint8 MAIN_6; uint8 MAIN_7; uint8 MAIN_8; uint8 MAIN_9; uint8 MAIN_0;
-   uint8 MAIN_A; uint8 MAIN_B; uint8 MAIN_C; uint8 MAIN_D; uint8 MAIN_E; uint8 MAIN_F; uint8 MAIN_G; uint8 MAIN_H; uint8 MAIN_I; uint8 MAIN_J; uint8 MAIN_K; uint8 MAIN_L; uint8 MAIN_M; uint8 MAIN_N; uint8 MAIN_O; uint8 MAIN_P; uint8 MAIN_Q; uint8 MAIN_R; uint8 MAIN_S; uint8 MAIN_T; uint8 MAIN_U; uint8 MAIN_V; uint8 MAIN_W; uint8 MAIN_X; uint8 MAIN_Y; uint8 MAIN_Z;
+   uint8 MAIN_1, MAIN_2, MAIN_3, MAIN_4, MAIN_5, MAIN_6, MAIN_7, MAIN_8, MAIN_9, MAIN_0;
+   uint8 MAIN_A, MAIN_B, MAIN_C, MAIN_D, MAIN_E, MAIN_F, MAIN_G, MAIN_H, MAIN_I, MAIN_J, MAIN_K, MAIN_L, MAIN_M, MAIN_N, MAIN_O, MAIN_P, MAIN_Q, MAIN_R, MAIN_S, MAIN_T, MAIN_U, MAIN_V, MAIN_W, MAIN_X, MAIN_Y, MAIN_Z;
    uint8 MAIN_TILDE;        // ` ~
    uint8 MAIN_MINUS;        // - _
    uint8 MAIN_PLUS;         // = +
@@ -140,18 +140,18 @@
    uint8 MAIN_COMMA;        // , <
    uint8 MAIN_SPACE;        // 
 
-   uint8 CONS_F1; uint8 CONS_F2; uint8 CONS_F3; uint8 CONS_F4; uint8 CONS_F5; uint8 CONS_F6; uint8 CONS_F7; uint8 CONS_F8; uint8 CONS_F9; uint8 CONS_F10; uint8 CONS_F11; uint8 CONS_F12;
-   uint8 CONS_ESC; uint8 CONS_PRTSC; uint8 CONS_DELETE; uint8 CONS_BACK; uint8 CONS_TAB; uint8 CONS_CAPS; uint8 CONS_ENTER;
-   uint8 CONS_LSHIFT; uint8 CONS_RSHIFT;
-   uint8 CONS_LALT; uint8 CONS_RALT;
-   uint8 CONS_LCTRL; uint8 CONS_RCTRL;
-   uint8 CONS_UP; uint8 CONS_LEFT; uint8 CONS_DOWN; uint8 CONS_RIGHT;
+   uint8 CONS_F1, CONS_F2, CONS_F3, CONS_F4, CONS_F5, CONS_F6, CONS_F7, CONS_F8, CONS_F9, CONS_F10, CONS_F11, CONS_F12;
+   uint8 CONS_ESC, CONS_PRTSC, CONS_DELETE, CONS_BACK, CONS_TAB, CONS_CAPS, CONS_ENTER;
+   uint8 CONS_LSHIFT, CONS_RSHIFT;
+   uint8 CONS_LALT, CONS_RALT;
+   uint8 CONS_LCTRL, CONS_RCTRL;
+   uint8 CONS_UP, CONS_LEFT, CONS_DOWN, CONS_RIGHT;
    uint8 CONS_WINDOWS;
    int1  RESH_CAPS;
 
    uint8 NUMS_NUMLOCK;
-   uint8 NUMS_MULTIPLE; uint8 NUMS_DEVIDE; uint8 NUMS_ADD; uint8 NUMS_SUBTRACT; uint8 NUMS_POINT;
-   uint8 NUMS_0; uint8 NUMS_1; uint8 NUMS_2; uint8 NUMS_3; uint8 NUMS_4; uint8 NUMS_5; uint8 NUMS_6; uint8 NUMS_7; uint8 NUMS_8; uint8 NUMS_9;
+   uint8 NUMS_MULTIPLE, NUMS_DEVIDE, NUMS_ADD, NUMS_SUBTRACT, NUMS_POINT;
+   uint8 NUMS_0, NUMS_1, NUMS_2, NUMS_3, NUMS_4, NUMS_5, NUMS_6, NUMS_7, NUMS_8, NUMS_9;
 
    int32 MOUS_X;
    int32 MOUS_Y;
@@ -171,6 +171,7 @@
    int32 MOUS_SCROLL2;
 
    int1  PADS_ON;
+   uint8 PADS_UP, PADS_LEFT, PADS_DOWN, PADS_RIGHT;
   };
   struct HEPTA_ANGELSCRIPT
   {
@@ -1033,6 +1034,10 @@
     case 91: return Input->NUMS_0;
     case 92: return Input->NUMS_POINT;
     case 94: return Input->MAIN_SPACE;
+    case 95: return Input->PADS_UP;
+    case 96: return Input->PADS_LEFT;
+    case 97: return Input->PADS_DOWN;
+    case 98: return Input->PADS_RIGHT;
    
     default: return 0;
    }
@@ -1133,6 +1138,10 @@
    if(Input->NUMS_0 == 1) return 91ui8;
    if(Input->NUMS_POINT == 1) return 92ui8;
    if(Input->MAIN_SPACE == 1) return 94ui8;
+   if(Input->PADS_UP == 1) return 95ui8;
+   if(Input->PADS_LEFT == 1) return 96ui8;
+   if(Input->PADS_DOWN == 1) return 97ui8;
+   if(Input->PADS_RIGHT == 1) return 98ui8;
    return 255ui8;
   }
   int32  L_Numbering(string Temp01)                                 perfect {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
@@ -1384,7 +1393,10 @@
 			Input->PADS_ON = Ipad02.connected;
 			if(Input->PADS_ON)
 			{
-			
+    if(Ipad02.IsDPadUpPressed()){Vrab01 = true; if((++Input->PADS_UP) == Vrab02) Input->PADS_UP = Vrab03;} else {Input->PADS_UP = 0ui8;}
+    if(Ipad02.IsDPadLeftPressed()){Vrab01 = true; if((++Input->PADS_LEFT) == Vrab02) Input->PADS_LEFT = Vrab03;} else {Input->PADS_LEFT = 0ui8;}
+    if(Ipad02.IsDPadDownPressed()){Vrab01 = true; if((++Input->PADS_DOWN) == Vrab02) Input->PADS_DOWN = Vrab03;} else {Input->PADS_DOWN = 0ui8;}
+    if(Ipad02.IsDPadRightPressed()){Vrab01 = true; if((++Input->PADS_RIGHT) == Vrab02) Input->PADS_RIGHT = Vrab03;} else {Input->PADS_RIGHT = 0ui8;}
 			} else
 			{
 			
@@ -1673,62 +1685,70 @@
     }
 
    // Inputs
-    std::vector < uint8 > Vect01;                 // Overall Input.
-    std::vector < std::vector < uint8 > > Vect02; // Player's Input.
+    remains std::vector < int8 > Vect01;                 // Overall Input.
+    remains std::vector < std::vector < int8 > > Vect02; // Player's Input.
     {
-     Vect01.resize(8);
-     insize Vrab03 = Enchanted->Setting[0].Player.size();
-     if(Vrab03 == 0)
-     {
-      statics uint8 Vrab04 = L_Input(Vrab0018);
-      statics uint8 Vrab05 = L_Input(Vrab0019);
-      statics uint8 Vrab06 = L_Input(Vrab0020);
-      statics uint8 Vrab07 = L_Input(Vrab0021);
-      statics uint8 Vrab08 = L_Input(Vrab0016);
-      statics uint8 Vrab09 = L_Input(Vrab0017);
-      statics uint8 Vrab10 = L_Input(Vrab0024);
-      statics uint8 Vrab11 = L_Input(Vrab0025);
-      statics uint8 Vrab12 = L_Input(Vrab0026);
-      statics uint8 Vrab13 = L_Input(Vrab0027);
-      statics uint8 Vrab14 = L_Input(Vrab0022);
-      statics uint8 Vrab15 = L_Input(Vrab0023);
-      Vect01[0] = Vrab04 > Vrab10 ? Vrab04 : Vrab10;
-      Vect01[1] = Vrab05 > Vrab11 ? Vrab05 : Vrab11;
-      Vect01[2] = Vrab06 > Vrab12 ? Vrab06 : Vrab12;
-      Vect01[3] = Vrab07 > Vrab13 ? Vrab07 : Vrab13;
-      Vect01[4] = Vrab08 > Vrab14 ? Vrab08 : Vrab14;
-      Vect01[5] = Vrab09 > Vrab15 ? Vrab09 : Vrab15;
-     } Vect02.resize(Vrab03);
+     Vect01.resize(8); std::vector < int1 > Vect03(8, false);
+     insize Vrab03 = Enchanted->Setting[0].Player.size(); Vect02.resize(Vrab03);
      while(Vrab03 != 0)
      {
       Vrab03 -= 1; Vect02[Vrab03].resize(8);
-      statics uint8 Vrab04 = L_Input(Enchanted->Setting[0].Player[Vrab03].Up);
-      statics uint8 Vrab05 = L_Input(Enchanted->Setting[0].Player[Vrab03].Left);
-      statics uint8 Vrab06 = L_Input(Enchanted->Setting[0].Player[Vrab03].Down);
-      statics uint8 Vrab07 = L_Input(Enchanted->Setting[0].Player[Vrab03].Right);
-      statics uint8 Vrab08 = L_Input(Enchanted->Setting[0].Player[Vrab03].Attack);
-      statics uint8 Vrab09 = L_Input(Enchanted->Setting[0].Player[Vrab03].Defend);
-      statics uint8 Vrab10 = L_Input(Enchanted->Setting[0].Player[Vrab03].Jump);
-      statics uint8 Vrab11 = L_Input(Enchanted->Setting[0].Player[Vrab03].Command);
-      statics uint8 Vrab12 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Up);
-      statics uint8 Vrab13 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Left);
-      statics uint8 Vrab14 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Down);
-      statics uint8 Vrab15 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Right);
-      statics uint8 Vrab16 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Attack);
-      statics uint8 Vrab17 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Defend);
-      statics uint8 Vrab18 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Jump);
-      statics uint8 Vrab19 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Command);
-      Vect02[Vrab03][0] = Vrab04 > Vrab12 ? Vrab04 : Vrab12; if(Vect01[0] < Vect02[Vrab03][0]) Vect01[0] = Vect02[Vrab03][0];
-      Vect02[Vrab03][1] = Vrab05 > Vrab13 ? Vrab05 : Vrab13; if(Vect01[1] < Vect02[Vrab03][1]) Vect01[1] = Vect02[Vrab03][1];
-      Vect02[Vrab03][2] = Vrab06 > Vrab14 ? Vrab06 : Vrab14; if(Vect01[2] < Vect02[Vrab03][2]) Vect01[2] = Vect02[Vrab03][2];
-      Vect02[Vrab03][3] = Vrab07 > Vrab15 ? Vrab07 : Vrab15; if(Vect01[3] < Vect02[Vrab03][3]) Vect01[3] = Vect02[Vrab03][3];
-      Vect02[Vrab03][4] = Vrab08 > Vrab16 ? Vrab08 : Vrab16; if(Vect01[4] < Vect02[Vrab03][4]) Vect01[4] = Vect02[Vrab03][4];
-      Vect02[Vrab03][5] = Vrab09 > Vrab17 ? Vrab09 : Vrab17; if(Vect01[5] < Vect02[Vrab03][5]) Vect01[5] = Vect02[Vrab03][5];
-      Vect02[Vrab03][6] = Vrab10 > Vrab18 ? Vrab10 : Vrab18; if(Vect01[6] < Vect02[Vrab03][6]) Vect01[6] = Vect02[Vrab03][6];
-      Vect02[Vrab03][7] = Vrab11 > Vrab19 ? Vrab11 : Vrab19; if(Vect01[7] < Vect02[Vrab03][7]) Vect01[7] = Vect02[Vrab03][7];
+      statics int1 Vrab04 = L_Input(Enchanted->Setting[0].Player[Vrab03].Up) > 0;
+      statics int1 Vrab05 = L_Input(Enchanted->Setting[0].Player[Vrab03].Left) > 0;
+      statics int1 Vrab06 = L_Input(Enchanted->Setting[0].Player[Vrab03].Down) > 0;
+      statics int1 Vrab07 = L_Input(Enchanted->Setting[0].Player[Vrab03].Right) > 0;
+      statics int1 Vrab08 = L_Input(Enchanted->Setting[0].Player[Vrab03].Attack) > 0;
+      statics int1 Vrab09 = L_Input(Enchanted->Setting[0].Player[Vrab03].Defend) > 0;
+      statics int1 Vrab10 = L_Input(Enchanted->Setting[0].Player[Vrab03].Jump) > 0;
+      statics int1 Vrab11 = L_Input(Enchanted->Setting[0].Player[Vrab03].Command) > 0;
+      statics int1 Vrab12 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Up) > 0;
+      statics int1 Vrab13 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Left) > 0;
+      statics int1 Vrab14 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Down) > 0;
+      statics int1 Vrab15 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Right) > 0;
+      statics int1 Vrab16 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Attack) > 0;
+      statics int1 Vrab17 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Defend) > 0;
+      statics int1 Vrab18 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Jump) > 0;
+      statics int1 Vrab19 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Command) > 0;
+      if(Vrab04 || Vrab12){if(Vect02[Vrab03][0] < 0){Vect02[Vrab03][0] = 1;} else {Vect02[Vrab03][0] += 1;} if(Vect02[Vrab03][0] == 100) Vect02[Vrab03][0] = 70;} else {if(Vect02[Vrab03][0] > 0){Vect02[Vrab03][0] = -100;} else {if(Vect02[Vrab03][0] != 0) Vect02[Vrab03][0] += 1;}} if(Vect02[Vrab03][0] > 0) Vect03[0] = true;
+      if(Vrab05 || Vrab13){if(Vect02[Vrab03][1] < 0){Vect02[Vrab03][1] = 1;} else {Vect02[Vrab03][1] += 1;} if(Vect02[Vrab03][1] == 100) Vect02[Vrab03][1] = 70;} else {if(Vect02[Vrab03][1] > 0){Vect02[Vrab03][1] = -100;} else {if(Vect02[Vrab03][1] != 0) Vect02[Vrab03][1] += 1;}} if(Vect02[Vrab03][1] > 0) Vect03[1] = true;
+      if(Vrab06 || Vrab14){if(Vect02[Vrab03][2] < 0){Vect02[Vrab03][2] = 1;} else {Vect02[Vrab03][2] += 1;} if(Vect02[Vrab03][2] == 100) Vect02[Vrab03][2] = 70;} else {if(Vect02[Vrab03][2] > 0){Vect02[Vrab03][2] = -100;} else {if(Vect02[Vrab03][2] != 0) Vect02[Vrab03][2] += 1;}} if(Vect02[Vrab03][2] > 0) Vect03[2] = true;
+      if(Vrab07 || Vrab15){if(Vect02[Vrab03][3] < 0){Vect02[Vrab03][3] = 1;} else {Vect02[Vrab03][3] += 1;} if(Vect02[Vrab03][3] == 100) Vect02[Vrab03][3] = 70;} else {if(Vect02[Vrab03][3] > 0){Vect02[Vrab03][3] = -100;} else {if(Vect02[Vrab03][3] != 0) Vect02[Vrab03][3] += 1;}} if(Vect02[Vrab03][3] > 0) Vect03[3] = true;
+      if(Vrab08 || Vrab16){if(Vect02[Vrab03][4] < 0){Vect02[Vrab03][4] = 1;} else {Vect02[Vrab03][4] += 1;} if(Vect02[Vrab03][4] == 100) Vect02[Vrab03][4] = 70;} else {if(Vect02[Vrab03][4] > 0){Vect02[Vrab03][4] = -100;} else {if(Vect02[Vrab03][4] != 0) Vect02[Vrab03][4] += 1;}} if(Vect02[Vrab03][4] > 0) Vect03[4] = true;
+      if(Vrab09 || Vrab17){if(Vect02[Vrab03][5] < 0){Vect02[Vrab03][5] = 1;} else {Vect02[Vrab03][5] += 1;} if(Vect02[Vrab03][5] == 100) Vect02[Vrab03][5] = 70;} else {if(Vect02[Vrab03][5] > 0){Vect02[Vrab03][5] = -100;} else {if(Vect02[Vrab03][5] != 0) Vect02[Vrab03][5] += 1;}} if(Vect02[Vrab03][5] > 0) Vect03[5] = true;
+      if(Vrab10 || Vrab18){if(Vect02[Vrab03][6] < 0){Vect02[Vrab03][6] = 1;} else {Vect02[Vrab03][6] += 1;} if(Vect02[Vrab03][6] == 100) Vect02[Vrab03][6] = 70;} else {if(Vect02[Vrab03][6] > 0){Vect02[Vrab03][6] = -100;} else {if(Vect02[Vrab03][6] != 0) Vect02[Vrab03][6] += 1;}} if(Vect02[Vrab03][6] > 0) Vect03[6] = true;
+      if(Vrab11 || Vrab19){if(Vect02[Vrab03][7] < 0){Vect02[Vrab03][7] = 1;} else {Vect02[Vrab03][7] += 1;} if(Vect02[Vrab03][7] == 100) Vect02[Vrab03][7] = 70;} else {if(Vect02[Vrab03][7] > 0){Vect02[Vrab03][7] = -100;} else {if(Vect02[Vrab03][7] != 0) Vect02[Vrab03][7] += 1;}} if(Vect02[Vrab03][7] > 0) Vect03[7] = true;
      }
+
+     if(L_Input(Vrab0018) > 0) Vect03[0] = true;
+     if(L_Input(Vrab0019) > 0) Vect03[1] = true;
+     if(L_Input(Vrab0020) > 0) Vect03[2] = true;
+     if(L_Input(Vrab0021) > 0) Vect03[3] = true;
+     if(L_Input(Vrab0016) > 0) Vect03[4] = true;
+     if(L_Input(Vrab0017) > 0) Vect03[5] = true;
+     if(L_Input(Vrab0024) > 0) Vect03[0] = true;
+     if(L_Input(Vrab0025) > 0) Vect03[1] = true;
+     if(L_Input(Vrab0026) > 0) Vect03[2] = true;
+     if(L_Input(Vrab0027) > 0) Vect03[3] = true;
+     if(L_Input(Vrab0022) > 0) Vect03[4] = true;
+     if(L_Input(Vrab0023) > 0) Vect03[5] = true;
+     if(Vect03[0]){if(Vect01[0] < 0){Vect01[0] = 1;} else {Vect01[0] += 1;} if(Vect01[0] == 100) Vect01[0] = 70;} else {if(Vect01[0] > 0){Vect01[0] = -100;} else {if(Vect01[0] != 0) Vect01[0] += 1;}}
+     if(Vect03[1]){if(Vect01[1] < 0){Vect01[1] = 1;} else {Vect01[1] += 1;} if(Vect01[1] == 100) Vect01[1] = 70;} else {if(Vect01[1] > 0){Vect01[1] = -100;} else {if(Vect01[1] != 0) Vect01[1] += 1;}}
+     if(Vect03[2]){if(Vect01[2] < 0){Vect01[2] = 1;} else {Vect01[2] += 1;} if(Vect01[2] == 100) Vect01[2] = 70;} else {if(Vect01[2] > 0){Vect01[2] = -100;} else {if(Vect01[2] != 0) Vect01[2] += 1;}}
+     if(Vect03[3]){if(Vect01[3] < 0){Vect01[3] = 1;} else {Vect01[3] += 1;} if(Vect01[3] == 100) Vect01[3] = 70;} else {if(Vect01[3] > 0){Vect01[3] = -100;} else {if(Vect01[3] != 0) Vect01[3] += 1;}}
+     if(Vect03[4]){if(Vect01[4] < 0){Vect01[4] = 1;} else {Vect01[4] += 1;} if(Vect01[4] == 100) Vect01[4] = 70;} else {if(Vect01[4] > 0){Vect01[4] = -100;} else {if(Vect01[4] != 0) Vect01[4] += 1;}}
+     if(Vect03[5]){if(Vect01[5] < 0){Vect01[5] = 1;} else {Vect01[5] += 1;} if(Vect01[5] == 100) Vect01[5] = 70;} else {if(Vect01[5] > 0){Vect01[5] = -100;} else {if(Vect01[5] != 0) Vect01[5] += 1;}}
+     if(Vect03[6]){if(Vect01[6] < 0){Vect01[6] = 1;} else {Vect01[6] += 1;} if(Vect01[6] == 100) Vect01[6] = 70;} else {if(Vect01[6] > 0){Vect01[6] = -100;} else {if(Vect01[6] != 0) Vect01[6] += 1;}}
+     if(Vect03[7]){if(Vect01[7] < 0){Vect01[7] = 1;} else {Vect01[7] += 1;} if(Vect01[7] == 100) Vect01[7] = 70;} else {if(Vect01[7] > 0){Vect01[7] = -100;} else {if(Vect01[7] != 0) Vect01[7] += 1;}}
     }
+
+    if(Vect01[0] > 0) Enchanted->Print_Text(0, 45, 0, "UP");
+    if(Vect01[1] > 0) Enchanted->Print_Text(0, 45, 0, "   LEFT");
+    if(Vect01[2] > 0) Enchanted->Print_Text(0, 45, 0, "        DOWN");
+    if(Vect01[3] > 0) Enchanted->Print_Text(0, 45, 0, "             RIGHT");
+    Enchanted->Print_Text(0, 60, 0, std::to_string(Vect01[0]) + std::to_string(Vect01[1]) + std::to_string(Vect01[2]) + std::to_string(Vect01[3]));
     
+    /*
+
    // Early Displayed Window
     {
      for(insize Vrab03 = Enchanted->Vect001.size() - 1; Vrab03 + 1 != 0; Vrab03--)
@@ -1827,6 +1847,8 @@
       default: break;
      }
     }
+
+    */
 
    // Finalizer.
     {

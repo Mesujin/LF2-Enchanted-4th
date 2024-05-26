@@ -344,7 +344,7 @@
         Rect01.left = (LONG)Disp0001[Vrab04].Post_X1 + Vrab0007;
         Rect01.top = (LONG)Disp0001[Vrab04].Post_Y1 + Vrab0008;
         statics insize Vrab05 = Disp0001[Vrab04].Target; DirectX::XMFLOAT2 Flts01; RECT Rect02;
-        auto Effc01 = DirectX::SpriteEffects_None; statics uint8 Vrab07 = Disp0001[Vrab04].Effect / 10;
+        auto Effc01 = DirectX::SpriteEffects_None; statics uint8 Vrab07 = ruint8(Disp0001[Vrab04].Effect / 10);
         switch((Disp0001[Vrab04].Effect % 10)){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
         if(Vrab07 % 90 == 0)
         {
