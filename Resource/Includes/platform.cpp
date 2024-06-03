@@ -198,11 +198,11 @@
   }
   int0 HEPTA_GAME::OnSuspending()  // Game is being power-suspended (or minimized).
   {
-   Vrab0004 = true;
+   Vrab0004 = true; m_gamepad.get()->Suspend();
   }
   int0 HEPTA_GAME::OnResuming()    // Game is being power-resumed (or returning from minimize).
   {
-   Vrab0004 = false; m_timer.ResetElapsedTime();
+   Vrab0004 = false; m_timer.ResetElapsedTime(); m_gamepad.get()->Resume();
   }
   int0 HEPTA_GAME::OnWindowMoved()
   {
@@ -403,7 +403,7 @@
         Pics001->Draw(Imge0001[Sprt0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
-	  case 10: // Color Control
+	     case 10: // Color Control
 	  {
        switch(ruint8(Disp0001[Vrab04].Post_X1))
        {

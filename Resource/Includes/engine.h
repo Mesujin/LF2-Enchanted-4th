@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////////////////
 // "engine.h"                                                                             //
 //                                                                                        //
 // Main source of "Hepta: Enchanted".                                                     //
@@ -105,8 +105,8 @@
   uint8  Vrab0019 = 49;     // Input Keyboard Default LEFT.
   uint8  Vrab0020 = 50;     // Input Keyboard Default DOWN.
   uint8  Vrab0021 = 51;     // Input Keyboard Default RIGHT.
-  uint8  Vrab0022 = 0;      // Input Pad Default OK.
-  uint8  Vrab0023 = 0;      // Input Pad Default CANCEL.
+  uint8  Vrab0022 = 103;    // Input Pad Default OK.
+  uint8  Vrab0023 = 104;    // Input Pad Default CANCEL.
   uint8  Vrab0024 = 95;     // Input Pad Default UP.
   uint8  Vrab0025 = 96;     // Input Pad Default LEFT.
   uint8  Vrab0026 = 97;     // Input Pad Default DOWN.
@@ -120,9 +120,20 @@
   uint8  Vrab0033 = 0;      // LF2_Enchanted Status.
   uint8  Vrab0034 = 0;      // LF2_Forevered Status.
  
+  std::vector < insize > Vect0001; // Language Index.
+  std::vector < string > Vect0002; // Language String.
+  
+ // Unique
+  struct HEPTA_INPUT; struct HEPTA_ANGELSCRIPT; struct HEPTA_LF2_ENCHANTED; struct HEPTA_LF2_FOREVERED;
+  unique < HEPTA_INPUT > Input;
+  unique < HEPTA_ANGELSCRIPT > Angel;
+  unique < HEPTA_LF2_ENCHANTED > Enchanted;
+  unique < HEPTA_LF2_FOREVERED > Forevered;
+
  // Stuctures
   struct HEPTA_INPUT
   {
+   HEPTA_INPUT(){PADS_ON.resize(5); PADS_UP.resize(5); PADS_LEFT.resize(5); PADS_DOWN.resize(5); PADS_RIGHT.resize(5); PADS_A.resize(5); PADS_B.resize(5); PADS_X.resize(5); PADS_Y.resize(5); PADS_START.resize(5); PADS_BACK.resize(5); PADS_MENU.resize(5); PADS_VIEW.resize(5);}
    uint8 RESH_ANY;
 
    uint8 MAIN_1, MAIN_2, MAIN_3, MAIN_4, MAIN_5, MAIN_6, MAIN_7, MAIN_8, MAIN_9, MAIN_0;
@@ -170,8 +181,8 @@
    int32 MOUS_SCROLL;
    int32 MOUS_SCROLL2;
 
-   int1  PADS_ON;
-   uint8 PADS_UP, PADS_LEFT, PADS_DOWN, PADS_RIGHT;
+   std::vector < int1 > PADS_ON;
+   std::vector < uint8 > PADS_UP, PADS_LEFT, PADS_DOWN, PADS_RIGHT, PADS_A, PADS_B, PADS_X, PADS_Y, PADS_START, PADS_BACK, PADS_MENU, PADS_VIEW;
   };
   struct HEPTA_ANGELSCRIPT
   {
@@ -233,6 +244,8 @@
     uint8  Vrab012 = 0;             // Mouse's standby countup.
     int32  Vrab013 = 0;             // Mouse's last frame x position.
     int32  Vrab014 = 0;             // Mouse's last frame y position.
+    uint8  Vrab015 = ruint8(-1);    // Last used Language.
+    int64  Vrab016[2]{0, 0};        // Last print_text size.
     std::vector < uint8 >  Vect001; // Window Order.
     std::vector < insize > Vect002; // Interface Index - Background(s).
     std::vector < int1 >   Vect003; // Interface Index - Background(s)'s Type.
@@ -525,6 +538,7 @@
      uint8  Brightness = 100;
      uint8  Volume = 80;
      int8   Pan = 0;
+     uint8  Lang = 1;
 
      int1   Fast_Loading = false;
      int1   Skip_Animation = false;
@@ -595,8 +609,19 @@
      string String;
      std::vector < HEPTA_LF2_ENCHANTED_INFO_MANAGER > Manager;
     };
-     
+    struct HEPTA_LF2_ENCHANTED_TEXT_SHIFT
+    {
+     int1 c; int1 C; int32 x, y;
+    };
+    struct HEPTA_LF2_ENCHANTED_TEXT
+    {
+     string Address; insize Pic_Index = rinsize(-1);
+     int32 x, y, w, h, row, col, type, num[10], sizex, sizey, shiftx, shifty, caps, caps2, stx, sty;
+     std::vector < HEPTA_LF2_ENCHANTED_TEXT_SHIFT > Shift;
+    }; 
+
     HEPTA_LF2_ENCHANTED_SETTING Setting[2];
+    std::vector < HEPTA_LF2_ENCHANTED_TEXT > Text;
     std::vector < HEPTA_LF2_ENCHANTED_INFO > Info;
     std::vector < HEPTA_LF2_ENCHANTED_RUNTIMEDATA > Data;
     unique < HEPTA_LF2_ENCHANTED_ENGINE0 > Engine0 = std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE0 > ();
@@ -663,15 +688,11 @@
 
      // Shift all the current existing info/notification.
      {
-      int64 Vrab04 = 29;
-      insize Vrab05 = 0, Vrab06 = 0, Vrab07 = Temp01.size(); while(Vrab07 > 41){Vrab07 -= 40; if(Temp01.at((Vrab05 * 40) + Vrab06 + 40) == ' '){Vrab07 -= 1; Vrab06 += 1;} Vrab05 += 1;}
-      if(Temp01.size() > 41){Vrab04 += 7 + (16 * rint64(Vrab05));} else
-      {Vrab04 += 5;}
-
-      for(insize Vrab08 = 0; Vrab08 < Vrab03; ++Vrab08)
+      Print_Text(0, 0, 0, Temp01, 360, 1);
+      for(insize Vrab04 = 0; Vrab04 < Vrab03; ++Vrab04)
       {
-       statics insize Vrab09 = Info[Vrab08].Manager.size(); Info[Vrab08].Manager.resize(Vrab09 + 1);
-       Info[Vrab08].Manager[Vrab09].Target = Vrab04;
+       statics insize Vrab05 = Info[Vrab04].Manager.size(); Info[Vrab04].Manager.resize(Vrab05 + 1);
+       Info[Vrab04].Manager[Vrab05].Target = 34 + Vrab016[1];
       }
      }
 
@@ -680,46 +701,54 @@
      if(Vrab02){Info[Vrab03].Volume = true;} else {Info[Vrab03].String = Temp01;}
      Info[Vrab03].Question = Vrab01;
     }
-    int0   Print_Text(statics int64 Vrab01, statics int64 Vrab02, uint8 Vrab03, statics string &Temp01, statics int64 Vrab04 = 0, statics int64 Vrab05 = 0) perfect
+    int0   Print_Text(statics int64 Vrab01, statics int64 Vrab02, uint8 Vrab03, statics string &Temp01, int64 Vrab04 = 0, statics uint8 Vrab05 = 0) perfect
     {
-     statics string Temp02 = Temp01;
-     statics insize Vrab06 = Temp02.size(); insize Vrab07 = 0; int64 Vrab08 = rint64(Vrab01); Vrab03 %= 6;
-     if(Vrab04 == 0 && Vrab05 == 0)
+     statics string Temp02 = Temp01; if(Vrab04 <= 0) Vrab04 = 0x7FFFFFFFFFFFFFFF; Vrab016[0] = 0; Vrab016[1] = 0;
+     statics insize Vrab06 = Temp02.size(); insize Vrab07 = 0; int64 Vrab08[2]{0, 0}; remains int64 Vrab09[2]{9, 15};
+     while(Vrab07 < Vrab06)
      {
-      while(Vrab07 != Vrab06)
+      insize Vrab10 = 1;
       {
-       statics int64 Vrab09 = rint64(Temp02.at(Vrab07)); int64 Vrab10 = 0, Vrab11 = 0;
-       switch(Vrab09)
-       {
-        case 95: case 103: case 106: case 112: case 113: case 121: case 152: case 159: case 230: case 237: case 244: case 245: Vrab11 = 1; break;
-        case 128: case 135: Vrab11 = 2; break;
-        case 109: Vrab10 = 1; break;
-        default: break;
-       }
-       P_Set_Display(3, Vect004[rinsize(Vrab03)], Vrab08 - Vrab10, Vrab02 + Vrab11, 0ui8, 255ui8, 15, 15, (Vrab09 % 16) * 16, (Vrab09 / 16) * 16);
-       Vrab07 += 1; Vrab08 += 9;
-       }
-     } else
-     {
-      while(Vrab07 != Vrab06)
-      {
-       statics int64 Vrab09 = rint64(Temp02.at(Vrab07)); int64 Vrab10 = 0, Vrab11 = 0;
-       switch(Vrab09)
-       {
-        case 95: case 103: case 106: case 112: case 113: case 121: case 152: case 159: case 230: case 237: case 244: case 245: Vrab11 = 1; break;
-        case 128: case 135: Vrab11 = 2; break;
-        case 109: Vrab10 = 1; break;
-        default: break;
-       }
-       int64 Vrab12 = 0; int64 Vrab13 = 0;
-       {
-        statics int64 Vrab14 = Vrab02 + Vrab11 - Vrab04; if(Vrab14 < 0) Vrab12 = -Vrab14;
-        statics int64 Vrab15 = Vrab02 + Vrab11 - Vrab05 + 15; if(Vrab15 > 0) Vrab13 = Vrab15;
-       }
-       if(Vrab12 + Vrab13 < 15)
-       P_Set_Display(3, Vect004[rinsize(Vrab03)], Vrab08 - Vrab10, Vrab02 + Vrab11 + Vrab12, 0ui8, 255ui8, 15, 15 - Vrab12 - Vrab13, (Vrab09 % 16) * 16, ((Vrab09 / 16) * 16) + Vrab12);
-       Vrab07 += 1; Vrab08 += 9;
+       statics int8 Vrab11 = Temp02[Vrab07];
+       if(Vrab11 <= -44 && Vrab11 >= -48) Vrab10 = 2;
+       if(Vrab07 + Vrab10 > Vrab06) break;
+       if(Vrab11 == '\n'){Vrab08[0] = 0; Vrab08[1] += Vrab09[1]; Vrab07 += Vrab10; Vrab016[1] = Vrab08[1]; continue;}
       }
+      std::vector < int8 > Vect01(Vrab10); Vect01[0] = Temp02[Vrab07]; if(Vrab10 > 1) Vect01[1] = Temp02[Vrab07 + 1]; if(Vrab10 > 2) Vect01[2] = Temp02[Vrab07 + 2];
+      insize Vrab11 = Text.size();
+      while(Vrab11 != 0)
+      {
+       Vrab11 -= 1; int1 Vrab12 = false;
+       while(true)
+       {
+        if(rinsize(Text[Vrab11].num[0]) != Vrab10) break;
+        if(Text[Vrab11].type != Vrab03) break;
+        if(Text[Vrab11].num[1] > Vect01[0] || Text[Vrab11].num[7] < Vect01[0]) break;
+        if(Vrab10 > 1) if(Text[Vrab11].num[2] > Vect01[1] || Text[Vrab11].num[8] < Vect01[1]) break;
+        if(Vrab10 > 2) if(Text[Vrab11].num[3] > Vect01[2] || Text[Vrab11].num[9] < Vect01[2]) break;
+        Vrab12 = true; break;
+       }
+       if(Vrab12)
+       {
+        Vrab09[0] = Text[Vrab11].sizex; Vrab09[1] = Text[Vrab11].sizey;
+        if(Vrab08[0] != 0 && Vrab08[0] + Vrab09[0] > Vrab04)
+        {
+         if(Vrab05 == 2) if(Vect01[0] != ' ') {Print_Text(Vrab01 + Vrab08[0], Vrab02 + Vrab08[1], Vrab03, "-");
+         Vrab016[0] = 0;} Vrab08[0] = 0; Vrab08[1] += Vrab09[1]; Vrab016[0] = Vrab04; Vrab016[1] = Vrab08[1];
+        }
+        if(Vrab05 != 1)
+        {
+         insize Vrab13 = rinsize(-1); {Vrab13 = ((Vect01[0] - Text[Vrab11].num[1]) * Text[Vrab11].num[4]); if(Vrab10 > 1) Vrab13 += ((Vect01[1] - Text[Vrab11].num[2]) * Text[Vrab11].num[5]); if(Vrab10 > 2) Vrab13 += ((Vect01[2] - Text[Vrab11].num[3]) * Text[Vrab11].num[6]);}
+         statics int64 Vrab14 = Text[Vrab11].w, Vrab15 = Text[Vrab11].h;
+         int64 Vrab16 = Text[Vrab11].shiftx, Vrab17 = Text[Vrab11].shifty; if(Text[Vrab11].Shift.size() > Vrab13 + 1){Vrab16 += Text[Vrab11].Shift[Vrab13].x; Vrab17 += Text[Vrab11].Shift[Vrab13].y;}
+         P_Set_Display(3, Text[Vrab11].Pic_Index, Vrab01 + Vrab08[0] + Vrab16, Vrab02 + Vrab08[1] + Vrab17, 0ui8, 255ui8, Vrab14, Vrab15, (Vrab13 % Text[Vrab11].row) * (Vrab14 + 1), (Vrab13 / Text[Vrab11].row) * (Vrab15 + 1), Text[Vrab11].stx, Text[Vrab11].sty);
+        }
+        Vrab08[0] += Vrab09[0]; if(Vrab016[0] < Vrab08[0]) Vrab016[0] = Vrab08[0];
+        break;
+       }
+      }
+
+      Vrab07 += Vrab10;
      }
     }
     int0   Print_Bar(int64 Vrab01, int64 Vrab02, uint64 Vrab03, uint64 Vrab04) perfect
@@ -756,6 +785,127 @@
        }
       }
      }
+    }
+    int0   Typing(string &Temp01) perfect
+    {
+     statics uint8 Vrab01 = ruint8(L_Rounding(256.0 / rxint64(Vrab0003)) - 1) - 1; remains int1 Vrab02 = true;
+     if((Input->CONS_LSHIFT == 1 && Input->CONS_RSHIFT > 0) || (Input->CONS_LSHIFT > 0 && Input->CONS_RSHIFT == 1)) Vrab02 = !Vrab02;
+     if(Input->RESH_CAPS || Input->CONS_LSHIFT > 0 || Input->CONS_RSHIFT > 0)
+     {
+      {statics uint8 Vrab03 = Input->MAIN_A; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('A');} else {Temp01 += "\xd0\xa4";}}
+      {statics uint8 Vrab03 = Input->MAIN_B; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('B');} else {Temp01 += "\xd0\x98";}}
+      {statics uint8 Vrab03 = Input->MAIN_C; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('C');} else {Temp01 += "\xd0\xa1";}}
+      {statics uint8 Vrab03 = Input->MAIN_D; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('D');} else {Temp01 += "\xd0\x92";}}
+      {statics uint8 Vrab03 = Input->MAIN_E; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('E');} else {Temp01 += "\xd0\xa3";}}
+      {statics uint8 Vrab03 = Input->MAIN_F; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('F');} else {Temp01 += "\xd0\x90";}}
+      {statics uint8 Vrab03 = Input->MAIN_G; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('G');} else {Temp01 += "\xd0\x9f";}}
+      {statics uint8 Vrab03 = Input->MAIN_H; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('H');} else {Temp01 += "\xd0\xa0";}}
+      {statics uint8 Vrab03 = Input->MAIN_I; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('I');} else {Temp01 += "\xd0\xa8";}}
+      {statics uint8 Vrab03 = Input->MAIN_J; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('J');} else {Temp01 += "\xd0\x9e";}}
+      {statics uint8 Vrab03 = Input->MAIN_K; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('K');} else {Temp01 += "\xd0\x9b";}}
+      {statics uint8 Vrab03 = Input->MAIN_L; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('L');} else {Temp01 += "\xd0\x94";}}
+      {statics uint8 Vrab03 = Input->MAIN_M; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('M');} else {Temp01 += "\xd0\xac";}}
+      {statics uint8 Vrab03 = Input->MAIN_N; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('N');} else {Temp01 += "\xd0\xa2";}}
+      {statics uint8 Vrab03 = Input->MAIN_O; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('O');} else {Temp01 += "\xd0\xa9";}}
+      {statics uint8 Vrab03 = Input->MAIN_P; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('P');} else {Temp01 += "\xd0\x97";}}
+      {statics uint8 Vrab03 = Input->MAIN_Q; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('Q');} else {Temp01 += "\xd0\x99";}}
+      {statics uint8 Vrab03 = Input->MAIN_R; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('R');} else {Temp01 += "\xd0\x9a";}}
+      {statics uint8 Vrab03 = Input->MAIN_S; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('S');} else {Temp01 += "\xd0\xab";}}
+      {statics uint8 Vrab03 = Input->MAIN_T; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('T');} else {Temp01 += "\xd0\x95";}}
+      {statics uint8 Vrab03 = Input->MAIN_U; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('U');} else {Temp01 += "\xd0\x93";}}
+      {statics uint8 Vrab03 = Input->MAIN_V; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('V');} else {Temp01 += "\xd0\x9c";}}
+      {statics uint8 Vrab03 = Input->MAIN_W; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('W');} else {Temp01 += "\xd0\xa6";}}
+      {statics uint8 Vrab03 = Input->MAIN_X; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('X');} else {Temp01 += "\xd0\xa7";}}
+      {statics uint8 Vrab03 = Input->MAIN_Y; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('Y');} else {Temp01 += "\xd0\x9d";}}
+      {statics uint8 Vrab03 = Input->MAIN_Z; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('Z');} else {Temp01 += "\xd0\xaf";}}
+     } else
+     {
+      {statics uint8 Vrab03 = Input->MAIN_A; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('a');} else {Temp01 += "\xd1\x84";}}
+      {statics uint8 Vrab03 = Input->MAIN_B; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('b');} else {Temp01 += "\xd0\xb8";}}
+      {statics uint8 Vrab03 = Input->MAIN_C; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('c');} else {Temp01 += "\xd1\x81";}}
+      {statics uint8 Vrab03 = Input->MAIN_D; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('d');} else {Temp01 += "\xd0\xb2";}}
+      {statics uint8 Vrab03 = Input->MAIN_E; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('e');} else {Temp01 += "\xd1\x83";}}
+      {statics uint8 Vrab03 = Input->MAIN_F; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('f');} else {Temp01 += "\xd0\xb0";}}
+      {statics uint8 Vrab03 = Input->MAIN_G; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('g');} else {Temp01 += "\xd0\xbf";}}
+      {statics uint8 Vrab03 = Input->MAIN_H; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('h');} else {Temp01 += "\xd1\x80";}}
+      {statics uint8 Vrab03 = Input->MAIN_I; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('i');} else {Temp01 += "\xd1\x88";}}
+      {statics uint8 Vrab03 = Input->MAIN_J; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('j');} else {Temp01 += "\xd0\xbe";}}
+      {statics uint8 Vrab03 = Input->MAIN_K; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('k');} else {Temp01 += "\xd0\xbb";}}
+      {statics uint8 Vrab03 = Input->MAIN_L; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('l');} else {Temp01 += "\xd0\xb4";}}
+      {statics uint8 Vrab03 = Input->MAIN_M; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('m');} else {Temp01 += "\xd1\x8c";}}
+      {statics uint8 Vrab03 = Input->MAIN_N; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('n');} else {Temp01 += "\xd1\x82";}}
+      {statics uint8 Vrab03 = Input->MAIN_O; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('o');} else {Temp01 += "\xd1\x89";}}
+      {statics uint8 Vrab03 = Input->MAIN_P; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('p');} else {Temp01 += "\xd0\xb7";}}
+      {statics uint8 Vrab03 = Input->MAIN_Q; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('q');} else {Temp01 += "\xd0\xb9";}}
+      {statics uint8 Vrab03 = Input->MAIN_R; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('r');} else {Temp01 += "\xd0\xba";}}
+      {statics uint8 Vrab03 = Input->MAIN_S; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('s');} else {Temp01 += "\xd1\x8b";}}
+      {statics uint8 Vrab03 = Input->MAIN_T; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('t');} else {Temp01 += "\xd0\xb5";}}
+      {statics uint8 Vrab03 = Input->MAIN_U; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('u');} else {Temp01 += "\xd0\xb3";}}
+      {statics uint8 Vrab03 = Input->MAIN_V; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('v');} else {Temp01 += "\xd0\xbc";}}
+      {statics uint8 Vrab03 = Input->MAIN_W; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('w');} else {Temp01 += "\xd1\x86";}}
+      {statics uint8 Vrab03 = Input->MAIN_X; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('x');} else {Temp01 += "\xd1\x87";}}
+      {statics uint8 Vrab03 = Input->MAIN_Y; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('y');} else {Temp01 += "\xd0\xbd";}}
+      {statics uint8 Vrab03 = Input->MAIN_Z; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('z');} else {Temp01 += "\xd1\x8f";}}
+     }
+     {statics uint8 Vrab03 = Input->NUMS_0; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('0');}
+     {statics uint8 Vrab03 = Input->NUMS_1; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('1');}
+     {statics uint8 Vrab03 = Input->NUMS_2; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('2');}
+     {statics uint8 Vrab03 = Input->NUMS_3; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('3');}
+     {statics uint8 Vrab03 = Input->NUMS_4; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('4');}
+     {statics uint8 Vrab03 = Input->NUMS_5; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('5');}
+     {statics uint8 Vrab03 = Input->NUMS_6; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('6');}
+     {statics uint8 Vrab03 = Input->NUMS_7; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('7');}
+     {statics uint8 Vrab03 = Input->NUMS_8; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('8');}
+     {statics uint8 Vrab03 = Input->NUMS_9; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('9');}
+     if(Input->CONS_LSHIFT > 0 || Input->CONS_RSHIFT > 0)
+     {
+      {statics uint8 Vrab03 = Input->MAIN_0; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back(')');} else {Temp01 += ")";}}
+      {statics uint8 Vrab03 = Input->MAIN_1; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('!');} else {Temp01 += "!";}}
+      {statics uint8 Vrab03 = Input->MAIN_2; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('@');} else {Temp01 += "\"";}}
+      {statics uint8 Vrab03 = Input->MAIN_3; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('#');} else {Temp01 += "\xe2\x84\x96";}}
+      {statics uint8 Vrab03 = Input->MAIN_4; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('$');} else {Temp01 += ";";}}
+      {statics uint8 Vrab03 = Input->MAIN_5; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('%');} else {Temp01 += "%";}}
+      {statics uint8 Vrab03 = Input->MAIN_6; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('^');} else {Temp01 += ":";}}
+      {statics uint8 Vrab03 = Input->MAIN_7; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('&');} else {Temp01 += "?";}}
+      {statics uint8 Vrab03 = Input->MAIN_8; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('*');} else {Temp01 += "*";}}
+      {statics uint8 Vrab03 = Input->MAIN_9; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('(');} else {Temp01 += "(";}}
+      {statics uint8 Vrab03 = Input->MAIN_TILDE;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('~');} else {Temp01 += "\xd0\x81";}}
+      {statics uint8 Vrab03 = Input->MAIN_MINUS;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('_');} else {Temp01 += "_";}}
+      {statics uint8 Vrab03 = Input->MAIN_PLUS;         if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('+');} else {Temp01 += "+";}}
+      {statics uint8 Vrab03 = Input->MAIN_OPENBRACKED;  if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('{');} else {Temp01 += "\xd0\xa5";}}
+      {statics uint8 Vrab03 = Input->MAIN_CLOSEBRACKED; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('}');} else {Temp01 += "\xd0\xaa";}}
+      {statics uint8 Vrab03 = Input->MAIN_PIPE;         if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('|');} else {Temp01 += "/";}}
+      {statics uint8 Vrab03 = Input->MAIN_SEMICOLON;    if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back(':');} else {Temp01 += "\xd0\x96";}}
+      {statics uint8 Vrab03 = Input->MAIN_QUOTES;       if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('\"');} else {Temp01 += "\xd0\xad";}}
+      {statics uint8 Vrab03 = Input->MAIN_QUESTION;     if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('?');} else {Temp01 += ",";}}
+      {statics uint8 Vrab03 = Input->MAIN_PERIOD;       if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('>');} else {Temp01 += "\xd0\xae";}}
+      {statics uint8 Vrab03 = Input->MAIN_COMMA;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('<');} else {Temp01 += "\xd0\x91";}}
+     } else
+     {
+      {statics uint8 Vrab03 = Input->MAIN_0; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('0');}
+      {statics uint8 Vrab03 = Input->MAIN_1; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('1');}
+      {statics uint8 Vrab03 = Input->MAIN_2; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('2');}
+      {statics uint8 Vrab03 = Input->MAIN_3; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('3');}
+      {statics uint8 Vrab03 = Input->MAIN_4; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('4');}
+      {statics uint8 Vrab03 = Input->MAIN_5; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('5');}
+      {statics uint8 Vrab03 = Input->MAIN_6; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('6');}
+      {statics uint8 Vrab03 = Input->MAIN_7; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('7');}
+      {statics uint8 Vrab03 = Input->MAIN_8; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('8');}
+      {statics uint8 Vrab03 = Input->MAIN_9; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back('9');}
+      {statics uint8 Vrab03 = Input->MAIN_TILDE;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('`');} else {Temp01 += "\xd1\x91";}}
+      {statics uint8 Vrab03 = Input->MAIN_MINUS;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('-');} else {Temp01 += "-";}}
+      {statics uint8 Vrab03 = Input->MAIN_PLUS;         if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('=');} else {Temp01 += "=";}}
+      {statics uint8 Vrab03 = Input->MAIN_OPENBRACKED;  if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('[');} else {Temp01 += "\xd1\x85";}}
+      {statics uint8 Vrab03 = Input->MAIN_CLOSEBRACKED; if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back(']');} else {Temp01 += "\xd1\x8a";}}
+      {statics uint8 Vrab03 = Input->MAIN_PIPE;         if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('\\');} else {Temp01 += "\\";}}
+      {statics uint8 Vrab03 = Input->MAIN_SEMICOLON;    if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back(';');} else {Temp01 += "\xd0\xb6";}}
+      {statics uint8 Vrab03 = Input->MAIN_QUOTES;       if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('\'');} else {Temp01 += "\xd1\x8d";}}
+      {statics uint8 Vrab03 = Input->MAIN_QUESTION;     if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('/');} else {Temp01 += ".";}}
+      {statics uint8 Vrab03 = Input->MAIN_PERIOD;       if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back('.');} else {Temp01 += "\xd1\x8e";}}
+      {statics uint8 Vrab03 = Input->MAIN_COMMA;        if(Vrab03 == 1 || Vrab03 == Vrab01) if(Vrab02){Temp01.push_back(',');} else {Temp01 += "\xd0\xb1";}}
+     }
+     {statics uint8 Vrab03 = Input->MAIN_SPACE; if(Vrab03 == 1 || Vrab03 == Vrab01) Temp01.push_back(' ');}
+     {statics uint8 Vrab03 = Input->CONS_BACK;  if(Vrab03 == 1 || Vrab03 == Vrab01){statics insize Vrab04 = Temp01.size(); if(Vrab04 - 2 < Vrab04) if(Temp01[Vrab04 - 1] <= -65 && Temp01[Vrab04 - 1] >= -128) if(Temp01[Vrab04 - 2] <= -44 && Temp01[Vrab04 - 2] >= -48) Temp01.pop_back(); if(Temp01.size() > 0) Temp01.pop_back();}}
     }
     string Input_Name(uint8 Vrab01) perfect
     {
@@ -899,12 +1049,6 @@
     }
   };
 
- // Unique
-  unique < HEPTA_INPUT > Input;
-  unique < HEPTA_ANGELSCRIPT > Angel;
-  unique < HEPTA_LF2_ENCHANTED > Enchanted;
-  unique < HEPTA_LF2_FOREVERED > Forevered;
-
  // Encryption & Decryption Functions
   int0   S_Control()                                 perfect {if(Temp0002.size() <= 94) Temp0002.resize(95);}
   int8   S_Decryption94(statics int8 Vrab01)         perfect {if(Vrab01 == Temp0002[0]) return 0; if(Vrab01 == Temp0002[1]) return 1; if(Vrab01 == Temp0002[2]) return 2; if(Vrab01 == Temp0002[3]) return 3; if(Vrab01 == Temp0002[4]) return 4; if(Vrab01 == Temp0002[5]) return 5; if(Vrab01 == Temp0002[6]) return 6; if(Vrab01 == Temp0002[7]) return 7; if(Vrab01 == Temp0002[8]) return 8; if(Vrab01 == Temp0002[9]) return 9; if(Vrab01 == Temp0002[10]) return 10; if(Vrab01 == Temp0002[11]) return 11; if(Vrab01 == Temp0002[12]) return 12; if(Vrab01 == Temp0002[13]) return 13; if(Vrab01 == Temp0002[14]) return 14; if(Vrab01 == Temp0002[15]) return 15; if(Vrab01 == Temp0002[16]) return 16; if(Vrab01 == Temp0002[17]) return 17; if(Vrab01 == Temp0002[18]) return 18; if(Vrab01 == Temp0002[19]) return 19; if(Vrab01 == Temp0002[20]) return 20; if(Vrab01 == Temp0002[21]) return 21; if(Vrab01 == Temp0002[22]) return 22; if(Vrab01 == Temp0002[23]) return 23; if(Vrab01 == Temp0002[24]) return 24; if(Vrab01 == Temp0002[25]) return 25; if(Vrab01 == Temp0002[26]) return 26; if(Vrab01 == Temp0002[27]) return 27; if(Vrab01 == Temp0002[28]) return 28; if(Vrab01 == Temp0002[29]) return 29; if(Vrab01 == Temp0002[30]) return 30; if(Vrab01 == Temp0002[31]) return 31; if(Vrab01 == Temp0002[32]) return 32; if(Vrab01 == Temp0002[33]) return 33; if(Vrab01 == Temp0002[34]) return 34; if(Vrab01 == Temp0002[35]) return 35; if(Vrab01 == Temp0002[36]) return 36; if(Vrab01 == Temp0002[37]) return 37; if(Vrab01 == Temp0002[38]) return 38; if(Vrab01 == Temp0002[39]) return 39; if(Vrab01 == Temp0002[40]) return 40; if(Vrab01 == Temp0002[41]) return 41; if(Vrab01 == Temp0002[42]) return 42; if(Vrab01 == Temp0002[43]) return 43; if(Vrab01 == Temp0002[44]) return 44; if(Vrab01 == Temp0002[45]) return 45; if(Vrab01 == Temp0002[46]) return 46; if(Vrab01 == Temp0002[47]) return 47; if(Vrab01 == Temp0002[48]) return 48; if(Vrab01 == Temp0002[49]) return 49; if(Vrab01 == Temp0002[50]) return 50; if(Vrab01 == Temp0002[51]) return 51; if(Vrab01 == Temp0002[52]) return 52; if(Vrab01 == Temp0002[53]) return 53; if(Vrab01 == Temp0002[54]) return 54; if(Vrab01 == Temp0002[55]) return 55; if(Vrab01 == Temp0002[56]) return 56; if(Vrab01 == Temp0002[57]) return 57; if(Vrab01 == Temp0002[58]) return 58; if(Vrab01 == Temp0002[59]) return 59; if(Vrab01 == Temp0002[60]) return 60; if(Vrab01 == Temp0002[61]) return 61; if(Vrab01 == Temp0002[62]) return 62; if(Vrab01 == Temp0002[63]) return 63; if(Vrab01 == Temp0002[64]) return 64; if(Vrab01 == Temp0002[65]) return 65; if(Vrab01 == Temp0002[66]) return 66; if(Vrab01 == Temp0002[67]) return 67; if(Vrab01 == Temp0002[68]) return 68; if(Vrab01 == Temp0002[69]) return 69; if(Vrab01 == Temp0002[70]) return 70; if(Vrab01 == Temp0002[71]) return 71; if(Vrab01 == Temp0002[72]) return 72; if(Vrab01 == Temp0002[73]) return 73; if(Vrab01 == Temp0002[74]) return 74; if(Vrab01 == Temp0002[75]) return 75; if(Vrab01 == Temp0002[76]) return 76; if(Vrab01 == Temp0002[77]) return 77; if(Vrab01 == Temp0002[78]) return 78; if(Vrab01 == Temp0002[79]) return 79; if(Vrab01 == Temp0002[80]) return 80; if(Vrab01 == Temp0002[81]) return 81; if(Vrab01 == Temp0002[82]) return 82; if(Vrab01 == Temp0002[83]) return 83; if(Vrab01 == Temp0002[84]) return 84; if(Vrab01 == Temp0002[85]) return 85; if(Vrab01 == Temp0002[86]) return 86; if(Vrab01 == Temp0002[87]) return 87; if(Vrab01 == Temp0002[88]) return 88; if(Vrab01 == Temp0002[89]) return 89; if(Vrab01 == Temp0002[90]) return 90; if(Vrab01 == Temp0002[91]) return 91; if(Vrab01 == Temp0002[92]) return 92; if(Vrab01 == Temp0002[93]) return 93; return 0;}
@@ -1034,10 +1178,18 @@
     case 91: return Input->NUMS_0;
     case 92: return Input->NUMS_POINT;
     case 94: return Input->MAIN_SPACE;
-    case 95: return Input->PADS_UP;
-    case 96: return Input->PADS_LEFT;
-    case 97: return Input->PADS_DOWN;
-    case 98: return Input->PADS_RIGHT;
+    case 95: return Input->PADS_UP[0];
+    case 96: return Input->PADS_LEFT[0];
+    case 97: return Input->PADS_DOWN[0];
+    case 98: return Input->PADS_RIGHT[0];
+    case 99: return Input->PADS_A[0];
+    case 100: return Input->PADS_B[0];
+    case 101: return Input->PADS_X[0];
+    case 102: return Input->PADS_Y[0];
+    case 103: return Input->PADS_START[0];
+    case 104: return Input->PADS_BACK[0];
+    case 105: return Input->PADS_MENU[0];
+    case 106: return Input->PADS_VIEW[0];
    
     default: return 0;
    }
@@ -1138,10 +1290,18 @@
    if(Input->NUMS_0 == 1) return 91ui8;
    if(Input->NUMS_POINT == 1) return 92ui8;
    if(Input->MAIN_SPACE == 1) return 94ui8;
-   if(Input->PADS_UP == 1) return 95ui8;
-   if(Input->PADS_LEFT == 1) return 96ui8;
-   if(Input->PADS_DOWN == 1) return 97ui8;
-   if(Input->PADS_RIGHT == 1) return 98ui8;
+   if(Input->PADS_UP[0] == 1) return 95ui8;
+   if(Input->PADS_LEFT[0] == 1) return 96ui8;
+   if(Input->PADS_DOWN[0] == 1) return 97ui8;
+   if(Input->PADS_RIGHT[0] == 1) return 98ui8;
+   if(Input->PADS_A[0] == 1) return 99ui8;
+   if(Input->PADS_B[0] == 1) return 100ui8;
+   if(Input->PADS_X[0] == 1) return 101ui8;
+   if(Input->PADS_Y[0] == 1) return 102ui8;
+   if(Input->PADS_START[0] == 1) return 103ui8;
+   if(Input->PADS_BACK[0] == 1) return 104ui8;
+   if(Input->PADS_MENU[0] == 1) return 105ui8;
+   if(Input->PADS_VIEW[0] == 1) return 106ui8;
    return 255ui8;
   }
   int32  L_Numbering(string Temp01)                                 perfect {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
@@ -1280,12 +1440,69 @@
    File02 << S_EncryptionUINT64(std::chrono::time_point_cast < std::chrono::seconds > (std::chrono::system_clock::now()).time_since_epoch().count());
    return "T|Successfully save the data.";
   }
+  string L_Lang(insize Vrab01, string Temp01 = "")                  perfect
+  {
+   if(Temp01 != "")
+   {
+    string Temp02 = "F"; Vect0001.clear(); Vect0002.clear(); Vect0002.push_back("");
+    while(true)
+    {
+     if(!L_Exist(Temp01)) break;
+     std::ifstream File01(Temp01); stream Strn01; Strn01 << File01.rdbuf(); File01.close(); statics string Temp03 = "</> " + Strn01.str() + "</> ";
+
+     insize Vrab02 = 0; statics insize Vrab03 = Temp03.size();
+     int1 Vrab04 = false; // On Read
+     int1 Vrab05 = false; // First Append to ignore spaces and enter on comment
+     insize Vrab06 = rinsize(-1); // Current text num
+     int1 Vrab07 = false; // Complete/Save last read.
+     insize Vrab08 = rinsize(-1); // Last read text num
+     string Temp04 = "<none>"; // on read
+     while(Vrab02 < Vrab03)
+     {
+      if(Vrab07) if(Vrab08 < Vect0001.size()) 
+      {insize Vrab09 = Vect0002.size(); if(Temp04 == ""){Vrab09 = 0;} else {Vect0002.push_back("");} Vect0002[Vrab09] = Temp04; Vect0001[Vrab08] = Vrab09; Temp04 = ""; Vrab07 = false;}
+      Vrab08 = Vrab06;
+
+      // Commands
+      if(!(Vrab04 == false && Vrab05 == true))
+      if(Vrab02 + 2 < Vrab03) if(Temp03[Vrab02] == '<')
+      {
+       if(Temp03[Vrab02 + 1] == '/' && Temp03[Vrab02 + 2] == '>')
+       {
+        Vrab06 += 1;
+        if(!Vrab04) Vrab02 -= 1; Vrab04 = true; Vrab05 = true; Vrab07 = true; Vrab02 += 3; continue;
+       }
+       if(Temp03[Vrab02 + 1] == ':')
+       {
+        string Temp05; insize Vrab09 = Vrab02 + 2; while(Vrab09 < Vrab03){if(Temp03[Vrab09] == '>') break; Temp05 += Temp03[Vrab09]; Vrab09 += 1;} if(Vrab09 == Vrab03) continue; Vrab06 = L_Numbering(Temp05);
+        if(!Vrab04) Vrab02 -= 1; Vrab04 = true; Vrab05 = true; Vrab07 = true; Vrab02 += Temp05.size() + 3; continue;
+       }
+      }
+      if(Vrab04)
+      {
+       if(Vrab06 >= Vect0001.size()) Vect0001.resize(Vrab06 + 1);
+       statics int8 Vrab09 = Temp03[Vrab02]; Temp04.push_back(Vrab09);
+       if(Vrab05)
+       {
+        if(Vrab02 + 1 < Vrab03) if(Temp03[Vrab02] == '/' && Temp03[Vrab02 + 1] == '/'){Temp04 = ""; Vrab04 = false;}
+        if(Vrab09 == '\n') Temp04 = "";
+        if(Vrab04) if(Vrab09 != ' ' && Vrab09 != '\n') Vrab05 = false;
+       }
+      } else {if(Vrab05) if(Temp03[Vrab02] == '\n') Vrab04 = true;}
+
+      Vrab02 += 1;
+     }
+
+     Temp02 = "T"; break;
+    } return Temp02;
+   } else {if(Vrab01 < Vect0001.size()){return Vect0002[Vect0001[Vrab01]];} else {return "";}}
+  }
 
  // Main Functions
   int0 M_EngineInput(DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01) perfect
   {
    int1 Vrab01 = false;
-   auto Ikey02 = Ikey01->GetState(); statics uint8 Vrab02 = ruint8(L_Rounding(256.0 / rxint64(Vrab0003)) - 1), Vrab03 = Vrab02 - ruint8(L_Rounding(32.0 / rxint64(Vrab0003))); 
+   auto Ikey02 = Ikey01->GetState(); statics uint8 Vrab02 = ruint8(L_Rounding(256.0 / rxint64(Vrab0003)) - 1), Vrab03 = Vrab02 - ruint8(L_Rounding(64.0 / rxint64(Vrab0003))); 
    if(Ikey02.D0){Vrab01 = true; if((++Input->MAIN_0) == Vrab02) Input->MAIN_0 = Vrab03;} else {Input->MAIN_0 = 0ui8;}
    if(Ikey02.D1){Vrab01 = true; if((++Input->MAIN_1) == Vrab02) Input->MAIN_1 = Vrab03;} else {Input->MAIN_1 = 0ui8;}
    if(Ikey02.D2){Vrab01 = true; if((++Input->MAIN_2) == Vrab02) Input->MAIN_2 = Vrab03;} else {Input->MAIN_2 = 0ui8;}
@@ -1389,19 +1606,37 @@
    Input->MOUS_SCROLL = Input->MOUS_SCROLL2 - Imou02.scrollWheelValue;
    Input->MOUS_SCROLL2 = Imou02.scrollWheelValue;
 
-   auto Ipad02 = Ipad01->GetState(0);
-			Input->PADS_ON = Ipad02.connected;
-			if(Input->PADS_ON)
-			{
-    if(Ipad02.IsDPadUpPressed()){Vrab01 = true; if((++Input->PADS_UP) == Vrab02) Input->PADS_UP = Vrab03;} else {Input->PADS_UP = 0ui8;}
-    if(Ipad02.IsDPadLeftPressed()){Vrab01 = true; if((++Input->PADS_LEFT) == Vrab02) Input->PADS_LEFT = Vrab03;} else {Input->PADS_LEFT = 0ui8;}
-    if(Ipad02.IsDPadDownPressed()){Vrab01 = true; if((++Input->PADS_DOWN) == Vrab02) Input->PADS_DOWN = Vrab03;} else {Input->PADS_DOWN = 0ui8;}
-    if(Ipad02.IsDPadRightPressed()){Vrab01 = true; if((++Input->PADS_RIGHT) == Vrab02) Input->PADS_RIGHT = Vrab03;} else {Input->PADS_RIGHT = 0ui8;}
-			} else
-			{
-			
-			}
-            
+   std::vector < std::vector < int1 > > Vect01(4, std::vector < int1 > (9));
+   for(insize Vrab04 = 1; Vrab04 < 5; Vrab04++)
+   {
+    auto Ipad02 = Ipad01->GetState(Vrab04 - 1); statics insize Vrab05 = Vrab04 - 1;
+			 Input->PADS_ON[Vrab04] = Ipad02.connected; if(!Input->PADS_ON[Vrab04]) continue;
+    if(Ipad02.dpad.up)   {Vect01[Vrab05][0] = true; if((++Input->PADS_UP[Vrab04]) == Vrab02) Input->PADS_UP[Vrab04] = Vrab03;} else {Input->PADS_UP[Vrab04] = 0ui8;}
+    if(Ipad02.dpad.left) {Vect01[Vrab05][1] = true; if((++Input->PADS_LEFT[Vrab04]) == Vrab02) Input->PADS_LEFT[Vrab04] = Vrab03;} else {Input->PADS_LEFT[Vrab04] = 0ui8;}
+    if(Ipad02.dpad.down) {Vect01[Vrab05][2] = true; if((++Input->PADS_DOWN[Vrab04]) == Vrab02) Input->PADS_DOWN[Vrab04] = Vrab03;} else {Input->PADS_DOWN[Vrab04] = 0ui8;}
+    if(Ipad02.dpad.right){Vect01[Vrab05][3] = true; if((++Input->PADS_RIGHT[Vrab04]) == Vrab02) Input->PADS_RIGHT[Vrab04] = Vrab03;} else {Input->PADS_RIGHT[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.a) {Vect01[Vrab05][4] = true; if((++Input->PADS_A[Vrab04]) == Vrab02) Input->PADS_A[Vrab04] = Vrab03;} else {Input->PADS_A[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.b) {Vect01[Vrab05][5] = true; if((++Input->PADS_B[Vrab04]) == Vrab02) Input->PADS_B[Vrab04] = Vrab03;} else {Input->PADS_B[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.x) {Vect01[Vrab05][6] = true; if((++Input->PADS_X[Vrab04]) == Vrab02) Input->PADS_X[Vrab04] = Vrab03;} else {Input->PADS_X[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.y) {Vect01[Vrab05][7] = true; if((++Input->PADS_Y[Vrab04]) == Vrab02) Input->PADS_Y[Vrab04] = Vrab03;} else {Input->PADS_Y[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.start){Vect01[Vrab05][8] = true; if((++Input->PADS_START[Vrab04]) == Vrab02) Input->PADS_START[Vrab04] = Vrab03;} else {Input->PADS_START[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.back) {Vect01[Vrab05][9] = true; if((++Input->PADS_BACK[Vrab04]) == Vrab02) Input->PADS_BACK[Vrab04] = Vrab03;} else {Input->PADS_BACK[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.menu) {Vect01[Vrab05][10] = true; if((++Input->PADS_MENU[Vrab04]) == Vrab02) Input->PADS_MENU[Vrab04] = Vrab03;} else {Input->PADS_MENU[Vrab04] = 0ui8;}
+    if(Ipad02.buttons.view) {Vect01[Vrab05][11] = true; if((++Input->PADS_VIEW[Vrab04]) == Vrab02) Input->PADS_VIEW[Vrab04] = Vrab03;} else {Input->PADS_VIEW[Vrab04] = 0ui8;}
+   }
+   if(Vect01[0][0] || Vect01[1][0] || Vect01[2][0] || Vect01[3][0])    {Vrab01 = true; if((++Input->PADS_UP[0]) == Vrab02) Input->PADS_UP[0] = Vrab03;} else {Input->PADS_UP[0] = 0ui8;}
+   if(Vect01[0][1] || Vect01[1][1] || Vect01[2][1] || Vect01[3][1])    {Vrab01 = true; if((++Input->PADS_LEFT[0]) == Vrab02) Input->PADS_LEFT[0] = Vrab03;} else {Input->PADS_LEFT[0] = 0ui8;}
+   if(Vect01[0][2] || Vect01[1][2] || Vect01[2][2] || Vect01[3][2])    {Vrab01 = true; if((++Input->PADS_DOWN[0]) == Vrab02) Input->PADS_DOWN[0] = Vrab03;} else {Input->PADS_DOWN[0] = 0ui8;}
+   if(Vect01[0][3] || Vect01[1][3] || Vect01[2][3] || Vect01[3][3])    {Vrab01 = true; if((++Input->PADS_RIGHT[0]) == Vrab02) Input->PADS_RIGHT[0] = Vrab03;} else {Input->PADS_RIGHT[0] = 0ui8;}
+   if(Vect01[0][4] || Vect01[1][4] || Vect01[2][4] || Vect01[3][4])    {Vrab01 = true; if((++Input->PADS_A[0]) == Vrab02) Input->PADS_A[0] = Vrab03;} else {Input->PADS_A[0] = 0ui8;}
+   if(Vect01[0][5] || Vect01[1][5] || Vect01[2][5] || Vect01[3][5])    {Vrab01 = true; if((++Input->PADS_B[0]) == Vrab02) Input->PADS_B[0] = Vrab03;} else {Input->PADS_B[0] = 0ui8;}
+   if(Vect01[0][6] || Vect01[1][6] || Vect01[2][6] || Vect01[3][6])    {Vrab01 = true; if((++Input->PADS_X[0]) == Vrab02) Input->PADS_X[0] = Vrab03;} else {Input->PADS_X[0] = 0ui8;}
+   if(Vect01[0][7] || Vect01[1][7] || Vect01[2][7] || Vect01[3][7])    {Vrab01 = true; if((++Input->PADS_Y[0]) == Vrab02) Input->PADS_Y[0] = Vrab03;} else {Input->PADS_Y[0] = 0ui8;}
+   if(Vect01[0][8] || Vect01[1][8] || Vect01[2][8] || Vect01[3][8])    {Vrab01 = true; if((++Input->PADS_START[0]) == Vrab02) Input->PADS_START[0] = Vrab03;} else {Input->PADS_START[0] = 0ui8;}
+   if(Vect01[0][9] || Vect01[1][9] || Vect01[2][9] || Vect01[3][9])    {Vrab01 = true; if((++Input->PADS_BACK[0]) == Vrab02) Input->PADS_BACK[0] = Vrab03;} else {Input->PADS_BACK[0] = 0ui8;}
+   if(Vect01[0][10] || Vect01[1][10] || Vect01[2][10] || Vect01[3][10]){Vrab01 = true; if((++Input->PADS_MENU[0]) == Vrab02) Input->PADS_MENU[0] = Vrab03;} else {Input->PADS_MENU[0] = 0ui8;}
+   if(Vect01[0][11] || Vect01[1][11] || Vect01[2][11] || Vect01[3][11]){Vrab01 = true; if((++Input->PADS_VIEW[0]) == Vrab02) Input->PADS_VIEW[0] = Vrab03;} else {Input->PADS_VIEW[0] = 0ui8;}
+
    if(Vrab01){if((++Input->RESH_ANY) == Vrab02) Input->RESH_ANY = Vrab03;} else {Input->RESH_ANY = 0ui8;}
   }
   int0 M_EngineFrame(xint64 Vrab01, xint64 Vrab02, uint32 Vrab03, uint32 Vrab04, DirectX::Keyboard *Ikey01, DirectX::GamePad *Ipad01, DirectX::Mouse *Imou01) perfect
@@ -1485,6 +1720,8 @@
  // External-Included Dependencies Program's Main Functions
   int0 EIDP_LF2Enchanted(uint32 Vrab01, uint64 Vrab02) perfect
   {
+   if(Enchanted->Vrab015 != Enchanted->Setting[0].Lang) L_Lang(0, L_Directory(Enchanted->Setting[0].Address) + (Enchanted->Setting[0].Lang == 0 ? "langEN" : (Enchanted->Setting[0].Lang == 1 ? "langID" : "langRU")) + ".txt"); Enchanted->Vrab015 = Enchanted->Setting[0].Lang;
+
    // Initialization
     if(Enchanted->Vrab001)
     {
@@ -1503,6 +1740,69 @@
      Enchanted->Setting_Load(); Enchanted->Setting_Save(); Enchanted->Setting[0].Fullscreen = Vrab0009;
      G_Adjust_Window(Enchanted->Setting[0].Width, Enchanted->Setting[0].Height, Enchanted->Setting[0].Fullscreen, "Little Fighter 2 : Enchanted");
      Enchanted->Engine1->Begin(L_Directory(Enchanted->Setting[0].Address));
+
+     // Language Load.
+     {
+      statics string Temp01 = L_Directory(Enchanted->Setting[0].Address);
+      if(L_Exist(Temp01 + "lang.ini")) while(true)
+      {
+       std::ifstream File01(Temp01 + "lang.ini"); if(!File01.is_open()) break;
+       insize Vrab03 = 0, Vrab04 = 0, Vrab05 = 0; string Temp02; 
+       while(File01)
+       {
+        if(Vrab03 != 13){File01 >> Temp02;} else {Vrab03 = 1;} if(!File01) break; if(Temp02.at(0) == '#'){std::getline(File01, Temp02); continue;} if(Temp02.size() > 1) if(Temp02.at(0) == '/' && Temp02.at(1) == '/'){std::getline(File01, Temp02); continue;}
+        switch(Vrab03)
+        {
+         case 0:
+          if(Temp02 == "<text>"){Vrab03 = 1; Vrab04 = Enchanted->Text.size(); Enchanted->Text.resize(Vrab04 + 1); File01 >> Enchanted->Text[Vrab04].Address; continue;}
+         break;
+         case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12:
+          if(Temp02 == "<text_end>") {Vrab03 = 0; continue;}
+
+          if(Temp02.at(0) == '['){Vrab03 = 11; Vrab05 = Enchanted->Text[Vrab04].Shift.size(); Enchanted->Text[Vrab04].Shift.resize(Vrab05 + 1); statics insize Vrab06 = Temp02.size(); if(Vrab06 > 1){Temp02 = string(Temp02, 1, Vrab06 - 1);} else {continue;}}
+          if(Vrab03 == 11) if(Temp02.at(0) == ']'){Vrab03 = 13; statics insize Vrab06 = Temp02.size(); if(Vrab06 > 1){Temp02 = string(Temp02, 1, Vrab06 - 1);} else {Vrab03 = 1;} continue;}
+          if(Vrab03 == 11) if(Temp02.at(0) == 'c' || Temp02.at(0) == 'C'){if(Temp02.at(0) == 'c'){Enchanted->Text[Vrab04].Shift[Vrab05].c = true;} else {Enchanted->Text[Vrab04].Shift[Vrab05].C = true;} statics insize Vrab06 = Temp02.size(); if(Vrab06 > 1){Temp02 = string(Temp02, 1, Vrab06 - 1);} else {continue;}}
+          if(Vrab03 == 11) {Vrab03 = 12; statics insize Vrab06 = Temp02.size(); insize Vrab07 = 0; while(Vrab06 != Vrab07){if(Temp02.at(Vrab07) == ',' || Temp02.at(Vrab07) == ']') break; Vrab07 += 1;} string Temp03; if(Vrab06 != Vrab07){Temp03 = string(Temp02, 0, Vrab07);} else {Temp03 = Temp02;} Enchanted->Text[Vrab04].Shift[Vrab05].x = L_Numbering(Temp03); if(Vrab06 - Vrab07 > 1){insize Vrab08 = (Temp02.at(Vrab07) == ']') ? 0 : 1; Temp02 = string(Temp02, Vrab07 + Vrab08, Vrab06 - Vrab07 - Vrab08);} else {continue;}}
+          if(Vrab03 == 12) if(Temp02.at(0) == ']'){Vrab03 = 13; statics insize Vrab06 = Temp02.size(); if(Vrab06 > 1){Temp02 = string(Temp02, 1, Vrab06 - 1);} else {Vrab03 = 1;} continue;}
+          if(Vrab03 == 12) {Vrab03 = 11; statics insize Vrab06 = Temp02.size(); insize Vrab07 = 0; while(Vrab06 != Vrab07){if(Temp02.at(Vrab07) == ',' || Temp02.at(Vrab07) == ']') break; Vrab07 += 1;} string Temp03; if(Vrab06 != Vrab07){Temp03 = string(Temp02, 0, Vrab07);} else {Temp03 = Temp02;} Enchanted->Text[Vrab04].Shift[Vrab05].y = L_Numbering(Temp03); if(Vrab06 - Vrab07 > 1){insize Vrab08 = (Temp02.at(Vrab07) == ']') ? 0 : 1; Temp02 = string(Temp02, Vrab07 + Vrab08, Vrab06 - Vrab07 - Vrab08);} else {continue;}}
+          if(Vrab03 == 11) if(Temp02.at(0) == ']'){Vrab03 = 13; statics insize Vrab06 = Temp02.size(); if(Vrab06 > 1){Temp02 = string(Temp02, 1, Vrab06 - 1);} else {Vrab03 = 1;} continue;}
+
+          if(Temp02 == "x:")     {File01 >> Temp02; Enchanted->Text[Vrab04].x = L_Numbering(Temp02); continue;}
+          if(Temp02 == "y:")     {File01 >> Temp02; Enchanted->Text[Vrab04].y = L_Numbering(Temp02); continue;}
+          if(Temp02 == "w:")     {File01 >> Temp02; Enchanted->Text[Vrab04].w = L_Numbering(Temp02); continue;}
+          if(Temp02 == "h:")     {File01 >> Temp02; Enchanted->Text[Vrab04].h = L_Numbering(Temp02); continue;}
+          if(Temp02 == "row:")   {File01 >> Temp02; Enchanted->Text[Vrab04].row = L_Numbering(Temp02); continue;}
+          if(Temp02 == "col:")   {File01 >> Temp02; Enchanted->Text[Vrab04].col = L_Numbering(Temp02); continue;}
+          if(Temp02 == "type:")  {File01 >> Temp02; Enchanted->Text[Vrab04].type = L_Numbering(Temp02); continue;}
+          if(Temp02 == "num:")   {File01 >> Temp02; Enchanted->Text[Vrab04].num[0] = L_Numbering(Temp02); Vrab03 = 2; continue;}
+          if(Temp02 == "sizex:") {File01 >> Temp02; Enchanted->Text[Vrab04].sizex = L_Numbering(Temp02); continue;}
+          if(Temp02 == "sizey:") {File01 >> Temp02; Enchanted->Text[Vrab04].sizey = L_Numbering(Temp02); continue;}
+          if(Temp02 == "shiftx:"){File01 >> Temp02; Enchanted->Text[Vrab04].shiftx = L_Numbering(Temp02); continue;}
+          if(Temp02 == "shifty:"){File01 >> Temp02; Enchanted->Text[Vrab04].shifty = L_Numbering(Temp02); continue;}
+          if(Temp02 == "caps:")  {File01 >> Temp02; Enchanted->Text[Vrab04].caps = L_Numbering(Temp02); continue;}
+          if(Temp02 == "caps2:") {File01 >> Temp02; Enchanted->Text[Vrab04].caps2 = L_Numbering(Temp02); continue;}
+          if(Temp02 == "stx:")   {File01 >> Temp02; Enchanted->Text[Vrab04].stx = L_Numbering(Temp02); continue;}
+          if(Temp02 == "sty:")   {File01 >> Temp02; Enchanted->Text[Vrab04].sty = L_Numbering(Temp02); continue;}
+
+          if(Vrab03 == 2) {Vrab03 = 3; Enchanted->Text[Vrab04].num[1] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 3) {Vrab03 = 4; Enchanted->Text[Vrab04].num[2] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 4) {Vrab03 = 5; Enchanted->Text[Vrab04].num[3] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 5) {Vrab03 = 6; Enchanted->Text[Vrab04].num[4] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 6) {Vrab03 = 7; Enchanted->Text[Vrab04].num[5] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 7) {Vrab03 = 8; Enchanted->Text[Vrab04].num[6] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 8) {Vrab03 = 9; Enchanted->Text[Vrab04].num[7] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 9) {Vrab03 = 10; Enchanted->Text[Vrab04].num[8] = L_Numbering(Temp02); continue;}
+          if(Vrab03 == 10){Vrab03 = 1; Enchanted->Text[Vrab04].num[9] = L_Numbering(Temp02); continue;}
+         break;
+         default: break;
+        }
+       }
+       break;
+      }
+      insize Vrab03 = Enchanted->Text.size();
+      while(Vrab03 != 0)
+      {Vrab03 -= 1; Enchanted->Text[Vrab03].Pic_Index = P_Load_Pic(Temp01 + Enchanted->Text[Vrab03].Address, Enchanted->Text[Vrab03].x, Enchanted->Text[Vrab03].y, (ruint32(Enchanted->Text[Vrab03].w) + 1) * ruint32(Enchanted->Text[Vrab03].row), (ruint32(Enchanted->Text[Vrab03].h) + 1) * ruint32(Enchanted->Text[Vrab03].col));}
+     }
 
      // Background(s) Load.
      {
@@ -1533,7 +1833,7 @@
      // Interface Load.
      {
       statics string Temp01 = L_Directory(Enchanted->Setting[0].Address + Enchanted->Setting[0].Address_Interface), Temp02 = ".bmp";
-      Enchanted->Vect004.push_back(P_Load_Pic(Temp01 + "WORDS1" + Temp02, 0, 0, 255, 255));         // Index : 0
+      Enchanted->Vect004.push_back(P_Load_Pic(Temp01 + "WORDS" + Temp02, 0, 0, 255, 255));         // Index : 0
       Enchanted->Vect004.push_back(P_Load_Pic(Temp01 + "WORDS2" + Temp02, 0, 0, 255, 255));         // Index : 1
       Enchanted->Vect004.push_back(P_Load_Pic(Temp01 + "WORDS3" + Temp02, 0, 0, 255, 255));         // Index : 2
       Enchanted->Vect004.push_back(P_Load_Pic(Temp01 + "WORDS4" + Temp02, 0, 0, 255, 255));         // Index : 3
@@ -1685,10 +1985,12 @@
     }
 
    // Inputs
+    struct Strc01 {int64 Vrab001, Vrab002; int8 Vrab003; int64 Vrab004, Vrab005;};
     remains std::vector < int8 > Vect01;                 // Overall Input.
     remains std::vector < std::vector < int8 > > Vect02; // Player's Input.
+    remains std::vector < Strc01 > Vect03;               // Touch/Mouse Input.
     {
-     Vect01.resize(8); std::vector < int1 > Vect03(8, false);
+     Vect01.resize(8); std::vector < int1 > Vect04(8, false);
      insize Vrab03 = Enchanted->Setting[0].Player.size(); Vect02.resize(Vrab03);
      while(Vrab03 != 0)
      {
@@ -1709,43 +2011,58 @@
       statics int1 Vrab17 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Defend) > 0;
       statics int1 Vrab18 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Jump) > 0;
       statics int1 Vrab19 = L_Input(Enchanted->Setting[0].Player[Vrab03].P_Command) > 0;
-      if(Vrab04 || Vrab12){if(Vect02[Vrab03][0] < 0){Vect02[Vrab03][0] = 1;} else {Vect02[Vrab03][0] += 1;} if(Vect02[Vrab03][0] == 100) Vect02[Vrab03][0] = 70;} else {if(Vect02[Vrab03][0] > 0){Vect02[Vrab03][0] = -100;} else {if(Vect02[Vrab03][0] != 0) Vect02[Vrab03][0] += 1;}} if(Vect02[Vrab03][0] > 0) Vect03[0] = true;
-      if(Vrab05 || Vrab13){if(Vect02[Vrab03][1] < 0){Vect02[Vrab03][1] = 1;} else {Vect02[Vrab03][1] += 1;} if(Vect02[Vrab03][1] == 100) Vect02[Vrab03][1] = 70;} else {if(Vect02[Vrab03][1] > 0){Vect02[Vrab03][1] = -100;} else {if(Vect02[Vrab03][1] != 0) Vect02[Vrab03][1] += 1;}} if(Vect02[Vrab03][1] > 0) Vect03[1] = true;
-      if(Vrab06 || Vrab14){if(Vect02[Vrab03][2] < 0){Vect02[Vrab03][2] = 1;} else {Vect02[Vrab03][2] += 1;} if(Vect02[Vrab03][2] == 100) Vect02[Vrab03][2] = 70;} else {if(Vect02[Vrab03][2] > 0){Vect02[Vrab03][2] = -100;} else {if(Vect02[Vrab03][2] != 0) Vect02[Vrab03][2] += 1;}} if(Vect02[Vrab03][2] > 0) Vect03[2] = true;
-      if(Vrab07 || Vrab15){if(Vect02[Vrab03][3] < 0){Vect02[Vrab03][3] = 1;} else {Vect02[Vrab03][3] += 1;} if(Vect02[Vrab03][3] == 100) Vect02[Vrab03][3] = 70;} else {if(Vect02[Vrab03][3] > 0){Vect02[Vrab03][3] = -100;} else {if(Vect02[Vrab03][3] != 0) Vect02[Vrab03][3] += 1;}} if(Vect02[Vrab03][3] > 0) Vect03[3] = true;
-      if(Vrab08 || Vrab16){if(Vect02[Vrab03][4] < 0){Vect02[Vrab03][4] = 1;} else {Vect02[Vrab03][4] += 1;} if(Vect02[Vrab03][4] == 100) Vect02[Vrab03][4] = 70;} else {if(Vect02[Vrab03][4] > 0){Vect02[Vrab03][4] = -100;} else {if(Vect02[Vrab03][4] != 0) Vect02[Vrab03][4] += 1;}} if(Vect02[Vrab03][4] > 0) Vect03[4] = true;
-      if(Vrab09 || Vrab17){if(Vect02[Vrab03][5] < 0){Vect02[Vrab03][5] = 1;} else {Vect02[Vrab03][5] += 1;} if(Vect02[Vrab03][5] == 100) Vect02[Vrab03][5] = 70;} else {if(Vect02[Vrab03][5] > 0){Vect02[Vrab03][5] = -100;} else {if(Vect02[Vrab03][5] != 0) Vect02[Vrab03][5] += 1;}} if(Vect02[Vrab03][5] > 0) Vect03[5] = true;
-      if(Vrab10 || Vrab18){if(Vect02[Vrab03][6] < 0){Vect02[Vrab03][6] = 1;} else {Vect02[Vrab03][6] += 1;} if(Vect02[Vrab03][6] == 100) Vect02[Vrab03][6] = 70;} else {if(Vect02[Vrab03][6] > 0){Vect02[Vrab03][6] = -100;} else {if(Vect02[Vrab03][6] != 0) Vect02[Vrab03][6] += 1;}} if(Vect02[Vrab03][6] > 0) Vect03[6] = true;
-      if(Vrab11 || Vrab19){if(Vect02[Vrab03][7] < 0){Vect02[Vrab03][7] = 1;} else {Vect02[Vrab03][7] += 1;} if(Vect02[Vrab03][7] == 100) Vect02[Vrab03][7] = 70;} else {if(Vect02[Vrab03][7] > 0){Vect02[Vrab03][7] = -100;} else {if(Vect02[Vrab03][7] != 0) Vect02[Vrab03][7] += 1;}} if(Vect02[Vrab03][7] > 0) Vect03[7] = true;
+      if(Vect02[Vrab03][0] != 0){Vect02[Vrab03][0] += 1; if(Vect02[Vrab03][0] == 100) Vect02[Vrab03][0] = 70;} if(Vrab04 || Vrab12){if(Vect02[Vrab03][0] <= 0) Vect02[Vrab03][0] = 1;} else {if(Vect02[Vrab03][0] > 0) Vect02[Vrab03][0] = -100;} if(Vect02[Vrab03][0] > 0) Vect04[0] = true;
+      if(Vect02[Vrab03][1] != 0){Vect02[Vrab03][1] += 1; if(Vect02[Vrab03][1] == 100) Vect02[Vrab03][1] = 70;} if(Vrab05 || Vrab13){if(Vect02[Vrab03][1] <= 0) Vect02[Vrab03][1] = 1;} else {if(Vect02[Vrab03][1] > 0) Vect02[Vrab03][1] = -100;} if(Vect02[Vrab03][1] > 0) Vect04[1] = true;
+      if(Vect02[Vrab03][2] != 0){Vect02[Vrab03][2] += 1; if(Vect02[Vrab03][2] == 100) Vect02[Vrab03][2] = 70;} if(Vrab06 || Vrab14){if(Vect02[Vrab03][2] <= 0) Vect02[Vrab03][2] = 1;} else {if(Vect02[Vrab03][2] > 0) Vect02[Vrab03][2] = -100;} if(Vect02[Vrab03][2] > 0) Vect04[2] = true;
+      if(Vect02[Vrab03][3] != 0){Vect02[Vrab03][3] += 1; if(Vect02[Vrab03][3] == 100) Vect02[Vrab03][3] = 70;} if(Vrab07 || Vrab15){if(Vect02[Vrab03][3] <= 0) Vect02[Vrab03][3] = 1;} else {if(Vect02[Vrab03][3] > 0) Vect02[Vrab03][3] = -100;} if(Vect02[Vrab03][3] > 0) Vect04[3] = true;
+      if(Vect02[Vrab03][4] != 0){Vect02[Vrab03][4] += 1; if(Vect02[Vrab03][4] == 100) Vect02[Vrab03][4] = 70;} if(Vrab08 || Vrab16){if(Vect02[Vrab03][4] <= 0) Vect02[Vrab03][4] = 1;} else {if(Vect02[Vrab03][4] > 0) Vect02[Vrab03][4] = -100;} if(Vect02[Vrab03][4] > 0) Vect04[4] = true;
+      if(Vect02[Vrab03][5] != 0){Vect02[Vrab03][5] += 1; if(Vect02[Vrab03][5] == 100) Vect02[Vrab03][5] = 70;} if(Vrab09 || Vrab17){if(Vect02[Vrab03][5] <= 0) Vect02[Vrab03][5] = 1;} else {if(Vect02[Vrab03][5] > 0) Vect02[Vrab03][5] = -100;} if(Vect02[Vrab03][5] > 0) Vect04[5] = true;
+      if(Vect02[Vrab03][6] != 0){Vect02[Vrab03][6] += 1; if(Vect02[Vrab03][6] == 100) Vect02[Vrab03][6] = 70;} if(Vrab10 || Vrab18){if(Vect02[Vrab03][6] <= 0) Vect02[Vrab03][6] = 1;} else {if(Vect02[Vrab03][6] > 0) Vect02[Vrab03][6] = -100;} if(Vect02[Vrab03][6] > 0) Vect04[6] = true;
+      if(Vect02[Vrab03][7] != 0){Vect02[Vrab03][7] += 1; if(Vect02[Vrab03][7] == 100) Vect02[Vrab03][7] = 70;} if(Vrab11 || Vrab19){if(Vect02[Vrab03][7] <= 0) Vect02[Vrab03][7] = 1;} else {if(Vect02[Vrab03][7] > 0) Vect02[Vrab03][7] = -100;} if(Vect02[Vrab03][7] > 0) Vect04[7] = true;
      }
 
-     if(L_Input(Vrab0018) > 0) Vect03[0] = true;
-     if(L_Input(Vrab0019) > 0) Vect03[1] = true;
-     if(L_Input(Vrab0020) > 0) Vect03[2] = true;
-     if(L_Input(Vrab0021) > 0) Vect03[3] = true;
-     if(L_Input(Vrab0016) > 0) Vect03[4] = true;
-     if(L_Input(Vrab0017) > 0) Vect03[5] = true;
-     if(L_Input(Vrab0024) > 0) Vect03[0] = true;
-     if(L_Input(Vrab0025) > 0) Vect03[1] = true;
-     if(L_Input(Vrab0026) > 0) Vect03[2] = true;
-     if(L_Input(Vrab0027) > 0) Vect03[3] = true;
-     if(L_Input(Vrab0022) > 0) Vect03[4] = true;
-     if(L_Input(Vrab0023) > 0) Vect03[5] = true;
-     if(Vect03[0]){if(Vect01[0] < 0){Vect01[0] = 1;} else {Vect01[0] += 1;} if(Vect01[0] == 100) Vect01[0] = 70;} else {if(Vect01[0] > 0){Vect01[0] = -100;} else {if(Vect01[0] != 0) Vect01[0] += 1;}}
-     if(Vect03[1]){if(Vect01[1] < 0){Vect01[1] = 1;} else {Vect01[1] += 1;} if(Vect01[1] == 100) Vect01[1] = 70;} else {if(Vect01[1] > 0){Vect01[1] = -100;} else {if(Vect01[1] != 0) Vect01[1] += 1;}}
-     if(Vect03[2]){if(Vect01[2] < 0){Vect01[2] = 1;} else {Vect01[2] += 1;} if(Vect01[2] == 100) Vect01[2] = 70;} else {if(Vect01[2] > 0){Vect01[2] = -100;} else {if(Vect01[2] != 0) Vect01[2] += 1;}}
-     if(Vect03[3]){if(Vect01[3] < 0){Vect01[3] = 1;} else {Vect01[3] += 1;} if(Vect01[3] == 100) Vect01[3] = 70;} else {if(Vect01[3] > 0){Vect01[3] = -100;} else {if(Vect01[3] != 0) Vect01[3] += 1;}}
-     if(Vect03[4]){if(Vect01[4] < 0){Vect01[4] = 1;} else {Vect01[4] += 1;} if(Vect01[4] == 100) Vect01[4] = 70;} else {if(Vect01[4] > 0){Vect01[4] = -100;} else {if(Vect01[4] != 0) Vect01[4] += 1;}}
-     if(Vect03[5]){if(Vect01[5] < 0){Vect01[5] = 1;} else {Vect01[5] += 1;} if(Vect01[5] == 100) Vect01[5] = 70;} else {if(Vect01[5] > 0){Vect01[5] = -100;} else {if(Vect01[5] != 0) Vect01[5] += 1;}}
-     if(Vect03[6]){if(Vect01[6] < 0){Vect01[6] = 1;} else {Vect01[6] += 1;} if(Vect01[6] == 100) Vect01[6] = 70;} else {if(Vect01[6] > 0){Vect01[6] = -100;} else {if(Vect01[6] != 0) Vect01[6] += 1;}}
-     if(Vect03[7]){if(Vect01[7] < 0){Vect01[7] = 1;} else {Vect01[7] += 1;} if(Vect01[7] == 100) Vect01[7] = 70;} else {if(Vect01[7] > 0){Vect01[7] = -100;} else {if(Vect01[7] != 0) Vect01[7] += 1;}}
+     if(L_Input(Vrab0018) > 0) Vect04[0] = true; if(L_Input(Vrab0024) > 0) Vect04[0] = true;
+     if(L_Input(Vrab0019) > 0) Vect04[1] = true; if(L_Input(Vrab0025) > 0) Vect04[1] = true;
+     if(L_Input(Vrab0020) > 0) Vect04[2] = true; if(L_Input(Vrab0026) > 0) Vect04[2] = true;
+     if(L_Input(Vrab0021) > 0) Vect04[3] = true; if(L_Input(Vrab0027) > 0) Vect04[3] = true;
+     if(L_Input(Vrab0016) > 0) Vect04[4] = true; if(L_Input(Vrab0022) > 0) Vect04[4] = true;
+     if(L_Input(Vrab0017) > 0) Vect04[5] = true; if(L_Input(Vrab0023) > 0) Vect04[5] = true;
+     if(Vect01[0] != 0){Vect01[0] += 1; if(Vect01[0] == 100) Vect01[0] = 70;} if(Vect04[0]){if(Vect01[0] <= 0) Vect01[0] = 1;} else {if(Vect01[0] > 0) Vect01[0] = -100;}
+     if(Vect01[1] != 0){Vect01[1] += 1; if(Vect01[1] == 100) Vect01[1] = 70;} if(Vect04[1]){if(Vect01[1] <= 0) Vect01[1] = 1;} else {if(Vect01[1] > 0) Vect01[1] = -100;}
+     if(Vect01[2] != 0){Vect01[2] += 1; if(Vect01[2] == 100) Vect01[2] = 70;} if(Vect04[2]){if(Vect01[2] <= 0) Vect01[2] = 1;} else {if(Vect01[2] > 0) Vect01[2] = -100;}
+     if(Vect01[3] != 0){Vect01[3] += 1; if(Vect01[3] == 100) Vect01[3] = 70;} if(Vect04[3]){if(Vect01[3] <= 0) Vect01[3] = 1;} else {if(Vect01[3] > 0) Vect01[3] = -100;}
+     if(Vect01[4] != 0){Vect01[4] += 1; if(Vect01[4] == 100) Vect01[4] = 70;} if(Vect04[4]){if(Vect01[4] <= 0) Vect01[4] = 1;} else {if(Vect01[4] > 0) Vect01[4] = -100;}
+     if(Vect01[5] != 0){Vect01[5] += 1; if(Vect01[5] == 100) Vect01[5] = 70;} if(Vect04[5]){if(Vect01[5] <= 0) Vect01[5] = 1;} else {if(Vect01[5] > 0) Vect01[5] = -100;}
+     if(Vect01[6] != 0){Vect01[6] += 1; if(Vect01[6] == 100) Vect01[6] = 70;} if(Vect04[6]){if(Vect01[6] <= 0) Vect01[6] = 1;} else {if(Vect01[6] > 0) Vect01[6] = -100;}
+     if(Vect01[7] != 0){Vect01[7] += 1; if(Vect01[7] == 100) Vect01[7] = 70;} if(Vect04[7]){if(Vect01[7] <= 0) Vect01[7] = 1;} else {if(Vect01[7] > 0) Vect01[7] = -100;}
+
+     Vect03.resize(3);
+     if(Vect03[0].Vrab003 != 0){Vect03[0].Vrab003 += 1; if(Vect03[0].Vrab003 == 100) Vect03[0].Vrab003 = 70;} if(Input->MOUS_Left > 0){if(Vect03[0].Vrab003 <= 0){Vect03[0].Vrab003 = 1; Vect03[0].Vrab001 = Input->MOUS_X; Vect03[0].Vrab002 = Input->MOUS_Y;} Vect03[0].Vrab004 = Input->MOUS_X; Vect03[0].Vrab005 = Input->MOUS_Y;} else {if(Vect03[0].Vrab003 > 0) Vect03[0].Vrab003 = -100;}
+     if(Vect03[1].Vrab003 != 0){Vect03[1].Vrab003 += 1; if(Vect03[1].Vrab003 == 100) Vect03[1].Vrab003 = 70;} if(Input->MOUS_Left > 0){if(Vect03[1].Vrab003 <= 0){Vect03[1].Vrab003 = 1; Vect03[1].Vrab001 = Input->MOUS_X; Vect03[1].Vrab002 = Input->MOUS_Y;} Vect03[1].Vrab004 = Input->MOUS_X; Vect03[1].Vrab005 = Input->MOUS_Y;} else {if(Vect03[1].Vrab003 > 0) Vect03[1].Vrab003 = -100;}
+     if(Vect03[2].Vrab003 != 0){Vect03[2].Vrab003 += 1; if(Vect03[2].Vrab003 == 100) Vect03[2].Vrab003 = 70;} if(Input->MOUS_Left > 0){if(Vect03[2].Vrab003 <= 0){Vect03[2].Vrab003 = 1; Vect03[2].Vrab001 = Input->MOUS_X; Vect03[2].Vrab002 = Input->MOUS_Y;} Vect03[2].Vrab004 = Input->MOUS_X; Vect03[2].Vrab005 = Input->MOUS_Y;} else {if(Vect03[2].Vrab003 > 0) Vect03[2].Vrab003 = -100;} 
     }
 
     if(Vect01[0] > 0) Enchanted->Print_Text(0, 45, 0, "UP");
     if(Vect01[1] > 0) Enchanted->Print_Text(0, 45, 0, "   LEFT");
     if(Vect01[2] > 0) Enchanted->Print_Text(0, 45, 0, "        DOWN");
     if(Vect01[3] > 0) Enchanted->Print_Text(0, 45, 0, "             RIGHT");
-    Enchanted->Print_Text(0, 60, 0, std::to_string(Vect01[0]) + std::to_string(Vect01[1]) + std::to_string(Vect01[2]) + std::to_string(Vect01[3]));
+    if(Vect01[4] > 0) Enchanted->Print_Text(0, 45, 0, "                   OK");
+    if(Vect01[5] > 0) Enchanted->Print_Text(0, 45, 0, "                      CANCEL");
+    if(Vect01[0] == 1) Enchanted->Post_Info(L_Lang(9));
+    if(Vect01[4] == 1){Enchanted->Setting[0].Lang += 1; if(Enchanted->Setting[0].Lang == 3) Enchanted->Setting[0].Lang = 0;}
+    Enchanted->Print_Text(0, 60, 0, std::to_string(Vect01[0]) + std::to_string(Vect01[1]) + std::to_string(Vect01[2]) + std::to_string(Vect01[3]) + std::to_string(Vect01[4]) + std::to_string(Vect01[5]));
+    Enchanted->Print_Text(0, 75, 0, std::to_string(Vect03[0].Vrab001));
+    Enchanted->Print_Text(0, 90, 0, std::to_string(Vect03[0].Vrab004));
+
+    Enchanted->Vrab015 = ruint8(-1);
+    if(L_Exist("ASAP.txt"))
+    {
+     remains string APED; Enchanted->Typing(APED);
+     std::ifstream AOP("ASAP.txt"); stream Strn01; Strn01 << AOP.rdbuf(); AOP.close(); string AP = APED + Strn01.str();
+     AP += L_Directory(Enchanted->Setting[0].Address) + (Enchanted->Setting[0].Lang == 0 ? "langENG" : (Enchanted->Setting[0].Lang == 1 ? "langIDN" : "langRUS")) + ".txt\n" + L_Lang(0) + L_Lang(20) + L_Lang(1) + L_Lang(21) + L_Lang(2);
+     Enchanted->Print_Text(0, 105, 0, AP, 700, 2);
+    }
+
     
     /*
 
@@ -1860,17 +2177,10 @@
        statics insize Vrab03 = Enchanted->Info.size(); insize Vrab04 = 0;
        while(Vrab03 != Vrab04)
        {
-        if(Enchanted->Info[Vrab04].String == ("Press \"" + Enchanted->Input_Name(Vrab0017) + "\" once again to exit."))
+        if(Enchanted->Info[Vrab04].String == (L_Lang(0) + Enchanted->Input_Name(Vrab0017) + L_Lang(1)))
         Vrab0030 = 1;
         Vrab04 += 1;
-       } if(Vrab03 == Vrab04)
-       {
-        Enchanted->Post_Info("Press \"" + Enchanted->Input_Name(Vrab0017) + "\" once again to exit.", true);
- 
-        /* ID3D11Debug* Debg01;
-        Game0001->m_deviceResources->GetD3DDevice()->QueryInterface < ID3D11Debug > (&Debg01);
-        ThrowIfFailed(Debg01->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL));*/
-       }
+       } if(Vrab03 == Vrab04) Enchanted->Post_Info(L_Lang(0) + Enchanted->Input_Name(Vrab0017) + L_Lang(1), true);
       }
      }
 
@@ -1941,7 +2251,7 @@
        Vrab03 -= 1;
  
        // Volume special notification.
-       if(Enchanted->Info[Vrab03].Volume) Enchanted->Info[Vrab03].String = "Volume is adjusted to " + std::to_string(Enchanted->Setting[0].Volume) + "%.";
+       if(Enchanted->Info[Vrab03].Volume) Enchanted->Info[Vrab03].String = L_Lang(2) + std::to_string(Enchanted->Setting[0].Volume) + L_Lang(3);
        insize Vrab04 = Enchanted->Info[Vrab03].String.size();
  
        // Position.
@@ -1965,12 +2275,8 @@
          // Shift back.
          if(Vrab10 >= 24 && Vrab10 < 24 + rint64(Vrab0003))
          {
-          int64 Vrab11 = 29;
-          {
-           insize Vrab12 = 0, Vrab13 = 0, Vrab14 = Vrab04; while(Vrab14 > 41){Vrab14 -= 40; if(Enchanted->Info[Vrab03].String.at((Vrab12 * 40) + Vrab13 + 40) == ' '){ Vrab14 -= 1; Vrab13 += 1;} Vrab12 += 1;}
-           if(Vrab04 > 41){Vrab11 += 7 + (16 * rint64(Vrab12));} else {Vrab11 += 5;}
-          }
- 
+          Enchanted->Print_Text(0, 0, 0, Enchanted->Info[Vrab03].String, 360, 1);
+          int64 Vrab11 = 34 + Enchanted->Vrab016[1];
           statics insize Vrab12 = Enchanted->Info.size();
           for(insize Vrab13 = 0; Vrab13 < Vrab12; ++Vrab13)
           if(Enchanted->Info[Vrab03].Slot > Enchanted->Info[Vrab13].Slot)
@@ -2003,16 +2309,9 @@
        // Drawing.
        if(Vrab07)
        {
-        {
-         insize Vrab09 = 0, Vrab10 = 0, Vrab11 = Vrab04;
-         while(Vrab11 > 41){Vrab11 -= 40; if(Enchanted->Info[Vrab03].String.at((Vrab09 * 40) + Vrab10 + 40) == ' '){Vrab11 -= 1; Vrab10 += 1;} Vrab09 += 1;}
-         if(Vrab04 > 41){Enchanted->Print_Bar(Vrab05 + 15, Vrab06, 380, 7 + (16 * rint64(Vrab09)));} else{Enchanted->Print_Bar(Vrab05 + 15, Vrab06, 13 + (9 * rint64(Vrab11)), 5);}
-        }
-        {
-         insize Vrab09 = 0, Vrab10 = 0;
-         while(Vrab04 > 41){Vrab04 -= 40; statics insize Vrab11 = Vrab09 * 40; string Temp01 = string(Enchanted->Info[Vrab03].String, Vrab11 + Vrab10, 40); if(Enchanted->Info[Vrab03].String.at(Vrab11 + Vrab10 + 40) != ' '){if(Enchanted->Info[Vrab03].String.at(Vrab11 + Vrab10 + 39) != ' ') Temp01.push_back('-');} else {Vrab04 -= 1; Vrab10 += 1;} Enchanted->Print_Text(Vrab05 + 30, Vrab06 - 6 + (16 * rint64(Vrab09)), 0, Temp01); Vrab09 += 1;}
-         Enchanted->Print_Text(Vrab05 + 30, Vrab06 - 6 + (16 * rint64(Vrab09)), 0, string(Enchanted->Info[Vrab03].String, (Vrab09 * 40) + Vrab10, Vrab04));
-        }
+        Enchanted->Print_Text(0, 0, 0, Enchanted->Info[Vrab03].String, 360, 1);
+        Enchanted->Print_Bar(Vrab05 + 15, Vrab06, 13 + Enchanted->Vrab016[0], 5 + Enchanted->Vrab016[1]);
+        Enchanted->Print_Text(Vrab05 + 30, Vrab06 - 6, 0, Enchanted->Info[Vrab03].String, 360, 2);
         P_Set_Display(2, Enchanted->Vect004[Enchanted->Info[Vrab03].Question ? 105 : 106], Vrab05 + 9, Vrab06 - 6);
        } else {Enchanted->Info.erase(Enchanted->Info.begin() + Vrab03);}
       }
@@ -2038,6 +2337,7 @@
   }
   int0 EIDP_LF2Forevered(uint32 Vrab01, uint64 Vrab02) perfect
   {
+   UNREFERENCED_PARAMETER(Vrab01); UNREFERENCED_PARAMETER(Vrab02);
    // Initialization
     if(Forevered->Vrab001)
     {
