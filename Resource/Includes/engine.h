@@ -14,6 +14,8 @@
 // "A note won't help much here anyway..". Either a documentation if you're not used to   //
 // my code format.                                                                        //
 //                                                                                        //
+// Please refer to "platform.h" for the "typedef"/"using".                                //
+//                                                                                        //
 // Under GNU General Public License v3.0.                                                 //
 // Written by Mesujin.                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +33,7 @@
   // AngelScript
    #include "AngelScript/angelscript.h"
    #include "AngelScript/scriptarray.h"
+   #include "AngelScript/scriptbuilder.h"
    #include "AngelScript/scriptmath.h"
    #include "AngelScript/scriptmathcomplex.h"
    #include "AngelScript/scriptstdstring.h"
@@ -39,6 +42,7 @@
    #define HEPTA_BASE_FRAME_PER_SECOND 960
 
  // Early Declaration (In order to be accessible by Global Variables.)
+  int0   L_Message(statics asSMessageInfo*, int0*) perfect;
   int1   L_Exist(statics string&)     perfect;
   int32  L_Rounding(statics xint64)   perfect;
   int64  L_Rounding64(statics xint64) perfect;
@@ -46,6 +50,7 @@
   string L_Pronounce(statics uint64)  perfect; 
   string L_Directory(statics string)  perfect;
   string L_Lowercase(string)          perfect;
+  string L_Simplfy(statics string)    perfect;
   string L_Cut(string Temp01, insize Vrab01 = 2, insize Vrab02 = 0) perfect;
   string L_Load(uint8 Vrab01, uint8 Vrab02 = 0)                     perfect;
   string L_Save(uint8 Vrab01, string Temp01 = "", uint8 Vrab02 = 0) perfect;
@@ -53,33 +58,33 @@
   int0   EIDP_LF2Forevered(uint32, uint64) perfect;
 
   // Encryption & Decryption Functions
-   int0   S_Control()                        perfect;
-   int8   S_Decryption94(const int8)         perfect;
-   int8   S_DecryptionINT8(const int8[2])    perfect;
-   int16  S_DecryptionINT16(const int8[3])   perfect;
-   int32  S_DecryptionINT32(const int8[5])   perfect;
-   int64  S_DecryptionINT64(const int8[10])  perfect;
-   uint32 S_DecryptionUINT4(const int8[1])   perfect;
-   uint8  S_DecryptionUINT8(const int8[2])   perfect;
-   uint32 S_DecryptionUINT10(const int8[2])  perfect;
-   uint16 S_DecryptionUINT16(const int8[3])  perfect;
-   uint32 S_DecryptionUINT18(const int8[3])  perfect;
-   uint32 S_DecryptionUINT24(const int8[4])  perfect;
-   uint32 S_DecryptionUINT32(const int8[5])  perfect;
-   uint64 S_DecryptionUINT64(const int8[10]) perfect;
-   xint64 S_DecryptionXINT64(const int8[11]) perfect;
-   string S_DecryptionSTRING(string)         perfect;
-   string S_Encryption94(const uint64)       perfect;
-   string S_EncryptionUINT4(const uint32)    perfect;
-   string S_EncryptionUINT8(const uint8)     perfect;
-   string S_EncryptionUINT10(const uint32)   perfect;
-   string S_EncryptionUINT16(const uint16)   perfect;
-   string S_EncryptionUINT18(const uint32)   perfect;
-   string S_EncryptionUINT24(const uint32)   perfect;
-   string S_EncryptionUINT32(const uint32)   perfect;
-   string S_EncryptionUINT64(const uint64)   perfect;
-   string S_EncryptionXINT64(const xint64)   perfect;
-   string S_EncryptionSTRING(string)         perfect;
+   int0   S_Control()                          perfect;
+   int8   S_Decryption94(statics int8)         perfect;
+   int8   S_DecryptionINT8(statics int8[2])    perfect;
+   int16  S_DecryptionINT16(statics int8[3])   perfect;
+   int32  S_DecryptionINT32(statics int8[5])   perfect;
+   int64  S_DecryptionINT64(statics int8[10])  perfect;
+   uint32 S_DecryptionUINT4(statics int8[1])   perfect;
+   uint8  S_DecryptionUINT8(statics int8[2])   perfect;
+   uint32 S_DecryptionUINT10(statics int8[2])  perfect;
+   uint16 S_DecryptionUINT16(statics int8[3])  perfect;
+   uint32 S_DecryptionUINT18(statics int8[3])  perfect;
+   uint32 S_DecryptionUINT24(statics int8[4])  perfect;
+   uint32 S_DecryptionUINT32(statics int8[5])  perfect;
+   uint64 S_DecryptionUINT64(statics int8[10]) perfect;
+   xint64 S_DecryptionXINT64(statics int8[11]) perfect;
+   string S_DecryptionSTRING(string)           perfect;
+   string S_Encryption94(statics uint64)       perfect;
+   string S_EncryptionUINT4(statics uint32)    perfect;
+   string S_EncryptionUINT8(statics uint8)     perfect;
+   string S_EncryptionUINT10(statics uint32)   perfect;
+   string S_EncryptionUINT16(statics uint16)   perfect;
+   string S_EncryptionUINT18(statics uint32)   perfect;
+   string S_EncryptionUINT24(statics uint32)   perfect;
+   string S_EncryptionUINT32(statics uint32)   perfect;
+   string S_EncryptionUINT64(statics uint64)   perfect;
+   string S_EncryptionXINT64(statics xint64)   perfect;
+   string S_EncryptionSTRING(string)           perfect;
 
  // Global Variables
   string Temp0001 = "";     // App Working Directory.
@@ -252,6 +257,9 @@
     std::vector < insize > Vect004; // Interface Index - Images.
     std::vector < insize > Vect005; // Interface Index - Sound.
     std::vector < int1 >   Vect006; // Engine Load?
+
+   // Early Declaration
+    //int0   Angel_Debug(statics asSMessageInfo*, int0*);
 
    // Structures
     struct HEPTA_LF2_ENCHANTED_ENGINE0
@@ -450,9 +458,31 @@
       std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME > > Frames; // Frames' Pointer.
       */
       
-      string Temp001;        // Working Address.
-      int1   Vrab001 = true; // Debug output.
-      //asIScriptEngine Engi001; // AngelScript's Engine.
+      string Temp001;                 // Working Address.
+      string Temp002;                 // Main Address.
+      int1   Vrab001 = true;          // Debug output.
+      int1   Vrab002 = false;         // Load file open?
+      std::ifstream File001;          // Load file.
+      asIScriptEngine *Engi001;       // AngelScript's Engine.
+      asIScriptModule *Modu001;       // AngelScript's Engine.
+      asIScriptContext *Cont001;      // AngelScript's Engine.
+      asIScriptFunction *Func001;     // AngelScript's Engine.
+      std::time_t Time001;            // Engine's Modified Time.
+      struct stat Stat001;            // Global Stat.
+      
+      int0   Printaddr(int0 *Vrab01){printf("%p", Vrab01);}
+      int0   Print(int1 Vrab01)  {printf(Vrab01 ? "true" : "false");}
+      int0   Print(int8 Vrab01)  {printf("%d", Vrab01);}
+      int0   Print(int16 Vrab01) {printf("%d", Vrab01);}
+      int0   Print(int32 Vrab01) {printf("%d", Vrab01);}
+      int0   Print(int64 Vrab01) {printf("%lld", Vrab01);}
+      int0   Print(uint8 Vrab01) {printf("%u", Vrab01);}
+      int0   Print(uint16 Vrab01){printf("%u", Vrab01);}
+      int0   Print(uint32 Vrab01){printf("%u", Vrab01);}
+      int0   Print(uint64 Vrab01){printf("%llu", Vrab01);}
+      int0   Print(xint32 Vrab01){printf("%f", Vrab01);}
+      int0   Print(xint64 Vrab01){printf("%Lf", Vrab01);}
+      int0   Print(statics string &Temp01){printf("%s", Temp01.c_str());}
 
       int0   Debug(statics string Temp01, statics int8 Vrab01 = 0 , statics int1 Vrab02 = false) perfect
       {
@@ -464,23 +494,109 @@
       }
 
      public:
-      HEPTA_LF2_ENCHANTED_ENGINE1(){}
+      int1 Running = false;
+      int1 Available = false;
 
-      int0   Begin(statics string Temp01) perfect
+      HEPTA_LF2_ENCHANTED_ENGINE1(){}
+      int0   Begin(statics string Temp01, statics string Temp02, statics int32 Vrab01 = 0) perfect
       {
-       Temp001 = Temp01; Debug("Engine1 : Origin - Starting.", 0, true);
+       Temp001 = Temp01 + Temp02; Temp002 = Temp01;
+       Debug("Enhanced Engine - Starting.", 0, true);
+       Running = true;
        
+       Debug("Enhanced Engine - AngelScript Initialization.");
        AllocConsole();
+       HANDLE Hand01 = GetStdHandle(STD_OUTPUT_HANDLE);
        freopen("CONIN$", "rb", stdin);   // Reopen stdin handle as console window input.
        freopen("CONOUT$", "wb", stdout); // Reopen stout handle as console window output.
        freopen("CONOUT$", "wb", stderr); // Reopen stderr handle as console window output.
-  
-      // Engi001 = NULL;
-      // Engi001 = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-      // if(!Engi001) return "";
+       SMALL_RECT Rect01 = {0, 0, 60, 30};
+       CONSOLE_SCREEN_BUFFER_INFOEX Info01;
+       Info01.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+       SetConsoleScreenBufferSize(Hand01, {60, 150});
+       GetConsoleScreenBufferInfoEx(Hand01, &Info01);
+       Info01.wAttributes = true; Info01.srWindow = Rect01;
+       {
+        int32 Vrab02 = 0; if(Vrab01 > 127){Vrab02 = 0;} else {Vrab02 = 255;}
+        Info01.ColorTable[0] = Vrab01 + (Vrab01 << 8) + (Vrab01 << 16);
+        Info01.ColorTable[1] = Vrab02 + (Vrab02 << 8) + (Vrab02 << 16);
+        Info01.ColorTable[7] = Info01.ColorTable[1];
+       }
+       SetConsoleScreenBufferInfoEx(Hand01, &Info01);
+       SetConsoleScreenBufferSize(Hand01, {60, 150});
+       SetConsoleTitleA("Windows Console API - LF2: Enchanted");
+
+       Engi001 = NULL;
+       Engi001 = asCreateScriptEngine(ANGELSCRIPT_VERSION);
+       if(!Engi001) return;
+       Engi001->SetMessageCallback(asFUNCTION(L_Message), NULL, asCALL_CDECL);
+       RegisterScriptArray(Engi001, true);
+       RegisterScriptMath(Engi001);
+       RegisterScriptMathComplex(Engi001);
+       RegisterStdString(Engi001);
+       RegisterStdStringUtils(Engi001);
+
+       // Function Regis
+       {
+        Engi001->RegisterGlobalFunction("void print(bool p)",             asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (int1 Vrab01),   int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(int8 p)",             asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (int8 Vrab01),   int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(int16 p)",            asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (int16 Vrab01),  int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(int32 p)",            asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (int32 Vrab01),  int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(int64 p)",            asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (int64 Vrab01),  int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(uint8 p)",            asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (uint8 Vrab01),  int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(uint16 p)",           asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (uint16 Vrab01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(uint32 p)",           asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (uint32 Vrab01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(uint64 p)",           asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (uint64 Vrab01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(float p)",            asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (xint32 Vrab01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(double p)",           asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (xint64 Vrab01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+        Engi001->RegisterGlobalFunction("void print(const string &in p)", asMETHODPR(HEPTA_LF2_ENCHANTED_ENGINE1, Print, (statics string &Temp01), int0), asCALL_THISCALL_ASGLOBAL, &Enchanted->Engine1);
+       }
+       
+       Debug("Enhanced Engine - System Load, \"" + Temp002 + "engine1.as\"."); printf("\nAngelScript - v%s\n\n", ANGELSCRIPT_VERSION_STRING);
+       Engi001->WriteMessage((Temp002 + "engine1.as").c_str(), 0, 0, asMSGTYPE_INFORMATION, ("Building \"" + Temp002 + "engine1.as\"").c_str());
+       CScriptBuilder Make01;
+       if(!L_Exist(Temp002 + "engine1.as"))                               {Engi001->WriteMessage((Temp002 + "engine1.as").c_str(), 0, 0, asMSGTYPE_ERROR, ("Unable to the system, \"" + Temp002 + "engine1.as\"").c_str()); return;}
+       if(stat((Temp002 + "engine1.as").c_str(), &Stat001) == 0) Time001 = Stat001.st_mtime;
+       if(Make01.StartNewModule(Engi001, "SYSTEM") < 0)                   {Engi001->DiscardModule("SYSTEM"); Engi001->WriteMessage((Temp002 + "engine1.as").c_str(), 0, 0, asMSGTYPE_ERROR, "Unable to start the Module"); return;}
+       if(Make01.AddSectionFromFile((Temp002 + "engine1.as").c_str()) < 0){Engi001->DiscardModule("SYSTEM"); Engi001->WriteMessage((Temp002 + "engine1.as").c_str(), 0, 0, asMSGTYPE_ERROR, ("Unable to load the system, \"" + Temp002 + "engine1.as\"").c_str()); return;}
+       if(Make01.BuildModule() < 0)                                       {Engi001->DiscardModule("SYSTEM"); Engi001->WriteMessage((Temp002 + "engine1.as").c_str(), 0, 0, asMSGTYPE_ERROR, "Unable to build the Module"); return;}
+       
+       Modu001 = Engi001->GetModule("SYSTEM");
+       Cont001 = Engi001->CreateContext();
+
+       // System Begin
+       if(Func001 = Modu001->GetFunctionByDecl("void Begin()")){Cont001->Prepare(Func001); Cont001->Execute();}
+       Available = true;
+      }
+      int0   Shutdown() perfect
+      {
+       Running = false; Available = false;
+       if(Vrab002){File001.close(); Vrab002 = false;}
+       FreeConsole();
+      }
+      int0   Main() perfect
+      {
+       if(!Running) return;
+       if(Available) if(Func001 = Modu001->GetFunctionByDecl("void Main()")){Cont001->Prepare(Func001); Cont001->Execute();}
+
+       // System Update
+       if(L_Exist(Temp002 + "engine1.as"))
+       if(stat((Temp002 + "engine1.as").c_str(), &Stat001) == 0)
+       if(Time001 < Stat001.st_mtime) Shutdown();
       }
       string Load() perfect
       {
+       if(!Vrab002)
+       {
+        Debug("Enhanced Engine - Data Load, \"" + Temp001 + "data\\data.txt\"."); Vrab002 = true;
+        int1 Vrab01 = true;
+        while(true)
+        {
+         if(!L_Exist(Temp001 + "data\\data.txt")) break;
+         File001.open(Temp001 + "data\\data.txt"); if(!File001.is_open()) break;
+         Vrab01 = false; break;
+        } if(Vrab01){Debug("Enhanced Engine - \"" + Temp001 + "data\\data.txt\" cannot be found."); return "F";}
+       }
        return "";
       }
     };
@@ -530,6 +646,7 @@
     };
     struct HEPTA_LF2_ENCHANTED_SETTING
     {
+     int1   Menu = false;
      uint32 Width  = 800;
      uint32 Height = 450;
      int1   Fullscreen = false;
@@ -543,7 +660,7 @@
      int1   Fast_Loading = false;
      int1   Skip_Animation = false;
      int1   Show_FPS = true;
-     uint8  Engine = 0;
+     uint8  Engine = 1;
      string Engine_Setting;
      string Address = "Database\\MiniGame_Enchanted\\";
      string Address_Game = "GameData_Default\\";
@@ -1079,6 +1196,23 @@
   string S_EncryptionSTRING(string Temp01)           perfect {S_Control(); int8 Vrab01 = 0; statics uint32 Vrab02 = Temp01.size(); uint32 Vrab03 = 0; while(Vrab03 != Vrab02){Vrab01 = Temp01.at(Vrab03); if(Vrab01 >= '!' && Vrab01 <= '~') Temp01.at(Vrab03) = (S_Encryption94(rint64(Vrab01) + rint64(Vrab03) - 33)).at(0); Vrab03 += 1;} return Temp01;}
 
  // Light Functions
+  int0   L_Message(statics asSMessageInfo *Amsg01, int0 *Vrab01)    perfect
+  {
+   UNREFERENCED_PARAMETER(Vrab01); statics string Temp01 = L_Simplfy(Amsg01->section);
+   if(Temp01 == "")
+   {
+    printf("%s - %s\n", Amsg01->type == asMSGTYPE_ERROR ? ("ERROR") : (Amsg01->type == asMSGTYPE_WARNING ? "WARNING" : "INFO"), Amsg01->message);
+   } else
+   {
+    if(Amsg01->row == 0 && Amsg01->col == 0)
+    {
+     printf("%s: %s - %s\n", Temp01.c_str(), Amsg01->type == asMSGTYPE_ERROR ? ("ERROR") : (Amsg01->type == asMSGTYPE_WARNING ? "WARNING" : "INFO"), Amsg01->message);
+    } else
+    {
+     printf("%s(%d, %d): %s - %s\n", Temp01.c_str(), Amsg01->row, Amsg01->col, Amsg01->type == asMSGTYPE_ERROR ? ("ERROR") : (Amsg01->type == asMSGTYPE_WARNING ? "WARNING" : "INFO"), Amsg01->message);
+    }
+   }
+  }
   int1   L_Any()                                                    perfect {return Input->RESH_ANY == 1;}
   int1   L_Exist(statics string &Temp01)                            perfect {struct stat Stat01; return (stat(Temp01.c_str(), &Stat01) == 0);} // Check if the certain directory is exist or not.
   uint8  L_Input(uint8 Vrab01)                                      perfect
@@ -1322,6 +1456,7 @@
    Vrab03 %= ruint64(0xFFFFFFFF) + 1;
    return ruint64(L_Rounding64((rxint64(Vrab03) / rxint64(0xFFFFFFFF)) * rxint64(Vrab01)));
   }
+  string L_Simplfy(statics string Temp01)                           perfect {insize Vrab01 = Temp01.size(); while(Vrab01 != 0){Vrab01 -= 1; if(Temp01.at(Vrab01) == '\\' || Temp01.at(Vrab01) == '/'){Vrab01 += 1; break;}} if(Vrab01 == 0) return Temp01; return string(Temp01, Vrab01, Temp01.size() - Vrab01);}
   string L_Cut(string Temp01, insize Vrab01, insize Vrab02)         perfect {statics insize Vrab03 = Temp01.size(); if(Vrab01 > Vrab03) Vrab01 = Vrab03; if(Vrab02 == 0) Vrab02 = Vrab03 - Vrab01; return string(Temp01, Vrab01, Vrab02);}
   string L_Pronounce(statics uint64 Vrab01)                         perfect {statics uint64 Vrab02 = (Vrab01 % 1000) + 1000; statics uint64 Vrab03 = Vrab01 / 1000; statics uint64 Vrab04 = Vrab03 / 60; statics uint64 Vrab05 = Vrab04 / 60; return std::to_string(Vrab05 / 24) + " - "+ string(std::to_string((Vrab05 % 24) + 100), 1, 2) + ":" + string(std::to_string((Vrab04 % 60) + 100), 1, 2) + ":" + string(std::to_string((Vrab03 % 60) + 100), 1, 2) + "." + string(std::to_string(Vrab02), 1, 3);}
   string L_Directory(statics string Temp01)                         perfect {return Temp0001 + Temp01;}
@@ -1739,7 +1874,6 @@
      Enchanted->Setting[0].Player[0].Command = 21;     Enchanted->Setting[0].Player[0].Command = 33;
      Enchanted->Setting_Load(); Enchanted->Setting_Save(); Enchanted->Setting[0].Fullscreen = Vrab0009;
      G_Adjust_Window(Enchanted->Setting[0].Width, Enchanted->Setting[0].Height, Enchanted->Setting[0].Fullscreen, "Little Fighter 2 : Enchanted");
-     Enchanted->Engine1->Begin(L_Directory(Enchanted->Setting[0].Address));
 
      // Language Load.
      {
@@ -2042,7 +2176,39 @@
      if(Vect03[2].Vrab003 != 0){Vect03[2].Vrab003 += 1; if(Vect03[2].Vrab003 == 100) Vect03[2].Vrab003 = 70;} if(Input->MOUS_Left > 0){if(Vect03[2].Vrab003 <= 0){Vect03[2].Vrab003 = 1; Vect03[2].Vrab001 = Input->MOUS_X; Vect03[2].Vrab002 = Input->MOUS_Y;} Vect03[2].Vrab004 = Input->MOUS_X; Vect03[2].Vrab005 = Input->MOUS_Y;} else {if(Vect03[2].Vrab003 > 0) Vect03[2].Vrab003 = -100;} 
     }
 
-    if(Vect01[0] > 0) Enchanted->Print_Text(0, 45, 0, "UP");
+    if(Enchanted->Setting[0].Menu)
+    {
+    
+    } else
+    {
+     // Engine Main
+     {
+      switch(Enchanted->Setting[0].Engine)
+      {case 1: Enchanted->Engine1->Main(); break; default: break;}
+     }
+
+     // Engine Begin & Load
+     {
+      int1 Vrab03 = false;
+      switch(Enchanted->Setting[0].Engine)
+      {case 1: Vrab03 = Enchanted->Engine1->Running; break; default: break;}
+      if(!Vrab03) switch(Enchanted->Setting[0].Engine)
+      {case 1: Enchanted->Engine1->Begin(L_Directory(Enchanted->Setting[0].Address), Enchanted->Setting[0].Address_Game); break; default: break;}
+      
+      if(Vrab03)
+      {
+       string Temp01;
+       switch(Enchanted->Setting[0].Engine)
+       {case 1: Temp01 = Enchanted->Engine1->Load(); break; default: break;}
+       if(Temp01 != "")
+       {
+      
+       }
+      }
+     }
+    }
+
+    /*if(Vect01[0] > 0) Enchanted->Print_Text(0, 45, 0, "UP");
     if(Vect01[1] > 0) Enchanted->Print_Text(0, 45, 0, "   LEFT");
     if(Vect01[2] > 0) Enchanted->Print_Text(0, 45, 0, "        DOWN");
     if(Vect01[3] > 0) Enchanted->Print_Text(0, 45, 0, "             RIGHT");
@@ -2062,7 +2228,7 @@
      AP += L_Directory(Enchanted->Setting[0].Address) + (Enchanted->Setting[0].Lang == 0 ? "langENG" : (Enchanted->Setting[0].Lang == 1 ? "langIDN" : "langRUS")) + ".txt\n" + L_Lang(0) + L_Lang(20) + L_Lang(1) + L_Lang(21) + L_Lang(2);
      Enchanted->Print_Text(0, 105, 0, AP, 700, 2);
     }
-
+    */
     
     /*
 

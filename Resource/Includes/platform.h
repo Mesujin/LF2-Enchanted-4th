@@ -86,6 +86,7 @@
   #define rsint16 static_cast < sint16 >
   #define rsint32 static_cast < sint32 >
   #define rsint64 static_cast < sint64 >
+  #define rlint32 static_cast < lint32 >
   #define ruint8  static_cast < uint8 >
   #define ruint16 static_cast < uint16 >
   #define ruint32 static_cast < uint32 >
@@ -683,8 +684,6 @@
     Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
     Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
    }
-
-
   //-//
  //-//
 #endif

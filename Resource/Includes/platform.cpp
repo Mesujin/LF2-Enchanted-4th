@@ -957,7 +957,7 @@
       return TRUE;
     }
    break;
-   case WM_DESTROY: Vrab0030 = 1; break;
+   case WM_DESTROY: case WM_CLOSE: Vrab0030 = 1; break;
    case WM_ACTIVATE:
    case WM_INPUT:
    case WM_MOUSEMOVE:
@@ -984,7 +984,7 @@
     {G_ToggleFullscreen();} else {DirectX::Keyboard::ProcessMessage(Vrab01, Wpar01, Lpar01);}
    return 0;
    case WM_MOUSEACTIVATE: // When you click activate the window, we want Mouse to ignore it.
-    return MA_ACTIVATEANDEAT;
+    if(Vrab0030 == 0) return MA_ACTIVATE;
    case WM_MENUCHAR:      // A menu is active and the user presses a key that does not correspond to any mnemonic or accelerator key. Ignore so we don't produce an error beep.
     return MAKELRESULT(0, MNC_CLOSE);
   }

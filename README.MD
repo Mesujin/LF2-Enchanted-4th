@@ -1,48 +1,24 @@
 <div align="center">
   <img src="PIC.JPG" width="120"/>
   <h1>LF2 Enchanted 4th | Hepta: Enchanted </h2>
-  Most resources belong to Marti Wong & Starsky Wong, developers of LF2
+  Programmed by Mesujin<br>
+  Arts & Sounds belong to Marti Wong & Starsky Wong
 </div>
 
 <br/>
 <br>
 
 ## Description
-This is the source of `LF2 Enchanted 4th (LF2EF)`'s Platform and Engine.                                                                  
+This is the source of `LF2 Enchanted 4th (LF2EF)`'s Platform and Engine, "Enchanted Engine". <br>
 Feel free to modify or anything since this is an open-sourced project, as long as you kept my name, Marti's name, and Starsky's name, then there's should be no conflict between us.
 > About LF2EF : https://lf-empire.de/forum/showthread.php?tid=11058 <br/>
 
 > LF2EF's Discord Server : _Under preparation_
 
-A program that based on DirecXTK, written in a very basic C++ programming, but could work fair enough to create a simple nice game.
-<br>
-<br>
-
-
-
-## Modify & Build
-To modify, generally you'll need [Microsoft Visual Studio](https://visualstudio.microsoft.com/), 2022 or higher. <br/>
-If you're not familiar with GitHub, here's the link to download this source. <br/>
-> Download Source : https://github.com/Mesujin/LF2-Enchanted-4th/archive/refs/heads/Official_Release.zip
-
-But you might missing something if you're purely download the source instead of clone it.
-
-<br/>
-
-In modifying the source, you could start from `platform.cpp`, but everything else about the game is located in `engine.h`. <br/>
-Make sure to build this source with `Release` setup. <br/>
-
-
-To run this source after you build it, you'll need to copy the data from the game (simply everything in the "Database") since it doesn't included here, but don't overwrite. 
-
+A program that based on DirectXTK, written in a very basic C++ programming, but could work fair enough to create a simple nice game.
 <br>
 
-
-<b>Note that i have the right to not explain nor answer anything regarding to the source, that's your matter/problem if you want to modify this project.</b>
-
-
 <br>
-
 
 ## Lincense
 Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
@@ -53,8 +29,8 @@ Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 
 
 ## Credits
-- Powered by DirectXTK and Microsoft Visual Studio 2022 (Professional). <br/>
-- Supported by LF-Empire Community.
+- Powered by DirectXTK, Microsoft Visual Studio 2022, and AngelScript. <br/>
+- Supported by LF-Empire Community & LF Forever Community.
 
 - Resources from Little Fighter 2, by Marti Wong & Starsky Wong.
 
@@ -64,7 +40,11 @@ Distributed under the [GNU General Public License v3.0](LICENSE.MD). <br/>
 
 > About MsVS2022 : https://visualstudio.microsoft.com <br/>
 
+> About AngelScript : http://angelcode.com <br/>
+
 > About LF-Empire : https://lf-empire.de/lfe-v10/lf-empire <br/>
+
+> About LF Forever : http://lfforever.ru <br/>
 
 > About Little Fighter 2 (LF2) : https://lf2.net
 
