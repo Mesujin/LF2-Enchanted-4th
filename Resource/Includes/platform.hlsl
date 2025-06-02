@@ -1,7 +1,8 @@
 Texture2D < float4 > Text0001 : register(t0);
+Texture2D < float4 > Text0002 : register(t1);
 sampler Samp0001 : register(s0);
 
-float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_Target0
+float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 {
  float4 Flot02;
 
@@ -75,7 +76,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_Target0
   Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
 		Flot02.x = 1.0f - Flot02.x; Flot02.y = 1.0f - Flot02.y; Flot02.z = 1.0f - Flot02.z;
 
- } else                      // (16.0f ~ 17.0f) : #000000 as Transparent with no color.
+ } else if (Flot01.a <= 17.0f) // (16.0f ~ 17.0f) : #000000 as Transparent with no color.
  {
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
@@ -85,6 +86,27 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_Target0
   Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
   Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
 		Flot02.x = 1.0f - Flot02.x; Flot02.y = 1.0f - Flot02.y; Flot02.z = 1.0f - Flot02.z;
+
+ } else if (Flot01.a <= 19.0f) // (18.0f ~ 19.0f) : Plain Color with fixed color
+ {
+
+  Flot02 = Flot01;
+  Flot02.a = Flot01.a - 18.0f;
+
+ } else if (Flot01.a <= 15.0f) // (20.0f ~ 21.0f) : Normal Image with fixed color
+ {
+
+  Flot02 = Text0001.Sample(Samp0001, Cord01);
+  Flot02.a *= Flot01.a - 20.0f;
+  Flot02.xyz = Flot01.xyz;
+
+ } else // (22.0f ~ 23.0f) : #000000 as Transparent with fixed color.
+ {
+
+  Flot02 = Text0001.Sample(Samp0001, Cord01);
+  Flot02.a *= Flot01.a - 22.0f;
+  if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+  Flot02.xyz += Flot01.xyz;
 
  }
 

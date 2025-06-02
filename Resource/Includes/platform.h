@@ -363,6 +363,7 @@
 
    int0 Relocate_Target() perfect {Vrab001 -= 1;}
    uint32 Get_Width()     perfect {return Vrab004;}
+   uint32 Get_Height()    perfect {return Vrab005;}
    insize Get_Offset()    perfect {return Vrab006;}
    insize Get_Target()    perfect {return Vrab001;}
    RECT Get_Image(statics insize Vrab01, statics int1 Vrab02 = false)     perfect
@@ -538,11 +539,11 @@
    if(!File01) throw std::runtime_error("CSO_Read");
    statics std::streampos Post01 = File01.tellg();
    if(!File01) throw std::runtime_error("CSO_Read");
-   std::vector < uint8_t > Temp02; Temp02.resize(size_t(Post01));  File01.seekg(0, std::ios::beg);
+   std::vector < uint8_t > Vect01; Vect01.resize(size_t(Post01));  File01.seekg(0, std::ios::beg);
    if(!File01) throw std::runtime_error("CSO_Read");
-   File01.read(reinterpret_cast < int8* >(Temp02.data()), Post01);
+   File01.read(reinterpret_cast < int8* >(Vect01.data()), Post01);
    if(!File01) throw std::runtime_error("CSO_Read");
-   File01.close(); return Temp02;
+   File01.close(); return Vect01;
   }
 
   // Platform's Action
@@ -587,6 +588,29 @@
     insize Vrab03 = 0; statics insize Vrab04 = Audi0001.size(); while(Vrab03 != Vrab04){if(Audi0001[Vrab03]->Address == Temp01) break; Vrab03 += 1;}
     if(Vrab03 == Vrab04) Audi0001.push_back(std::make_unique < HEPTA_AUDINGS > (Temp01, Game0001->GetAudio()));
     if(Audi0001[Vrab03]->Success){return Vrab03;} else {Audi0001.pop_back(); return rinsize(-1);}
+   }
+
+   int64  P_Get_Width(statics insize Vrab01, statics int1 Vrab02 = false) perfect
+   {
+    if(Vrab02)
+    {
+     if(Vrab01 < Spic0001.size()) return Sprt0001[Spic0001[Vrab01]].Get_Width();
+    } else
+    {
+     if(Vrab01 < Pics0001.size()) return Pics0001[Vrab01].Get_Width();
+    }
+    return 1;
+   }
+   int64  P_Get_Height(statics insize Vrab01, statics int1 Vrab02 = false) perfect
+   {
+    if(Vrab02)
+    {
+     if(Vrab01 < Spic0001.size()) return Sprt0001[Spic0001[Vrab01]].Get_Height();
+    } else
+    {
+     if(Vrab01 < Pics0001.size()) return Pics0001[Vrab01].Get_Height();
+    }
+    return 1;
    }
 
    int1   P_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) perfect
