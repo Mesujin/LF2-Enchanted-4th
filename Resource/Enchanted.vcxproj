@@ -121,6 +121,7 @@
       <EntryPointName>main</EntryPointName>
       <ShaderType>Pixel</ShaderType>
       <CompileD2DCustomEffect>true</CompileD2DCustomEffect>
+      <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <ResourceCompile>
       <SuppressStartupBanner>true</SuppressStartupBanner>

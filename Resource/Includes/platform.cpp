@@ -403,14 +403,15 @@
         Pics001->Draw(Imge0001[Sprt0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
-	     case 10: // Color Control
-	     {
+	  case 10: // Color Control
+	  {
        switch(ruint8(Disp0001[Vrab04].Post_X1))
        {
         case 0: Vrab02 = 0.0f; Vrab03 = 0; break;
         case 1: Vrab02 = 6.0f; break;
         case 2: Vrab02 = 12.0f; break;
         case 3: Vrab02 = 18.0f; break;
+        case 4: Vrab02 = 24.0f + (rxint32(Disp0001[Vrab04].Post_Y1 % 1000) * 100.0f); break;
         default: break;
        }
       }
