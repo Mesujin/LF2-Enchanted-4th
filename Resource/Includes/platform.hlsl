@@ -132,6 +132,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    Flot02 = Flot01;
    Flot02.a = Flot01.a - 24.0f;
    float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
@@ -146,6 +147,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    Flot02.y += Flot01.y;
    Flot02.z += Flot01.z;
    float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
@@ -162,6 +164,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    Flot02.y += Flot01.y;
    Flot02.z += Flot01.z;
    float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;

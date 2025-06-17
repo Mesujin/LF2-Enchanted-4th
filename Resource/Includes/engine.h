@@ -39,7 +39,7 @@
   int32  L_Positive(statics int32)    perfect;
   int32  L_Numbering(string)          perfect;
   int64  L_Rounding64(statics xint64) perfect;
-  int64  L_Positive64(statics int64)  perfect;
+  xint64 L_Positive64(statics xint64) perfect;
   uint64 L_Random(uint64 Vrab01, insize Vrab02 = 0) perfect;
   uint64 L_Convert(string)            perfect;
   xint64 L_Doubling(statics string&)  perfect;
@@ -351,7 +351,7 @@
       struct HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER
       {
        insize Index_pic = rinsize(-1);
-       int32  kind;
+       int32  kind = 0;
        int32  x;
        int32  y;
        int32  z;
@@ -372,21 +372,21 @@
        string file = "";
 
        string name = "";
-       uint32 width[2]{};
-       uint32 zwidth[2]{};
-       uint32 cam[4]{};
+       int32  width[2]{};
+       int32  zwidth[2]{};
+       int32  cam[4]{};
        insize Index_shadow = rinsize(-1);
        uint32 shadow[2]{};
 
-       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER > Layer;
-       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_OPOINT > Opoint;
+       std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER > > Layer;
+       std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_OPOINT > > Opoint;
       };
       struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND
       {
-       int32  kind;
-       uint32 width[2]{};
-       uint32 zwidth[2]{};
-       uint32 cam[4]{};
+       int32  kind = 0;
+       int32  width[2]{};
+       int32  zwidth[2]{};
+       int32  cam[4]{};
        insize Index_shadow = rinsize(-1);
        uint32 shadow[2]{};
 
@@ -414,23 +414,23 @@
       };
       struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_HPOINT
       {
-       int32 kind;
-       int32 x;
-       int32 y;
-       int32 z;
-       int32 w;
-       int32 h;
-       int32 zwidth;
+       int32  kind;
+       xint64 x = 0;
+       xint64 y = 0;
+       xint64 z = -5;
+       xint64 w = 0;
+       xint64 h = 0;
+       xint64 l = 10;
       };
       struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_IPOINT
       {
        int32  kind;
-       int32  x;
-       int32  y;
-       int32  z;
-       int32  w;
-       int32  h;
-       int32  zwidth;
+       xint64 x = 0;
+       xint64 y = 0;
+       xint64 z = -9;
+       xint64 w = 0;
+       xint64 h = 0;
+       xint64 l = 18;
        xint64 dvx;
        xint64 dvy;
        xint64 dvz;
@@ -527,8 +527,9 @@
        xint64 dvx;
        xint64 dvy;
        xint64 dvz;
-       int32  centerx;
-       int32  centery;
+       int32  centerx = 0;
+       int32  centery = 0;
+       int32  centerz = 0;
        std::vector < int32 > hit_a = {0};
        std::vector < int32 > hit_d = {0};
        std::vector < int32 > hit_j = {0};
@@ -551,12 +552,11 @@
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME_HPOINT > bdy;
      
        // Runtime Data
-       int32 bdy_X = 0, bdy_Y = 0, bdy_W = 0, bdy_H = 0;
-       int32 itr_X = 0, itr_Y = 0, itr_W = 0, itr_H = 0, itr_Z = 0;
+       xint64 bdy_X = 0xFFFFFFFF, bdy_Y = 0xFFFFFFFF, bdy_Z = 0xFFFFFFFF, bdy_W = -(0xFFFFFFFF), bdy_H = -(0xFFFFFFFF), bdy_L = -(0xFFFFFFFF);
+       xint64 itr_X = 0xFFFFFFFF, itr_Y = 0xFFFFFFFF, itr_Z = 0xFFFFFFFF, itr_W = -(0xFFFFFFFF), itr_H = -(0xFFFFFFFF), itr_L = -(0xFFFFFFFF);
       };
       struct HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_STRENGTH
       {
-       int32 zwidth;
        int32 dvx;
        int32 dvy;
        int32 dvz;
@@ -618,7 +618,7 @@
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_STRENGTH > Strength;
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME* > Frame;
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT* > Effect;
-       unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND > Background;
+       HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND* Background;
       };
       struct HEPTA_LF2_ENCHANTED_ENGINE1_LOAD
       {
@@ -693,7 +693,9 @@
        uint8 Press_A = 0, Press_D = 0, Press_J = 0, Press_RR = 0, Press_LL = 0;
        uint8 Cast_A = 0, Cast_D = 0, Cast_J = 0, Cast_DRA = 0, Cast_DLA = 0, Cast_DRJ = 0, Cast_DLJ = 0, Cast_DDA = 0, Cast_DDJ = 0, Cast_DUA = 0, Cast_DUJ = 0, Cast_DJA = 0;
        
+       xint64 D_Shift_X = 0, D_Shift_Y = 0, D_Shift_Z = 0;
        std::vector < uint32 > Animation;
+
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT_EFFECT > Effect;
        
        std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT* > Trans_Address; uint8 Trans = 0;
@@ -708,12 +710,14 @@
 
       struct HEPTA_LF2_ENCHANTED_ENGINE1_SECTIONDATA
       {
-       int1   Pause = false;
+       int1   Pause = false, TPause = false;
        uint64 Frame = 0;
        uint64 Timeunit = 0, Playtime = 0;
        insize Background = 0;
        uint8  Coloring = 0;
        std::vector < uint32 > Animation;
+
+       xint64 Camera[4] = {0, 0, rxint64(rinsize(-2)), 0};
 
        int0 Reset()
        {
@@ -735,18 +739,18 @@
       
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEEFFECT > Effect;
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT > Object;
-      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_SECTIONDATA > Section;
-      
+
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_LOAD > Loads;
+      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_STAGE > Stages;
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT > Objects;
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND > Backgrounds;
-      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_STAGE > Stages;
       std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME > > Frames;
       std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT > > Effects;
+      std::vector < unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND > > Object_Backgrounds;
 
       std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_PLAYERINPUTS > Inputs;
 
-      uint8  Decode(statics string &Temp01) perfect
+      uint8  Decode  (statics string &Temp01) perfect
       {
        if(File001.is_open()) File001.close(); if(!L_Exist(Temp01)) return 1; File001.open(Temp01, std::ios::binary | std::ios::in); if(!File001.is_open()) return 2;
        statics string Temp02 = L_Lowercase(string(Temp01, Temp01.size() - 4, 4));
@@ -767,7 +771,7 @@
        if(!File001.is_open()) return 3;
        return 0;
       }
-      insize Preload(statics string &Temp01, statics uint8 Vrab01 = 0, statics uint32 Vrab02 = 1, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 0, statics uint32 Vrab05 = 0) perfect
+      insize Preload (statics string &Temp01, statics uint8 Vrab01 = 0, statics uint32 Vrab02 = 1, statics uint32 Vrab03 = 1, statics uint32 Vrab04 = 0, statics uint32 Vrab05 = 0) perfect
       {
        statics insize Vrab06 = Loads.size(); insize Vrab07 = 0;
        while(Vrab07 < Vrab06)
@@ -794,7 +798,7 @@
        return Vrab06;
       }
       
-      int0         Remove(statics insize Vrab01, statics insize Vrab02 = rinsize(-1)) perfect
+      int0         Remove (statics insize Vrab01, statics insize Vrab02 = rinsize(-1)) perfect
       {
        if(Vrab02 != rinsize(-1))
        {
@@ -833,10 +837,10 @@
         Vrab03 -= 1; if(Object[Vrab03].Exist) if(Object[Vrab03].D == Vrab01) Remove(Vrab03);
        }
       }
-      insize       Add(statics insize Vrab01, statics insize Vrab02 = 0) perfect
+      insize       Add    (statics insize Vrab01, statics insize Vrab02 = 0) perfect
       {
        // ID search.
-       int1 Vrab03 = false; insize Vrab04 = 0;
+       int1 Vrab03 = false; insize Vrab04 = rinsize(-1);
        {
         insize Vrab05 = Objects.size();
         while(Vrab05 != 0)
@@ -849,14 +853,16 @@
         while(Vrab06 < Vrab05)
         {if(!Object[Vrab06].Exist) break; Vrab06 += 1;}
 
+        if(Vrab06 == Vrab004) return rinsize(-1); 
         if(Vrab06 == Vrab05)
-        {if(Vrab06 == Vrab004) return rinsize(-1); Object.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT());} else
+        {Object.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT());} else
         {Object[Vrab06] = HEPTA_LF2_ENCHANTED_ENGINE1_GAMEOBJECT();}
 
         Object[Vrab06].Data = &Objects[Vrab04]; Object[Vrab06].Section = Vrab02; return Vrab06;
-       } return rinsize(-1);
+       }
+       return rinsize(-1);
       }
-      int1         States(statics HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME* Vrab01, statics int32 Vrab02[], insize Vrab03) perfect
+      int1         States (statics HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME* Vrab01, statics int32 Vrab02[], insize Vrab03) perfect
       {
        while(Vrab03 != 0)
        {
@@ -868,11 +874,11 @@
        }
        return false;
       };
-      stacked int1 States(statics HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME* Vrab01, std::initializer_list < int32 > Vrab03)
+      stacked int1 States (statics HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME* Vrab01, std::initializer_list < int32 > Vrab03)
       {
        return States(Vrab01, Vrab03.begin(), Vrab03.size());
       }
-      int1         Arrays(statics std::vector < int32 > Vrab01, statics int32 Vrab02[], insize Vrab03) perfect
+      int1         Arrays (statics std::vector < int32 > Vrab01, statics int32 Vrab02[], insize Vrab03) perfect
       {
        while(Vrab03 != 0)
        {
@@ -884,7 +890,7 @@
        }
        return false;
       };
-      stacked int1 Arrays(statics std::vector < int32 > Vrab01, std::initializer_list < int32 > Vrab03)
+      stacked int1 Arrays (statics std::vector < int32 > Vrab01, std::initializer_list < int32 > Vrab03)
       {
        return Arrays(Vrab01, Vrab03.begin(), Vrab03.size());
       }
@@ -902,7 +908,7 @@
        return Vrab02;
       }
 
-      int0   Control(statics insize Vrab01, statics insize Vrab02)
+      int0 Control(statics insize Vrab01, statics insize Vrab02)
       {
        insize Vrab03 = Inputs.size();
        while(Vrab03 != 0)
@@ -926,7 +932,7 @@
        
        }
       }
-      int0   Emulate(statics insize Vrab01) perfect
+      int0 Emulate(statics insize Vrab01) perfect
       {
        #pragma region Sector 1 : Commands Effect (Function Keys)
        {
@@ -946,12 +952,15 @@
          
          #pragma region Phase 0 : Arranging Main Values, Random Falling Items.
          {
-          // Arranging Main Values.
+          // Arranging Main Values & Effect.
           {
            {insize Vrab99 = Effect.size(); while(Vrab99 != 0){Vrab99 -= 1; statics insize Vrab98 = Effect[Vrab99].Pics.size(); if(Vrab98 != Effect[Vrab99].Pic + 1){Effect[Vrab99].Pic += 1;} else {if(Effect[Vrab99].Loop && Vrab98 != 0){Effect[Vrab99].Pic = 0;} else {Effect[Vrab99].Exist = false;}}}}
-           {insize Vrab99 = Object.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Object[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Object[Vrab99].Exist) Vrab99 -= 1; Object.resize(Vrab99 + 1);}}
-           {insize Vrab99 = Effect.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Effect[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Effect[Vrab99].Exist) Vrab99 -= 1; Effect.resize(Vrab99 + 1);}}
-           {insize Vrab99 = Object.size(); while(Vrab99 != 0){Vrab99 -= 1; insize Vrab98 = Object[Vrab99].Vrest.size(); if(Vrab98 != 0){while(Vrab98 != 0){Vrab98 -= 1; if(Object[Vrab99].Vrest[Vrab98] != 0) break;} if(Vrab98 == 0) if(Object[Vrab99].Vrest[Vrab98] == 0) Vrab98 -= 1; Object[Vrab99].Vrest.resize(Vrab98 + 1);}}}
+           if(Section[Vrab01].Timeunit % 120 == 0)
+           {
+            {insize Vrab99 = Effect.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Effect[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Effect[Vrab99].Exist) Vrab99 -= 1; Effect.resize(Vrab99 + 1);}}
+            {insize Vrab99 = Object.size(); if(Vrab99 != 0){while(Vrab99 != 0){Vrab99 -= 1; if(Object[Vrab99].Exist) break;} if(Vrab99 == 0) if(!Object[Vrab99].Exist) Vrab99 -= 1; Object.resize(Vrab99 + 1);}}
+            {insize Vrab99 = Object.size(); while(Vrab99 != 0){Vrab99 -= 1; insize Vrab98 = Object[Vrab99].Vrest.size(); if(Vrab98 != 0){while(Vrab98 != 0){Vrab98 -= 1; if(Object[Vrab99].Vrest[Vrab98] != 0) break;} if(Vrab98 == 0) if(Object[Vrab99].Vrest[Vrab98] == 0) Vrab98 -= 1; Object[Vrab99].Vrest.resize(Vrab98 + 1);}}}
+           }
            {statics insize Vrab99 = Effect.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Effect[Vrab98].Section == Vrab01) if(Effect[Vrab98].Exist) Vect01.push_back(Vrab98);}
            {statics insize Vrab99 = Object.size(); for(insize Vrab98 = 0; Vrab98 < Vrab99; ++Vrab98) if(Object[Vrab98].Section == Vrab01) if(Object[Vrab98].Exist) Vect02.push_back(Vrab98);}
           }
@@ -969,10 +978,10 @@
             int1 Vrab96 = L_Random(14) == 0;
             if(Vrab96)
             {
-             std::vector < insize > Vect03; insize Vrab95 = Vect02.size(); while(Vrab95 != 0){Vrab95 -= 1; if(Object[Vect02[Vrab95]].Data->type == 0) Vect03.push_back(Vect02[Vrab95]);}
-             if(Vect03.size() != 0)
+             std::vector < insize > Vect04; insize Vrab95 = Vect02.size(); while(Vrab95 != 0){Vrab95 -= 1; if(Object[Vect02[Vrab95]].Data->type == 0) Vect04.push_back(Vect02[Vrab95]);}
+             if(Vect04.size() != 0)
              {
-              Vrab95 = Vect03[L_Random(Vect03.size() - 1)];
+              Vrab95 = Vect04[L_Random(Vect04.size() - 1)];
               Object[Vrab97].X = Object[Vrab95].X; Object[Vrab97].Z = Object[Vrab95].Z;
              } else {Vrab96 = false;}
             }
@@ -1022,7 +1031,9 @@
              statics insize Vrab95 = Object[Vrab97].Frame; if(Vrab95 == 1000 || Vrab95 == 9998){Vrab96 = true; break;} if(Vrab95 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab95]->Exist) break;
              if(Object[Vrab97].Held != rinsize(-1) || Object[Vrab97].Caught != rinsize(-1)) break;
              if(Object[Vrab97].Shake != 0 && Object[Vrab97].Data->type != 3) break;
-             if(States(Object[Vrab97].Data->Frame[Vrab95], {14})){Object[Vrab97].Wait += 1; if(Object[Vrab97].Data->type == 0) Object[Vrab97].Lying = 0;} else {if(Object[Vrab97].HP > 0) Object[Vrab97].Wait += 1; Object[Vrab97].Lying += 1;}
+             if(!States(Object[Vrab97].Data->Frame[Vrab95], {14}))
+             {Object[Vrab97].Wait += 1;} else
+             {Object[Vrab97].Wait += 1; if(Object[Vrab97].Data->type == 0) Object[Vrab97].Lying = 0;}
 
              int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95]->next[L_Random(Object[Vrab97].Data->Frame[Vrab95]->next.size() - 1)];
              if(Vrab94 != 0)
@@ -1064,12 +1075,12 @@
              // Repetition
              if(Object[Vrab97].Data->type == 3)
              {
-              statics int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95]->hit_a[L_Random(Object[Vrab97].Data->Frame[Vrab95]->hit_a.size() - 1)];
-              statics int32 Vrab93 = Object[Vrab97].Data->Frame[Vrab95]->hit_d[L_Random(Object[Vrab97].Data->Frame[Vrab95]->hit_d.size() - 1)];
+              statics int32 Vrab94 = Object[Vrab97].Data->Frame[Vrab95]->hit_a[0];
+              statics int32 Vrab93 = Object[Vrab97].Data->Frame[Vrab95]->hit_d[0];
               if(Vrab93 != 0)
               {
-               Object[Vrab97].Counter -= rint16(Vrab94);
-               if((Object[Vrab97].Counter <= 0 || Vrab94 >= 500) && Vrab95 != rinsize(L_Positive(Vrab93)))
+               Object[Vrab97].Counter += rint16(Vrab94);
+               if((Object[Vrab97].Counter >= (Polish ? 2000 : 500) || Vrab94 >= (Polish ? 2000 : 500)) && Vrab95 != rinsize(L_Positive(Vrab93)))
                {
                 Vrab95 = rinsize(L_Positive(Vrab93)); if(Vrab93 < 0) Object[Vrab97].Facing = !Object[Vrab97].Facing; Object[Vrab97].Wait = 0;
                 Object[Vrab97].Frame = Vrab95; if(Vrab95 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab95]->Exist) break;
@@ -1102,7 +1113,8 @@
              if(Object[Vrab97].Frame == 9998){Vrab96 = true; break;}
              if(Object[Vrab97].Held != rinsize(-1) || Object[Vrab97].Caught != rinsize(-1)) break;
   
-             statics xint64 Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab94 = Vrab95 + rxint64(Backgrounds[Section[Vrab01].Background].width[1]);
+             xint64 Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]);
+             if(Object[Vrab97].D != rinsize(-1)){Vrab95 = rxint64(Object[Object[Vrab97].D].Data->Background->width[0]); Vrab94 = rxint64(Object[Object[Vrab97].D].Data->Background->width[1]);}
              if(Object[Vrab97].Data->type != 0 && Object[Vrab97].Data->type != 3)
              {
               if(Object[Vrab97].Y >= 0){Object[Vrab97].Lying += 1;} else {Object[Vrab97].Lying = 0;}
@@ -1131,24 +1143,21 @@
              statics insize Vrab95 = Object[Vrab97].Frame2; if(Vrab95 == Object[Vrab97].Frame) break; if(Vrab95 >= Object[Vrab97].Data->Frame.size()) break; if(!Object[Vrab97].Data->Frame[Vrab95]->Exist) break;
              if(States(Object[Vrab97].Data->Frame[Vrab95], {13}))
              {
-              statics insize Vrab94 = 5; // Big Ice. (120 ~ 123)
-              statics insize Vrab93 = 3; // Small Ice. (125 ~ 128)
-              statics insize Vrab92 = 5; // Big Ice2. (130 ~ 133)
-              statics insize Vrab91 = 3; // Small Ice2. (135 ~ 138)
+              statics insize Vrab94 = 2; // Big Ice. (120 ~ 123)
+              statics insize Vrab93 = 2; // Small Ice. (125 ~ 128)
+              statics insize Vrab92 = 2; // Big Ice2. (130 ~ 133)
+              statics insize Vrab91 = 2; // Small Ice2. (135 ~ 138)
               insize Vrab90 = 0;
               while(Vrab90 < Vrab94 + Vrab93 + Vrab92 + Vrab91)
               {
                Vrab90 += 1; 
-               statics insize Vrab89 = Add(999);
-               if(Vrab89 == rinsize(-1)) break; Vect02.push_back(Vrab89); Vrab99 += 1;
+               statics insize Vrab89 = Add(999, Vrab01);
+               if(Vrab89 == rinsize(-1)) continue; Vect02.push_back(Vrab89); Vrab99 += 1;
  
                Object[Vrab89].Facing = L_Random(1) == 0;
-               Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owners = Object[Vrab97].Owners; Object[Vrab89].Owners.push_back(Vrab97); Object[Vrab89].Scale = Object[Vrab97].Scale;
+               Object[Vrab89].Team = Object[Vrab97].Team; Object[Vrab89].Name = Object[Vrab97].Name; Object[Vrab89].Owners = Object[Vrab97].Owners; Object[Vrab89].Owners.push_back(Vrab97);
+               Object[Vrab89].Scale = Object[Vrab97].Scale;
                Object[Vrab89].Frame = L_Random(3); if(Object[Vrab97].Blink > 0) Object[Vrab89].Blink = Object[Vrab97].Blink;
-  
-               if(Object[Vrab89].Data->type == 0)
-               {statics int1 Vrab88 = (Object[Vrab97].Data->id == 52 || Object[Vrab97].Data->id == 5); Object[Vrab89].Clone = Vrab97; Object[Vrab89].MP = Vrab88 ? 100 : 500; Object[Vrab89].MMP = Vrab88 ? 100 : 500; Object[Vrab89].HP = Vrab88 ? 10 : 500; Object[Vrab89].DHP = Vrab88 ? 10 : 500; Object[Vrab89].MHP = Vrab88 ? 10 : 500;} else
-               {Object[Vrab89].MP = 500; Object[Vrab89].MMP = 500; statics xint64 Vrab88 = rxint64(Object[Vrab89].Data->weapon_hp); Object[Vrab89].HP = Vrab88; Object[Vrab89].DHP = Vrab88; Object[Vrab89].MHP = Vrab88;}
   
                Object[Vrab89].X = Object[Vrab97].X - 25 + rxint64(L_Random(50));
                Object[Vrab89].Y = Object[Vrab97].Y - 55 + rxint64(L_Random(50));
@@ -1169,8 +1178,7 @@
                if(Vrab90 - Vrab94 <= Vrab93)
                {Object[Vrab89].Frame += 125; continue;}
                if(Vrab90 - Vrab94 - Vrab93 <= Vrab92)
-               {Object[Vrab89].Frame += 130; continue;}
-               Object[Vrab89].Frame += 135;
+               {Object[Vrab89].Frame += 130;} else {Object[Vrab89].Frame += 135;}
               }
              }
              break;
@@ -1741,17 +1749,31 @@
 
            // Position Shift.
            {
-            if(Section[Vrab01].Background >= Backgrounds.size()) Section[Vrab01].Background = 0;
-
-            statics xint64 Vrab97 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
-            if(Object[Vrab98].Lock)
+            if(Object[Vrab98].D == rinsize(-1))
             {
-             if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             if(Section[Vrab01].Background >= Backgrounds.size()) Section[Vrab01].Background = 0;
+
+             statics xint64 Vrab97 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
+             if(Object[Vrab98].Lock)
+             {
+              if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             } else
+             {
+              if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             }
+             if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
             } else
             {
-             if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             statics xint64 Vrab97 = rxint64(Object[Object[Vrab98].D].Data->Background->width[0]), Vrab96 = rxint64(Object[Object[Vrab98].D].Data->Background->width[1]), Vrab95 = rxint64(Object[Object[Vrab98].D].Data->Background->zwidth[0]), Vrab94 = rxint64(Object[Object[Vrab98].D].Data->Background->zwidth[1]);
+             if(Object[Vrab98].Lock)
+             {
+              if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             } else
+             {
+              if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             }
+             if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
             }
-            if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
            }
           }
          }
@@ -1902,10 +1924,11 @@
                  while(Vrab94 != 0)
                  {
                   Vrab94 -= 1; statics insize Vrab93 = Vect02[Vrab94];
+                  if(Object[Vrab93].D != Object[Vrab98].D) continue;
                   if(Object[Vrab93].Blink >= 25) continue;
                   if(Object[Vrab93].Hold != rinsize(-1)) continue;
                   if(Object[Vrab93].Data->type != 0) continue;
-                  if(Vrab95 == 5){if(Object[Vrab93].Clone != rinsize(-1)) continue; if(Object[Vrab93].Team != Object[Vrab98].Team) continue;} else {if(Object[Vrab93].Team == Object[Vrab98].Team) continue;}
+                  if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 5){if(Object[Vrab93].Clone != rinsize(-1)) continue; if(Object[Vrab93].Team != Object[Vrab98].Team) continue;} else {if(Object[Vrab93].Team == Object[Vrab98].Team) continue;}
 
                   insize Vrab92 = Vect06.size(); statics xint64 Vrab91 = L_Distance(Vect04[Vrab99].Vrab001, Vect04[Vrab99].Vrab003 * 2.5, Vect04[Vrab94].Vrab001, Vect04[Vrab94].Vrab003 * 2.5);
                   while(Vrab92 != 0)
@@ -1918,11 +1941,11 @@
                 statics insize Vrab94 = Vect06.size();
                 if(Vrab94 > 0)
                 {
-                 insize Vrab93 = Vrab95 == 9 ? 4 : (Vrab95 == 8 ? 3 : 1); if(Vrab94 > Vrab93) Vrab93 = Vrab94;
+                 insize Vrab93 = Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 9 ? 4 : (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 8 ? 3 : 1); if(Vrab94 > Vrab93) Vrab93 = Vrab94;
                  insize Vrab92 = 0; insize Vrab91 = 0;
-                 while(Vrab92 < 8 || (Vrab95 == 6 && Vrab92 < 10) || Vrab95 == 5 || (Vrab95 == 8 && Vrab92 < 15))
+                 while(Vrab92 < 8 || (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 6 && Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] < 10) || Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 5 || (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 8 && Vrab92 < 15))
                  {
-                  statics insize Vrab90 = Add(Vrab95 == 9 ? (L_Random(1) == 0 ? 222 : 221) : ( Vrab95 == 8 ? 225 : (Vrab95 == 6 ? 220 : 219)));
+                  statics insize Vrab90 = Add(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 9 ? (L_Random(1) == 0 ? 222 : 221) : (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 8 ? 225 : (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 6 ? 220 : 219)));
                   if(Vrab90 != rinsize(-1))
                   {
                    Object[Vrab90].Facing = Object[Vrab90].Facing;
@@ -1935,7 +1958,7 @@
                 
                    Object[Vrab90].X = Object[Vrab98].X; Object[Vrab90].Y = Object[Vrab98].Y; Object[Vrab90].Z = Object[Vrab98].Z; Object[Vrab90].D = Object[Vrab98].D;
                    Object[Vrab90].X_Vel = Object[Vrab98].X_Vel - 7.5 + L_Random(15);
-                   Object[Vrab90].Y_Vel = (Vrab95 == 5 || Vrab95 == 8) ? 0 : (-4 - rxint64(L_Random(12)));
+                   Object[Vrab90].Y_Vel = (Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 5 || Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 8) ? 0 : (-4 - rxint64(L_Random(12)));
                    Object[Vrab90].Z_Vel = Object[Vrab98].Z_Vel - 3 + L_Random(6);
 
                    if(Object[Vrab90].X_Vel < 0) Object[Vrab90].Facing = false;
@@ -1944,7 +1967,7 @@
                   }
 
                   Vrab92 += 1; if(Vrab92 == Vrab93) break;
-                  Vrab91 += 1; if(Vrab91 == Vrab94) if(Vrab95 == 5){break;} else {Vrab91 = 0;}
+                  Vrab91 += 1; if(Vrab91 == Vrab94) if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 5){break;} else {Vrab91 = 0;}
                  }
                 }
 
@@ -1952,25 +1975,23 @@
                }
                break;
                case 7:
+               if(Polish ? (Section[Vrab01].Timeunit % 4 == 0) : true)
                {
                 statics insize Vrab94 = Add(Object[Vrab98].Data->id);
                 if(Vrab94 != rinsize(-1))
                 {
                  Object[Vrab94].Facing = Object[Vrab98].Facing;
-                 Object[Vrab94].Team = Object[Vrab98].Team; Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owners = Object[Vrab98].Owners; Object[Vrab94].Owners.push_back(Vrab98); Object[Vrab94].Scale = Object[Vrab98].Scale;
+                 Object[Vrab94].Team = Object[Vrab98].Team; Object[Vrab94].Name = Object[Vrab98].Name; Object[Vrab94].Owners = Object[Vrab98].Owners; Object[Vrab94].Owners.push_back(Vrab98);
+                 Object[Vrab94].Scale = Object[Vrab98].Scale;
                  Object[Vrab94].Frame = 40; if(Object[Vrab98].Blink > 0) Object[Vrab94].Blink = Object[Vrab98].Blink;
                
-                 if(Object[Vrab94].Data->type == 0)
-                 {statics int1 Vrab93 = (Object[Vrab98].Data->id == 52 || Object[Vrab98].Data->id == 5); Object[Vrab94].Clone = Vrab98; Object[Vrab94].MP = Vrab93 ? 100 : 500; Object[Vrab94].MMP = Vrab93 ? 100 : 500; Object[Vrab94].HP = Vrab93 ? 10 : 500; Object[Vrab94].DHP = Vrab93 ? 10 : 500; Object[Vrab94].MHP = Vrab93 ? 10 : 500;} else
-                 {Object[Vrab94].MP = 500; Object[Vrab94].MMP = 500; statics xint64 Vrab93 = rxint64(Object[Vrab94].Data->weapon_hp); Object[Vrab94].HP = Vrab93; Object[Vrab94].DHP = Vrab93; Object[Vrab94].MHP = Vrab93;}
-
                  Object[Vrab94].X = Object[Vrab98].X; Object[Vrab94].Y = Object[Vrab98].Y; Object[Vrab94].Z = Object[Vrab98].Z; Object[Vrab94].D = Object[Vrab98].D;
                  Object[Vrab94].X_Vel = 0; Object[Vrab94].Y_Vel = 0; Object[Vrab94].Z_Vel = 0;
                 }
                }
                case 14: case 13: case 12: case 10: case 4: case 3: case 2: case 1:
                {
-                if(Object[Vrab98].Target == rinsize(-1) && Object[Vrab98].Counter > 0)
+                if(Object[Vrab98].Target == rinsize(-1) && Object[Vrab98].Counter < (Polish ? 2000 : 500))
                 {
                  // Picking Target(s).
                  std::vector < insize > Vect06; std::vector < xint64 > Vect07;
@@ -1978,10 +1999,11 @@
                  insize Vrab94 = Vect02.size(); while(Vrab94 != 0)
                  {
                   Vrab94 -= 1; statics insize Vrab93 = Vect02[Vrab94];
+                  if(Object[Vrab93].D != Object[Vrab98].D) continue;
                   if(Object[Vrab93].Blink >= 25) continue;
                   if(Object[Vrab93].Hold != rinsize(-1)) continue;
                   if(Object[Vrab93].Data->type != 0) continue;
-                  if(Vrab95 == 4){if(Object[Vrab93].Clone != rinsize(-1)) continue; if(Object[Vrab93].Team != Object[Vrab98].Team) continue;} else {if(Object[Vrab93].Team == Object[Vrab98].Team) continue;}
+                  if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 4){if(Object[Vrab93].Clone != rinsize(-1)) continue; if(Object[Vrab93].Team != Object[Vrab98].Team) continue;} else {if(Object[Vrab93].Team == Object[Vrab98].Team) continue;}
 
                   statics xint64 Vrab92 = L_Distance(Vect04[Vrab99].Vrab001, Vect04[Vrab99].Vrab003 * 2.5, Vect04[Vrab94].Vrab001, Vect04[Vrab94].Vrab003 * 2.5);
 
@@ -1997,13 +2019,13 @@
                 xint64 Vrab94 = 40;
                 xint64 Vrab93 = 0, Vrab92 = 0, Vrab91 = 0, Vrab90 = 0, Vrab89 = 0, Vrab88 = 0, Vrab87 = 0, Vrab86 = 0, Vrab85 = 0;
               
-                switch(Vrab95)
+                switch(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95])
                 {
                  case 1:
                   Vrab93 = 13; Vrab90 = 0.85; Vrab92 = 1.2; Vrab89 = 1.2; Vrab91 = 2; Vrab88 = 0.3; Vrab94 = 10;
                  break;
                  case 2: case 12:
-                  if(Object[Vrab98].Counter <= 0){Vrab93 = 17; Vrab90 = 2;} else {Vrab93 = 14; Vrab90 = 0.7;} Vrab92 = 1; Vrab89 = 1; Vrab91 = 2.2; Vrab88 = 0.4;
+                  if(Object[Vrab98].Counter > (Polish ? 2000 : 500)){Vrab93 = 17; Vrab90 = 2;} else {Vrab93 = 14; Vrab90 = 0.7;} Vrab92 = 1; Vrab89 = 1; Vrab91 = 2.2; Vrab88 = 0.4;
                  break;
                  case 3: case 4:
                   Vrab93 = 14; Vrab90 = 0.7; Vrab92 = 1; Vrab89 = 1; Vrab91 = 2.2; Vrab88 = 0.4;
@@ -2015,21 +2037,24 @@
                   Vrab93 = 30; Vrab90 = 1.1; Vrab92 = 1.2; Vrab89 = 1.2; Vrab91 = 2; Vrab88 = 0.3; Vrab94 = 10;
                  break;
                  case 13: case 14:
-                  if(Object[Vrab98].Counter <= 0){Vrab93 = 17; Vrab90 = 2;} else {Vrab93 = 14; Vrab90 = 0.7;} Vrab92 = 0.1; Vrab89 = 0.1; Vrab91 = 1.5; Vrab88 = 0.4;
+                  if(Object[Vrab98].Counter > (Polish ? 2000 : 500)){Vrab93 = 17; Vrab90 = 2;} else {Vrab93 = 14; Vrab90 = 0.7;} Vrab92 = 0.1; Vrab89 = 0.1; Vrab91 = 1.5; Vrab88 = 0.4;
                  break;
                  default: break;
                 }
+                if(Polish)
+                {Vrab90 /= 4, Vrab89 /= 4, Vrab88 /= 4, Vrab87 /= 4, Vrab86 /= 4, Vrab85 /= 4;}
               
                 insize Vrab84 = rinsize(-1);
                 while(true)
                 {
-                 insize Vrab83 = Object[Vrab98].Target; if(Vrab83 >= Object.size()) Vrab83 = rinsize(-1); if(!Object[Vrab83].Exist) Vrab83 = rinsize(-1);
-                 if(Vrab83 == rinsize(-1) || Object[Vrab98].Counter <= 0){Object[Vrab98].Target = rinsize(-1); break;}
+                 insize Vrab83 = Object[Vrab98].Target; if(Vrab83 >= Object.size()) Vrab83 = rinsize(-1); if(Vrab83 < Object.size()) if(!Object[Vrab83].Exist) Vrab83 = rinsize(-1);
+                 if(Vrab83 == rinsize(-1) || Object[Vrab98].Counter > (Polish ? 2000 : 500)){Object[Vrab98].Target = rinsize(-1); break;}
                
+                 if(Object[Vrab83].D != Object[Vrab98].D) break;
                  if(Object[Vrab83].Blink >= 25) break;
                  if(Object[Vrab83].Hold != rinsize(-1)) break;
                  if(Object[Vrab83].Data->type != 0) break;
-                 if(Vrab95 == 4){if(Object[Vrab83].Clone != rinsize(-1)) break; if(Object[Vrab83].Team != Object[Vrab98].Team) break;} else {if(Object[Vrab83].Team == Object[Vrab98].Team) break;}
+                 if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 4){if(Object[Vrab83].Clone != rinsize(-1)) break; if(Object[Vrab83].Team != Object[Vrab98].Team) break;} else {if(Object[Vrab83].Team == Object[Vrab98].Team) break;}
 
                  {
                   statics insize Vrab82 = Vect02.size(); insize Vrab81 = 0;
@@ -2092,7 +2117,7 @@
                 }
                 if(Vrab77 || Vrab76) if(Object[Vrab98].Y_Vel >= -Vrab89 && Object[Vrab98].Y_Vel <= Vrab89) Object[Vrab98].Y_Vel = 0;
 
-                switch(Vrab95)
+                switch(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95])
                 {
                  case 4:
                   if(Vrab84 != rinsize(-1))
@@ -2104,7 +2129,7 @@
                    Object[Vrab98].X = Vect04[Vrab84].Vrab001; Object[Vrab98].Y = Vect04[Vrab84].Vrab002 - Vrab94; Object[Vrab98].Z = Vect04[Vrab84].Vrab003; Object[Vrab98].X_Vel = 0; Object[Vrab98].Y_Vel = 0; Object[Vrab98].Z_Vel = 0;
                   }
                  case 2: case 12:
-                  if((Vrab95 == 2 || Vrab95 == 12) && Object[Vrab98].Data->id == 215)
+                  if((Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 2 || Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 12) && Object[Vrab98].Data->id == 215)
                   {
                    if(Object[Vrab98].X_Vel <= 7 && Object[Vrab98].X_Vel >= -7)
                    {if(Object[Vrab98].Frame < 1 || Object[Vrab98].Frame > 2){Object[Vrab98].Frame = 1; Object[Vrab98].Wait = 0;}} else
@@ -2115,9 +2140,9 @@
                    }
                   }
                  case 13: case 14:
-                  if(Vrab95 == 13 || Vrab95 == 14)
+                  if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 13 || Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 14)
                   {
-                   if(Vrab95 == 13){if(Object[Vrab98].X_Vel <= 8 && Object[Vrab98].X_Vel >= -8){Object[Vrab98].Frame = 50;} else {Object[Vrab98].Frame = 0;} Object[Vrab98].Wait = 0;} else
+                   if(Object[Vrab98].Data->Frame[Vrab97]->hit_Fa[Vrab95] == 13){if(Object[Vrab98].X_Vel <= 8 && Object[Vrab98].X_Vel >= -8){Object[Vrab98].Frame = 50;} else {Object[Vrab98].Frame = 0;} Object[Vrab98].Wait = 0;} else
                    {
                     if(Object[Vrab98].X_Vel <= 8 && Object[Vrab98].X_Vel >= -8)
                     {if(Object[Vrab98].Frame < 50 || Object[Vrab98].Frame > 59) Object[Vrab98].Frame = (Object[Vrab98].Frame % 10) + 50;} else
@@ -2333,6 +2358,40 @@
                break;
 			   case 6800: if(Section[Vrab01].Coloring != 0){if(L_Random(1) == 0) Section[Vrab01].Coloring = 1;} else {Section[Vrab01].Coloring = 1;} break;
 			   case 6801: if(Section[Vrab01].Coloring != 0){if(L_Random(1) == 0) Section[Vrab01].Coloring = 2;} else {Section[Vrab01].Coloring = 2;} break;
+               case 6700:
+                if(Polish ? (Section[Vrab01].Timeunit % 4 == 0) : true)
+                if(Object[Vrab98].D != Vrab98)
+                {
+                 insize Vrab95 = Vect02.size(); int1 Vrab94 = true;
+                 while(Vrab95 != 0)
+                 {
+                  Vrab95 -= 1; statics insize Vrab93 = Vect02[Vrab95];
+                  if(Object[Vrab93].D == Vrab98) if(Object[Vrab93].Data->type == 0){Vrab94 = false; break;}
+                 } if(Vrab94)
+                 {
+                  Object[Vrab98].D_Shift_X = Object[Vrab98].X;
+                  Object[Vrab98].D_Shift_Y = Object[Vrab98].Y;
+                  Object[Vrab98].D_Shift_Z = Object[Vrab98].Z;
+                  Object[Vrab98].D = Vrab98;
+                  Object[Vrab98].X = (Object[Vrab98].Data->Background->width[1] + Object[Vrab98].Data->Background->width[0]) / 2.0;
+                  Object[Vrab98].Y = 0;
+                  Object[Vrab98].Z = (Object[Vrab98].Data->Background->zwidth[1] + Object[Vrab98].Data->Background->zwidth[0]) / 2.0;
+                  if(Object[Vrab98].Hold != rinsize(-1)) Object[Object[Vrab98].Hold].D = Vrab98;
+                  if(Object[Vrab98].Catch != rinsize(-1)) Object[Object[Vrab98].Catch].D = Vrab98;
+                 } else
+                 {
+                 
+                 }
+                } else
+                {
+                 Object[Vrab98].D = rinsize(-1);
+                 Object[Vrab98].X = Object[Vrab98].D_Shift_X + (Object[Vrab98].X - ((Object[Vrab98].Data->Background->width[1] + Object[Vrab98].Data->Background->width[0]) / 2.0));
+                 Object[Vrab98].Y = Object[Vrab98].D_Shift_Y + (Object[Vrab98].Y);
+                 Object[Vrab98].Z = Object[Vrab98].D_Shift_Z + (Object[Vrab98].Z - ((Object[Vrab98].Data->Background->zwidth[1] + Object[Vrab98].Data->Background->zwidth[0]) / 2.0));
+                 if(Object[Vrab98].Hold != rinsize(-1)) Object[Object[Vrab98].Hold].D = rinsize(-1);
+                 if(Object[Vrab98].Catch != rinsize(-1)) Object[Object[Vrab98].Catch].D = rinsize(-1);
+                }
+               break;
                case 2000:
                 if(Object[Vrab98].Y >= 0) Object[Vrab98].Frame = 20;
                break;
@@ -2341,6 +2400,9 @@
                 if(Object[Vrab98].Y >= 0) break;
                 Object[Vrab98].Frame = 0;
                }
+               break;
+               case 1701:
+                if(Object[Vrab98].Wait == 0) Object[Vrab98].HP = Object[Vrab98].DHP;
                break;
                case 1700:
                 if(Object[Vrab98].Wait == 0) Object[Vrab98].HP_Regen += 75;
@@ -2378,6 +2440,7 @@
                  while(Vrab94 != 0)
                  {
                   Vrab94 -= 1;
+                  if(Object[Vect02[Vrab94]].D == Object[Vrab98].D)
                   if(Object[Vect02[Vrab94]].Data->type == 0)
                   if(Object[Vect02[Vrab94]].HP > 0)
                   if(States(Object[Vrab98].Data->Frame[Vrab97], {400}) ? Object[Vrab98].Team != Object[Vect02[Vrab94]].Team : (Object[Vrab98].Team == Object[Vect02[Vrab94]].Team && Vect02[Vrab94] != Vrab98))
@@ -2461,10 +2524,10 @@
                 if(Object[Vrab98].Y < 0) Object[Vrab98].Frame = 212;
                }
                default:
-                if(Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] >= 8000 && Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] <= 8999)
+                if((Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] >= 8000 && Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] <= 8999) || (Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] >= 4000 && Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] <= 4999))
                 {
-                 insize Vrab95 = rinsize(-1); {statics insize Vrab94 = Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] - 8000; statics insize Vrab93 = Objects.size(); insize Vrab92 = 0; while(Vrab92 < Vrab93){if(Objects[Vrab92].id == Vrab94){Vrab95 = Vrab92; break;} Vrab92 += 1;}}
-                 Object[Vrab98].Wait = 0; Object[Vrab98].Pic_Offset = 140; Object[Vrab98].Frame = Object[Vrab98].Data->Frame[Vrab97]->next[L_Random(Object[Vrab98].Data->Frame[Vrab97]->next.size() - 1)];
+                 insize Vrab95 = rinsize(-1); {statics insize Vrab94 = Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] - ((Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] > 8000) ? 8000 : 4000); statics insize Vrab93 = Objects.size(); insize Vrab92 = 0; while(Vrab92 < Vrab93){if(Objects[Vrab92].id == Vrab94){Vrab95 = Vrab92; break;} Vrab92 += 1;}}
+                 Object[Vrab98].Wait = 0; Object[Vrab98].Pic_Offset = (Object[Vrab98].Data->Frame[Vrab97]->state[Vrab96] > 8000) ? 140 : 0; Object[Vrab98].Frame = Object[Vrab98].Data->Frame[Vrab97]->next[L_Random(Object[Vrab98].Data->Frame[Vrab97]->next.size() - 1)];
                  if(Vrab95 != rinsize(-1)) Object[Vrab98].Data = &Objects[Vrab95];
                  int1 Vrab94 = true;
                  while(true)
@@ -2498,17 +2561,31 @@
 
            // Position Shift.
            {
-            if(Section[Vrab01].Background >= Backgrounds.size()) Section[Vrab01].Background = 0;
-
-            statics xint64 Vrab97 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
-            if(Object[Vrab98].Lock)
+            if(Object[Vrab98].D == rinsize(-1))
             {
-             if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             if(Section[Vrab01].Background >= Backgrounds.size()) Section[Vrab01].Background = 0;
+
+             statics xint64 Vrab97 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
+             if(Object[Vrab98].Lock)
+             {
+              if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             } else
+             {
+              if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             }
+             if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
             } else
             {
-             if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             statics xint64 Vrab97 = rxint64(Object[Object[Vrab98].D].Data->Background->width[0]), Vrab96 = rxint64(Object[Object[Vrab98].D].Data->Background->width[1]), Vrab95 = rxint64(Object[Object[Vrab98].D].Data->Background->zwidth[0]), Vrab94 = rxint64(Object[Object[Vrab98].D].Data->Background->zwidth[1]);
+             if(Object[Vrab98].Lock)
+             {
+              if(Object[Vrab98].X < Vrab97) Object[Vrab98].X = Vrab97; if(Object[Vrab98].X > Vrab96) Object[Vrab98].X = Vrab96;
+             } else
+             {
+              if(Object[Vrab98].Data->type == 0){if(Object[Vrab98].X < Vrab97 - 200) Object[Vrab98].X = Vrab97 - 200; if(Object[Vrab98].X > Vrab96 + 200) Object[Vrab98].X = Vrab96 + 200;}
+             }
+             if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
             }
-            if(Object[Vrab98].Z < Vrab95) Object[Vrab98].Z = Vrab95; if(Object[Vrab98].Z > Vrab94) Object[Vrab98].Z = Vrab94;
            }
           }
           
@@ -2740,6 +2817,139 @@
            }
           }
 
+          // Interact.
+          {
+           struct Strc02 {int1 Vrab001 = false; xint64 Vrab002[6] = {0, 0, 0, 0, 0, 0}; int1 Vrab003 = false; xint64 Vrab004[6] = {0, 0, 0, 0, 0, 0};};
+           std::vector < Strc02 > Vect04(Vrab99); std::vector < std::vector < insize > > Vect05(Vrab99);
+
+           // Pre-Calculate Base Hitbox
+           {
+            insize Vrab98 = Vrab99;
+            while(Vrab98 != 0)
+            {
+             Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98];
+             statics insize Vrab96 = Object[Vrab97].Frame; if(Vrab96 >= Object[Vrab97].Data->Frame.size()) continue; if(!Object[Vrab97].Data->Frame[Vrab96]->Exist) continue;
+             auto Vrab95 = Object[Vrab97].Data->Frame[Vrab96];
+             
+             if(Vrab95->itr_W > 0 && Vrab95->itr_H > 0 && Vrab95->itr_L > 0)
+             {
+              Vect04[Vrab98].Vrab001 = true;
+              Vect04[Vrab98].Vrab002[0] = Object[Vrab97].X + ((Object[Vrab97].Facing ? 1.0 : -1.0) * Vrab95->itr_X);
+              Vect04[Vrab98].Vrab002[1] = Vect04[Vrab98].Vrab002[0] + ((Object[Vrab97].Facing ? 1.0 : -1.0) * Vrab95->itr_W); if(!Object[Vrab97].Facing){auto Vrab94 = Vect04[Vrab98].Vrab002[0]; Vect04[Vrab98].Vrab002[0] = Vect04[Vrab98].Vrab002[1]; Vect04[Vrab98].Vrab002[1] = Vrab94;}
+              Vect04[Vrab98].Vrab002[2] = Object[Vrab97].Y + Vrab95->itr_Y;
+              Vect04[Vrab98].Vrab002[3] = Vect04[Vrab98].Vrab002[2] + Vrab95->itr_H;
+              Vect04[Vrab98].Vrab002[4] = Object[Vrab97].Z + Vrab95->itr_Z;
+              Vect04[Vrab98].Vrab002[5] = Vect04[Vrab98].Vrab002[4] + Vrab95->itr_L;
+             }
+             if(Vrab95->bdy_W > 0 && Vrab95->bdy_H > 0 && Vrab95->bdy_L > 0)
+             {
+              Vect04[Vrab98].Vrab003 = true;
+              Vect04[Vrab98].Vrab004[0] = Object[Vrab97].X + ((Object[Vrab97].Facing ? 1.0 : -1.0) * Vrab95->bdy_X);
+              Vect04[Vrab98].Vrab004[1] = Vect04[Vrab98].Vrab004[0] + ((Object[Vrab97].Facing ? 1.0 : -1.0) * Vrab95->bdy_W); if(!Object[Vrab97].Facing){auto Vrab94 = Vect04[Vrab98].Vrab004[0]; Vect04[Vrab98].Vrab004[0] = Vect04[Vrab98].Vrab004[1]; Vect04[Vrab98].Vrab004[1] = Vrab94;}
+              Vect04[Vrab98].Vrab004[2] = Object[Vrab97].Y + Vrab95->bdy_Y;
+              Vect04[Vrab98].Vrab004[3] = Vect04[Vrab98].Vrab004[2] + Vrab95->bdy_H;
+              Vect04[Vrab98].Vrab004[4] = Object[Vrab97].Z + Vrab95->bdy_Z;
+              Vect04[Vrab98].Vrab004[5] = Vect04[Vrab98].Vrab004[4] + Vrab95->bdy_L;
+             }
+            }
+           }
+
+           // Base Hitbox Check
+           {
+            insize Vrab98 = Vrab99;
+            while(Vrab98 != 0)
+            {
+             Vrab98 -= 1; if(!Vect04[Vrab98].Vrab001) continue;
+
+             insize Vrab97 = Vrab99;
+             while(Vrab97 != 0)
+             {
+              Vrab97 -= 1; if(Vrab98 == Vrab97) continue; if(!Vect04[Vrab97].Vrab003) continue;
+
+              if(Vect04[Vrab98].Vrab002[0] <= Vect04[Vrab97].Vrab004[1] && Vect04[Vrab98].Vrab002[1] >= Vect04[Vrab97].Vrab004[0])
+              if(Vect04[Vrab98].Vrab002[2] <= Vect04[Vrab97].Vrab004[3] && Vect04[Vrab98].Vrab002[3] >= Vect04[Vrab97].Vrab004[2])
+              if(Vect04[Vrab98].Vrab002[4] <= Vect04[Vrab97].Vrab004[5] && Vect04[Vrab98].Vrab002[5] >= Vect04[Vrab97].Vrab004[4])
+              Vect05[Vrab98].push_back(Vrab97);
+             }
+            }
+           }
+           
+           struct Strc03 {insize Vrab001, Vrab002;};
+           std::vector < std::vector < std::vector < Strc03 > > > Vect06(Vrab99);
+
+           // Interact Hitbox Check
+           {
+            insize Vrab98 = Vrab99;
+            while(Vrab98 != 0)
+            {
+             Vrab98 -= 1; statics insize Vrab97 = Vect05[Vrab98].size(); if(Vrab97 == 0) continue;
+             statics insize Vrab96 = Vect02[Vrab98], Vrab95 = Object[Vrab96].Frame;
+             insize Vrab94 = Object[Vrab96].Data->Frame[Vrab95]->itr.size(); Vect06[Vrab98].resize(Vrab94);
+             while(Vrab94 != 0)
+             {
+              Vrab94 -= 1; xint64 Vrab93[6] = {0, 0, 0, 0, 0, 0};
+              Vrab93[0] = Object[Vrab96].X + ((Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].x - Object[Vrab96].Data->Frame[Vrab95]->centerx) * (Object[Vrab96].Facing ? 1.0 : -1.0));
+              Vrab93[1] = Vrab93[0] + (Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].w * (Object[Vrab96].Facing ? 1.0 : -1.0)); if(!Object[Vrab96].Facing){auto Vrab92 = Vrab93[0]; Vrab93[0] = Vrab93[1]; Vrab93[1] = Vrab92;}
+              Vrab93[2] = Object[Vrab96].Y + Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].y - Object[Vrab96].Data->Frame[Vrab95]->centery;
+              Vrab93[3] = Vrab93[2] + Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].h;
+              Vrab93[4] = Object[Vrab96].Z + Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].z - Object[Vrab96].Data->Frame[Vrab95]->centerz;
+              Vrab93[5] = Vrab93[4] + Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab94].l;
+              insize Vrab92 = Vrab97; insize Vrab91 = 5;
+              while(Vrab92 != 0)
+              {
+               if(Vrab91 == 0) break;
+               Vrab92 -= 1; statics insize Vrab90 = Vect02[Vect05[Vrab98][Vrab92]], Vrab89 = Object[Vrab90].Frame;
+               insize Vrab88 = Object[Vrab90].Data->Frame[Vrab89]->bdy.size();
+               while(Vrab88 != 0)
+               {
+                Vrab88 -= 1; xint64 Vrab87[6] = {0, 0, 0, 0, 0, 0};
+                Vrab87[0] = Object[Vrab90].X + ((Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].x - Object[Vrab90].Data->Frame[Vrab89]->centerx) * (Object[Vrab90].Facing ? 1.0 : -1.0));
+                Vrab87[1] = Vrab87[0] + (Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].w * (Object[Vrab90].Facing ? 1.0 : -1.0)); if(!Object[Vrab90].Facing){auto Vrab86 = Vrab87[0]; Vrab87[0] = Vrab87[1]; Vrab87[1] = Vrab86;}
+                Vrab87[2] = Object[Vrab90].Y + Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].y - Object[Vrab90].Data->Frame[Vrab89]->centery;
+                Vrab87[3] = Vrab87[2] + Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].h;
+                Vrab87[4] = Object[Vrab90].Z + Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].z - Object[Vrab90].Data->Frame[Vrab89]->centerz;
+                Vrab87[5] = Vrab87[4] + Object[Vrab90].Data->Frame[Vrab89]->bdy[Vrab88].l;
+
+                if(Vrab93[0] <= Vrab87[1] && Vrab93[1] >= Vrab87[0])
+                if(Vrab93[2] <= Vrab87[3] && Vrab93[3] >= Vrab87[2])
+                if(Vrab93[4] <= Vrab87[5] && Vrab93[5] >= Vrab87[4])
+                {Vect06[Vrab98][Vrab94].push_back({Vect05[Vrab98][Vrab92], Vrab88}); Vrab91 -= 1; break;}
+               }
+              }
+             }
+            }
+           }
+
+           std::vector < insize > Vect07(Vrab99);
+
+           // Interact Application
+           {
+            insize Vrab98 = Vrab99;
+            while(Vrab98 != 0){Vrab98 -= 1; Vect07[Vrab98] = Object[Vect02[Vrab98]].Frame;}
+
+            Vrab98 = Vrab99;
+            while(Vrab98 != 0)
+            {
+             Vrab98 -= 1; insize Vrab97 = Vect06[Vrab98].size(); if(Vrab97 == 0) continue;
+             statics insize Vrab96 = Vect02[Vrab98], Vrab95 = Vect07[Vrab98];
+             while(Vrab97 != 0)
+             {
+              Vrab97 -= 1;
+              if(Object[Vrab96].Data->Frame[Vrab95]->itr[Vrab97].kind == 2)
+              if(States(Object[Vect02[Vect06[Vrab98][Vrab97][0].Vrab001]].Data->Frame[Vect07[Vect06[Vrab98][Vrab97][0].Vrab001]], {1004}))
+              {
+               Object[Vect02[Vect06[Vrab98][Vrab97][0].Vrab001]].Held = Vrab96;
+               Object[Vect02[Vect06[Vrab98][Vrab97][0].Vrab001]].Team = Object[Vrab96].Team;
+               Object[Vrab96].Hold = Vect02[Vect06[Vrab98][Vrab97][0].Vrab001];
+               Object[Vrab96].Frame = 115; Object[Vrab96].Wait = 0;
+              }
+             }
+            }
+           }
+
+           // Lat
+          }
+          
          }
          #pragma endregion
          #pragma region Phase 5 : Friction, Cpoint, Wpoint, Position Shift.
@@ -3013,19 +3223,86 @@
            while(Vrab98 != 0)
            {
             Vrab98 -= 1; statics insize Vrab97 = Vect02[Vrab98];
-            statics xint64 Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab93 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
-            if(Object[Vrab97].Lock)
+            if(Object[Vrab97].D == rinsize(-1))
             {
-             if(Object[Vrab97].X < Vrab96) Object[Vrab97].X = Vrab96; if(Object[Vrab97].X > Vrab95) Object[Vrab97].X = Vrab95;
+             statics xint64 Vrab96 = rxint64(Backgrounds[Section[Vrab01].Background].width[0]), Vrab95 = rxint64(Backgrounds[Section[Vrab01].Background].width[1]), Vrab94 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[0]), Vrab93 = rxint64(Backgrounds[Section[Vrab01].Background].zwidth[1]);
+             if(Object[Vrab97].Lock)
+             {
+              if(Object[Vrab97].X < Vrab96) Object[Vrab97].X = Vrab96; if(Object[Vrab97].X > Vrab95) Object[Vrab97].X = Vrab95;
+             } else
+             {
+              if(Object[Vrab97].Data->type == 0){if(Object[Vrab97].X < Vrab96 - 200) Object[Vrab97].X = Vrab96 - 200; if(Object[Vrab97].X > Vrab95 + 200) Object[Vrab97].X = Vrab95 + 200;}
+             }
+             if(Object[Vrab97].Z < Vrab94) Object[Vrab97].Z = Vrab94; if(Object[Vrab97].Z > Vrab93) Object[Vrab97].Z = Vrab93;
             } else
             {
-             if(Object[Vrab97].Data->type == 0){if(Object[Vrab97].X < Vrab96 - 200) Object[Vrab97].X = Vrab96 - 200; if(Object[Vrab97].X > Vrab95 + 200) Object[Vrab97].X = Vrab95 + 200;}
+             statics xint64 Vrab96 = rxint64(Object[Object[Vrab97].D].Data->Background->width[0]), Vrab95 = rxint64(Object[Object[Vrab97].D].Data->Background->width[1]), Vrab94 = rxint64(Object[Object[Vrab97].D].Data->Background->zwidth[0]), Vrab93 = rxint64(Object[Object[Vrab97].D].Data->Background->zwidth[1]);
+             if(Object[Vrab97].Lock)
+             {
+              if(Object[Vrab97].X < Vrab96) Object[Vrab97].X = Vrab96; if(Object[Vrab97].X > Vrab95) Object[Vrab97].X = Vrab95;
+             } else
+             {
+              if(Object[Vrab97].Data->type == 0){if(Object[Vrab97].X < Vrab96 - 200) Object[Vrab97].X = Vrab96 - 200; if(Object[Vrab97].X > Vrab95 + 200) Object[Vrab97].X = Vrab95 + 200;}
+             }
+             if(Object[Vrab97].Z < Vrab94) Object[Vrab97].Z = Vrab94; if(Object[Vrab97].Z > Vrab93) Object[Vrab97].Z = Vrab93;
             }
-            if(Object[Vrab97].Z < Vrab94) Object[Vrab97].Z = Vrab94; if(Object[Vrab97].Z > Vrab93) Object[Vrab97].Z = Vrab93;
            }
           }
          }
          #pragma endregion
+         #pragma region Phase EX : Camera, Sounds
+         {
+          std::vector < insize > Vect01;
+          insize Vrab99 = rinsize(-1);
+
+          statics insize Vrab98 = Object.size(); insize Vrab97 = 0; int1 Vrab96 = true;
+          while(Vrab97 < Vrab98)
+          {
+           if(Object[Vrab97].Exist) if(Object[Vrab97].Section == Vrab01)
+            if(Object[Vrab97].User != 0){Vrab99 = Object[Vrab97].D; Vrab96 = false; break;}
+           Vrab97 += 1;
+          } if(Vrab96)
+          {
+           Vrab97 = 0;
+           while(Vrab97 < Vrab98)
+           {
+            if(Object[Vrab97].Exist) if(Object[Vrab97].Section == Vrab01)
+             if(Object[Vrab97].Data->type == 0) if(Object[Vrab97].D == Vrab99) Vect01.push_back(Vrab97);
+            Vrab97 += 1;
+           }
+          } else
+          {
+           Vrab97 = 0;
+           while(Vrab97 < Vrab98)
+           {
+            if(Object[Vrab97].Exist) if(Object[Vrab97].Section == Vrab01)
+             if(Object[Vrab97].User != 0) if(Object[Vrab97].D == Vrab99) Vect01.push_back(Vrab97);
+            Vrab97 += 1;
+           }
+          }
+
+          Section[Vrab01].Camera[0] = 0; Section[Vrab01].Camera[1] = 0;
+          Vrab97 = Vect01.size(); insize Vrab95 = 0;
+          while(Vrab97 != 0)
+          {
+           Vrab97 -= 1;
+           Vrab95 += 1;
+           Section[Vrab01].Camera[0] += Object[Vect01[Vrab97]].X - 400 + (Object[Vect01[Vrab97]].Facing ? 15 : -15);
+           Section[Vrab01].Camera[1] += Object[Vect01[Vrab97]].Z - 315;
+          }
+          Section[Vrab01].Camera[0] = (Section[Vrab01].Camera[0] / rxint64(Vrab95)) + 400;
+          Section[Vrab01].Camera[1] = (Section[Vrab01].Camera[1] / rxint64(Vrab95)) + 200;
+          Section[Vrab01].Camera[2] = rxint64(Vrab99);
+
+          Vrab97 = Vect03.size();
+          while(Vrab97 != 0)
+          {
+           Vrab97 -= 1; if(Vect03[Vrab97].Vrab005 == Vrab99) Enchanted->Sound_Effect(Vect03[Vrab97].Vrab001);
+          }
+         }
+         #pragma endregion
+
+         if(Section[Vrab01].TPause){Section[Vrab01].Pause = true; Section[Vrab01].TPause = false;}
         }
        }
        #pragma endregion
@@ -3047,9 +3324,9 @@
       int1   New_Phase = false;
       int1   New_Subphase = false;
       insize Player_Count = 0;
-      // insize Background = 0;
+      //insize Background = 0;
       insize Independent_Team = 0;
-      insize Max = 0;
+      //insize Max = 0;
       int1   Polish = true;
       int1   Hitboxes = false;
       int1   Fill_Hitboxes = true;
@@ -3060,7 +3337,16 @@
       uint8  Speed = 2;
       uint8  Base_FPS = 8;
 
-      int0   Keys(std::vector < std::vector < int8 > > Vect01) perfect
+      std::vector < HEPTA_LF2_ENCHANTED_ENGINE1_SECTIONDATA > Section;
+
+      int0    Order (statics string Temp01, statics insize Vrab01 = 0)
+      {
+       if(Section.size() <= Vrab01) Section.resize(Vrab01 + 1);
+       if(Temp01 == "P") Section[Vrab01].Pause = !Section[Vrab01].Pause;
+       if(Temp01 == "P1"){Section[Vrab01].Pause = false; Section[Vrab01].TPause = true;}
+       if(Temp01 == "P2"){Hitboxes = !Hitboxes;}
+      }
+      int0    Keys  (std::vector < std::vector < int8 > > Vect01) perfect
       {
        Inputs.clear();
        statics insize Vrab01 = Vect01.size(); insize Vrab02 = 0;
@@ -3078,22 +3364,26 @@
         Inputs[Vrab02].C = (Vect01[Vrab02][7] > 0) ? 1 : 0;
         Vrab02 += 1;
        }
-      };
-      int0   Main(statics insize Vrab01 = 0) perfect 
+      }
+      xint64* Main  (statics insize Vrab01 = 0) perfect 
       {
-       if(!Running) return; if(!Game) return; if(Section.size() <= Vrab01) Section.resize(Vrab01 + 1);
+       if(Section.size() <= Vrab01) Section.resize(Vrab01 + 1);
+       if(!Running) return Section[Vrab01].Camera;
+       if(!Game) return Section[Vrab01].Camera;
 
        Section[Vrab01].Frame += ruint64(Vrab0003);
        if(Section[Vrab01].Frame >= Base_FPS) while(Section[Vrab01].Frame != 0)
        {
         Section[Vrab01].Frame -= Base_FPS;
         Emulate(Vrab01);
-       }
-      };
-      int0   Draw(statics insize Vrab01 = 0, statics int64 Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 800, statics int64 Vrab05 = 450, statics int64 Vrab06 = 0, statics int64 Vrab07 = 0, statics insize Vrab08 = rinsize(-1), statics uint64 Vrab09 = 0) perfect
+       } return Section[Vrab01].Camera;
+      }
+      int0    Draw  (statics insize Vrab01 = 0, statics int64 Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 800, statics int64 Vrab05 = 400, int64 Vrab06 = 0, int64 Vrab07 = 0, insize Vrab08 = rinsize(-1), statics uint64 Vrab09 = 0) perfect
       {
        if(!Running) return; if(!Game) return; if(Section.size() <= Vrab01) Section.resize(Vrab01 + 1);
 
+       if(Object.size() < Vrab08) Vrab08 = rinsize(-1); if(Vrab08 != rinsize(-1)) if(!Object[Vrab08].Exist) Vrab08 = rinsize(-1);
+       Vrab06 -= Vrab04 / 2.0; Vrab07 -= Vrab05 / 2.0;
        struct Strc01 {xint64 Vrab01 = 0; uint8 Vrab02 = 0; insize Vrab03 = rinsize(-1); int64 Vrab04 = 0; int64 Vrab05 = 0; uint8 Vrab06 = 0ui8; uint8 Vrab07 = 255ui8; int64 Vrab08 = 0; int64 Vrab09 = 0; int64 Vrab10 = 0; string Temp01;};
        std::vector < Strc01 > Vect01;
 
@@ -3101,40 +3391,58 @@
        if(Vrab08 == rinsize(-1))
        {
         if(Section[Vrab01].Background >= Backgrounds.size()) Section[Vrab01].Background = 0; if(Section[Vrab01].Background == 0) Section[Vrab01].Background = rinsize(L_Random(Backgrounds.size() - 2)) + 1;
+        // Camera Limits
+        {
+         int64 Vrab10 = Backgrounds[Section[Vrab01].Background].cam[0] + Backgrounds[Section[Vrab01].Background].width[0];
+         int64 Vrab11 = Backgrounds[Section[Vrab01].Background].cam[1] + Backgrounds[Section[Vrab01].Background].width[1];
+         int64 Vrab12 = Backgrounds[Section[Vrab01].Background].cam[2] + Backgrounds[Section[Vrab01].Background].zwidth[0];
+         int64 Vrab13 = Backgrounds[Section[Vrab01].Background].cam[3] + Backgrounds[Section[Vrab01].Background].zwidth[1];
+         if(Vrab11 - Vrab10 <= Vrab04){Vrab06 = 0;} else
+         {
+          if(Vrab06 < Vrab10) Vrab06 = Vrab10;
+          if(Vrab06 + Vrab04 > Vrab11) Vrab06 = Vrab11 - Vrab04;
+         }
+         if(Vrab13 - Vrab12 <= Vrab05){Vrab07 = 0;} else
+         {
+          if(Vrab07 < Vrab12) Vrab07 = Vrab12;
+          if(Vrab07 + Vrab05 > Vrab13) Vrab07 = Vrab13 - Vrab05;
+         }
+        }
+
         statics insize Vrab10 = Backgrounds[Section[Vrab01].Background].Layer.size(); 
         if(Section[Vrab01].Animation.size() <= Vrab10 + Backgrounds[Section[Vrab01].Background].Opoint.size()) Section[Vrab01].Animation.resize(Vrab10 + Backgrounds[Section[Vrab01].Background].Opoint.size());
         insize Vrab11 = 0; while(Vrab11 < Vrab10)
         {
-         statics insize &Vrab12 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].Index_pic;
-         statics uint32 &Vrab13 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].loop;
-         statics insize &Vrab14 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].loop_count;
-         statics uint32 &Vrab15 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].color;
-         statics uint8  &Vrab16 = ruint8(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].kind);
-         statics int64  &Vrab17 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].x);
-         statics int64  &Vrab18 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].y);
-         statics int64  &Vrab19 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].z);
+         statics insize &Vrab12 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->Index_pic;
+         statics uint32 &Vrab13 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->loop;
+         statics insize &Vrab14 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->loop_count;
+         statics uint32 &Vrab15 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->color;
+         statics uint8  &Vrab16 = ruint8(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->kind); if(Vrab16 == 2){Vrab11 += 1; continue;}
+         statics int64  &Vrab17 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->x);
+         statics int64  &Vrab18 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->y);
+         statics int64  &Vrab19 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->z);
 
          if(Vrab15 != 0)
          {
           statics insize Vrab20 = Vect01.size(); Vect01.push_back(Strc01());
-          Vect01[Vrab20].Vrab01 = rxint64((Vrab19 < Backgrounds[Section[Vrab01].Background].zwidth[0]) ? -100000 : Vrab19);
+          Vect01[Vrab20].Vrab01 = rxint64((Vrab19 <= Backgrounds[Section[Vrab01].Background].zwidth[0]) ? (-100000 + Backgrounds[Section[Vrab01].Background].zwidth[0]) : Vrab19);
           Vect01[Vrab20].Vrab02 = 0;
           Vect01[Vrab20].Vrab03 = Vrab15;
           Vect01[Vrab20].Vrab04 = Vrab17;
           Vect01[Vrab20].Vrab05 = Vrab18;
-          Vect01[Vrab20].Vrab06 = ruint8(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].rotate);
-          Vect01[Vrab20].Vrab07 = ruint8(255 - Backgrounds[Section[Vrab01].Background].Layer[Vrab11].trans);
-          Vect01[Vrab20].Vrab08 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].width;
-          Vect01[Vrab20].Vrab09 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].height;         
+          Vect01[Vrab20].Vrab06 = ruint8(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->rotate);
+          Vect01[Vrab20].Vrab07 = ruint8(255 - Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->trans);
+          Vect01[Vrab20].Vrab08 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->width;
+          Vect01[Vrab20].Vrab09 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->height;         
          } else
          {
           statics uint32 Vrab20 = Section[Vrab01].Animation[Vrab11];
-          if(Vrab20 >= (Backgrounds[Section[Vrab01].Background].Layer[Vrab11].c1 * (Polish ? 4 : 1)) && Vrab20 <= (Backgrounds[Section[Vrab01].Background].Layer[Vrab11].c2 * (Polish ? 4 : 1)) + (Polish ? 3 : 0))
+          if(Vrab20 >= (Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->c1 * (Polish ? 4 : 1)) && Vrab20 <= (Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->c2 * (Polish ? 4 : 1)) + (Polish ? 3 : 0))
           {
            int64  Vrab21 = 0;
            int64  Vrab22 = rint64(Backgrounds[Section[Vrab01].Background].width[1]);
            int64  Vrab23 = Vrab13; if(Vrab13 == 0) Vrab23 = Vrab22 + 1;
-           statics int64 Vrab24 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11].width);
+           statics int64 Vrab24 = rint64(Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->width);
            statics int1  Vrab25 = Vrab24 != 0;
            insize Vrab26 = Vrab14; if(Vrab26 == 0) Vrab26 = rinsize(-1);
            while(true)
@@ -3142,21 +3450,21 @@
             int64 Vrab27 = Vrab17 + Vrab21;
             if(Vrab25) if(Vrab22 - 800 != 0) Vrab27 -= (((Vrab24 - 800) * Vrab06) / (Vrab22 - 800)) - Vrab06;
             if(Vrab27 > Vrab22) break;
-            statics int64 Vrab28 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].height;
+            statics int64 Vrab28 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->height;
             statics int1  Vrab29 = Vrab28 != 0;
             int64 Vrab30 = Vrab18; if(Vrab29) if(Backgrounds[Section[Vrab01].Background].zwidth[1] - 400 != 0) Vrab30 -= (((Vrab28 - 400) * Vrab07) / (Backgrounds[Section[Vrab01].Background].zwidth[1] - 400)) - Vrab07;
             
             statics insize Vrab31 = Vect01.size(); Vect01.push_back(Strc01());
-            Vect01[Vrab31].Vrab01 = rxint64((Vrab19 < Backgrounds[Section[Vrab01].Background].zwidth[0]) ? -100000 : Vrab19);
+            Vect01[Vrab31].Vrab01 = rxint64((Vrab19 <= Backgrounds[Section[Vrab01].Background].zwidth[0]) ? (-100000 + Backgrounds[Section[Vrab01].Background].zwidth[0]) : Vrab19);
             Vect01[Vrab31].Vrab02 = Vrab16 == 1 ? 6 : 2;
             Vect01[Vrab31].Vrab03 = Vrab12;
             Vect01[Vrab31].Vrab04 = Vrab27;
             Vect01[Vrab31].Vrab05 = Vrab30;
             Vect01[Vrab31].Vrab06 = 0;
-            Vect01[Vrab31].Vrab07 = ruint8(255 - Backgrounds[Section[Vrab01].Background].Layer[Vrab11].trans);
+            Vect01[Vrab31].Vrab07 = ruint8(255 - Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->trans);
             Vect01[Vrab31].Vrab08 = 0;
             Vect01[Vrab31].Vrab09 = 0;
-            Vect01[Vrab31].Vrab10 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11].rotate;
+            Vect01[Vrab31].Vrab10 = Backgrounds[Section[Vrab01].Background].Layer[Vrab11]->rotate;
             
             Vrab21 += Vrab23; Vrab26 -= 1; if(Vrab26 == 0) break;
            }
@@ -3166,7 +3474,87 @@
         }
        } else
        {
-       
+        // Camera Limits
+        {
+         int64 Vrab10 = Object[Vrab08].Data->Background->cam[0] + Object[Vrab08].Data->Background->width[0];
+         int64 Vrab11 = Object[Vrab08].Data->Background->cam[1] + Object[Vrab08].Data->Background->width[1];
+         int64 Vrab12 = Object[Vrab08].Data->Background->cam[2] + Object[Vrab08].Data->Background->zwidth[0];
+         int64 Vrab13 = Object[Vrab08].Data->Background->cam[3] + Object[Vrab08].Data->Background->zwidth[1];
+         if(Vrab11 - Vrab10 <= Vrab04){Vrab06 = 0;} else
+         {
+          if(Vrab06 < Vrab10) Vrab06 = Vrab10;
+          if(Vrab06 + Vrab04 > Vrab11) Vrab06 = Vrab11 - Vrab04;
+         }
+         if(Vrab13 - Vrab12 <= Vrab05){Vrab07 = 0;} else
+         {
+          if(Vrab07 < Vrab12) Vrab07 = Vrab12;
+          if(Vrab07 + Vrab05 > Vrab13) Vrab07 = Vrab13 - Vrab05;
+         }
+        }
+
+        statics insize Vrab10 = Object[Vrab08].Data->Background->Layer.size(); 
+        if(Object[Vrab08].Animation.size() <= Vrab10 + Object[Vrab08].Data->Background->Opoint.size()) Object[Vrab08].Animation.resize(Vrab10 + Object[Vrab08].Data->Background->Opoint.size());
+        insize Vrab11 = 0; while(Vrab11 < Vrab10)
+        {
+         statics insize &Vrab12 = Object[Vrab08].Data->Background->Layer[Vrab11]->Index_pic;
+         statics uint32 &Vrab13 = Object[Vrab08].Data->Background->Layer[Vrab11]->loop;
+         statics insize &Vrab14 = Object[Vrab08].Data->Background->Layer[Vrab11]->loop_count;
+         statics uint32 &Vrab15 = Object[Vrab08].Data->Background->Layer[Vrab11]->color;
+         statics uint8  &Vrab16 = ruint8(Object[Vrab08].Data->Background->Layer[Vrab11]->kind); if(Vrab16 == 2){Vrab11 += 1; continue;}
+         statics int64  &Vrab17 = rint64(Object[Vrab08].Data->Background->Layer[Vrab11]->x);
+         statics int64  &Vrab18 = rint64(Object[Vrab08].Data->Background->Layer[Vrab11]->y);
+         statics int64  &Vrab19 = rint64(Object[Vrab08].Data->Background->Layer[Vrab11]->z);
+
+         if(Vrab15 != 0)
+         {
+          statics insize Vrab20 = Vect01.size(); Vect01.push_back(Strc01());
+          Vect01[Vrab20].Vrab01 = rxint64((Vrab19 <= Object[Vrab08].Data->Background->zwidth[0]) ? (-100000 + Object[Vrab08].Data->Background->zwidth[0]) : Vrab19);
+          Vect01[Vrab20].Vrab02 = 0;
+          Vect01[Vrab20].Vrab03 = Vrab15;
+          Vect01[Vrab20].Vrab04 = Vrab17;
+          Vect01[Vrab20].Vrab05 = Vrab18;
+          Vect01[Vrab20].Vrab06 = ruint8(Object[Vrab08].Data->Background->Layer[Vrab11]->rotate);
+          Vect01[Vrab20].Vrab07 = ruint8(255 - Object[Vrab08].Data->Background->Layer[Vrab11]->trans);
+          Vect01[Vrab20].Vrab08 = Object[Vrab08].Data->Background->Layer[Vrab11]->width;
+          Vect01[Vrab20].Vrab09 = Object[Vrab08].Data->Background->Layer[Vrab11]->height;         
+         } else
+         {
+          statics uint32 Vrab20 = Object[Vrab08].Animation[Vrab11];
+          if(Vrab20 >= (Object[Vrab08].Data->Background->Layer[Vrab11]->c1 * (Polish ? 4 : 1)) && Vrab20 <= (Object[Vrab08].Data->Background->Layer[Vrab11]->c2 * (Polish ? 4 : 1)) + (Polish ? 3 : 0))
+          {
+           int64  Vrab21 = 0;
+           int64  Vrab22 = rint64(Object[Vrab08].Data->Background->width[1]);
+           int64  Vrab23 = Vrab13; if(Vrab13 == 0) Vrab23 = Vrab22 + 1;
+           statics int64 Vrab24 = rint64(Object[Vrab08].Data->Background->Layer[Vrab11]->width);
+           statics int1  Vrab25 = Vrab24 != 0;
+           insize Vrab26 = Vrab14; if(Vrab26 == 0) Vrab26 = rinsize(-1);
+           while(true)
+           {
+            int64 Vrab27 = Vrab17 + Vrab21;
+            if(Vrab25) if(Vrab22 - 800 != 0) Vrab27 -= (((Vrab24 - 800) * Vrab06) / (Vrab22 - 800)) - Vrab06;
+            if(Vrab27 > Vrab22) break;
+            statics int64 Vrab28 = Object[Vrab08].Data->Background->Layer[Vrab11]->height;
+            statics int1  Vrab29 = Vrab28 != 0;
+            int64 Vrab30 = Vrab18; if(Vrab29) if(Object[Vrab08].Data->Background->zwidth[1] - 400 != 0) Vrab30 -= (((Vrab28 - 400) * Vrab07) / (Object[Vrab08].Data->Background->zwidth[1] - 400)) - Vrab07;
+
+            statics insize Vrab31 = Vect01.size(); Vect01.push_back(Strc01());
+            Vect01[Vrab31].Vrab01 = rxint64((Vrab19 <= Object[Vrab08].Data->Background->zwidth[0]) ? (-100000 + Object[Vrab08].Data->Background->zwidth[0]) : Vrab19);
+            Vect01[Vrab31].Vrab02 = Vrab16 == 1 ? 6 : 2;
+            Vect01[Vrab31].Vrab03 = Vrab12;
+            Vect01[Vrab31].Vrab04 = Vrab27;
+            Vect01[Vrab31].Vrab05 = Vrab30;
+            Vect01[Vrab31].Vrab06 = 0;
+            Vect01[Vrab31].Vrab07 = ruint8(255 - Object[Vrab08].Data->Background->Layer[Vrab11]->trans);
+            Vect01[Vrab31].Vrab08 = 0;
+            Vect01[Vrab31].Vrab09 = 0;
+            Vect01[Vrab31].Vrab10 = Object[Vrab08].Data->Background->Layer[Vrab11]->rotate;
+
+            Vrab21 += Vrab23; Vrab26 -= 1; if(Vrab26 == 0) break;
+           }
+          }
+         }
+         Vrab11 += 1;
+        }
        }
 
        // Shadow. (Drawn before any entities.)
@@ -3176,55 +3564,39 @@
         xint64 Vrab12 = rxint64(Backgrounds[Section[Vrab01].Background].shadow[1]);
         if(Vrab08 != rinsize(-1))
         {
-        
+         Vrab10 = Object[Vrab08].Data->Background->Index_shadow;
+         Vrab11 = rxint64(Object[Vrab08].Data->Background->shadow[0]);
+         Vrab12 = rxint64(Object[Vrab08].Data->Background->shadow[1]);
         }
         
         insize Vrab13 = Object.size();
         while(Vrab13 != 0)
         {
          Vrab13 -= 1; if(!Object[Vrab13].Exist) continue; if(Object[Vrab13].Section != Vrab01) continue; if(Object[Vrab13].D != Vrab08) continue;
-         statics insize Vrab14 = Vect01.size(); Vect01.resize(Vrab14 + 1);
-         Vect01[Vrab14].Vrab01 = -10000;
-         Vect01[Vrab14].Vrab02 = 2;
-         Vect01[Vrab14].Vrab03 = Vrab10;
-         Vect01[Vrab14].Vrab04 = Object[Vrab13].X - Vrab11;
-         Vect01[Vrab14].Vrab05 = Object[Vrab13].Z - Vrab12;
-        }
-       }
-
-       /*/ Shadow. (Drawn before any entities.)
-       {
-        statics insize &Vrab10 = Backgrounds[Background].Index_shadow;
-        statics xint64 &Vrab11 = rxint64(Backgrounds[Background].shadow[0]);
-        statics xint64 &Vrab12 = rxint64(Backgrounds[Background].shadow[1]);
-        statics int64  Vrab13 = rint64(Vrab11 / 2);
-        statics int64  Vrab14 = rint64(Vrab12 / 2);
-        insize Vrab15 = Object.size();
-        while(Vrab15 != 0)
-        {
-         Vrab15 -= 1; if(!Object[Vrab15].Exist) continue; if(Object[Vrab15].Section != Vrab01) continue; if(Object[Vrab15].D != Vrab08) continue;
-         if(Object[Vrab15].Held != rinsize(-1)) continue;
-         statics insize &Vrab16 = Object[Vrab15].Data->id; if(Vrab16 == 223 || Vrab16 == 224) continue;
-         statics int32  Vrab17 = Object[Vrab15].Blink / (Polish ? 4 : 1); if(Vrab17 < 70){if((Vrab17 % 4 > 1 && Vrab17 > 0) || (Vrab17 % 4 < -1 && Vrab17 < 0)) continue;} else {continue;}
-         statics insize &Vrab18 = Object[Vrab15].Frame; 
-         if(Vrab18 < Object[Vrab15].Data->Frame.size()) if(Object[Vrab15].Data->Frame[Vrab18]->Exist)
+         if(Object[Vrab13].Held != rinsize(-1)) continue;
+         statics insize Vrab14 = Object[Vrab13].Data->id; if(Vrab14 == 223 || Vrab14 == 224) continue;
+         statics int32  Vrab15 = Object[Vrab13].Blink; if(Vrab15 < 70){if((Vrab15 % 4 > 1 && Vrab15 > 0) || (Vrab15 % 4 < -1 && Vrab15 < 0)) continue;} else {continue;}
+         statics insize Vrab16 = Object[Vrab13].Frame; if(Vrab16 < Object[Vrab13].Data->Frame.size()) if(Object[Vrab13].Data->Frame[Vrab16]->Exist)
          {
-          int32 Vrab19[3] = {3005, 400, 401};
-          if(Find_State(Vrab15, Vrab18, Vrab19, 3)) continue;
+          insize Vrab17 = Object[Vrab13].Data->Frame[Vrab16]->state.size(); int1 Vrab18 = false;
+          while(Vrab17 != 0)
+          {
+           Vrab17 -= 1;
+           switch(Object[Vrab13].Data->Frame[Vrab16]->state[Vrab17])
+           {
+            case 3005: case 400: case 401: Vrab18 = true; break;
+            default: break;
+           }
+          } if(Vrab18) continue;
          }
-         statics insize Vrab19 = Vect01.size(); Vect01.resize(-1);
-         Vect01[Vrab19].Vrab01 = Object[Vrab15].Z;
-         Vect01[Vrab19].Vrab02 = 2;
-         Vect01[Vrab19].Vrab03 = Vrab10;
-         Vect01[Vrab19].Vrab04 = L_Rounding64(Object[Vrab15].X) - Vrab13;
-         Vect01[Vrab19].Vrab05 = L_Rounding64(Object[Vrab15].Z) - Vrab14;
-         Vect01[Vrab19].Vrab06 = 0ui8;
-         Vect01[Vrab19].Vrab07 = 255ui8;
-         Vect01[Vrab19].Vrab08 = L_Rounding64((Vrab11 * Object[Vrab15].Scale) - Vrab11);
-         Vect01[Vrab19].Vrab09 = L_Rounding64((Vrab12 * Object[Vrab15].Scale) - Vrab12);
+         statics insize Vrab17 = Vect01.size(); Vect01.resize(Vrab17 + 1);
+         Vect01[Vrab17].Vrab01 = -10000;
+         Vect01[Vrab17].Vrab02 = 2;
+         Vect01[Vrab17].Vrab03 = Vrab10;
+         Vect01[Vrab17].Vrab04 = Object[Vrab13].X - Vrab11;
+         Vect01[Vrab17].Vrab05 = Object[Vrab13].Z - Vrab12;
         }
        }
-       */
 
        // Object
        {
@@ -3243,7 +3615,123 @@
           Vect01[Vrab12].Vrab02 = 69;
           Vect01[Vrab12].Vrab04 = Object[Vrab10].X;
           Vect01[Vrab12].Vrab05 = Object[Vrab10].Z;
-          if(Object[Vrab10].Data->type == 0) Vect01[Vrab12].Temp01 = Object[Vrab10].Name;
+
+          // Bar
+          if(Object[Vrab10].Data->type == 0)
+          {
+           Vect01[Vrab12].Temp01 = Object[Vrab10].Name;
+           insize Vrab19 = 73, Vrab20 = (Object[Vrab10].HP_Regen > 0 && Section[Vrab01].Timeunit % 4 > 1) ? 72 : 71, Vrab21 = 76, Vrab22 = 74;
+           xint64 Vrab23 = Object[Vrab10].MHP; {statics xint64 Vrab24 = Object[Vrab10].DHP; if(Vrab24 > Vrab23) Vrab23 = Vrab24;}
+           int64 Vrab24 = L_Rounding64((Object[Vrab10].HP / Vrab23) * 60.0);
+           int64 Vrab25 = L_Rounding64((Object[Vrab10].DHP / Vrab23) * 60.0);
+           int64 Vrab26 = L_Rounding64((Object[Vrab10].MP / Object[Vrab10].MMP) * 60.0);
+           if(Vrab24 > Vrab25){auto Vrab27 = Vrab24; Vrab24 = Vrab25; Vrab25 = Vrab27; if(Object[Vrab10].HP > Object[Vrab10].DHP) Vrab19 = 80;}
+           int64 Vrab27 = 0;
+           if(Vrab25 > 60){Vrab27 = Vrab25 - 60; Vrab25 = 60; if(Vrab27 > 60) Vrab27 = 60;}
+           if(Vrab26 > 60) Vrab26 = 60;
+           if(Vrab25 > 0)
+           {
+            statics insize Vrab28 = Vect01.size(); Vect01.resize(Vrab28 + 1);
+            Vect01[Vrab28].Vrab01 = Object[Vrab10].Z;
+            Vect01[Vrab28].Vrab02 = 2;
+            Vect01[Vrab28].Vrab03 = Enchanted->Vect004[Vrab19];
+            Vect01[Vrab28].Vrab04 = Object[Vrab10].X - 30;
+            Vect01[Vrab28].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery - 13;
+            Vect01[Vrab28].Vrab08 = Vrab25;
+            Vect01[Vrab28].Vrab09 = 3;
+           }
+           if(Vrab24 > 0)
+           {
+            statics insize Vrab28 = Vect01.size(); Vect01.resize(Vrab28 + 1);
+            Vect01[Vrab28].Vrab01 = Object[Vrab10].Z;
+            Vect01[Vrab28].Vrab02 = 2;
+            Vect01[Vrab28].Vrab03 = Enchanted->Vect004[Vrab20];
+            Vect01[Vrab28].Vrab04 = Object[Vrab10].X - 30;
+            Vect01[Vrab28].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery - 13;
+            Vect01[Vrab28].Vrab08 = Vrab24;
+            Vect01[Vrab28].Vrab09 = 3;
+           }
+           if(Vrab27 > 0)
+           {
+            statics insize Vrab28 = Vect01.size(); Vect01.resize(Vrab28 + 1);
+            Vect01[Vrab28].Vrab01 = Object[Vrab10].Z;
+            Vect01[Vrab28].Vrab02 = 2;
+            Vect01[Vrab28].Vrab03 = Enchanted->Vect004[Vrab19];
+            Vect01[Vrab28].Vrab04 = Object[Vrab10].X - 30;
+            Vect01[Vrab28].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery - 13;
+            Vect01[Vrab28].Vrab08 = Vrab27;
+            Vect01[Vrab28].Vrab09 = 3;
+           }
+           if(Vrab24 > 0 || Vrab25 > 0)
+           {
+            statics insize Vrab28 = Vect01.size(); Vect01.resize(Vrab28 + 1);
+            Vect01[Vrab28].Vrab01 = Object[Vrab10].Z;
+            Vect01[Vrab28].Vrab02 = 2;
+            Vect01[Vrab28].Vrab03 = Enchanted->Vect004[Vrab21];
+            Vect01[Vrab28].Vrab04 = Object[Vrab10].X - 30;
+            Vect01[Vrab28].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery - 10;
+            Vect01[Vrab28].Vrab08 = 60;
+            Vect01[Vrab28].Vrab09 = 3;
+           }
+           if(Vrab26 > 0)
+           {
+            statics insize Vrab28 = Vect01.size(); Vect01.resize(Vrab28 + 1);
+            Vect01[Vrab28].Vrab01 = Object[Vrab10].Z;
+            Vect01[Vrab28].Vrab02 = 2;
+            Vect01[Vrab28].Vrab03 = Enchanted->Vect004[Vrab22];
+            Vect01[Vrab28].Vrab04 = Object[Vrab10].X - 30;
+            Vect01[Vrab28].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery - 10;
+            Vect01[Vrab28].Vrab08 = Vrab26;
+            Vect01[Vrab28].Vrab09 = 3;
+           }
+          }
+
+          // Hitboxes
+          if(Hitboxes)
+          {
+           insize Vrab13 = Object[Vrab10].Data->Frame[Vrab11]->itr.size();
+           while(Vrab13 != 0)
+           {
+            Vrab13 -= 1; insize Vrab14 = Vect01.size(); Vect01.resize(Vrab14 + 1);
+            Vect01[Vrab14].Vrab01 = 9999999999;
+            Vect01[Vrab14].Vrab02 = 1;
+            Vect01[Vrab14].Vrab03 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].kind != 0 ? 0xFFA500 : 0xFF0000;
+            Vect01[Vrab14].Vrab04 = Object[Vrab10].X - ((Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].x - Object[Vrab10].Data->Frame[Vrab11]->centerx) * (Object[Vrab10].Facing ? -1.0 : 1.0)) - (Object[Vrab10].Facing ? 0 : Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].w);
+            Vect01[Vrab14].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery + Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].y;
+            Vect01[Vrab14].Vrab08 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].w;
+            Vect01[Vrab14].Vrab09 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].h;
+            Vrab14 = Vect01.size(); Vect01.resize(Vrab14 + 1);
+            Vect01[Vrab14].Vrab01 = 999999999;
+            Vect01[Vrab14].Vrab02 = 0;
+            Vect01[Vrab14].Vrab03 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].kind != 0 ? 0xFFA500 : 0xFF0000;
+            Vect01[Vrab14].Vrab04 = Object[Vrab10].X - ((Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].x - Object[Vrab10].Data->Frame[Vrab11]->centerx) * (Object[Vrab10].Facing ? -1.0 : 1.0)) - (Object[Vrab10].Facing ? 0 : Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].w) + 1;
+            Vect01[Vrab14].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery + Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].y + 1;
+            Vect01[Vrab14].Vrab07 = 50;
+            Vect01[Vrab14].Vrab08 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].w - 2;
+            Vect01[Vrab14].Vrab09 = Object[Vrab10].Data->Frame[Vrab11]->itr[Vrab13].h - 2;
+           }
+           Vrab13 = Object[Vrab10].Data->Frame[Vrab11]->bdy.size();
+           while(Vrab13 != 0)
+           {
+            Vrab13 -= 1; insize Vrab14 = Vect01.size(); Vect01.resize(Vrab14 + 1);
+            Vect01[Vrab14].Vrab01 = 9999999999;
+            Vect01[Vrab14].Vrab02 = 1;
+            Vect01[Vrab14].Vrab03 = 0xFF00;
+            Vect01[Vrab14].Vrab04 = Object[Vrab10].X - ((Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].x - Object[Vrab10].Data->Frame[Vrab11]->centerx) * (Object[Vrab10].Facing ? -1.0 : 1.0)) - (Object[Vrab10].Facing ? 0 : Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].w);
+            Vect01[Vrab14].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery + Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].y;
+            Vect01[Vrab14].Vrab08 = Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].w;
+            Vect01[Vrab14].Vrab09 = Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].h;
+            Vrab14 = Vect01.size(); Vect01.resize(Vrab14 + 1);
+            Vect01[Vrab14].Vrab01 = 999999999;
+            Vect01[Vrab14].Vrab02 = 0;
+            Vect01[Vrab14].Vrab03 = 0xFF00;
+            Vect01[Vrab14].Vrab04 = Object[Vrab10].X - ((Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].x - Object[Vrab10].Data->Frame[Vrab11]->centerx) * (Object[Vrab10].Facing ? -1.0 : 1.0)) - (Object[Vrab10].Facing ? 0 : Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].w) + 1;
+            Vect01[Vrab14].Vrab05 = Object[Vrab10].Z + Object[Vrab10].Y - Object[Vrab10].Data->Frame[Vrab11]->centery + Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].y + 1;
+            Vect01[Vrab14].Vrab07 = 50;
+            Vect01[Vrab14].Vrab08 = Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].w - 2;
+            Vect01[Vrab14].Vrab09 = Object[Vrab10].Data->Frame[Vrab11]->bdy[Vrab13].h - 2;
+           }
+          }
          }
 
          statics xint64 Vrab12 = (Object[Vrab10].Facing ? 1.0 : -1.0);
@@ -3254,9 +3742,9 @@
          {
           while(Vrab14 != 0)
           {
-           Vrab14 -= 1; statics insize *Vrab15 = Pic_To_Address(Object[Vrab10].Data->Frame[Vrab11]->ppoint[Vrab14].pic, Object[Vrab10].Data);
+           Vrab14 -= 1; statics insize *Vrab15 = Pic_To_Address(Object[Vrab10].Data->Frame[Vrab11]->ppoint[Vrab14].pic + Object[Vrab10].Pic_Offset, Object[Vrab10].Data);
            statics insize Vrab16 = Vect01.size(); Vect01.resize(Vrab16 + 1);
-           Vect01[Vrab16].Vrab01 = Vrab13[2] + Object[Vrab10].Data->Frame[Vrab11]->ppoint[Vrab14].z;
+           Vect01[Vrab16].Vrab01 = Vrab13[2] + Object[Vrab10].Data->Frame[Vrab11]->ppoint[Vrab14].z + (rxint64(Object[Vrab10].Data->type) * 0.00001);
            Vect01[Vrab16].Vrab02 = 4;
            Vect01[Vrab16].Vrab03 = Vrab15[0];
            Vect01[Vrab16].Vrab04 = Vrab13[0] + (Object[Vrab10].Data->Frame[Vrab11]->ppoint[Vrab14].x * Vrab12) - (Object[Vrab10].Facing ? 0 : Vrab15[1]);
@@ -3269,9 +3757,9 @@
           }
          } else
          {
-          statics insize *Vrab15 = Pic_To_Address(Object[Vrab10].Data->Frame[Vrab11]->pic, Object[Vrab10].Data);
+          statics insize *Vrab15 = Pic_To_Address(Object[Vrab10].Data->Frame[Vrab11]->pic + Object[Vrab10].Pic_Offset, Object[Vrab10].Data);
           statics insize Vrab16 = Vect01.size(); Vect01.resize(Vrab16 + 1);
-          Vect01[Vrab16].Vrab01 = Vrab13[2];
+          Vect01[Vrab16].Vrab01 = Vrab13[2] + (rxint64(Object[Vrab10].Data->type) * 0.00001);
           Vect01[Vrab16].Vrab02 = 4;
           Vect01[Vrab16].Vrab03 = Vrab15[0];
           Vect01[Vrab16].Vrab04 = Vrab13[0] - (Object[Vrab10].Facing ? 0 : Vrab15[1]);
@@ -3281,15 +3769,6 @@
         }
        }
 
-       // Background
-       if(Vrab08 == rinsize(-1))
-       {
-       
-       } else
-       {
-       
-       }
-
        // Sorting & Drawing.
        {
         std::vector < Strc01* > Vect02;
@@ -3297,16 +3776,16 @@
          insize Vrab10 = Vect01.size();
          while(Vrab10 != 0)
          {
-          Vrab10 -= 1; insize Vrab11 = Vect02.size(); int1 Vrab12 = true;
-          while(Vrab11 != 0)
+          Vrab10 -= 1; statics insize Vrab11 = Vect02.size(); insize Vrab12 = 0;
+          while(Vrab12 < Vrab11)
           {
-           Vrab11 -= 1; if(Vect02[Vrab11]->Vrab01 >= Vect01[Vrab10].Vrab01) break;
-           Vrab12 = false;
-          } if(Vrab12)
-          {Vect02.push_back(&Vect01[Vrab10]);} else
-          {Vect02.insert(Vect02.begin() + Vrab11, &Vect01[Vrab10]);}
+           if(Vect01[Vrab10].Vrab01 > Vect02[Vrab12]->Vrab01) break;
+           Vrab12 += 1;
+          }
+          Vect02.insert(Vect02.begin() + Vrab12, &Vect01[Vrab10]);
          }
         }
+
         insize Vrab10 = Vect02.size(); int64 Vrab11 = Vrab09 % 1000; xint64 Vrab12 = (((Vrab09 % 10000 < 1000) ? 1.0 : -1.0) * rxint64(Vrab09 - (Vrab09 % 10000))) / 10000000.0; xint64 Vrab13 = rxint64(Vrab02) + (rxint64(Vrab04) / 2.0); xint64 Vrab14 = rxint64(Vrab03) + (rxint64(Vrab05) / 2.0);
         while(Vrab10 != 0)
         {
@@ -3364,14 +3843,13 @@
           if(Vrab15 < Vrab02) Vrab15 = Vrab02;
           if(Vrab16 + Enchanted->Vrab016[1] > Vrab03 + Vrab05) Vrab16 = Vrab03 + Vrab05 - Enchanted->Vrab016[1];
           if(Vrab16 < Vrab03) Vrab16 = Vrab03;
-          Enchanted->Print_Text(0, 10, 0, std::to_string(Enchanted->Vrab016[1]));
           Enchanted->Print_Text(Vrab15, Vrab16, 0, Vect02[Vrab10]->Temp01); continue;
          }
          P_Set_Display(Vect02[Vrab10]->Vrab02, Vect02[Vrab10]->Vrab03, Vrab15, Vrab16, Vect02[Vrab10]->Vrab06, Vect02[Vrab10]->Vrab07, Vect02[Vrab10]->Vrab08, Vect02[Vrab10]->Vrab09, Vect02[Vrab10]->Vrab10);
         }
        }
-      };
-      int1   Begin(statics string Temp01, statics string Temp02, statics int32 Vrab01 = rinsize(-1)) perfect 
+      }
+      int1    Begin (statics string Temp01, statics string Temp02, statics int32 Vrab01 = rinsize(-1)) perfect 
       {
        Temp001 = Temp01; Temp002 = Temp02; Game = true; Running = false; Loaded = false;
        Objects.clear(); Stages.clear(); Loads.clear();
@@ -3379,9 +3857,10 @@
        Frames.clear(); Frames.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME > ());
        Effects.clear(); Effects.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT > ());
        return true;
-      };
-      int1   Set(statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics string Temp01, statics insize Vrab04 = 0) perfect
+      }
+      int1    Set   (statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics string Temp01, statics insize Vrab04 = 0) perfect
       {
+       if(Section.size() <= Vrab04) Section.resize(Vrab04 + 1);
        statics insize Vrab05 = Add(Vrab02, Vrab04); if(Vrab05 == rinsize(-1)) return false;
        if(Vrab03 == 0){Object[Vrab05].Team = Independent_Team; Independent_Team += 1;} else {Object[Vrab05].Team = Vrab03;}
        Object[Vrab05].User = Vrab01 + 1;
@@ -3390,18 +3869,18 @@
        Object[Vrab05].Lock = true; Object[Vrab05].HP = 500; Object[Vrab05].DHP = 500; Object[Vrab05].MHP = 500; Object[Vrab05].MP = 200; Object[Vrab05].MMP = 500;
        Object[Vrab05].Blink = Polish ? 0 : 0; Object[Vrab05].Facing = L_Random(1) == 0; Object[Vrab05].Y_Vel = 1;
        {
-        statics xint64 Vrab05 = rxint64(Backgrounds[Section[Vrab04].Background].width[1] - Backgrounds[Section[Vrab04].Background].width[0]) / 2.0, Vrab06 = rxint64(Backgrounds[Section[Vrab04].Background].zwidth[1] - Backgrounds[Section[Vrab04].Background].zwidth[0]) / 2.0;
-        Object[Vrab05].X = rxint64(L_Random(rint32(Vrab05))) + rxint64(Backgrounds[Section[Vrab04].Background].width[0]) + (Vrab05 / 2.0);
-        Object[Vrab05].Z = rxint64(L_Random(rint32(Vrab06))) + rxint64(Backgrounds[Section[Vrab04].Background].zwidth[0]) + (Vrab06 / 2.0);
+        statics xint64 Vrab06 = rxint64(Backgrounds[Section[Vrab04].Background].width[1] - Backgrounds[Section[Vrab04].Background].width[0]) / 2.0, Vrab07 = rxint64(Backgrounds[Section[Vrab04].Background].zwidth[1] - Backgrounds[Section[Vrab04].Background].zwidth[0]) / 2.0;
+        Object[Vrab05].X = rxint64(L_Random(rint32(Vrab06))) + rxint64(Backgrounds[Section[Vrab04].Background].width[0]) + (Vrab06 / 2.0);
+        Object[Vrab05].Z = rxint64(L_Random(rint32(Vrab07))) + rxint64(Backgrounds[Section[Vrab04].Background].zwidth[0]) + (Vrab07 / 2.0);
        }
        return true;
-      };
-      int1   Start(statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics insize Vrab04, statics insize Vrab05 = 0) perfect
+      }
+      int1    Start (statics uint8 Vrab01, statics insize Vrab02, statics uint8 Vrab03, statics insize Vrab04, statics insize Vrab05 = 0) perfect
       {
        if(!Loaded) return false; if(Running) return false; if(Section.size() <= Vrab05) Section.resize(Vrab05 + 1);
 
        Vrab003 = 0; Independent_Team = 6;
-       Mode = Vrab01; Difficult = Vrab03; Max = Vrab04;
+       Mode = Vrab01; Difficult = Vrab03; Vrab004 = Vrab04;
        Move = false; Pause = false; Frame_Pause = false; Speed = 2; F6 = false; Hitboxes = false; Fill_Hitboxes = false;
       
        if(Mode == 1)
@@ -3409,13 +3888,13 @@
        {Section[Vrab05].Background = Vrab02; if(Section[Vrab05].Background >= Backgrounds.size()) Section[Vrab05].Background = 0; if(Section[Vrab05].Background == 0) Section[Vrab05].Background = rinsize(L_Random(Backgrounds.size() - 2)) + 1;}
 
        Running = true; return true;
-      };
-      int1   End(insize Vrab01 = 0) perfect
+      }
+      int1    End   (insize Vrab01 = 0) perfect
       {
        Remove(rinsize(-1), Vrab01);
        Game = false;
-      };
-      string Load(statics int1 Vrab01 = false) perfect
+      }
+      string  Load  (statics int1 Vrab01 = false) perfect
       {
        if(Loaded) return ""; string Temp01 = "";
        while(true)
@@ -3428,6 +3907,7 @@
           Backgrounds.clear(); Backgrounds.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND());
           Frames.clear(); Frames.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME > ());
           Effects.clear(); Effects.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT > ());
+          Object_Backgrounds.clear(); Object_Backgrounds.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND > ());
           {
            statics string Temp02 = Temp001 + Temp002 + "data\\";
            Vect003.clear(); statics string Temp03 = ".wav";
@@ -3442,7 +3922,7 @@
           Vrab001 = 3; Vrab002[0] = 0;
          continue;
          case 3: case 4:
-          if(Vrab002[0] >= Objects.size()) if(Vrab001 == 3){return "F4";} else {Vrab001 = 7; Vrab002[0] = 1; break;} if(Objects[Vrab002[0]].type == 0) Vrab001 = 4;
+          if(Vrab002[0] >= Objects.size()) if(Vrab001 == 3){return "F4";} else {Vrab001 = 7; Vrab002[0] = 1; continue;} if(Objects[Vrab002[0]].type == 0) Vrab001 = 4;
           Temp01 = Temp001 + Temp002 + Objects[Vrab002[0]].file;
           {statics uint8 Vrab02 = Decode(Temp01); if(Vrab02 != 0) return "F" + std::to_string(Vrab02) + "|" + Temp01;}
           Vrab001 += 2; Vrab002[1] = 0;
@@ -3499,15 +3979,54 @@
              while(Vrab06 != 0){Vrab06 -= 1; statics insize Vrab07 = Objects[Vrab05].Pic[Vrab06].Index_pic; if(Vrab07 < Vrab04) Objects[Vrab05].Pic[Vrab06].Index_pic = Vect002[Vrab07];}
             
              Vrab06 = Objects[Vrab05].Frame.size();
-             while(Vrab06 != 0){Vrab06 -= 1; if(Objects[Vrab05].Frame[Vrab06]->Exist){statics insize Vrab07 = Objects[Vrab05].Frame[Vrab06]->Index_sound; if(Vrab07 < Vrab04) Objects[Vrab05].Frame[Vrab06]->Index_sound = Vect002[Vrab07];}}
+             while(Vrab06 != 0)
+             {
+              Vrab06 -= 1; if(Objects[Vrab05].Frame[Vrab06]->Exist)
+              {
+               insize Vrab07 = Objects[Vrab05].Frame[Vrab06]->Index_sound; if(Vrab07 < Vrab04) Objects[Vrab05].Frame[Vrab06]->Index_sound = Vect002[Vrab07];
+               statics xint64 Vrab08 = rxint64(Objects[Vrab05].Frame[Vrab06]->centerx), Vrab09 = rxint64(Objects[Vrab05].Frame[Vrab06]->centery), Vrab10 = rxint64(Objects[Vrab05].Frame[Vrab06]->centerz);
+               Vrab07 = Objects[Vrab05].Frame[Vrab06]->bdy.size();
+               while(Vrab07 != 0)
+               {
+                Vrab07 -= 1; statics xint64 Vrab11 = Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].x - Vrab08, Vrab12 = Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].y - Vrab09, Vrab13 = Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].z - Vrab10;
+                if(Vrab11 < Objects[Vrab05].Frame[Vrab06]->bdy_X) Objects[Vrab05].Frame[Vrab06]->bdy_X = Vrab11;
+                if(Vrab12 < Objects[Vrab05].Frame[Vrab06]->bdy_Y) Objects[Vrab05].Frame[Vrab06]->bdy_Y = Vrab12;
+                if(Vrab13 < Objects[Vrab05].Frame[Vrab06]->bdy_Z) Objects[Vrab05].Frame[Vrab06]->bdy_Z = Vrab13;
+                if(Vrab11 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].w > Objects[Vrab05].Frame[Vrab06]->bdy_W) Objects[Vrab05].Frame[Vrab06]->bdy_W = Vrab11 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].w;
+                if(Vrab12 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].h > Objects[Vrab05].Frame[Vrab06]->bdy_H) Objects[Vrab05].Frame[Vrab06]->bdy_H = Vrab12 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].h;
+                if(Vrab13 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].l > Objects[Vrab05].Frame[Vrab06]->bdy_L) Objects[Vrab05].Frame[Vrab06]->bdy_L = Vrab13 + Objects[Vrab05].Frame[Vrab06]->bdy[Vrab07].l;
+               }
+               Vrab07 = Objects[Vrab05].Frame[Vrab06]->itr.size();
+               while(Vrab07 != 0)
+               {
+                Vrab07 -= 1; statics xint64 Vrab11 = Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].x - Vrab08, Vrab12 = Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].y - Vrab09, Vrab13 = Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].z - Vrab10;
+                if(Vrab11 < Objects[Vrab05].Frame[Vrab06]->itr_X) Objects[Vrab05].Frame[Vrab06]->itr_X = Vrab11;
+                if(Vrab12 < Objects[Vrab05].Frame[Vrab06]->itr_Y) Objects[Vrab05].Frame[Vrab06]->itr_Y = Vrab12;
+                if(Vrab13 < Objects[Vrab05].Frame[Vrab06]->itr_Z) Objects[Vrab05].Frame[Vrab06]->itr_Z = Vrab13;
+                if(Vrab11 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].w > Objects[Vrab05].Frame[Vrab06]->itr_W) Objects[Vrab05].Frame[Vrab06]->itr_W = Vrab11 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].w;
+                if(Vrab12 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].h > Objects[Vrab05].Frame[Vrab06]->itr_H) Objects[Vrab05].Frame[Vrab06]->itr_H = Vrab12 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].h;
+                if(Vrab13 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].l > Objects[Vrab05].Frame[Vrab06]->itr_L) Objects[Vrab05].Frame[Vrab06]->itr_L = Vrab13 + Objects[Vrab05].Frame[Vrab06]->itr[Vrab07].l;
+               }
+               Objects[Vrab05].Frame[Vrab06]->bdy_W = Objects[Vrab05].Frame[Vrab06]->bdy_W - Objects[Vrab05].Frame[Vrab06]->bdy_X;
+               Objects[Vrab05].Frame[Vrab06]->bdy_H = Objects[Vrab05].Frame[Vrab06]->bdy_H - Objects[Vrab05].Frame[Vrab06]->bdy_Y;
+               Objects[Vrab05].Frame[Vrab06]->bdy_L = Objects[Vrab05].Frame[Vrab06]->bdy_L - Objects[Vrab05].Frame[Vrab06]->bdy_Z;
+               Objects[Vrab05].Frame[Vrab06]->itr_W = Objects[Vrab05].Frame[Vrab06]->itr_W - Objects[Vrab05].Frame[Vrab06]->itr_X;
+               Objects[Vrab05].Frame[Vrab06]->itr_H = Objects[Vrab05].Frame[Vrab06]->itr_H - Objects[Vrab05].Frame[Vrab06]->itr_Y;
+               Objects[Vrab05].Frame[Vrab06]->itr_L = Objects[Vrab05].Frame[Vrab06]->itr_L - Objects[Vrab05].Frame[Vrab06]->itr_Z;
+              }
+             }
+            }
+            Vrab05 = Object_Backgrounds.size(); while(Vrab05 != 0)
+            {
+             Vrab05 -= 1;
+             insize Vrab06 = Object_Backgrounds[Vrab05]->Index_shadow; if(Vrab06 < Vrab04) Object_Backgrounds[Vrab05]->Index_shadow = Vect002[Vrab06];
             }
             Vrab05 = Backgrounds.size(); while(Vrab05 != 0)
             {
-             Vrab05 -= 1;
-             {statics insize Vrab06 = Backgrounds[Vrab05].Index_shadow; if(Vrab06 < Vrab04) Backgrounds[Vrab05].Index_shadow = Vect002[Vrab06];}
-             
-             insize Vrab06 = Backgrounds[Vrab05].Layer.size();
-             while(Vrab06 != 0){Vrab06 -= 1; statics insize Vrab07 = Backgrounds[Vrab05].Layer[Vrab06].Index_pic; if(Vrab07 < Vrab04) Backgrounds[Vrab05].Layer[Vrab06].Index_pic = Vect002[Vrab07];}
+             Vrab05 -= 1; 
+             insize Vrab06 = Backgrounds[Vrab05].Index_shadow; if(Vrab06 < Vrab04) Backgrounds[Vrab05].Index_shadow = Vect002[Vrab06];
+             Vrab06 = Backgrounds[Vrab05].Layer.size();
+             while(Vrab06 != 0){Vrab06 -= 1; statics insize Vrab07 = Backgrounds[Vrab05].Layer[Vrab06]->Index_pic; if(Vrab07 < Vrab04) Backgrounds[Vrab05].Layer[Vrab06]->Index_pic = Vect002[Vrab07];}
             }
             Vrab05 = Stages.size(); while(Vrab05 != 0)
             {
@@ -3544,7 +4063,7 @@
             break;
             case 1:
              if(Temp01 == "<object_end>") {Vrab002[0] = 0; continue;}
-             if(Temp01 == "id:")          {File001 >> Temp01; Vrab002[1] = Objects.size(); Objects.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT()); Objects[Vrab002[1]].id = rinsize(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "id:")          {File001 >> Temp01; Vrab002[1] = Objects.size(); Objects.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT()); Objects[Vrab002[1]].id = rinsize(L_Numbering(Temp01)); Objects[Vrab002[1]].Background = Object_Backgrounds[0].get(); continue;}
              if(Temp01 == "type:")        {File001 >> Temp01; if(Vrab002[1] < Objects.size()) Objects[Vrab002[1]].type = L_Numbering(Temp01); continue;}
              if(Temp01 == "file:")        {File001 >> Temp01; if(Vrab002[1] < Objects.size()) Objects[Vrab002[1]].file = Temp01; continue;}
             break;
@@ -3569,7 +4088,7 @@
              if(Temp01 == "<property>" || Temp01 == "<bmp_begin>")            {Vrab002[1] = 1; Vrab002[2] = rinsize(-1); Objects[Vrab002[0]].Pic.clear(); Vect001.clear(); continue;}
              if(Temp01 == "<strength>" || Temp01 == "<weapon_strength_list>") {Vrab002[1] = 3; Vrab002[2] = rinsize(-1); continue;}
              if(Temp01 == "<frame>")                                          {Vrab002[1] = 5; File001 >> Temp01; statics insize Vrab02 = rinsize(L_Numbering(Temp01)); statics insize Vrab03 = Objects[Vrab002[0]].Frame.size(); if(Vrab03 <= Vrab02){Objects[Vrab002[0]].Frame.insert(Objects[Vrab002[0]].Frame.end(), Vrab02 + 1 - Vrab03, Frames[0].get());} Vrab002[2] = Vrab02; if(Objects[Vrab002[0]].Frame[Vrab002[2]] == Frames[0].get()){insize Vrab04 = Frames.size(); Frames.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME >()); Objects[Vrab002[0]].Frame[Vrab002[2]] = Frames[Vrab04].get();} else {*Objects[Vrab002[0]].Frame[Vrab002[2]] = HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_FRAME();} Objects[Vrab002[0]].Frame[Vrab002[2]]->Exist = true; File001 >> Temp01; continue;}
-             if(Temp01 == "<background>")                                     {Vrab002[1] = 38; Objects[Vrab002[0]].Background.release(); Objects[Vrab002[0]].Background = std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND > (); continue;}
+             if(Temp01 == "<background>")                                     {Vrab002[1] = 54; if(Objects[Vrab002[0]].Background == Object_Backgrounds[0].get()){insize Vrab02 = Object_Backgrounds.size(); Object_Backgrounds.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND > ()); Objects[Vrab002[0]].Background = Object_Backgrounds[Vrab02].get();} else {*Objects[Vrab002[0]].Background = HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_BACKGROUND();} continue;}
              if(Temp01 == "<effect>")                                         {Vrab002[1] = 52; File001 >> Temp01; statics insize Vrab02 = rinsize(L_Numbering(Temp01)); statics insize Vrab03 = Objects[Vrab002[0]].Effect.size(); if(Vrab03 <= Vrab02){Objects[Vrab002[0]].Effect.insert(Objects[Vrab002[0]].Effect.end(), Vrab02 + 1 - Vrab03, Effects[0].get());} Vrab002[2] = Vrab02; if(Objects[Vrab002[0]].Effect[Vrab002[2]] == Effects[0].get()){insize Vrab04 = Effect.size(); Effects.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT >()); Objects[Vrab002[0]].Effect[Vrab002[2]] = Effects[Vrab04].get();} else {*Objects[Vrab002[0]].Effect[Vrab002[2]] = HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_EFFECT();} Objects[Vrab002[0]].Effect[Vrab002[2]]->Exist = true; File001 >> Temp01; continue;}
             break;
             case 1:
@@ -3622,7 +4141,6 @@
             case 3: case 4:
              if(Temp01 == "<strength_end>" || Temp01 == "<weapon_strength_list_end>") {Vrab002[1] = 0; continue;}
              if(Temp01 == "entry:")   {File001 >> Temp01; Vrab002[2] = Objects[Vrab002[0]].Strength.size(); Objects[Vrab002[0]].Strength.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_OBJECT_STRENGTH()); File001 >> Temp01; continue;}
-             if(Temp01 == "zwidth:")  {File001 >> Temp01; if(Vrab002[2] < Objects[Vrab002[0]].Strength.size()) Objects[Vrab002[0]].Strength[Vrab002[2]].zwidth = L_Numbering(Temp01); if(Vrab002[1] != 3) Vrab002[1] = 3; continue;}
              if(Temp01 == "dvx:")     {File001 >> Temp01; if(Vrab002[2] < Objects[Vrab002[0]].Strength.size()) Objects[Vrab002[0]].Strength[Vrab002[2]].dvx = L_Numbering(Temp01); if(Vrab002[1] != 3) Vrab002[1] = 3; continue;}
              if(Temp01 == "dvy:")     {File001 >> Temp01; if(Vrab002[2] < Objects[Vrab002[0]].Strength.size()) Objects[Vrab002[0]].Strength[Vrab002[2]].dvy = L_Numbering(Temp01); if(Vrab002[1] != 3) Vrab002[1] = 3; continue;}
              if(Temp01 == "dvz:")     {File001 >> Temp01; if(Vrab002[2] < Objects[Vrab002[0]].Strength.size()) Objects[Vrab002[0]].Strength[Vrab002[2]].dvz = L_Numbering(Temp01); if(Vrab002[1] != 3) Vrab002[1] = 3; continue;}
@@ -3647,6 +4165,7 @@
              if(Temp01 == "dvz:")                        {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->dvz = L_Doubling(Temp01); if(Vrab002[1] != 5) Vrab002[1] = 5; continue;}
              if(Temp01 == "centerx:")                    {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->centerx = L_Numbering(Temp01); if(Vrab002[1] != 5) Vrab002[1] = 5; continue;}
              if(Temp01 == "centery:")                    {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->centery = L_Numbering(Temp01); if(Vrab002[1] != 5) Vrab002[1] = 5; continue;}
+             if(Temp01 == "centerz:")                    {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->centerz = L_Numbering(Temp01); if(Vrab002[1] != 5) Vrab002[1] = 5; continue;}
              if(Temp01 == "hit_a:")                      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_a.clear(); Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_a.push_back(L_Numbering(Temp01)); Vrab002[1] = 8; continue;}
              if(Temp01 == "hit_d:")                      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_d.clear(); Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_d.push_back(L_Numbering(Temp01)); Vrab002[1] = 9; continue;}
              if(Temp01 == "hit_j:")                      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_j.clear(); Objects[Vrab002[0]].Frame[Vrab002[2]]->hit_j.push_back(L_Numbering(Temp01)); Vrab002[1] = 10; continue;}
@@ -3767,12 +4286,13 @@
             case 32: case 33: case 34: case 35: case 36:
              if(Temp01 == "ipoint_end:" || Temp01 == "itr_end:") {Vrab002[1] = 5; continue;}
              if(Temp01 == "kind:")        {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].kind = L_Numbering(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "x:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].x = L_Numbering(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "y:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].y = L_Numbering(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "z:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].z = L_Numbering(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "w:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].w = ruint32(L_Numbering(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "h:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].h = ruint32(L_Numbering(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
-             if(Temp01 == "zwidth:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].zwidth = ruint32(L_Numbering(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "x:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].x = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "y:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].y = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "z:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].z = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "w:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].w = L_Positive64(L_Doubling(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "h:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].h = L_Positive64(L_Doubling(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "l:")           {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].l = L_Positive64(L_Doubling(Temp01)); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
+             if(Temp01 == "zwidth:")      {File001 >> Temp01; statics xint32 Vrab02 = L_Positive(L_Numbering(Temp01)); Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].z = -Vrab02; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].l = Vrab02 * 2; if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
              if(Temp01 == "dvx:")         {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].dvx = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
              if(Temp01 == "dvy:")         {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].dvy = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
              if(Temp01 == "dvy:")         {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->itr[Vrab002[3]].dvz = L_Doubling(Temp01); if(Vrab002[1] != 32) Vrab002[1] = 32; continue;}
@@ -3794,22 +4314,27 @@
             case 37:
              if(Temp01 == "hpoint_end:" || Temp01 == "bdy_end:") {Vrab002[1] = 5; continue;}
              if(Temp01 == "kind:")   {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].kind = L_Numbering(Temp01); continue;}
-             if(Temp01 == "x:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].x = L_Numbering(Temp01); continue;}
-             if(Temp01 == "y:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].y = L_Numbering(Temp01); continue;}
-             if(Temp01 == "z:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].z = L_Numbering(Temp01); continue;}
-             if(Temp01 == "w:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].w = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "h:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].h = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "zwidth:") {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].zwidth = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "x:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].x = L_Doubling(Temp01); continue;}
+             if(Temp01 == "y:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].y = L_Doubling(Temp01); continue;}
+             if(Temp01 == "z:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].z = L_Doubling(Temp01); continue;}
+             if(Temp01 == "w:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].w = L_Positive64(L_Doubling(Temp01)); continue;}
+             if(Temp01 == "h:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].h = L_Positive64(L_Doubling(Temp01)); continue;}
+             if(Temp01 == "l:")      {File001 >> Temp01; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].l = L_Positive64(L_Doubling(Temp01)); continue;}
+             if(Temp01 == "zwidth:") {File001 >> Temp01; statics xint64 Vrab02 = L_Positive64(L_Doubling(Temp01)); Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].z = -Vrab02; Objects[Vrab002[0]].Frame[Vrab002[2]]->bdy[Vrab002[3]].l = Vrab02 * 2; continue;}
+            break;
+            case 54:
+             if(Temp01 == "<background_end>"){Vrab002[1] = 0; continue;}
+             if(Temp01 == "<property>")      {Vrab002[1] = 38; continue;}
+             if(Temp01 == "<layer>")         {Vrab002[1] = 46; insize Vrab02 = Backgrounds[0].Layer.size(); Backgrounds[0].Layer.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER > ()); Vrab002[2] = Objects[Vrab002[0]].Background->Layer.size(); Objects[Vrab002[0]].Background->Layer.push_back(Backgrounds[0].Layer[Vrab02].get()); File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->Index_pic = Preload(Temp01); continue;}
+             if(Temp01 == "<opoint>")        {Vrab002[1] = 47; insize Vrab02 = Backgrounds[0].Opoint.size(); Backgrounds[0].Opoint.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_OPOINT > ()); Vrab002[2] = Objects[Vrab002[0]].Background->Opoint.size(); Objects[Vrab002[0]].Background->Opoint.push_back(Backgrounds[0].Opoint[Vrab02].get()); continue;}
             break;
             case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45:
-             if(Temp01 == "<background_end>") {Vrab002[1] = 0; continue;}
-             if(Temp01 == "kind:")            {File001 >> Temp01; Objects[Vrab002[0]].Background->kind = L_Numbering(Temp01); if(Vrab002[1] != 38) Vrab002[1] = 38; continue;}
-             if(Temp01 == "width:")           {File001 >> Temp01; Objects[Vrab002[0]].Background->width[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->width[1] = 0; Vrab002[1] = 39; continue;}
-             if(Temp01 == "zwidth:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->zwidth[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->zwidth[1] = 0; Vrab002[1] = 40; continue;}
-             if(Temp01 == "cam:")             {File001 >> Temp01; Objects[Vrab002[0]].Background->cam[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->cam[1] = 0; Objects[Vrab002[0]].Background->cam[2] = 0; Objects[Vrab002[0]].Background->cam[3] = 0; Vrab002[1] = 41; continue;}
-             if(Temp01 == "shadow:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Index_shadow = Preload(Temp01); Objects[Vrab002[0]].Background->shadow[0] = 0; Objects[Vrab002[0]].Background->shadow[1] = 0; Vrab002[1] = 44;}
-             if(Temp01 == "<layer>")          {Vrab002[1] = 46; File001 >> Temp01; Vrab002[2] = Backgrounds[0].Layer.size(); Backgrounds[0].Layer.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER()); Objects[Vrab002[0]].Background->Layer.push_back(&Backgrounds[0].Layer[Vrab002[2]]); Backgrounds[0].Layer[Vrab002[2]].Index_pic = Preload(Temp01); continue;}
-             if(Temp01 == "<opoint>")         {Vrab002[1] = 47; Vrab002[2] = Backgrounds[0].Opoint.size(); Backgrounds[0].Opoint.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_OPOINT()); Objects[Vrab002[0]].Background->Opoint.push_back(&Backgrounds[0].Opoint[Vrab002[2]]); continue;}
+             if(Temp01 == "<property_end>"){Vrab002[1] = 54; continue;}
+             if(Temp01 == "kind:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->kind = L_Numbering(Temp01); if(Vrab002[1] != 38) Vrab002[1] = 38; continue;}
+             if(Temp01 == "width:")        {File001 >> Temp01; Objects[Vrab002[0]].Background->width[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->width[1] = 0; Vrab002[1] = 39; continue;}
+             if(Temp01 == "zwidth:")       {File001 >> Temp01; Objects[Vrab002[0]].Background->zwidth[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->zwidth[1] = 0; Vrab002[1] = 40; continue;}
+             if(Temp01 == "cam:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->cam[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->cam[1] = 0; Objects[Vrab002[0]].Background->cam[2] = 0; Objects[Vrab002[0]].Background->cam[3] = 0; Vrab002[1] = 41; continue;}
+             if(Temp01 == "shadow:")       {File001 >> Temp01; Objects[Vrab002[0]].Background->Index_shadow = Preload(Temp01); Objects[Vrab002[0]].Background->shadow[0] = 0; Objects[Vrab002[0]].Background->shadow[1] = 0; Vrab002[1] = 44; continue;}
 
              if(Vrab002[1] == 39){Vrab002[1] = 38; Objects[Vrab002[0]].Background->width[1] = L_Numbering(Temp01); continue;}
              if(Vrab002[1] == 40){Vrab002[1] = 38; Objects[Vrab002[0]].Background->zwidth[1] = L_Numbering(Temp01); continue;}
@@ -3820,42 +4345,43 @@
              if(Vrab002[1] == 45){Vrab002[1] = 38; Objects[Vrab002[0]].Background->shadow[1] = L_Numbering(Temp01); continue;}
             break;
             case 46:
-             if(Temp01 == "<layer_end>") {Vrab002[1] = 38; continue;}
-             if(Temp01 == "kind:")       {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].kind = L_Numbering(Temp01); continue;}
-             if(Temp01 == "x:")          {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].x = L_Numbering(Temp01); continue;}
-             if(Temp01 == "y:")          {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].y = L_Numbering(Temp01); continue;}
-             if(Temp01 == "z:")          {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].z = L_Numbering(Temp01); continue;}
-             if(Temp01 == "width:")      {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].width = L_Numbering(Temp01); continue;}
-             if(Temp01 == "height:")     {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].height = L_Numbering(Temp01); continue;}
-             if(Temp01 == "trans:")      {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].trans = L_Numbering(Temp01); continue;}
-             if(Temp01 == "rotate:")     {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].rotate = L_Numbering(Temp01); continue;}
-             if(Temp01 == "color:")      {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].color = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "loop:")       {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].loop = L_Numbering(Temp01); continue;}
-             if(Temp01 == "loop_count:") {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].loop_count = L_Numbering(Temp01); continue;}
-             if(Temp01 == "cc:")         {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].cc = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "c1:")         {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].c1 = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "c2:")         {File001 >> Temp01; Backgrounds[0].Layer[Vrab002[2]].c2 = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "<layer_end>") {Vrab002[1] = 54; continue;}
+             if(Temp01 == "kind:")       {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->kind = L_Numbering(Temp01); continue;}
+             if(Temp01 == "x:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->x = L_Numbering(Temp01); continue;}
+             if(Temp01 == "y:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->y = L_Numbering(Temp01); continue;}
+             if(Temp01 == "z:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->z = L_Numbering(Temp01); continue;}
+             if(Temp01 == "width:")      {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->width = L_Numbering(Temp01); continue;}
+             if(Temp01 == "height:")     {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->height = L_Numbering(Temp01); continue;}
+             if(Temp01 == "trans:")      {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->trans = L_Numbering(Temp01); continue;}
+             if(Temp01 == "rotate:")     {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->rotate = L_Numbering(Temp01); continue;}
+             if(Temp01 == "color:")      {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->color = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "colorhex:")   {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->color = ruint32(L_Convert(Temp01)); continue;}
+             if(Temp01 == "loop:")       {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->loop = L_Numbering(Temp01); continue;}
+             if(Temp01 == "loop_count:") {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->loop_count = L_Numbering(Temp01); continue;}
+             if(Temp01 == "cc:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->cc = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "c1:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->c1 = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "c2:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Layer[Vrab002[2]]->c2 = ruint32(L_Numbering(Temp01)); continue;}
             break;
             case 47: case 48: case 49: case 50: case 51:
-             if(Temp01 == "<opoint_end>") {Vrab002[1] = 37; continue;}
-             if(Temp01 == "kind:")        {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].kind = L_Numbering(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "x:")           {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].x[0] = L_Numbering(Temp01); Backgrounds[0].Opoint[Vrab002[2]].x[1] = Backgrounds[0].Opoint[Vrab002[2]].x[0]; Vrab002[1] = 48; continue;}
-             if(Temp01 == "y:")           {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].y[0] = L_Numbering(Temp01); Backgrounds[0].Opoint[Vrab002[2]].y[1] = Backgrounds[0].Opoint[Vrab002[2]].y[0]; Vrab002[1] = 49; continue;}
-             if(Temp01 == "z:")           {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].z[0] = L_Numbering(Temp01); Backgrounds[0].Opoint[Vrab002[2]].y[1] = Backgrounds[0].Opoint[Vrab002[2]].y[0]; Vrab002[1] = 50; continue;}
-             if(Temp01 == "dvx:")         {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].dvx = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "dvy:")         {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].dvy = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "dvz:")         {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].dvz = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "oid:")         {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].oid = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "action:")      {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].action.clear(); Backgrounds[0].Opoint[Vrab002[2]].action.push_back(L_Numbering(Temp01)); Vrab002[1] = 51; continue;}
-             if(Temp01 == "facing:")      {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].facing = L_Numbering(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "cc:")          {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].cc = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "c1:")          {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].c1 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
-             if(Temp01 == "c2:")          {File001 >> Temp01; Backgrounds[0].Opoint[Vrab002[2]].c2 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "<opoint_end>") {Vrab002[1] = 54; continue;}
+             if(Temp01 == "kind:")        {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->kind = L_Numbering(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "x:")           {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->x[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->x[1] = Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->x[0]; Vrab002[1] = 48; continue;}
+             if(Temp01 == "y:")           {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[1] = Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[0]; Vrab002[1] = 49; continue;}
+             if(Temp01 == "z:")           {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->z[0] = L_Numbering(Temp01); Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[1] = Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[0]; Vrab002[1] = 50; continue;}
+             if(Temp01 == "dvx:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->dvx = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "dvy:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->dvy = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "dvz:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->dvz = L_Doubling(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "oid:")         {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->oid = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "action:")      {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->action.clear(); Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->action.push_back(L_Numbering(Temp01)); Vrab002[1] = 51; continue;}
+             if(Temp01 == "facing:")      {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->facing = L_Numbering(Temp01); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "cc:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->cc = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "c1:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->c1 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
+             if(Temp01 == "c2:")          {File001 >> Temp01; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->c2 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 47) Vrab002[1] = 47; continue;}
 
-             if(Vrab002[1] == 48) {Vrab002[1] = 47; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].x[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 49) {Vrab002[1] = 47; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 50) {Vrab002[1] = 47; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].z[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 51) {Backgrounds[0].Opoint[Vrab002[2]].action.push_back(L_Numbering(Temp01)); continue;}
+             if(Vrab002[1] == 48) {Vrab002[1] = 47; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->x[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 49) {Vrab002[1] = 47; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->y[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 50) {Vrab002[1] = 47; Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->z[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 51) {Objects[Vrab002[0]].Background->Opoint[Vrab002[2]]->action.push_back(L_Numbering(Temp01)); continue;}
             break;
             case 52: case 53:
              if(Temp01 == "<effect_end>")            {Vrab002[1] = 0; continue;}
@@ -3891,8 +4417,8 @@
            {
             case 0:
              if(Temp01 == "<property>") {Vrab002[1] = 1; continue;}
-             if(Temp01 == "<layer>")    {Vrab002[1] = 9; File001 >> Temp01; Vrab002[2] = Backgrounds[Vrab002[0]].Layer.size(); Backgrounds[Vrab002[0]].Layer.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER()); Backgrounds[Vrab002[0]].Layer[Vrab002[2]].Index_pic = Preload(Temp01); continue;}
-             if(Temp01 == "<opoint>")   {Vrab002[1] = 10; Vrab002[2] = Backgrounds[Vrab002[0]].Opoint.size(); Backgrounds[Vrab002[0]].Layer.push_back(HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER()); Backgrounds[Vrab002[0]].Layer[Vrab002[2]].Index_pic = Preload(Temp01); continue;}
+             if(Temp01 == "<layer>")    {Vrab002[1] = 9; Vrab002[2] = Backgrounds[Vrab002[0]].Layer.size(); Backgrounds[Vrab002[0]].Layer.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_LAYER > ()); File001 >> Temp01;  Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->Index_pic = Preload(Temp01); continue;}
+             if(Temp01 == "<opoint>")   {Vrab002[1] = 10; Vrab002[2] = Backgrounds[Vrab002[0]].Opoint.size(); Backgrounds[Vrab002[0]].Opoint.push_back(std::make_unique < HEPTA_LF2_ENCHANTED_ENGINE1_BACKGROUND_OPOINT > ()); continue;}
             break;
             case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
              if(Temp01 == "<property_end>") {Vrab002[1] = 0; continue;}
@@ -3912,41 +4438,42 @@
             break;
             case 9:
              if(Temp01 == "<layer_end>") {Vrab002[1] = 0; continue;}
-             if(Temp01 == "kind:")       {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].kind = L_Numbering(Temp01); continue;}
-             if(Temp01 == "x:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].x = L_Numbering(Temp01); continue;}
-             if(Temp01 == "y:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].y = L_Numbering(Temp01); continue;}
-             if(Temp01 == "z:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].z = L_Numbering(Temp01); continue;}
-             if(Temp01 == "width:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].width = L_Numbering(Temp01); continue;}
-             if(Temp01 == "height:")     {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].height = L_Numbering(Temp01); continue;}
-             if(Temp01 == "trans:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].trans = L_Numbering(Temp01); continue;}
-             if(Temp01 == "rotate:")     {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].rotate = L_Numbering(Temp01); continue;}
-             if(Temp01 == "color:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].color = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "loop:")       {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].loop = L_Numbering(Temp01); continue;}
-             if(Temp01 == "loop_count:") {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].loop_count = L_Numbering(Temp01); continue;}
-             if(Temp01 == "cc:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].cc = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "c1:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].c1 = ruint32(L_Numbering(Temp01)); continue;}
-             if(Temp01 == "c2:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]].c2 = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "kind:")       {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->kind = L_Numbering(Temp01); continue;}
+             if(Temp01 == "x:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->x = L_Numbering(Temp01); continue;}
+             if(Temp01 == "y:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->y = L_Numbering(Temp01); continue;}
+             if(Temp01 == "z:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->z = L_Numbering(Temp01); continue;}
+             if(Temp01 == "width:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->width = L_Numbering(Temp01); continue;}
+             if(Temp01 == "height:")     {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->height = L_Numbering(Temp01); continue;}
+             if(Temp01 == "trans:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->trans = L_Numbering(Temp01); continue;}
+             if(Temp01 == "rotate:")     {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->rotate = L_Numbering(Temp01); continue;}
+             if(Temp01 == "color:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->color = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "colorhex:")   {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->color = ruint32(L_Convert(Temp01)); continue;}
+             if(Temp01 == "loop:")       {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->loop = L_Numbering(Temp01); continue;}
+             if(Temp01 == "loop_count:") {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->loop_count = L_Numbering(Temp01); continue;}
+             if(Temp01 == "cc:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->cc = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "c1:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->c1 = ruint32(L_Numbering(Temp01)); continue;}
+             if(Temp01 == "c2:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Layer[Vrab002[2]]->c2 = ruint32(L_Numbering(Temp01)); continue;}
             break;
             case 10: case 11: case 12: case 13: case 14:
              if(Temp01 == "<opoint_end>") {Vrab002[1] = 0; continue;}
-             if(Temp01 == "kind:")        {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].kind = L_Numbering(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "x:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].x[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].x[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].x[0]; Vrab002[1] = 11; continue;}
-             if(Temp01 == "y:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[0]; Vrab002[1] = 12; continue;}
-             if(Temp01 == "z:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].z[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[0]; Vrab002[1] = 13; continue;}
-             if(Temp01 == "dvx:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].dvx = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "dvy:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].dvy = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "dvz:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].dvz = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "oid:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].oid = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "action:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].action.clear(); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].action.push_back(L_Numbering(Temp01)); Vrab002[1] = 14; continue;}
-             if(Temp01 == "facing:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].facing = L_Numbering(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "cc:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].cc = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "c1:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].c1 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
-             if(Temp01 == "c2:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].c2 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "kind:")        {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->kind = L_Numbering(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "x:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->x[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->x[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->x[0]; Vrab002[1] = 11; continue;}
+             if(Temp01 == "y:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[0]; Vrab002[1] = 12; continue;}
+             if(Temp01 == "z:")           {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->z[0] = L_Numbering(Temp01); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[1] = Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[0]; Vrab002[1] = 13; continue;}
+             if(Temp01 == "dvx:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->dvx = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "dvy:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->dvy = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "dvz:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->dvz = L_Doubling(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "oid:")         {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->oid = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "action:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->action.clear(); Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->action.push_back(L_Numbering(Temp01)); Vrab002[1] = 14; continue;}
+             if(Temp01 == "facing:")      {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->facing = L_Numbering(Temp01); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "cc:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->cc = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "c1:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->c1 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
+             if(Temp01 == "c2:")          {File001 >> Temp01; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->c2 = rinsize(L_Numbering(Temp01)); if(Vrab002[1] != 10) Vrab002[1] = 10; continue;}
 
-             if(Vrab002[1] == 11) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].x[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 12) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].y[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 13) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].z[1] = L_Numbering(Temp01); continue;}
-             if(Vrab002[1] == 14) {Backgrounds[Vrab002[0]].Opoint[Vrab002[2]].action.push_back(L_Numbering(Temp01)); continue;}
+             if(Vrab002[1] == 11) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->x[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 12) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->y[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 13) {Vrab002[1] = 10; Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->z[1] = L_Numbering(Temp01); continue;}
+             if(Vrab002[1] == 14) {Backgrounds[Vrab002[0]].Opoint[Vrab002[2]]->action.push_back(L_Numbering(Temp01)); continue;}
             break;
             default: break;
            }
@@ -3997,7 +4524,11 @@
        }
        return "";
       }
-      string Temp(){return std::to_string(Backgrounds[1].Layer[0].Index_pic);};
+      string  Temp  ()
+      {
+       //if(Section.size() <= 0) Section.resize(0 + 1);
+       return "";
+      }
     };
     struct HEPTA_LF2_ENCHANTED_ENGINE2
     {
@@ -4534,6 +5065,10 @@
      }
      L_Save(2, Temp01);
     }
+    int0   Sound_Effect(statics insize Vrab01)
+    {
+     P_Set_Sound(Vrab01, (rxint32(Enchanted->Setting[0].Volume) / 100.0f) * Vrab0012, Vrab0013);
+    }
     int0   Post_Info(statics string Temp01, statics int1 Vrab01 = false, statics int1 Vrab02 = false) perfect
     {
      statics insize Vrab03 = Info.size(); Info.resize(Vrab03 + 1);
@@ -4632,7 +5167,7 @@
           int64 Vrab19 = Font[Vrab14].shiftx, Vrab20 = Font[Vrab14].shifty;
           if(Font[Vrab14].Shift.size() > Vrab16 + 1){Vrab19 += Font[Vrab14].Shift[Vrab16].x; Vrab20 += Font[Vrab14].Shift[Vrab16].y;}
           if(Vrab05 != 1)  P_Set_Display(3, Font[Vrab14].Pic_Index, Vrab01 + Vrab08[0] + Vrab19, Vrab02 + Vrab08[1] + Vrab20, 0ui8, 255ui8, Vrab17, Vrab18, (Vrab16 % Font[Vrab14].row) * (Vrab17 + 1), (Vrab16 / Font[Vrab14].row) * (Vrab18 + 1), Font[Vrab14].stx, Font[Vrab14].sty);
-          Vrab016[0] += Vrab09[0]; Vrab08[0] += Vrab09[0];
+          Vrab016[0] += Vrab09[0]; Vrab016[1] = 16; Vrab08[0] += Vrab09[0];
          }
         } 
        }
@@ -5334,7 +5869,7 @@
   int32  L_Numbering(string Temp01)                                 perfect {while(Temp01.size() > 0 && Temp01.at(0) != '-' && (Temp01.at(0) < '0' || Temp01.at(0) > '9')) Temp01.erase(0, 1); uint32 Vrab01 = Temp01.size(); if(Vrab01 == 0) return 0; while(Vrab01 != 1) if(Temp01.at(Vrab01 - 1) < '0' || Temp01.at(Vrab01 - 1) > '9'){Vrab01 -= 1;} else {break;} int32 Vrab02 = 0; if(Temp01.at(0) == '-'){if(Vrab01 == 1) return 0; if(Temp01.at(1) < '0' || Temp01.at(1) > '9') return 0; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1; break; case '2': Vrab02 -= 2; break; case '3': Vrab02 -= 3; break; case '4': Vrab02 -= 4; break; case '5': Vrab02 -= 5; break; case '6': Vrab02 -= 6; break; case '7': Vrab02 -= 7; break; case '8': Vrab02 -= 8; break; case '9': Vrab02 -= 9; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10; break; case '2': Vrab02 -= 20; break; case '3': Vrab02 -= 30; break; case '4': Vrab02 -= 40; break; case '5': Vrab02 -= 50; break; case '6': Vrab02 -= 60; break; case '7': Vrab02 -= 70; break; case '8': Vrab02 -= 80; break; case '9': Vrab02 -= 90; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100; break; case '2': Vrab02 -= 200; break; case '3': Vrab02 -= 300; break; case '4': Vrab02 -= 400; break; case '5': Vrab02 -= 500; break; case '6': Vrab02 -= 600; break; case '7': Vrab02 -= 700; break; case '8': Vrab02 -= 800; break; case '9': Vrab02 -= 900; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000; break; case '2': Vrab02 -= 2000; break; case '3': Vrab02 -= 3000; break; case '4': Vrab02 -= 4000; break; case '5': Vrab02 -= 5000; break; case '6': Vrab02 -= 6000; break; case '7': Vrab02 -= 7000; break; case '8': Vrab02 -= 8000; break; case '9': Vrab02 -= 9000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000; break; case '2': Vrab02 -= 20000; break; case '3': Vrab02 -= 30000; break; case '4': Vrab02 -= 40000; break; case '5': Vrab02 -= 50000; break; case '6': Vrab02 -= 60000; break; case '7': Vrab02 -= 70000; break; case '8': Vrab02 -= 80000; break; case '9': Vrab02 -= 90000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000; break; case '2': Vrab02 -= 200000; break; case '3': Vrab02 -= 300000; break; case '4': Vrab02 -= 400000; break; case '5': Vrab02 -= 500000; break; case '6': Vrab02 -= 600000; break; case '7': Vrab02 -= 700000; break; case '8': Vrab02 -= 800000; break; case '9': Vrab02 -= 900000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 1000000; break; case '2': Vrab02 -= 2000000; break; case '3': Vrab02 -= 3000000; break; case '4': Vrab02 -= 4000000; break; case '5': Vrab02 -= 5000000; break; case '6': Vrab02 -= 6000000; break; case '7': Vrab02 -= 7000000; break; case '8': Vrab02 -= 8000000; break; case '9': Vrab02 -= 9000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 10000000; break; case '2': Vrab02 -= 20000000; break; case '3': Vrab02 -= 30000000; break; case '4': Vrab02 -= 40000000; break; case '5': Vrab02 -= 50000000; break; case '6': Vrab02 -= 60000000; break; case '7': Vrab02 -= 70000000; break; case '8': Vrab02 -= 80000000; break; case '9': Vrab02 -= 90000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000; break; case '2': Vrab02 -= 200000000; break; case '3': Vrab02 -= 300000000; break; case '4': Vrab02 -= 400000000; break; case '5': Vrab02 -= 500000000; break; case '6': Vrab02 -= 600000000; break; case '7': Vrab02 -= 700000000; break; case '8': Vrab02 -= 800000000; break; case '9': Vrab02 -= 900000000; break; default: break;} Vrab01 -= 1; if(Vrab01 == 0) return Vrab02; for(int32 Vrab03 = 10; Vrab01 > 0; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 -= 100000000 * Vrab03; break; case '2': Vrab02 -= 200000000 * Vrab03; break; case '3': Vrab02 -= 300000000 * Vrab03; break; case '4': Vrab02 -= 400000000 * Vrab03; break; case '5': Vrab02 -= 500000000 * Vrab03; break; case '6': Vrab02 -= 600000000 * Vrab03; break; case '7': Vrab02 -= 700000000 * Vrab03; break; case '8': Vrab02 -= 800000000 * Vrab03; break; case '9': Vrab02 -= 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;} else {Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1; break; case '2': Vrab02 += 2; break; case '3': Vrab02 += 3; break; case '4': Vrab02 += 4; break; case '5': Vrab02 += 5; break; case '6': Vrab02 += 6; break; case '7': Vrab02 += 7; break; case '8': Vrab02 += 8; break; case '9': Vrab02 += 9; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10; break; case '2': Vrab02 += 20; break; case '3': Vrab02 += 30; break; case '4': Vrab02 += 40; break; case '5': Vrab02 += 50; break; case '6': Vrab02 += 60; break; case '7': Vrab02 += 70; break; case '8': Vrab02 += 80; break; case '9': Vrab02 += 90; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100; break; case '2': Vrab02 += 200; break; case '3': Vrab02 += 300; break; case '4': Vrab02 += 400; break; case '5': Vrab02 += 500; break; case '6': Vrab02 += 600; break; case '7': Vrab02 += 700; break; case '8': Vrab02 += 800; break; case '9': Vrab02 += 900; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000; break; case '2': Vrab02 += 2000; break; case '3': Vrab02 += 3000; break; case '4': Vrab02 += 4000; break; case '5': Vrab02 += 5000; break; case '6': Vrab02 += 6000; break; case '7': Vrab02 += 7000; break; case '8': Vrab02 += 8000; break; case '9': Vrab02 += 9000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000; break; case '2': Vrab02 += 20000; break; case '3': Vrab02 += 30000; break; case '4': Vrab02 += 40000; break; case '5': Vrab02 += 50000; break; case '6': Vrab02 += 60000; break; case '7': Vrab02 += 70000; break; case '8': Vrab02 += 80000; break; case '9': Vrab02 += 90000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000; break; case '2': Vrab02 += 200000; break; case '3': Vrab02 += 300000; break; case '4': Vrab02 += 400000; break; case '5': Vrab02 += 500000; break; case '6': Vrab02 += 600000; break; case '7': Vrab02 += 700000; break; case '8': Vrab02 += 800000; break; case '9': Vrab02 += 900000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 1000000; break; case '2': Vrab02 += 2000000; break; case '3': Vrab02 += 3000000; break; case '4': Vrab02 += 4000000; break; case '5': Vrab02 += 5000000; break; case '6': Vrab02 += 6000000; break; case '7': Vrab02 += 7000000; break; case '8': Vrab02 += 8000000; break; case '9': Vrab02 += 9000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 10000000; break; case '2': Vrab02 += 20000000; break; case '3': Vrab02 += 30000000; break; case '4': Vrab02 += 40000000; break; case '5': Vrab02 += 50000000; break; case '6': Vrab02 += 60000000; break; case '7': Vrab02 += 70000000; break; case '8': Vrab02 += 80000000; break; case '9': Vrab02 += 90000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000; break; case '2': Vrab02 += 200000000; break; case '3': Vrab02 += 300000000; break; case '4': Vrab02 += 400000000; break; case '5': Vrab02 += 500000000; break; case '6': Vrab02 += 600000000; break; case '7': Vrab02 += 700000000; break; case '8': Vrab02 += 800000000; break; case '9': Vrab02 += 900000000; break; default: break;} if(Vrab01 == 0) return Vrab02; Vrab01 -= 1; for(int32 Vrab03 = 10; Vrab01 != -1; Vrab03 *= 10){switch(Temp01.at(Vrab01)){case '1': Vrab02 += 100000000 * Vrab03; break; case '2': Vrab02 += 200000000 * Vrab03; break; case '3': Vrab02 += 300000000 * Vrab03; break; case '4': Vrab02 += 400000000 * Vrab03; break; case '5': Vrab02 += 500000000 * Vrab03; break; case '6': Vrab02 += 600000000 * Vrab03; break; case '7': Vrab02 += 700000000 * Vrab03; break; case '8': Vrab02 += 800000000 * Vrab03; break; case '9': Vrab02 += 900000000 * Vrab03; break; default: break;} Vrab01 -= 1;} return Vrab02;}}
   int32  L_Positive(statics int32 Vrab01)                           perfect {if(Vrab01 < 0) return -Vrab01; return Vrab01;}
   int32  L_Rounding(statics xint64 Vrab01)                          perfect {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint32(Vrab01); return rint32(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int32.
-  int64  L_Positive64(statics int64 Vrab01)                         perfect {if(Vrab01 < 0) return -Vrab01; return Vrab01;}
+  xint64 L_Positive64(statics xint64 Vrab01)                        perfect {if(Vrab01 < 0) return -Vrab01; return Vrab01;}
   int64  L_Rounding64(statics xint64 Vrab01)                        perfect {statics int1 Vrab02 = Vrab01 < 0; if(rint64(Vrab01) == rint64(Vrab01 + (Vrab02 ? -0.5 : 0.5))) return rint64(Vrab01); return rint64(Vrab01) + (Vrab02 ? -1 : 1);} // Round xint64 into int64.
   uint64 L_Random(uint64 Vrab01, insize Vrab02)                     perfect 
   {
@@ -6260,20 +6795,141 @@
      // Engine Main
      {
       if(Enchanted->Data.size() < 1) Enchanted->Data.resize(1);
-      if(Enchanted->Data[0].INT64.size() < 5) Enchanted->Data[0].INT64.resize(5);
+      if(Enchanted->Data[0].INT64.size() < 6){Enchanted->Data[0].INT64.resize(6); Enchanted->Data[0].INT64[5] = rinsize(-1);}
 
       //if(Vect02[0][0] > 0) Enchanted->Data[0].INT64[1] -= 1;
       //if(Vect02[0][2] > 0) Enchanted->Data[0].INT64[1] += 1;
-      //if(Vect02[0][1] > 0) Enchanted->Data[0].INT64[0] -= 1;
-      //if(Vect02[0][3] > 0) Enchanted->Data[0].INT64[0] += 1;
+      //if(Vect02[1][1] > 0) Enchanted->Data[0].INT64[0] -= 1;
+      //if(Vect02[1][3] > 0) Enchanted->Data[0].INT64[0] += 1;
       //if(Vect02[0][4] > 0) Enchanted->Data[0].INT64[2] -= 1; if(Enchanted->Data[0].INT64[2] == -1) Enchanted->Data[0].INT64[2] = 359;
       //if(Vect02[0][5] > 0) Enchanted->Data[0].INT64[2] += 1; if(Enchanted->Data[0].INT64[2] == 361) Enchanted->Data[0].INT64[2] = 1;
       //if(Vect02[0][6] > 0) Enchanted->Data[0].INT64[4] -= 1;
       //if(Vect02[0][7] > 0) Enchanted->Data[0].INT64[4] += 1; if(Enchanted->Data[0].INT64[4] < 0) Enchanted->Data[0].INT64[4] = 0; if(Enchanted->Data[0].INT64[4] > 100) Enchanted->Data[0].INT64[4] = 100;
       
       statics uint64 Vrab03 = ruint64(Enchanted->Data[0].INT64[2] + (Enchanted->Data[0].INT64[3] < 0 ? 1000 : 0) + (L_Positive64(Enchanted->Data[0].INT64[3]) * 10000));
+
+      // Camera Movement
+      {
+       xint64* Vrab04 = nullptr; int1 Vrab693 = false;
+       switch(Enchanted->Setting[0].Engine)
+       {
+        case 1:
+         Enchanted->Engine1->Keys(Vect02);
+         {
+          if(L_Input(53) == 1) Enchanted->Engine1->Order("P");
+          if(L_Input(54) == 1){Enchanted->Engine1->Order("P1");Vrab693 = true;}
+          if(L_Input(55) == 1) Enchanted->Engine1->Order("P2");
+          Vrab04 = Enchanted->Engine1->Main();
+         }
+        break;
+        default: break;
+       }
+       if(Enchanted->Data[0].XINT64.size() < 6) Enchanted->Data[0].XINT64.resize(6);
+       //Enchanted->Print_Text(0, 48, 0, std::to_string(Enchanted->Data[0].XINT64[0]) + " " + std::to_string(Enchanted->Data[0].XINT64[1]) + " " + std::to_string(Enchanted->Data[0].XINT64[2]) + " " + std::to_string(Enchanted->Data[0].XINT64[3]) + " " + std::to_string(Vrab04[0]) + " " + std::to_string(Vrab04[1]));
+       if(!Enchanted->Engine1->Section[0].Pause || Vrab693)
+       {
+        statics xint64   Vrab05 = 0.5, Vrab06 = 0.085, Vrab07 = 40; // Base Velocity, Additional Velocity by Distance, Top Speed.
+        statics xint64*  Vrab08 = L_Degree(Enchanted->Data[0].XINT64[0], Enchanted->Data[0].XINT64[1], 0, Vrab04[0], Vrab04[1], 0, false); // Vector
+        xint64  Vrab09 = Vrab05 + (Vrab06 * L_Distance(Enchanted->Data[0].XINT64[0], Enchanted->Data[0].XINT64[1], Vrab04[0], Vrab04[1])); // Velocity
+                xint64   Vrab10 = Vrab09 * Vrab08[0]; // X-Velocity
+                xint64   Vrab11 = Vrab09 * Vrab08[1]; // Y-Velocity
+        statics xint64   Vrab12 = Vrab07 * Vrab08[0]; // X-Top Speed
+        statics xint64   Vrab13 = Vrab07 * Vrab08[1]; // Y-Top Speed
+
+        statics xint64   Vrab14 = 4, Vrab15 = -4; // Accelerate, Deccelerate
+        statics xint64   Vrab16 = Vrab14 * Vrab08[0]; // X-Accelerate
+        statics xint64   Vrab17 = Vrab14 * Vrab08[1]; // Y-Accelerate
+        statics xint64   Vrab18 = Vrab15 * Vrab08[0]; // X-Deccelerate
+        statics xint64   Vrab19 = Vrab15 * Vrab08[1]; // Y-Daccelerate
+        statics xint64   Vrab20 = (((Vrab14 < 0) ? (-Vrab14) : Vrab14) + ((Vrab16 < 0) ? (-Vrab16) : Vrab16)) / 2.0;
+
+
+        if(Vrab08[0] < 0)
+        {
+         if(Vrab10 < Vrab12) Vrab10 = Vrab12;
+         if(Enchanted->Data[0].XINT64[2] > Vrab10) if(Enchanted->Data[0].XINT64[2] + Vrab16 < Vrab10){Enchanted->Data[0].XINT64[2] = Vrab10;} else {Enchanted->Data[0].XINT64[2] += Vrab16;}
+         if(Enchanted->Data[0].XINT64[2] < Vrab10) if(Enchanted->Data[0].XINT64[2] + Vrab18 > Vrab10){Enchanted->Data[0].XINT64[2] = Vrab10;} else {Enchanted->Data[0].XINT64[2] += Vrab18;}
+        }
+        if(Vrab08[0] > 0) 
+        { 
+         if(Vrab10 > Vrab12) Vrab10 = Vrab12;
+         if(Enchanted->Data[0].XINT64[2] < Vrab10) if(Enchanted->Data[0].XINT64[2] + Vrab16 > Vrab10){Enchanted->Data[0].XINT64[2] = Vrab10;} else {Enchanted->Data[0].XINT64[2] += Vrab16;}
+         if(Enchanted->Data[0].XINT64[2] > Vrab10) if(Enchanted->Data[0].XINT64[2] + Vrab18 < Vrab10){Enchanted->Data[0].XINT64[2] = Vrab10;} else {Enchanted->Data[0].XINT64[2] += Vrab18;}
+        }
+        if(Vrab08[0] == 0)
+        {
+         if(Enchanted->Data[0].XINT64[2] < 0) if(Enchanted->Data[0].XINT64[2] + Vrab20 > 0){Enchanted->Data[0].XINT64[2] = 0;} else {Enchanted->Data[0].XINT64[2] += Vrab20;}
+         if(Enchanted->Data[0].XINT64[2] > 0) if(Enchanted->Data[0].XINT64[2] - Vrab20 < 0){Enchanted->Data[0].XINT64[2] = 0;} else {Enchanted->Data[0].XINT64[2] -= Vrab20;}
+        }
+        if(Vrab08[1] < 0)
+        {
+         if(Vrab11 < Vrab13) Vrab11 = Vrab13;
+         if(Enchanted->Data[0].XINT64[3] > Vrab11) if(Enchanted->Data[0].XINT64[3] + Vrab17 < Vrab11){Enchanted->Data[0].XINT64[3] = Vrab11;} else {Enchanted->Data[0].XINT64[3] += Vrab17;}
+         if(Enchanted->Data[0].XINT64[3] < Vrab11) if(Enchanted->Data[0].XINT64[3] + Vrab19 > Vrab11){Enchanted->Data[0].XINT64[3] = Vrab11;} else {Enchanted->Data[0].XINT64[3] += Vrab19;}
+        }
+        if(Vrab08[1] > 0)
+        {
+         if(Vrab11 > Vrab13) Vrab11 = Vrab13;
+         if(Enchanted->Data[0].XINT64[3] < Vrab11) if(Enchanted->Data[0].XINT64[3] + Vrab17 > Vrab11){Enchanted->Data[0].XINT64[3] = Vrab11;} else {Enchanted->Data[0].XINT64[3] += Vrab17;}
+         if(Enchanted->Data[0].XINT64[3] > Vrab11) if(Enchanted->Data[0].XINT64[3] + Vrab19 < Vrab11){Enchanted->Data[0].XINT64[3] = Vrab11;} else {Enchanted->Data[0].XINT64[3] += Vrab19;}
+        }
+        if(Vrab08[1] == 0)
+        {
+         if(Enchanted->Data[0].XINT64[3] < 0) if(Enchanted->Data[0].XINT64[3] + Vrab20 > 0){Enchanted->Data[0].XINT64[3] = 0;} else {Enchanted->Data[0].XINT64[3] += Vrab20;}
+         if(Enchanted->Data[0].XINT64[3] > 0) if(Enchanted->Data[0].XINT64[3] - Vrab20 < 0){Enchanted->Data[0].XINT64[3] = 0;} else {Enchanted->Data[0].XINT64[3] -= Vrab20;}
+        }
+
+        if(Enchanted->Data[0].INT64[4] != 0) Enchanted->Data[0].INT64[4] -= 3; if(Enchanted->Data[0].INT64[4] < 0) Enchanted->Data[0].INT64[4] = 0;
+        if(Enchanted->Data[0].INT64[5] != Vrab04[2]){Enchanted->Data[0].INT64[4] = 100; Enchanted->Data[0].XINT64[2] = 0; Enchanted->Data[0].XINT64[0] = Vrab04[0]; Enchanted->Data[0].XINT64[3] = 0; Enchanted->Data[0].XINT64[1] = Vrab04[1];}
+        Enchanted->Data[0].INT64[5] = Vrab04[2];
+
+        if(Vrab04[0] - Enchanted->Data[0].XINT64[0] < Vrab05) if(Enchanted->Data[0].XINT64[2] < Vrab05 * 2 && Enchanted->Data[0].XINT64[2] > 0){Enchanted->Data[0].XINT64[2] = 0; Enchanted->Data[0].XINT64[0] = Vrab04[0];}
+        if(Vrab04[0] - Enchanted->Data[0].XINT64[0] > -Vrab05) if(Enchanted->Data[0].XINT64[2] > -Vrab05 * 2 && Enchanted->Data[0].XINT64[2] < 0){Enchanted->Data[0].XINT64[2] = 0; Enchanted->Data[0].XINT64[0] = Vrab04[0];}
+        if(Vrab04[1] - Enchanted->Data[0].XINT64[1] < Vrab05) if(Enchanted->Data[0].XINT64[3] < Vrab05 * 2 && Enchanted->Data[0].XINT64[3] > 0){Enchanted->Data[0].XINT64[3] = 0; Enchanted->Data[0].XINT64[1] = Vrab04[1];}
+        if(Vrab04[1] - Enchanted->Data[0].XINT64[1] > -Vrab05) if(Enchanted->Data[0].XINT64[3] > -Vrab05 * 2 && Enchanted->Data[0].XINT64[3] < 0){Enchanted->Data[0].XINT64[3] = 0; Enchanted->Data[0].XINT64[1] = Vrab04[1];}
+        Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];
+        Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];
+        /*
+        if(Vrab04[0] - Enchanted->Data[0].XINT64[0] > 0 && Vrab04[0] - Enchanted->Data[0].XINT64[0] < 2)
+        if(Enchanted->Data[0].XINT64[2] < 0){Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];} else
+        {if(Enchanted->Data[0].XINT64[0] + Enchanted->Data[0].XINT64[2] > Vrab04[0]){Enchanted->Data[0].XINT64[0] = Vrab04[0];} else {Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];}}
+        if(Vrab04[0] - Enchanted->Data[0].XINT64[0] < 0 && Vrab04[0] - Enchanted->Data[0].XINT64[0] > -2) 
+        if(Enchanted->Data[0].XINT64[2] > 0){Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];} else
+        {if(Enchanted->Data[0].XINT64[0] + Enchanted->Data[0].XINT64[2] < Vrab04[0]){Enchanted->Data[0].XINT64[0] = Vrab04[0];} else {Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];}}
+        if(Vrab04[1] - Enchanted->Data[0].XINT64[1] > 0 && Vrab04[1] - Enchanted->Data[0].XINT64[1] < 2) 
+        if(Enchanted->Data[0].XINT64[3] < 0){Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];} else
+        {if(Enchanted->Data[0].XINT64[1] + Enchanted->Data[0].XINT64[3] > Vrab04[1]){Enchanted->Data[0].XINT64[1] = Vrab04[1];} else {Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];}}
+        if(Vrab04[1] - Enchanted->Data[0].XINT64[1] < 0 && Vrab04[1] - Enchanted->Data[0].XINT64[1] > -2) 
+        if(Enchanted->Data[0].XINT64[3] > 0){Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];} else
+        {if(Enchanted->Data[0].XINT64[1] + Enchanted->Data[0].XINT64[3] < Vrab04[1]){Enchanted->Data[0].XINT64[1] = Vrab04[1];} else {Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];}}*/
+
+        //if(Enchanted->Data[0].XINT64[2] < 0) if(Enchanted->Data[0].XINT64[0] + Enchanted->Data[0].XINT64[2] < Vrab04[0]){Enchanted->Data[0].XINT64[0] = Vrab04[0];} else {Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];}
+        //if(Enchanted->Data[0].XINT64[2] > 0) if(Enchanted->Data[0].XINT64[0] + Enchanted->Data[0].XINT64[2] > Vrab04[0]){Enchanted->Data[0].XINT64[0] = Vrab04[0];} else {Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];}
+        //if(Enchanted->Data[0].XINT64[3] < 0) if(Enchanted->Data[0].XINT64[1] + Enchanted->Data[0].XINT64[3] < Vrab04[1]){Enchanted->Data[0].XINT64[1] = Vrab04[1];} else {Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];}
+        //if(Enchanted->Data[0].XINT64[3] > 0) if(Enchanted->Data[0].XINT64[1] + Enchanted->Data[0].XINT64[3] > Vrab04[1]){Enchanted->Data[0].XINT64[1] = Vrab04[1];} else {Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];}
+        Enchanted->Data[0].XINT64[4] = Vrab04[0];
+        Enchanted->Data[0].XINT64[5] = Vrab04[1];
+
+        /*
+       if((Vrab12 > 0 && Enchanted->Data[0].XINT64[2] + Vrab10 > Vrab12) || (Vrab12 < 0 && Enchanted->Data[0].XINT64[2] + Vrab10 < Vrab12))
+       {Enchanted->Data[0].XINT64[2] = Vrab12;} else {Enchanted->Data[0].XINT64[2] += Vrab10;}
+       if((Vrab13 > 0 && Enchanted->Data[0].XINT64[3] + Vrab11 > Vrab13) || (Vrab13 < 0 && Enchanted->Data[0].XINT64[3] + Vrab11 < Vrab13))
+       {Enchanted->Data[0].XINT64[3] = Vrab13;} else {Enchanted->Data[0].XINT64[3] += Vrab11;}
+       Enchanted->Data[0].XINT64[0] += Enchanted->Data[0].XINT64[2];
+       Enchanted->Data[0].XINT64[1] += Enchanted->Data[0].XINT64[3];*/
+
+       }
+      }
+
       switch(Enchanted->Setting[0].Engine)
-      {case 1: Enchanted->Engine1->Keys(Vect02); Enchanted->Engine1->Main(); P_Set_Display(10, 0, 4, Enchanted->Data[0].INT64[4]); Enchanted->Engine1->Draw(0, 0, 25, 800, 400, Enchanted->Data[0].INT64[0], Enchanted->Data[0].INT64[1], rinsize(-1), Vrab03); P_Set_Display(10, 0, 0, 0); break; default: break;}
+      {
+       case 1:
+        P_Set_Display(10, 0, 4, Enchanted->Data[0].INT64[4]);
+        Enchanted->Engine1->Draw(0, 0, 25, 800, 400, L_Rounding64(Enchanted->Data[0].XINT64[0]), L_Rounding64(Enchanted->Data[0].XINT64[1]), Enchanted->Data[0].INT64[5], Vrab03);
+        P_Set_Display(10, 0, 0, 0);
+       break;
+       default: break;
+      }
      }
 
      // Engine Begin & Load
@@ -6306,9 +6962,9 @@
        if(Enchanted->Vrab005 == 0) switch(Enchanted->Setting[0].Engine)
        {
         case 1:
-         if(!Enchanted->Engine1->Start(0, 2, 0, 1500)) break;
+         if(!Enchanted->Engine1->Start(0, 1, 0, 1500)) break;
          Enchanted->Engine1->Set(0, 60, 1, "Mesujin");
-         Enchanted->Engine1->Set(1, 52, 1, "Kitty");
+         Enchanted->Engine1->Set(1, 51, 2, "Kitty");
         break; 
         default: break;
        }
@@ -6604,7 +7260,9 @@
     }
 
     // FPS Draw.
-    if(Enchanted->Setting[0].Show_FPS) Enchanted->Print_Text(0, -3, 0, std::to_string(Vrab01) + "|" + std::to_string(Vrab02));
+    string Temp01 = "";
+    switch(Enchanted->Setting[0].Engine){case 1: Temp01 = Enchanted->Engine1->Temp(); break; default: break;}
+    if(Enchanted->Setting[0].Show_FPS) Enchanted->Print_Text(0, -3, 0, std::to_string(Vrab01) + "|" + std::to_string(Vrab02) + " " + Temp01);
    }
   }
   int0 EIDP_LF2Forevered(uint32 Vrab01, uint64 Vrab02) perfect
