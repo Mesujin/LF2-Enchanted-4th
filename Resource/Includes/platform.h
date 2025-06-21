@@ -106,8 +106,8 @@
   // DirectX
    struct HEPTA_DEVICENOTIFY
    {
-    univers int0 OnDeviceLost() = 0ui8;
-    univers int0 OnDeviceRestored() = 0ui8;
+    univers int0 OnDeviceLost() = 0;
+    univers int0 OnDeviceRestored() = 0;
     protected:
      ~HEPTA_DEVICENOTIFY() = default;
    };
