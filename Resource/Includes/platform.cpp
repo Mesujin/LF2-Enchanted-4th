@@ -39,6 +39,22 @@
   if(Vrab03 != Vrab0009) G_ToggleFullscreen();
   SetWindowTextA(Hwnd01, Temp01.c_str());
  }
+ int0 G_GenerateSineWave( _Out_writes_(sampleRate) int16_t* data,
+  int sampleRate, int frequency )
+ {
+  const double timeStep = 1.0 / double(sampleRate);
+  const double freq = double(frequency);
+
+  int16_t* ptr = data;
+  double time = 0.0;
+  for( int j = 0; j < sampleRate; ++j, ++ptr )
+  {
+   double angle = ( 2.0 * M_PI * freq ) * time;
+   double factor = 0.5 * ( sin(angle) + 1.0 );
+   *ptr = int16_t( 32768 * factor );
+   time += timeStep;
+  }
+ }
 
  HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) perfect
  {
@@ -81,10 +97,27 @@
   if(File01.is_open())
   {
    File01.close();
+
+   /*size_t audioSize = 44100 * 2;
+   std::unique_ptr<uint8_t[]> wavData( new uint8_t[audioSize + sizeof(WAVEFORMATEX)]);
+
+   auto startAudio = wavData.get() + sizeof(WAVEFORMATEX);
+
+   G_GenerateSineWave( reinterpret_cast<int16_t*>( startAudio ), 44100, 440 );
+
+   auto wfx = reinterpret_cast<WAVEFORMATEX*>( wavData.get() );
+   wfx->wFormatTag = WAVE_FORMAT_PCM;
+   wfx->nChannels = 1;
+   wfx->nSamplesPerSec = 44100;
+   wfx->nAvgBytesPerSec = 2 * 44100;
+   wfx->nBlockAlign = 2;
+   wfx->wBitsPerSample = 16;
+   wfx->cbSize = 0;*/
+
    Sound = std::make_unique < DirectX::SoundEffect > (Aeng01, std::wstring(Temp01.begin(), Temp01.end()).c_str());
+   Sound->CreateInstance(DirectX::SoundEffectInstance_ZeroCenter3D);
    Address = Temp01; Success = true;
-  } else
-  {Success = false;}
+  } else {Success = false;}
  }
 
  namespace
@@ -233,7 +266,9 @@
     DirectX::XMMATRIX Matx01 = DirectX::XMMatrixIdentity();
     DirectX::XMVECTOR Vect01 = DirectX::XMMatrixDeterminant(Matx01);
     Matx01 = DirectX::XMMatrixInverse(&Vect01, Matx01);
-    Pics001->Begin(DirectX::SpriteSortMode_Deferred, Stat001->NonPremultiplied(), Samp001.Get(), nullptr, nullptr, [=]
+    Pics001->Begin
+    (
+     DirectX::SpriteSortMode_Deferred, Stat001->NonPremultiplied(), Samp001.Get(), nullptr, nullptr, [=]
      {
       m_deviceResources->GetD3DDeviceContext()->PSSetShader(Grap001.Get(), nullptr, 0);
      }, Matx01
@@ -452,7 +487,7 @@
    Stat001 = std::make_unique < DirectX::CommonStates > (Dvis01); Stat001->DepthNone();
    
    D3D11_SAMPLER_DESC Desc01;
-   Desc01.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+   Desc01.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
    Desc01.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
    Desc01.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;

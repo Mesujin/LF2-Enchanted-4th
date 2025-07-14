@@ -420,7 +420,7 @@
    string Address;
    unique < DirectX::SoundEffect > Sound;
   };
-  struct HEPTA_SOUNDPLAY {insize Target; xint32 Pan = 0; xint32 Volume = 1;};
+  struct HEPTA_SOUNDPLAY {insize Target; xint32 Pan = 0.0f; xint32 Volume = 1.0f;};
   struct HEPTA_MUSIC
   {
    unique < DirectX::SoundEffectInstance > Instance;
