@@ -187,7 +187,7 @@
      HEPTA_DEVICENOTIFY*   m_deviceNotify;       // The IDeviceNotify can be held directly as it owns the DeviceResources.
    };
 
-  struct HEPTA_TIMING // Helper class for animation and simulation timing.
+  struct HEPTA_TIMING  // Helper class for animation and simulation timing.
   {
    HEPTA_TIMING() perfect (false) : m_elapsedTicks(0), m_totalTicks(0), m_leftOverTicks(0), m_frameCount(0), m_framesPerSecond(0), m_framesThisSecond(0), m_qpcSecondCounter(0), m_isFixedTimeStep(false), m_targetElapsedTicks(TicksPerSecond / 60)
    {
@@ -307,7 +307,7 @@
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
-  struct HEPTA_IMAGE
+  struct HEPTA_IMAGE  
   {
    HEPTA_IMAGE(statics string&, ID3D11Device*) perfect;
    
@@ -357,7 +357,7 @@
     uint32 Vrab006;
     uint32 Vrab007;
   };
-  struct HEPTA_SPRITE
+  struct HEPTA_SPRITE 
   {
    HEPTA_SPRITE(insize, uint32, uint32, uint32, uint32, insize);
 
@@ -500,8 +500,8 @@
 
  // Global Function
   int0 G_ToggleFullscreen() perfect;
-  int0 G_Adjust_Window(statics uint32 = 1920, statics uint32 = 1080, statics int1 = true, statics string = "Hepta : Enchanted") perfect;
-  int0 ThrowIfFailed(HRESULT Hres01, statics string Temp01 = "")
+  int0 G_Adjust_Window   (statics uint32 = 1920, statics uint32 = 1080, statics int1 = true, statics string = "Hepta : Enchanted") perfect;
+  int0 ThrowIfFailed     (HRESULT Hres01, statics string Temp01 = "")
   {
    if(SUCCEEDED(Hres01)) return;
    if(FACILITY_WINDOWS == HRESULT_FACILITY(Hres01)) Hres01 = HRESULT_CODE(Hres01);
@@ -547,7 +547,7 @@
   }
 
   // Platform's Action
-   insize P_Load_Pic(statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) perfect
+   insize P_Load_Pic   (statics string Temp01, statics uint32 Vrab01 = 0, statics uint32 Vrab02 = 0, statics uint32 Vrab03 = -1, statics uint32 Vrab04 = -1) perfect
    {
     insize Vrab05 = 0; statics insize Vrab06 = Imge0001.size();
 
@@ -577,7 +577,7 @@
     for(insize Vrab10 = Vrab08; Vrab10 < Vrab09; ++Vrab10) Spic0001[Vrab10] = Vrab07;
     return Vrab08;
    }
-   insize P_Load_Sound(statics string Temp01) perfect
+   insize P_Load_Sound (statics string Temp01) perfect
    {
     insize Vrab01 = Temp01.size();
     string Temp02 = Temp01; while(Vrab01 != 0){Vrab01 -= 1; if(Temp02.at(Vrab01) >= 'A' && Temp02.at(Vrab01) <= 'Z') Temp02.at(Vrab01) += 32;}
@@ -590,7 +590,7 @@
     if(Audi0001[Vrab03]->Success){return Vrab03;} else {Audi0001.pop_back(); return rinsize(-1);}
    }
 
-   int64  P_Get_Width(statics insize Vrab01, statics int1 Vrab02 = false) perfect
+   int64  P_Get_Width (statics insize Vrab01, statics int1 Vrab02 = false) perfect
    {
     if(Vrab02)
     {
@@ -632,19 +632,37 @@
     Disp0001[Vrab13].Post_Y4 = Vrab12;
     return true;
    }
-   int1   P_Set_Sound(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
+   int1   P_Set_Sound  (statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return false;
     Sond0001.push_back({Vrab01, Vrab03, Vrab02});
     return true;
    }
-   insize P_Set_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
+   insize P_Set_Music  (statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return rinsize(-1);
     statics insize Vrab04 = Isnd0001.size();
     Isnd0001.push_back(std::make_unique < HEPTA_MUSIC > (Audi0001[Vrab01]->Sound->CreateInstance(), 0ui8));
     Isnd0001[Vrab04]->Instance->SetVolume(Vrab02); Isnd0001[Vrab04]->Instance->SetPan(Vrab03); 
     return Vrab04;
+   }
+
+   int0           P_Push_Display   (statics HEPTA_DISPLAY* Disp01)
+   {
+    if(Disp01 == nullptr) return;
+    P_Set_Display(Disp01->Type, Disp01->Target, Disp01->Post_X1, Disp01->Post_Y1, Disp01->Effect, Disp01->Trans, Disp01->Post_X2, Disp01->Post_Y2, Disp01->Post_X3, Disp01->Post_Y3, Disp01->Post_X4, Disp01->Post_Y4);
+   }
+   HEPTA_DISPLAY* P_Extract_Display(statics insize Vrab01 = 10)
+   {
+    insize Vrab02 = Disp0001.size(); while(Vrab02 != 0)
+    {
+     Vrab02 -= 1; if(Disp0001[Vrab02].Type == Vrab01) return &Disp0001[Vrab02];
+    }
+    statics insize Vrab03 = Disp0001.size(); if(Vrab03 >= rinsize(0xFFFFFFF)) return nullptr; Disp0001.push_back(HEPTA_DISPLAY());
+    Disp0001[Vrab03].Type = 10;
+    Disp0001[Vrab03].Target = 0x0;
+    Disp0001[Vrab03].Post_X1 = 0;
+    return &Disp0001[Vrab03];
    }
 
    int1   P_Control_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0, statics int1 Vrab04 = false) perfect
@@ -654,7 +672,7 @@
     return true;
    }
    
-   int0   P_Unload_Pic(statics insize Vrab01 = 0) perfect
+   int0   P_Unload_Pic   (statics insize Vrab01 = 0) perfect
    {
     if(Vrab01 >= Pics0001.size()) return;
     Pics0001.erase(Pics0001.begin() + Vrab01, Pics0001.end());
@@ -665,13 +683,13 @@
     Spic0001.erase(Spic0001.begin() + Vrab02, Spic0001.end());
     Sprt0001.erase(Sprt0001.begin() + Vrab01, Sprt0001.end());
    }
-   int0   P_Unload_Sound(statics insize Vrab01 = 0) perfect
+   int0   P_Unload_Sound (statics insize Vrab01 = 0) perfect
    {
     if(Vrab01 >= Audi0001.size()) return;
     Audi0001.erase(Audi0001.begin() + Vrab01, Audi0001.end());
     Isnd0001.clear();
    }
-   int0   P_Unload_Image() perfect
+   int0   P_Unload_Image () perfect
    {
     Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
     Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
@@ -708,6 +726,4 @@
     Game0001->m_deviceResources->GetD3DDeviceContext()->ClearState();
     Game0001->m_deviceResources->GetD3DDeviceContext()->Flush();
    }
-  //-//
- //-//
 #endif

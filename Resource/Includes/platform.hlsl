@@ -16,20 +16,19 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 2.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
 
  } else if (Flot01.a <= 5.0f)  // (4.0f ~ 5.0f) : Image texture with #000000 as transparent.
  {
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 4.0f;
-  if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0)
-  Flot02.a = 0.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
 
  } else if (Flot01.a <= 7.0f)  // (6.0f ~ 7.0f) : Plain color texture. (grayscaled)
  {
@@ -44,9 +43,9 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 8.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
   float1 Flot03 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
   Flot02.xyz = Flot03;
 
@@ -55,11 +54,10 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 10.0f;
-  if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0)
-  Flot02.a = 0.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
   float1 Flot03 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
   Flot02.xyz = Flot03;
 
@@ -77,9 +75,9 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 14.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
   Flot02.x = 1.0f - Flot02.x;
   Flot02.y = 1.0f - Flot02.y;
   Flot02.z = 1.0f - Flot02.z;
@@ -89,11 +87,10 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 16.0f;
-  if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0)
-  Flot02.a = 0.0f;
-  Flot02.x += Flot01.x; //Flot02.x %= 1.0f;
-  Flot02.y += Flot01.y; //Flot02.y %= 1.0f;
-  Flot02.z += Flot01.z; //Flot02.z %= 1.0f;
+  if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+  Flot02.x += Flot01.x;
+  Flot02.y += Flot01.y;
+  Flot02.z += Flot01.z;
   Flot02.x = 1.0f - Flot02.x;
   Flot02.y = 1.0f - Flot02.y;
   Flot02.z = 1.0f - Flot02.z;
@@ -111,13 +108,12 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
   Flot02.a *= Flot01.a - 20.0f;
   Flot02.xyz = Flot01.xyz;
 
- } else if (Flot01.a <= 23.0f)// (22.0f ~ 23.0f) : Image texture with #000000 as transparent. (fixed color)
+ } else if (Flot01.a <= 23.0f) // (22.0f ~ 23.0f) : Image texture with #000000 as transparent. (fixed color)
  {
 
   Flot02 = Text0001.Sample(Samp0001, Cord01);
   Flot02.a *= Flot01.a - 22.0f;
-  if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0)
-  Flot02.a = 0.0f;
+  if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
   Flot02.xyz += Flot01.xyz;
 
  } else
@@ -126,19 +122,18 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
   int Uint01 = (int(Flot01.a) / 100) * 100;
   float1 Flot03 = float(Uint01) / 10000.0f;
   Flot01.a = Flot01.a - float(Uint01);
-  if (Flot01.a <= 25.0f) // (24.0f ~ 25.0f) : Plain color texture. (adjustable grayscale)
+  
+  if (Flot01.a <= 25.0f)        // (24.0f ~ 25.0f) : Plain color texture. (adjustable grayscale)
   {
 
    Flot02 = Flot01;
    Flot02.a = Flot01.a - 24.0f;
-   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
-   Flot04 = 0.5f;
+   float1 Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
 
-  }
-  else if (Flot01.a <= 27.0f) // (26.0f ~ 27.0f) : Image texture. (adjustable grayscale)
+  } else if (Flot01.a <= 27.0f) // (26.0f ~ 27.0f) : Image texture. (adjustable grayscale)
   {
 
    Flot02 = Text0001.Sample(Samp0001, Cord01);
@@ -146,28 +141,103 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    Flot02.x += Flot01.x;
    Flot02.y += Flot01.y;
    Flot02.z += Flot01.z;
-   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
-   Flot04 = 0.5f;
+   float1 Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
 
-  }
-  else if (Flot01.a <= 29.0f) // (28.0f ~ 29.0f) :  Image texture with #000000 as transparent. (adjustable grayscale)
+  } else if (Flot01.a <= 29.0f) // (28.0f ~ 29.0f) :  Image texture with #000000 as transparent. (adjustable grayscale)
   {
 
    Flot02 = Text0001.Sample(Samp0001, Cord01);
    Flot02.a *= Flot01.a - 28.0f;
-   if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0)
-   Flot02.a = 0.0f;
+   if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
    Flot02.x += Flot01.x;
    Flot02.y += Flot01.y;
    Flot02.z += Flot01.z;
-   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
-   Flot04 = 0.5f;
+   float1 Flot04 = 0.5f;
    Flot02.x += (Flot04 - Flot02.x) * Flot03;
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
+
+  } else if (Flot01.a <= 31.0f) // (30.0f ~ 31.0f) : Plain color texture. (font color)
+  {
+
+   Flot02 = Flot01;
+   Flot02.a = Flot01.a - 30.0f;
+   
+   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   if (Flot04 >= 0.5f)
+   {
+    Flot02.xyz = Flot01.xyz;
+   } else
+   {
+    float1 Flot05 = ((Flot01.x + Flot01.y + Flot01.z) / 3.0f);
+    if (Flot05 >= 0.2f)
+    {
+     Flot02.x = 0.117647f + (0.196078f * Flot01.x);
+     Flot02.y = 0.117647f + (0.196078f * Flot01.y);
+     Flot02.z = 0.117647f + (0.196078f * Flot01.z);
+    } else
+    {
+     Flot02.x = 0.8f + (0.1f * Flot01.x);
+     Flot02.y = 0.8f + (0.1f * Flot01.y);
+     Flot02.z = 0.8f + (0.1f * Flot01.z);
+    }
+   }
+
+  } else if (Flot01.a <= 33.0f) // (32.0f ~ 33.0f) : Image texture. (font color)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 32.0f;
+   
+   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   if (Flot04 >= 0.5f)
+   {
+    Flot02.xyz = Flot01.xyz;
+   } else
+   {
+    float1 Flot05 = ((Flot01.x + Flot01.y + Flot01.z) / 3.0f);
+    if (Flot05 >= 0.2f)
+    {
+     Flot02.x = 0.117647f + (0.196078f * Flot01.x);
+     Flot02.y = 0.117647f + (0.196078f * Flot01.y);
+     Flot02.z = 0.117647f + (0.196078f * Flot01.z);
+    } else
+    {
+     Flot02.x = 0.8f + (0.1f * Flot01.x);
+     Flot02.y = 0.8f + (0.1f * Flot01.y);
+     Flot02.z = 0.8f + (0.1f * Flot01.z);
+    }
+   }
+
+  } else if (Flot01.a <= 35.0f) // (34.0f ~ 35.0f) :  Image texture with #000000 as transparent. (font color)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 34.0f;
+   if(Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+   
+   float1 Flot04 = ((Flot02.x + Flot02.y + Flot02.z) / 3.0f);
+   if (Flot04 >= 0.5f)
+   {
+    Flot02.xyz = Flot01.xyz;
+   } else
+   {
+    float1 Flot05 = ((Flot01.x + Flot01.y + Flot01.z) / 3.0f);
+    if (Flot05 >= 0.2f)
+    {
+     Flot02.x = 0.117647f + (0.196078f * Flot01.x);
+     Flot02.y = 0.117647f + (0.196078f * Flot01.y);
+     Flot02.z = 0.117647f + (0.196078f * Flot01.z);
+    } else
+    {
+     Flot02.x = 0.8f + (0.1f * Flot01.x);
+     Flot02.y = 0.8f + (0.1f * Flot01.y);
+     Flot02.z = 0.8f + (0.1f * Flot01.z);
+    }
+   }
 
   }
  }

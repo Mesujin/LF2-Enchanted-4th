@@ -26,7 +26,7 @@
   }
   Vrab0009 = !Vrab0009;
  }
- int0 G_Adjust_Window(statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) perfect
+ int0 G_Adjust_Window   (statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) perfect
  {
   auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
   if(Vrab03 == Vrab0009 && Vrab0009 && (Vrab0005 != Vrab01 || Vrab0006 != Vrab02))
@@ -39,8 +39,7 @@
   if(Vrab03 != Vrab0009) G_ToggleFullscreen();
   SetWindowTextA(Hwnd01, Temp01.c_str());
  }
- int0 G_GenerateSineWave( _Out_writes_(sampleRate) int16_t* data,
-  int sampleRate, int frequency )
+ int0 G_GenerateSineWave(_Out_writes_(sampleRate) int16_t* data, int sampleRate, int frequency)
  {
   const double timeStep = 1.0 / double(sampleRate);
   const double freq = double(frequency);
@@ -56,7 +55,7 @@
   }
  }
 
- HEPTA_IMAGE::HEPTA_IMAGE(statics string &Temp01, ID3D11Device *Dvis01) perfect
+ HEPTA_IMAGE::HEPTA_IMAGE    (statics string &Temp01, ID3D11Device *Dvis01) perfect
  {
   std::ifstream File01(Temp01);
   if(File01.is_open())
@@ -68,7 +67,7 @@
   }
   Success = false;
  }
- HEPTA_SPRITE::HEPTA_SPRITE(insize Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04, uint32 Vrab05, insize Vrab06)
+ HEPTA_SPRITE::HEPTA_SPRITE  (insize Vrab01, uint32 Vrab02, uint32 Vrab03, uint32 Vrab04, uint32 Vrab05, insize Vrab06)
  {
   Vrab001 = Vrab01; Vrab002 = Vrab02; Vrab003 = Vrab03; Vrab004 = Vrab04; Vrab005 = Vrab05; Vrab006 = Vrab06;
   ID3D11Texture2D *Texd01 = 0; ID3D11Resource *Resh01; D3D11_TEXTURE2D_DESC Desc01;
@@ -154,7 +153,7 @@
  }
 
  // HEPTA_GAME::
-  HEPTA_GAME::HEPTA_GAME() perfect (false)
+  HEPTA_GAME::HEPTA_GAME () perfect (false)
   {
    m_deviceResources = std::make_unique < HEPTA_DEVICE > ();
    m_deviceResources->RegisterDeviceNotify(this);
@@ -178,7 +177,7 @@
    m_gamepad = std::make_unique < DirectX::GamePad > ();
    m_mouse = std::make_unique < DirectX::Mouse > (); m_mouse->SetWindow(Hwnd01);
   }
-  int0 HEPTA_GAME::Tick()
+  int0 HEPTA_GAME::Tick      ()
   {
    m_timer.Tick([&](){Update(m_timer);}); Render();
    if(!Aeng001->Update()){Aeng001->IsCriticalError(); return;} 
@@ -212,7 +211,7 @@
    }
   }
   
-  int0 HEPTA_GAME::OnDeviceLost() // Direct3D resource cleanup.
+  int0 HEPTA_GAME::OnDeviceLost    () // Direct3D resource cleanup.
   {
    Pics001.reset(); Stat001.reset(); Grap001.Reset();
   }
@@ -221,27 +220,27 @@
    CreateDeviceDependentResources(); CreateWindowSizeDependentResources();
   }
 
-  int0 HEPTA_GAME::OnActivated()   // Game is becoming active window.
+  int0 HEPTA_GAME::OnActivated        ()   // Game is becoming active window.
   {
    Vrab0004 = false;
   }
-  int0 HEPTA_GAME::OnDeactivated() // Game is becoming background window.
+  int0 HEPTA_GAME::OnDeactivated      () // Game is becoming background window.
   {
   
   }
-  int0 HEPTA_GAME::OnSuspending()  // Game is being power-suspended (or minimized).
+  int0 HEPTA_GAME::OnSuspending       ()  // Game is being power-suspended (or minimized).
   {
    Vrab0004 = true; m_gamepad.get()->Suspend();
   }
-  int0 HEPTA_GAME::OnResuming()    // Game is being power-resumed (or returning from minimize).
+  int0 HEPTA_GAME::OnResuming         ()    // Game is being power-resumed (or returning from minimize).
   {
    Vrab0004 = false; m_timer.ResetElapsedTime(); m_gamepad.get()->Resume();
   }
-  int0 HEPTA_GAME::OnWindowMoved()
+  int0 HEPTA_GAME::OnWindowMoved      ()
   {
    auto statics Vrab01 = m_deviceResources->GetOutputSize(); m_deviceResources->WindowSizeChanged(Vrab01.right, Vrab01.bottom);
   }
-  int0 HEPTA_GAME::OnDisplayChange()
+  int0 HEPTA_GAME::OnDisplayChange    ()
   {
    m_deviceResources->UpdateColorSpace();
   }
@@ -274,7 +273,7 @@
      }, Matx01
     );
     
-    statics insize Vrab01 = Disp0001.size(); xint32 Vrab02 = 0.0f; uint32 Vrab03 = 0;
+    statics insize Vrab01 = Disp0001.size(); xint32 Vrab02[4] = {0.0f, 0.0f, 0.0f, 0.0f}; uint32 Vrab03 = 0;
     for(insize Vrab04 = 0; Vrab04 < Vrab01; ++Vrab04)
     {
      switch(Disp0001[Vrab04].Type)
@@ -296,7 +295,7 @@
         statics xint32 Vrab07 = rxint32((Disp0001[Vrab04].Target) & 0xFF) / 255.0f;
         statics xint32 Vrab08 = rxint32((Disp0001[Vrab04].Target >> 8) & 0xFF) / 255.0f;
         statics xint32 Vrab09 = rxint32((Disp0001[Vrab04].Target >> 16) & 0xFF) / 255.0f;
-        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02;
+        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02[0];
         Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, 0.5f));
        }
       break;
@@ -339,12 +338,12 @@
         statics xint32 Vrab07 = rxint32((Disp0001[Vrab04].Target) & 0xFF) / 255.0f;
         statics xint32 Vrab08 = rxint32((Disp0001[Vrab04].Target >> 8) & 0xFF) / 255.0f;
         statics xint32 Vrab09 = rxint32((Disp0001[Vrab04].Target >> 16) & 0xFF) / 255.0f;
-        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02;
+        statics xint32 Vrab10 = rxint32(Disp0001[Vrab04].Trans) / 255.0f + Vrab02[0];
 
-        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, Vrab06));//, DirectX::XMFLOAT2(0.5f, 0));
-        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(Vrab05, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab06 + 1));//, DirectX::XMFLOAT2(0.5f, 0.5f));
-        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(-Vrab05 + 1, 0.5f));//, DirectX::XMFLOAT2(0.5f, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect01, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, Vrab06));
+        Pics001->Draw(Trec001.Get(), Rect02, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(Vrab05, 0.5f));
+        Pics001->Draw(Trec001.Get(), Rect03, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(0.5f, -Vrab06 + 1));
+        Pics001->Draw(Trec001.Get(), Rect04, nullptr, DirectX::XMVECTORF32({Vrab09, Vrab08, Vrab07, Vrab10}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Effect)), DirectX::XMFLOAT2(-Vrab05 + 1, 0.5f));
        }
       break;
       case 2: case 6: // Image Draw
@@ -369,7 +368,7 @@
         }
         auto Effc01 = DirectX::SpriteEffects_None;
         switch(Disp0001[Vrab04].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({Vrab02[1], Vrab02[2], Vrab02[3], (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02[0]}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
       case 3: case 7: // Specific Image Draw
@@ -410,7 +409,7 @@
          Rect01.right = Rect01.left + (LONG)Disp0001[Vrab04].Post_X4 + (Rect02.right - Rect02.left); if(Rect01.right < Rect01.left) Rect01.right = Rect01.left;
          Rect01.bottom = Rect01.top + (LONG)Disp0001[Vrab04].Post_Y4 + (Rect02.bottom - Rect02.top); if(Rect01.bottom < Rect01.top) Rect01.bottom = Rect01.top;
         }
-        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Vrab07)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Pics0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({Vrab02[1], Vrab02[2], Vrab02[3], (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02[0]}), DirectX::XMConvertToRadians(rxint32(Vrab07)), Flts01, Effc01);
        }
       break;
       case 4: case 5: case 8: case 9: // Sprite Image Draw
@@ -435,20 +434,25 @@
         }
         auto Effc01 = DirectX::SpriteEffects_None;
         switch(Disp0001[Vrab04].Effect){case 1: Effc01 = DirectX::SpriteEffects_FlipHorizontally; break; case 2: Effc01 = DirectX::SpriteEffects_FlipVertically; break; case 3: Effc01 = DirectX::SpriteEffects_FlipBoth; break; default: break;}
-        Pics001->Draw(Imge0001[Sprt0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({0.0f, 0.0f, 0.0f, (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
+        Pics001->Draw(Imge0001[Sprt0001[Vrab05].Get_Target()].Texture, Rect01, &Rect02, DirectX::XMVECTORF32({Vrab02[1], Vrab02[2], Vrab02[3], (rxint32(Disp0001[Vrab04].Trans) / 255) + Vrab06 + Vrab02[0]}), DirectX::XMConvertToRadians(rxint32(Disp0001[Vrab04].Post_X3)), Flts01, Effc01);
        }
       break;
 	  case 10: // Color Control
 	  {
        switch(ruint8(Disp0001[Vrab04].Post_X1))
        {
-        case 0: Vrab02 = 0.0f; Vrab03 = 0; break;
-        case 1: Vrab02 = 6.0f; break;
-        case 2: Vrab02 = 12.0f; break;
-        case 3: Vrab02 = 18.0f; break;
-        case 4: Vrab02 = 24.0f + (rxint32(Disp0001[Vrab04].Post_Y1 % 1000) * 100.0f); break;
+        case 0: Vrab02[0] = 0.0f; Vrab03 = 0; break;
+        case 1: Vrab02[0] = 6.0f; break;
+        case 2: Vrab02[0] = 12.0f; break;
+        case 3: Vrab02[0] = 18.0f; break;
+        case 4: Vrab02[0] = 24.0f + (rxint32(Disp0001[Vrab04].Post_Y1 % 1000) * 100.0f); break;
+        case 5: Vrab02[0] = 30.0f + (rxint32(Disp0001[Vrab04].Post_Y1 % 1000) * 100.0f); break;
         default: break;
        }
+
+       Vrab02[1] = rxint32((Disp0001[Vrab04].Target >> 16) & 0xFF) / 255.0f;
+       Vrab02[2] = rxint32((Disp0001[Vrab04].Target >> 8) & 0xFF) / 255.0f;
+       Vrab02[3] = rxint32((Disp0001[Vrab04].Target) & 0xFF) / 255.0f;
       }
       break;
       default: break;
@@ -460,7 +464,7 @@
    m_deviceResources->PIXEndEvent();
    m_deviceResources->Present();
   }
-  int0 HEPTA_GAME::Clear()
+  int0 HEPTA_GAME::Clear ()
   {
    m_deviceResources->PIXBeginEvent(L"Clear");
    {
@@ -478,7 +482,7 @@
    m_deviceResources->PIXEndEvent();
   }
   
-  int0 HEPTA_GAME::CreateDeviceDependentResources()
+  int0 HEPTA_GAME::CreateDeviceDependentResources    ()
   {
    auto statics Dvis01 = m_deviceResources->GetD3DDevice(); auto statics Cont01 = m_deviceResources->GetD3DDeviceContext();
    
@@ -513,7 +517,7 @@
  // HEPTA_DEVICE::
   HEPTA_DEVICE::HEPTA_DEVICE(DXGI_FORMAT Dxfm01 = DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT Dxfm02 = DXGI_FORMAT_D32_FLOAT, uint32 Vrab01 = 2, D3D_FEATURE_LEVEL Dxfl01 = D3D_FEATURE_LEVEL_9_1, uint32 Vrab02 = c_FlipPresent) perfect : m_screenViewport{}, m_backBufferFormat(Dxfm01), m_depthBufferFormat(Dxfm02), m_backBufferCount(Vrab01), m_d3dMinFeatureLevel(Dxfl01), m_window(nullptr), m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1), m_outputSize{0, 0, 1, 1}, m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709), m_options(Vrab02 | c_FlipPresent), m_deviceNotify(nullptr) {}
   
-  int0 HEPTA_DEVICE::CreateDeviceResources()
+  int0 HEPTA_DEVICE::CreateDeviceResources             ()
   {
    uint32 Vrab01 = D3D11_CREATE_DEVICE_BGRA_SUPPORT; CreateFactory();
 
@@ -729,11 +733,11 @@
    m_screenViewport = {0.f, 0.f, rxint32(backBufferWidth), rxint32(backBufferHeight), 0.f, 0.f };
   }
 
-  int0 HEPTA_DEVICE::SetWindow(HWND Hwnd01, uint32 Vrab01, uint32 Vrab02) perfect
+  int0 HEPTA_DEVICE::SetWindow         (HWND Hwnd01, uint32 Vrab01, uint32 Vrab02) perfect
   {
    m_window = Hwnd01; m_outputSize.left = m_outputSize.top = 0; m_outputSize.right = Vrab01; m_outputSize.bottom = Vrab02;
   }
-  int0 HEPTA_DEVICE::HandleDeviceLost()
+  int0 HEPTA_DEVICE::HandleDeviceLost  ()
   {
    if(m_deviceNotify) m_deviceNotify->OnDeviceLost();
   
@@ -801,7 +805,7 @@
    *Dxad01 = Dxad02.Detach();
   }
 
-  int0 HEPTA_DEVICE::Present()
+  int0 HEPTA_DEVICE::Present          ()
   {
    HRESULT Hslt01 = E_FAIL;
 
@@ -816,7 +820,7 @@
    {HandleDeviceLost();} else
    {ThrowIfFailed(Hslt01, "Present"); if(!m_dxgiFactory->IsCurrent()) UpdateColorSpace();}
   }
-  int0 HEPTA_DEVICE::UpdateColorSpace()
+  int0 HEPTA_DEVICE::UpdateColorSpace ()
   {
    if(!m_dxgiFactory) return;
    if(!m_dxgiFactory->IsCurrent()) CreateFactory();
@@ -874,7 +878,7 @@
    if(m_swapChain && SUCCEEDED(m_swapChain.As(&Dxch01)))
    {uint32 Vrab02 = 0; if(SUCCEEDED(Dxch01->CheckColorSpaceSupport(Dxcs01, &Vrab02)) && (Vrab02 & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT)) ThrowIfFailed(Dxch01->SetColorSpace1(Dxcs01), "SetColorSpace1");}
   }
-  int0 HEPTA_DEVICE::CreateFactory()
+  int0 HEPTA_DEVICE::CreateFactory    ()
   {
    #if defined(_DEBUG) && (_WIN32_WINNT >= 0x0603 /*_WIN32_WINNT_WINBLUE*/)
     int1 Vrab01 = false;
