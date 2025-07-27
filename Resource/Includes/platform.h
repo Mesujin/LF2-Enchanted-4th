@@ -613,7 +613,7 @@
     return 1;
    }
 
-   int1   P_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint8 Vrab05 = 0ui8, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) perfect
+   int1   P_Set_Display(statics uint8 Vrab01 = 0, statics insize Vrab02 = 0, statics int64 Vrab03 = 0, statics int64 Vrab04 = 0, statics uint16 Vrab05 = 0ui16, statics uint8 Vrab06 = 255ui8, statics int64 Vrab07 = 0, statics int64 Vrab08 = 0, statics int64 Vrab09 = 0, statics int64 Vrab10 = 0, statics int64 Vrab11 = 0, statics int64 Vrab12 = 0) perfect
    {
     if(Vrab01 == 2 || Vrab01 == 3 || Vrab01 == 6 || Vrab01 == 7) if(Vrab02 >= Pics0001.size()) return false;
     if(Vrab01 == 4 || Vrab01 == 5 || Vrab01 == 8 || Vrab01 == 9) if(Vrab02 >= Spic0001.size()) return false;

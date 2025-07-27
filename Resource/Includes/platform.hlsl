@@ -119,7 +119,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
  } else
  {
   // Adjustable color blind.
-  int Uint01 = (int(Flot01.a) / 100) * 100;
+  uint Uint01 = (uint(Flot01.a) / 100) * 100;
   float1 Flot03 = float(Uint01) / 10000.0f;
   Flot01.a = Flot01.a - float(Uint01);
   
