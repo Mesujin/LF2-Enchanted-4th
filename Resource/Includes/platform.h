@@ -489,14 +489,16 @@
   
  // Memory / Variables
   unique < HEPTA_GAME > Game0001;
-  std::vector < insize > Spic0001;
-  std::vector < HEPTA_IMAGE > Imge0001;
-  std::vector < HEPTA_SPRITE > Sprt0001;
+
+  std::vector < insize >        Spic0001;
+  std::vector < HEPTA_IMAGE >   Imge0001;
+  std::vector < HEPTA_SPRITE >  Sprt0001;
   std::vector < HEPTA_PICTURE > Pics0001;
-  std::vector < HEPTA_DISPLAY > Disp0001;
+  std::vector < unique < HEPTA_DISPLAY > > Disp0001;
+
   std::vector < HEPTA_SOUNDPLAY > Sond0001;
+  std::vector < unique < HEPTA_MUSIC > >   Isnd0001;
   std::vector < unique < HEPTA_AUDINGS > > Audi0001;
-  std::vector < unique < HEPTA_MUSIC > > Isnd0001;
 
  // Global Function
   int0 G_ToggleFullscreen() perfect;
@@ -617,19 +619,19 @@
    {
     if(Vrab01 == 2 || Vrab01 == 3 || Vrab01 == 6 || Vrab01 == 7) if(Vrab02 >= Pics0001.size()) return false;
     if(Vrab01 == 4 || Vrab01 == 5 || Vrab01 == 8 || Vrab01 == 9) if(Vrab02 >= Spic0001.size()) return false;
-    statics insize Vrab13 = Disp0001.size(); if(Vrab13 >= rinsize(0xFFFFFFF)) return false; Disp0001.push_back(HEPTA_DISPLAY());
-    Disp0001[Vrab13].Type = Vrab01;
-    Disp0001[Vrab13].Target = Vrab02;
-    Disp0001[Vrab13].Post_X1 = Vrab03;
-    Disp0001[Vrab13].Post_Y1 = Vrab04;
-    Disp0001[Vrab13].Effect = Vrab05;
-    Disp0001[Vrab13].Trans = Vrab06;
-    Disp0001[Vrab13].Post_X2 = Vrab07;
-    Disp0001[Vrab13].Post_Y2 = Vrab08;
-    Disp0001[Vrab13].Post_X3 = Vrab09;
-    Disp0001[Vrab13].Post_Y3 = Vrab10;
-    Disp0001[Vrab13].Post_X4 = Vrab11;
-    Disp0001[Vrab13].Post_Y4 = Vrab12;
+    statics insize Vrab13 = Disp0001.size(); if(Vrab13 >= rinsize(0xFFFFFFF)) return false; Disp0001.push_back(std::make_unique < HEPTA_DISPLAY > ());
+    Disp0001[Vrab13]->Type = Vrab01;
+    Disp0001[Vrab13]->Target = Vrab02;
+    Disp0001[Vrab13]->Post_X1 = Vrab03;
+    Disp0001[Vrab13]->Post_Y1 = Vrab04;
+    Disp0001[Vrab13]->Effect = Vrab05;
+    Disp0001[Vrab13]->Trans = Vrab06;
+    Disp0001[Vrab13]->Post_X2 = Vrab07;
+    Disp0001[Vrab13]->Post_Y2 = Vrab08;
+    Disp0001[Vrab13]->Post_X3 = Vrab09;
+    Disp0001[Vrab13]->Post_Y3 = Vrab10;
+    Disp0001[Vrab13]->Post_X4 = Vrab11;
+    Disp0001[Vrab13]->Post_Y4 = Vrab12;
     return true;
    }
    int1   P_Set_Sound  (statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0) perfect
@@ -656,13 +658,13 @@
    {
     insize Vrab02 = Disp0001.size(); while(Vrab02 != 0)
     {
-     Vrab02 -= 1; if(Disp0001[Vrab02].Type == Vrab01) return &Disp0001[Vrab02];
+     Vrab02 -= 1; if(Disp0001[Vrab02]->Type == Vrab01) return Disp0001[Vrab02].get();
     }
-    statics insize Vrab03 = Disp0001.size(); if(Vrab03 >= rinsize(0xFFFFFFF)) return nullptr; Disp0001.push_back(HEPTA_DISPLAY());
-    Disp0001[Vrab03].Type = 10;
-    Disp0001[Vrab03].Target = 0x0;
-    Disp0001[Vrab03].Post_X1 = 0;
-    return &Disp0001[Vrab03];
+    statics insize Vrab03 = Disp0001.size(); if(Vrab03 >= rinsize(0xFFFFFFF)) return nullptr; Disp0001.push_back(std::make_unique < HEPTA_DISPLAY > ());
+    Disp0001[Vrab03]->Type = 10;
+    Disp0001[Vrab03]->Target = 0x0;
+    Disp0001[Vrab03]->Post_X1 = 0;
+    return Disp0001[Vrab03].get();
    }
 
    int1   P_Control_Music(statics insize Vrab01, statics xint32 Vrab02 = 1, statics xint32 Vrab03 = 0, statics int1 Vrab04 = false) perfect

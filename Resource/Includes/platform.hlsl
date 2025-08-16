@@ -146,7 +146,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    Flot02.y += (Flot04 - Flot02.y) * Flot03;
    Flot02.z += (Flot04 - Flot02.z) * Flot03;
 
-  } else if (Flot01.a <= 29.0f) // (28.0f ~ 29.0f) :  Image texture with #000000 as transparent. (adjustable grayscale)
+  } else if (Flot01.a <= 29.0f) // (28.0f ~ 29.0f) : Image texture with #000000 as transparent. (adjustable grayscale)
   {
 
    Flot02 = Text0001.Sample(Samp0001, Cord01);
@@ -212,7 +212,7 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
     }
    }
 
-  } else if (Flot01.a <= 35.0f) // (34.0f ~ 35.0f) :  Image texture with #000000 as transparent. (font color)
+  } else if (Flot01.a <= 35.0f) // (34.0f ~ 35.0f) : Image texture with #000000 as transparent. (font color)
   {
 
    Flot02 = Text0001.Sample(Samp0001, Cord01);
@@ -238,6 +238,110 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
      Flot02.z = 0.8f + (0.1f * Flot01.z);
     }
    }
+
+  } else if (Flot01.a <= 37.0f) // (24.0f ~ 25.0f) : Plain color texture. (black and white)
+  {
+
+   Flot02 = Flot01;
+   Flot02.a = Flot01.a - 36.0f;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot04 < 0.5f)
+   {
+    float1 Flot05 = Flot04 - (Flot04 * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   } else
+   {
+    float1 Flot05 = Flot04 + ((1.0f - Flot04) * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   }
+
+  } else if (Flot01.a <= 39.0f) // (26.0f ~ 27.0f) : Image texture. (black and white)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 38.0f;
+   Flot02.x += Flot01.x;
+   Flot02.y += Flot01.y;
+   Flot02.z += Flot01.z;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot04 < 0.5f)
+   {
+    float1 Flot05 = Flot04 - (Flot04 * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   } else
+   {
+    float1 Flot05 = Flot04 + ((1.0f - Flot04) * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   }
+
+  } else if (Flot01.a <= 41.0f) // (28.0f ~ 29.0f) : Image texture with #000000 as transparent. (black and white)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 40.0f;
+   if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+   Flot02.x += Flot01.x;
+   Flot02.y += Flot01.y;
+   Flot02.z += Flot01.z;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot04 < 0.5f)
+   {
+    float1 Flot05 = Flot04 - (Flot04 * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   } else
+   {
+    float1 Flot05 = Flot04 + ((1.0f - Flot04) * Flot03);
+    Flot02.x = Flot05;
+    Flot02.y = Flot05;
+    Flot02.z = Flot05;
+   }
+
+  }  else if (Flot01.a <= 43.0f) // (24.0f ~ 25.0f) : Plain color texture. (filtered color)
+  {
+
+   Flot02 = Flot01;
+   Flot02.a = Flot01.a - 42.0f;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot03 >= 0.0f && Flot03 < 0.33f)   if (Flot02.x < Flot04 || Flot02.x < Flot02.y * 1.5f || Flot02.x < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 >= 0.33f && Flot03 <= 0.66f) if (Flot02.y < Flot04 || Flot02.y < Flot02.x * 1.5f || Flot02.y < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 > 0.66f && Flot03 <= 1.0f)   if (Flot02.z < Flot04 || Flot02.z < Flot02.x * 2.0f || Flot02.z < Flot02.y * 1.0f) Flot02.xyz = Flot04;
+
+  } else if (Flot01.a <= 45.0f) // (26.0f ~ 27.0f) : Image texture. (filtered color)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 44.0f;
+   Flot02.x += Flot01.x;
+   Flot02.y += Flot01.y;
+   Flot02.z += Flot01.z;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot03 >= 0.0f && Flot03 < 0.33f)   if (Flot02.x < Flot04 || Flot02.x < Flot02.y * 1.5f || Flot02.x < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 >= 0.33f && Flot03 <= 0.66f) if (Flot02.y < Flot04 || Flot02.y < Flot02.x * 1.5f || Flot02.y < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 > 0.66f && Flot03 <= 1.0f)   if (Flot02.z < Flot04 || Flot02.z < Flot02.x * 2.0f || Flot02.z < Flot02.y * 1.0f) Flot02.xyz = Flot04;
+
+  } else if (Flot01.a <= 47.0f) // (28.0f ~ 29.0f) : Image texture with #000000 as transparent. (filtered color)
+  {
+
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
+   Flot02.a *= Flot01.a - 46.0f;
+   if (Flot02.x == 0 && Flot02.y == 0 && Flot02.z == 0) Flot02.a = 0.0f;
+   Flot02.x += Flot01.x;
+   Flot02.y += Flot01.y;
+   Flot02.z += Flot01.z;
+   float1 Flot04 = (Flot02.x + Flot02.y + Flot02.z) / 3.0f;
+   if (Flot03 >= 0.0f && Flot03 < 0.33f)   if (Flot02.x < Flot04 || Flot02.x < Flot02.y * 1.5f || Flot02.x < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 >= 0.33f && Flot03 <= 0.66f) if (Flot02.y < Flot04 || Flot02.y < Flot02.x * 1.5f || Flot02.y < Flot02.z * 1.5f) Flot02.xyz = Flot04;
+   if (Flot03 > 0.66f && Flot03 <= 1.0f)   if (Flot02.z < Flot04 || Flot02.z < Flot02.x * 2.0f || Flot02.z < Flot02.y * 1.0f) Flot02.xyz = Flot04;
 
   }
  }
