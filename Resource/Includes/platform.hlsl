@@ -343,6 +343,9 @@ float4 main(float4 Flot01 : COLOR0, float2 Cord01 : TEXCOORD0) : SV_TARGET0
    if (Flot03 >= 0.33f && Flot03 <= 0.66f) if (Flot02.y < Flot04 || Flot02.y < Flot02.x * 1.5f || Flot02.y < Flot02.z * 1.5f) Flot02.xyz = Flot04;
    if (Flot03 > 0.66f && Flot03 <= 1.0f)   if (Flot02.z < Flot04 || Flot02.z < Flot02.x * 2.0f || Flot02.z < Flot02.y * 1.0f) Flot02.xyz = Flot04;
 
+  } else 
+  {
+   Flot02 = Text0001.Sample(Samp0001, Cord01);
   }
  }
  return Flot02;

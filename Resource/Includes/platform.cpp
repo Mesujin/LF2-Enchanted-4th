@@ -488,7 +488,9 @@
    m_deviceResources->PIXBeginEvent(L"Clear");
    {
     // Clear the views.
-    auto statics Cont01 = m_deviceResources->GetD3DDeviceContext(); auto statics Rend01 = m_deviceResources->GetRenderTargetView(); auto statics Dept01 = m_deviceResources->GetDepthStencilView();
+    auto statics Cont01 = m_deviceResources->GetD3DDeviceContext();
+    auto statics Rend01 = m_deviceResources->GetRenderTargetView();
+    auto statics Dept01 = m_deviceResources->GetDepthStencilView();
    
     Cont01->ClearRenderTargetView(Rend01, DirectX::Colors::Black);
     Cont01->ClearDepthStencilView(Dept01, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
