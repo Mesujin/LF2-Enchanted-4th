@@ -933,16 +933,36 @@
    RECT Rect01; Rect01.left = Rect01.top = 0; Vrab0007 = 0; Vrab0008 = 0;
    statics xint64 Vrab05 = rxint64(Vrab01) / rxint64(Vrab0005);
    statics xint64 Vrab06 = rxint64(Vrab02) / rxint64(Vrab0006);
-   if(Vrab0010)
+           int1   Vrab07[2] = {Vrab0010, !Vrab0010};
+
+   if(Vrab0011)
+   {
+    if(Vrab05 > 1.0 && Vrab06 > 1.0)
+    {
+     Vrab07[0] = false; Vrab07[1] = false;
+     Rect01.right = Vrab01;
+     Rect01.bottom = Vrab02;
+     Vrab0007 = L_Rounding(rxint64(ruint64(Rect01.right) - Vrab0005) / 2);
+     Vrab0008 = L_Rounding(rxint64(ruint64(Rect01.bottom) - Vrab0006) / 2);
+     Vrab0014 = Vrab0015 = 1.0;
+    } else
+    {
+     Vrab07[0] = true;
+    }
+   }
+
+   if(Vrab07[0])
    {
     if(Vrab05 != Vrab06)
     {
      if(Vrab05 > Vrab06)
      {
-      Rect01.right = L_Rounding(rxint64(Vrab0005) / (Vrab06 * (rxint64(Vrab0005) / rxint64(Vrab01)))); Rect01.bottom = Vrab0006; Vrab0007 = L_Rounding(rxint64(ruint64(Rect01.right) - Vrab0005) / 2);
+      Rect01.right = L_Rounding(rxint64(Vrab0005) / (Vrab06 * (rxint64(Vrab0005) / rxint64(Vrab01))));
+      Rect01.bottom = Vrab0006; Vrab0007 = L_Rounding(rxint64(ruint64(Rect01.right) - Vrab0005) / 2);
      } else
      {
-      Rect01.bottom = L_Rounding(rxint64(Vrab0006) / (Vrab05 * (rxint64(Vrab0006) / rxint64(Vrab02)))); Rect01.right = Vrab0005; Vrab0008 = L_Rounding(rxint64(ruint64(Rect01.bottom) - Vrab0006) / 2);
+      Rect01.bottom = L_Rounding(rxint64(Vrab0006) / (Vrab05 * (rxint64(Vrab0006) / rxint64(Vrab02))));
+      Rect01.right = Vrab0005; Vrab0008 = L_Rounding(rxint64(ruint64(Rect01.bottom) - Vrab0006) / 2);
      }
     } else
     {
@@ -950,7 +970,9 @@
     }
     if(Vrab05 < Vrab06)
     {Vrab0014 = Vrab0015 = Vrab05;} else {Vrab0014 = Vrab0015 = Vrab06;}
-   } else
+   } 
+   
+   if(!Vrab07[0] && Vrab07[1])
    {
     Rect01.right = Vrab0005; Rect01.bottom = Vrab0006;
     Vrab0014 = Vrab05; Vrab0015 = Vrab06;
@@ -958,12 +980,14 @@
 
    if(m_outputSize == Rect01)
    {
-    // Handle color space settings for HDR
-    UpdateColorSpace(); return false;
+    UpdateColorSpace();
+    return false;
+   } else
+   {
+    m_outputSize = Rect01;
+    CreateWindowSizeDependentResources();
+    return true;
    }
-   m_outputSize = Rect01;
-   CreateWindowSizeDependentResources();
-   return true;
   }
 
 // Windows' Function
