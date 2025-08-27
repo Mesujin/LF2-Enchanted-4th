@@ -29,13 +29,10 @@
  int0 G_Adjust_Window   (statics uint32 Vrab01, statics uint32 Vrab02, statics int1 Vrab03, statics string Temp01) perfect
  {
   auto Hwnd01 = Game0001->m_deviceResources->GetWindow();
-  if(Vrab03 == Vrab0009 && Vrab0009 && (Vrab0005 != Vrab01 || Vrab0006 != Vrab02))
-  {
-   Vrab0005 = Vrab01; Vrab0006 = Vrab02;
-   G_ToggleFullscreen(); G_ToggleFullscreen();
-  }
+
   Vrab0005 = Vrab01; Vrab0006 = Vrab02;
-  if(Vrab03 == Vrab0009 && !Vrab0009) Game0001->OnWindowSizeChanged(Vrab01, Vrab02);
+  Game0001->OnWindowSizeChanged(Vrab0028, Vrab0029);
+
   if(Vrab03 != Vrab0009) G_ToggleFullscreen();
   SetWindowTextA(Hwnd01, Temp01.c_str());
  }
@@ -114,7 +111,7 @@
    wfx->cbSize = 0;*/
 
    Sound = std::make_unique < DirectX::SoundEffect > (Aeng01, std::wstring(Temp01.begin(), Temp01.end()).c_str());
-   Sound->CreateInstance(DirectX::SoundEffectInstance_ZeroCenter3D);
+   Sound->CreateInstance(DirectX::SoundEffectInstance_NoSetPitch | DirectX::SoundEffectInstance_Use3D);
    Address = Temp01; Success = true;
   } else {Success = false;}
  }
